@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@Controller("/board")
+@RequestMapping("/board")
 public class BoardController {
 
     private final BoardService boardService;
@@ -23,17 +23,17 @@ public class BoardController {
         this.boardService = boardService;
     }
 
+    // 전체 글 조회 (기본 주소)
+    @GetMapping
+    public ResponseEntity<List<BoardResponseDto>> getBoards() {
+        return ResponseEntity.ok(boardService.getBoards());
+    }
+
     // 글 작성
     @PostMapping("/create")
     public ResponseEntity<Board> createBoard(@RequestBody BoardCreateDto boardCreateDto) {
         Board board = boardService.createBoard(boardCreateDto);
         return ResponseEntity.ok(board);
-    }
-
-    // 전체 글 조회
-    @GetMapping("/")
-    public ResponseEntity<List<BoardResponseDto>> getBoards() {
-        return ResponseEntity.ok(boardService.getBoards());
     }
 
     // 특정 글 조회
@@ -42,5 +42,8 @@ public class BoardController {
         BoardResponseDto boardResponseDto = boardService.getBoardById(boardId);
         return ResponseEntity.ok(boardResponseDto);
     }
+
+    // 글 수정
+    // @PutMapping("/{boardId}")
 
 }
