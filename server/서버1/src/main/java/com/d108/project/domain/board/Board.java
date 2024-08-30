@@ -39,13 +39,16 @@ public class Board {
     @JoinTable(
             // 중계테이블 생성
             name = "board_comments",
-            joinColumns = @JoinColumn(name="board_id"),
+            joinColumns = @JoinColumn(name = "board_id"),
             inverseJoinColumns = @JoinColumn(name="comment_id")
     )
     private List<Comment> comments;
 
     // 생성 및 수정
+    @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @Column
     private LocalDateTime updatedAt;
 
     @Builder
@@ -54,6 +57,16 @@ public class Board {
         this.boardDescription = boardDescription;
         this.boardView = boardView;
         this.user = user;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 }
 

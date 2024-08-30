@@ -8,7 +8,6 @@ spring:
     name: server1
 
   datasource:
-
     url: jdbc:mariadb://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S11P21D108?serverTimezone=UTC&useUniCode=ture&characterEncoding=utf8
     username: S11P21D108
     password: ssafy123

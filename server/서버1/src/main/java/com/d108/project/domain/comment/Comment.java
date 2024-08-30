@@ -1,5 +1,6 @@
 package com.d108.project.domain.comment;
 
+import com.d108.project.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,4 +18,9 @@ public class Comment {
     private int commentId;
 
     private String commentContent;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
 }

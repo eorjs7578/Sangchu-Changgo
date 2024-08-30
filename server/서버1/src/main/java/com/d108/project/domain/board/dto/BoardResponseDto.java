@@ -13,6 +13,6 @@ public class BoardResponseDto {
     private String boardDescription;
     private Long boardView;
     private Long userId;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
