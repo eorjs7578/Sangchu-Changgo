@@ -20,27 +20,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto signUp(UserDto userDto) {
-        Optional<User> existingUser = userRepository.findById(userDto.getId());
-        if (existingUser.isPresent()) {
-            throw new IllegalArgumentException("User with this ID already exists.");
-        }
+    public UserCreateDto signUp(UserCreateDto userCreateDto) {
+//        Optional<User> existingUser = userRepository.findById(userCreateDto.getUserId());
+//        if (existingUser.isPresent()) {
+//            throw new IllegalArgumentException("User with this ID already exists.");
+//        }
 
         User user = User.builder()
-                .id(userDto.getId())
-                .password(userDto.getPassword())
+                .username(userCreateDto.getUsername())
+                .password(userCreateDto.getPassword())
                 .build();
 
         user = userRepository.save(user);
 
-        return UserDto.builder()
-                .id(user.getId())
+        return UserCreateDto.builder()
+                .username(userCreateDto.getUsername())
+                .password(userCreateDto.getPassword())
                 .build();
     }
 
     @Override
     public String login(UserDto userDto) {
-        User user = userRepository.findById(userDto.getId())
+        User user = userRepository.findById(userDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid ID or password."));
 
         if (!userDto.getPassword().equals(user.getPassword())) {
@@ -56,5 +57,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found."));
 
         userRepository.delete(user);
+    }
+
+    @Override
+    public User getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found."));
+
+        return user;
     }
 }

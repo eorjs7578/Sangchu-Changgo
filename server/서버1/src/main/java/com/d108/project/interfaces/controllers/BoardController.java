@@ -1,12 +1,12 @@
 package com.d108.project.interfaces.controllers;
 
 import com.d108.project.domain.board.Board;
-import com.d108.project.domain.board.BoardService;
+import com.d108.project.domain.board.BoardServiceImpl;
 import com.d108.project.domain.board.dto.BoardCreateDto;
 import com.d108.project.domain.board.dto.BoardResponseDto;
 import com.d108.project.domain.board.dto.BoardUpdateDto;
 import com.d108.project.domain.comment.Comment;
-import com.d108.project.domain.comment.CommentService;
+import com.d108.project.domain.comment.CommentServiceImpl;
 import com.d108.project.domain.comment.dto.CommentCreateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +19,11 @@ import java.util.List;
 @RequestMapping("/board")
 public class BoardController {
 
-    private final BoardService boardService;
-    private final CommentService commentService;
+    private final BoardServiceImpl boardService;
+    private final CommentServiceImpl commentService;
 
     @Autowired
-    public BoardController(BoardService boardService, CommentService commentService) {
+    public BoardController(BoardServiceImpl boardService, CommentServiceImpl commentService) {
         this.boardService = boardService;
         this.commentService = commentService;
     }

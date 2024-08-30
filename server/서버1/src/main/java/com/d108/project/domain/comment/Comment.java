@@ -22,13 +22,19 @@ public class Comment {
 
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "board_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id", nullable = false, insertable = false, updatable = false)
     private Board board;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @Column(name = "board_id")
+    private Long boardId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
     private User user;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     private LocalDateTime createdAt;
 

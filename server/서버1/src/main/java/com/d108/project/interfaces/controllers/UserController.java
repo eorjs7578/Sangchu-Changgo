@@ -1,5 +1,7 @@
 package com.d108.project.interfaces.controllers;
 
+import com.d108.project.domain.user.User;
+import com.d108.project.domain.user.UserCreateDto;
 import com.d108.project.domain.user.UserDto;
 import com.d108.project.domain.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,17 @@ public class UserController {
         this.userService = userService;
     }
 
+    // 회원 조회
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUser(@PathVariable Long userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
+    }
+
     // 회원가입 엔드포인트
     @PostMapping("/signup")
-    public ResponseEntity<UserDto> signUp(@RequestBody UserDto userDto) {
-        UserDto createdUser = userService.signUp(userDto);
+    public ResponseEntity<UserCreateDto> signUp(@RequestBody UserCreateDto userCreateDto) {
+        UserCreateDto createdUser = userService.signUp(userCreateDto);
         return ResponseEntity.ok(createdUser);
     }
 
