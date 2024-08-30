@@ -4,9 +4,9 @@ import com.d108.project.domain.board.Board;
 import com.d108.project.domain.board.BoardService;
 import com.d108.project.domain.board.dto.BoardCreateDto;
 import com.d108.project.domain.board.dto.BoardResponseDto;
+import com.d108.project.domain.board.dto.BoardUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +44,17 @@ public class BoardController {
     }
 
     // 글 수정
-    // @PutMapping("/{boardId}")
+    @PutMapping("/{boardId}")
+    public ResponseEntity<Board> updateBoard(@PathVariable Long boardId, @RequestBody BoardUpdateDto boardUpdateDto) {
+        Board board = boardService.updateBoardById(boardId, boardUpdateDto);
+        return ResponseEntity.ok(board);
+    }
+
+    // 글 삭제
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId) {
+        boardService.deleteBoardById(boardId);
+        return ResponseEntity.noContent().build();
+    }
 
 }

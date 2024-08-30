@@ -3,6 +3,7 @@ package com.d108.project.domain.board;
 
 import com.d108.project.domain.board.dto.BoardCreateDto;
 import com.d108.project.domain.board.dto.BoardResponseDto;
+import com.d108.project.domain.board.dto.BoardUpdateDto;
 import com.d108.project.domain.user.User;
 import com.d108.project.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,22 @@ public class BoardService {
         return convertToDto(board);
     }
 
+    // 글 수정
+    public Board updateBoardById(Long boardId, BoardUpdateDto boardUpdateDto) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new RuntimeException("게시글 번호를 찾을 수 없음"));
+        
+        // 두개만 수정
+        board.setBoardTitle(boardUpdateDto.getBoardTitle());
+        board.setBoardDescription(boardUpdateDto.getBoardDescription());
+        
+        return boardRepository.save(board);
+    }
+
+    // 글 삭제
+    public void deleteBoardById(Long boardId) {
+        boardRepository.deleteById(boardId);
+    }
     
     // Entity -> DTO 변환
     private BoardResponseDto convertToDto(Board board) {
