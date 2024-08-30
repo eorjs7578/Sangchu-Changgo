@@ -5,6 +5,9 @@ import com.d108.project.domain.board.BoardService;
 import com.d108.project.domain.board.dto.BoardCreateDto;
 import com.d108.project.domain.board.dto.BoardResponseDto;
 import com.d108.project.domain.board.dto.BoardUpdateDto;
+import com.d108.project.domain.comment.Comment;
+import com.d108.project.domain.comment.CommentService;
+import com.d108.project.domain.comment.dto.CommentCreateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +20,12 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final CommentService commentService;
 
     @Autowired
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, CommentService commentService) {
         this.boardService = boardService;
+        this.commentService = commentService;
     }
 
     // 전체 글 조회 (기본 주소)
@@ -57,4 +62,20 @@ public class BoardController {
         return ResponseEntity.noContent().build();
     }
 
+
+
+    // 댓글 생성
+    @PostMapping("/{boardId}/comment")
+    public ResponseEntity<Comment> createComment(@PathVariable Long boardId, @RequestBody CommentCreateDto commentCreateDto) {
+
+        Comment comment = commentService.createComment(commentCreateDto);
+        return ResponseEntity.ok(comment);
+    }
+
+    // 댓글 삭제
+    @DeleteMapping("/{boardId}/comment/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long boardId, @PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.noContent().build();
+    }
 }

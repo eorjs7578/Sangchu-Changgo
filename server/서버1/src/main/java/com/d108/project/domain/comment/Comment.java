@@ -1,5 +1,6 @@
 package com.d108.project.domain.comment;
 
+import com.d108.project.domain.board.Board;
 import com.d108.project.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,7 +18,11 @@ public class Comment {
     @Column(name = "comment_id")
     private int commentId;
 
-    private String commentContent;
+    private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "board_id", nullable = false)
+    private Board board;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
