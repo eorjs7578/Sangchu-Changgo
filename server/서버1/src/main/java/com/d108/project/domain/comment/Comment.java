@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Entity
 @ToString
 @Getter
@@ -28,4 +30,10 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

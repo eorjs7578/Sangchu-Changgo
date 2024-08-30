@@ -1,47 +1,31 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <div>
+    <div>
+      테스트용
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    <form @submit.prevent="createBoard">
+      <input type="text" placeholder="title"/>
+      <input type="text" placeholder="description"/>
+      <input type="submit" />
+    </form>
+  </div>
 </template>
 
+<script lang="ts">
+// import api from "@/lib/axios";
+// import {ref} from "vue";
+//
+// const title = ref<string>("");
+// const description = ref<string>("");
+//
+// function createBoard() {
+//   api.post("/board/create", {
+//     title: title.value,
+//     description: description.value,
+//   })
+// }
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
-}
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
 </style>

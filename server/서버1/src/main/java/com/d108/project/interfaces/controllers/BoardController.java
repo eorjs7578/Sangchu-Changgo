@@ -62,12 +62,9 @@ public class BoardController {
         return ResponseEntity.noContent().build();
     }
 
-
-
     // 댓글 생성
     @PostMapping("/{boardId}/comment")
     public ResponseEntity<Comment> createComment(@PathVariable Long boardId, @RequestBody CommentCreateDto commentCreateDto) {
-
         Comment comment = commentService.createComment(commentCreateDto);
         return ResponseEntity.ok(comment);
     }

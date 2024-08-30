@@ -58,8 +58,7 @@ public class Board {
         this.boardView = boardView;
         this.user = user;
     }
-
-
+    
     // 생성 및 수정 자동 설정
     @PrePersist
     protected void onCreate() {
