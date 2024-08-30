@@ -37,7 +37,7 @@ project/
 │       │   ├── UserApi.java   # API for User
 │       │   ├── ProductApi.java  # API for Product
 │       │   └── OrderApi.java  # API for Order
-│	    └── advice/
+|       └── advice/
 │           └── AdviceController.java  # Controller Advice
 ├── tests/
 ├── config/
