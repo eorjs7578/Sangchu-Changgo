@@ -24,16 +24,16 @@ public class CommentServiceImpl implements CommentService {
 
     // 댓글 생성
     @Override
-    public Comment createComment(CommentCreateDto commentCreateDto) {
-        Board board = boardRepository.findById(commentCreateDto.getBoardId())
+    public Comment createComment(Long boardId, CommentCreateDto commentCreateDto) {
+        Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new RuntimeException("게시글 번호를 찾을 수 없음"));
 
         User user = userRepository.findById(commentCreateDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없음"));
 
         Comment comment = new Comment();
-        comment.setBoardId(commentCreateDto.getBoardId());
-        comment.setUserId(commentCreateDto.getUserId());
+        comment.setBoard(board);
+        comment.setUser(user);
         comment.setContent(commentCreateDto.getContent());
         return commentRepository.save(comment);
     }

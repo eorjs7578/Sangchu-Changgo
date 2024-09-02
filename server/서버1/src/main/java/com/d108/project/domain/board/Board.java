@@ -18,24 +18,21 @@ public class Board {
     // ID
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
-    private Long boardId;
+    private Long id;
 
     // 글 제목
-    private String boardTitle;
+    private String title;
 
     // 글 내용
-    private String boardDescription;
+    private String description;
 
     // 조회수
-    private Long boardView;
+    private Long view;
 
     // 유저와 관계 설정 (N:1) ?
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", updatable = false)
     private User user;
-
-    @Column(name = "user_id")
-    private Long userId;
 
     @OneToMany(mappedBy = "board")
     private List<Comment> comments;
@@ -43,21 +40,21 @@ public class Board {
     // 생성 및 수정
     @Column(updatable = false)
     private LocalDateTime createdAt;
-
     @Column
     private LocalDateTime updatedAt;
 
     @Builder
-    public Board(String boardTitle, String boardDescription, Long boardView, Long userId) {
-        this.boardTitle = boardTitle;
-        this.boardDescription = boardDescription;
-        this.boardView = boardView;
-        this.userId = userId;
+    public Board(String title, String description, Long view, User user) {
+        this.title = title;
+        this.description = description;
+        this.view = view;
+        this.user = user;
     }
-    
+
     // 생성 및 수정 자동 설정
     @PrePersist
     protected void onCreate() {
+        this.updatedAt = LocalDateTime.now();
         this.createdAt = LocalDateTime.now();
     }
 

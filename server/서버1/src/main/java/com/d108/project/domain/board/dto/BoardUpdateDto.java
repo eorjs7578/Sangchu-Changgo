@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class BoardUpdateDto {
-    private String boardTitle;
-    private String boardDescription;
+    private String title;
+    private String description;
 }

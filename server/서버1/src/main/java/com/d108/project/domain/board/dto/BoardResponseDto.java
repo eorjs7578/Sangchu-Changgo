@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class BoardResponseDto {
-    private Long boardId;
-    private String boardTitle;
-    private String boardDescription;
-    private Long boardView;
+    private Long id;
+    private String title;
+    private String description;
+    private Long view;
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

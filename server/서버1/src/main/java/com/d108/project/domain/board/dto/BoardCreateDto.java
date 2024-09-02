@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class BoardCreateDto {
-    private String boardTitle;
-    private String boardDescription;
+    private String title;
+    private String description;
     private Long userId;
 }

@@ -35,11 +35,13 @@ public class BoardController {
     }
 
     // 글 작성
-    @PostMapping("/create")
-    public ResponseEntity<Board> createBoard(@RequestBody BoardCreateDto boardCreateDto) {
-        Board board = boardService.createBoard(boardCreateDto);
-        return ResponseEntity.ok(board);
+    // 작성 후에 작성 결과를 보여줄 필요 없음
+    @PostMapping
+    public ResponseEntity<String> createBoard(@RequestBody BoardCreateDto boardCreateDto) {
+        boardService.createBoard(boardCreateDto);
+        return ResponseEntity.ok("게시글 작성 완료");
     }
+
 
     // 특정 글 조회
     @GetMapping("/{boardId}")
@@ -49,10 +51,11 @@ public class BoardController {
     }
 
     // 글 수정
+    // 수정 후에 수정 결과를 보여줄 필요 없음
     @PutMapping("/{boardId}")
-    public ResponseEntity<Board> updateBoard(@PathVariable Long boardId, @RequestBody BoardUpdateDto boardUpdateDto) {
+    public ResponseEntity<String> updateBoard(@PathVariable Long boardId, @RequestBody BoardUpdateDto boardUpdateDto) {
         Board board = boardService.updateBoardById(boardId, boardUpdateDto);
-        return ResponseEntity.ok(board);
+        return ResponseEntity.ok("게시글 수정 완료");
     }
 
     // 글 삭제
@@ -63,10 +66,11 @@ public class BoardController {
     }
 
     // 댓글 생성
+    // 생성 후에 생성 결과를 보여줄 필요 없음
     @PostMapping("/{boardId}/comment")
-    public ResponseEntity<Comment> createComment(@PathVariable Long boardId, @RequestBody CommentCreateDto commentCreateDto) {
-        Comment comment = commentService.createComment(commentCreateDto);
-        return ResponseEntity.ok(comment);
+    public ResponseEntity<String> createComment(@PathVariable Long boardId, @RequestBody CommentCreateDto commentCreateDto) {
+        commentService.createComment(boardId, commentCreateDto);
+        return ResponseEntity.ok("댓글 작성 완료");
     }
 
     // 댓글 삭제

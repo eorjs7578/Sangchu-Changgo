@@ -31,10 +31,10 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("아이디 오류"));
 
         Board board = Board.builder()
-                .boardTitle(boardCreateDto.getBoardTitle())
-                .boardDescription(boardCreateDto.getBoardDescription())
-                .userId(boardCreateDto.getUserId())
-                .boardView(0L)
+                .title(boardCreateDto.getTitle())
+                .description(boardCreateDto.getDescription())
+                .user(user)
+                .view(0L)
                 .build();
 
         return boardRepository.save(board);
@@ -66,8 +66,8 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new RuntimeException("게시글 번호를 찾을 수 없음"));
         
         // 두개만 수정
-        board.setBoardTitle(boardUpdateDto.getBoardTitle());
-        board.setBoardDescription(boardUpdateDto.getBoardDescription());
+        board.setTitle(boardUpdateDto.getTitle());
+        board.setDescription(boardUpdateDto.getDescription());
         
         return boardRepository.save(board);
     }
@@ -82,11 +82,11 @@ public class BoardServiceImpl implements BoardService {
     // Entity -> DTO 변환
     private BoardResponseDto convertToDto(Board board) {
         return BoardResponseDto.builder()
-                .boardId(board.getBoardId())
-                .boardTitle(board.getBoardTitle())
-                .boardDescription(board.getBoardDescription())
-                .boardView(board.getBoardView())
-                .userId(board.getUser().getUserId())        // 여기서 유저의 정보를 같이 가져오면 되지 않나?
+                .id(board.getId())
+                .title(board.getTitle())
+                .description(board.getDescription())
+                .view(board.getView())
+                .userId(board.getUser().getUserId())        // 여기서 유저의 정보를 같이 가져오면 되지 않나? (여기서 getUser().getUsername()을 하면 유저 네임이 DTO에 담김)
                 .createdAt(board.getCreatedAt())
                 .updatedAt(board.getUpdatedAt())
                 .build();
