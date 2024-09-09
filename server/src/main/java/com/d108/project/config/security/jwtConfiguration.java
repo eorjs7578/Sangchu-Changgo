@@ -20,7 +20,7 @@ public class jwtConfiguration {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    // JWT의 유효 기간 (밀리초 단위, application.properties 또는 application.yml에서 주입됨)
+    // JWT의 유효 기간 (밀리초(ms) 단위, application.properties 또는 application.yml에서 주입됨)
     @Value("${jwt.expirationMs}")
     private int jwtExpirationMs;
 
