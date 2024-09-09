@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import com.d108.project.domain.member.entity.Member;
 import io.jsonwebtoken.io.Decoders;
 import java.security.Key;
 import java.util.Date;

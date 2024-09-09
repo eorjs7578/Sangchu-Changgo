@@ -23,6 +23,8 @@ public class LoginCredential extends BaseTimeEntity {
     @NotNull
     private String password;
 
+    private String refreshToken;
+
     @Builder
     public LoginCredential(String username, String password) {
         this.username = username;

@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+// TODO: 로그인 반환값 토큰으로 바꿔서 이것도 고쳐야함
 @DisplayName("회원 관련 기능 테스트")
 class MemberControllerTest {
 
