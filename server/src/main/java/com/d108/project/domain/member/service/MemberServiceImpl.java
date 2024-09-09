@@ -56,10 +56,11 @@ public class MemberServiceImpl implements MemberService {
 
         // 비밀번호 확인
         if (passwordEncoder.matches(memberLoginDto.getPassword(), loginCredential.getPassword())) {
-            return MemberResponseDto.builder()
-                    .username(loginCredential.getUsername())
-                    .nickname(member.getNickname())
-                    .build();
+            return MemberResponseDto.from(member);
+//            return MemberResponseDto.builder()
+//                    .username(loginCredential.getUsername())
+//                    .nickname(member.getNickname())
+//                    .build();
         } else {
             throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
         }
