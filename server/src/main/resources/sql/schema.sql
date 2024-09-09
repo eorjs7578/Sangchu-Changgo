@@ -36,7 +36,6 @@ CREATE TABLE `business_areas` (
                                   `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
                                   `name`	VARCHAR(255)	NOT NULL,
                                   `description`	VARCHAR(255)	NULL,
-                                  `business_area_id` VARCHAR(255) NULL,
                                   PRIMARY KEY (`id`)
 );
 
