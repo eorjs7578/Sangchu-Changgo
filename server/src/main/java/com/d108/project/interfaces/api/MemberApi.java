@@ -1,10 +1,12 @@
 package com.d108.project.interfaces.api;
 
 
+import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
 import com.d108.project.cache.redisToken.dto.TokenResponseDto;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;
+import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,4 +29,10 @@ public interface MemberApi {
 
     @PostMapping("/logout")
     ResponseEntity<Void> logoutMember(String username);
+
+    @GetMapping("/auth-email")
+    ResponseEntity<Void> sendAuthEmail(String email) throws MessagingException;
+
+    @PostMapping("/auth-email")
+    ResponseEntity<Void> checkAuthCode(EmailAuthCheckDto emailAuthCheckDto);
 }
