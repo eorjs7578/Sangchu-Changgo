@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS `members`;
 CREATE TABLE `members` (
                            `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
                            `nickname`	VARCHAR(255)	NOT NULL	COMMENT '미 입력시 아이디를 바탕으로 자동 생성',
+                            `email` VARCHAR(255) NOT NULL,
                            PRIMARY KEY (`id`)
 );
 
@@ -16,6 +17,7 @@ CREATE TABLE `login_credentials` (
                                      `id`	BIGINT	NOT NULL AUTO_INCREMENT COMMENT 'Auto',
                                      `username`	VARCHAR(255)	NOT NULL,
                                      `password`	VARCHAR(255)	NOT NULL,
+                                     `refresh_token` VARCHAR(255),
                                      `created_at` TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
                                      `updated_at`	TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
                                      PRIMARY KEY (`id`)
