@@ -42,13 +42,13 @@ public class SecurityConfiguration {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .sessionManagement(
                         sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(whiteList).permitAll()
-                        .requestMatchers(swaggerWhiteList).permitAll()
-                        .requestMatchers(HttpMethod.GET, whiteListForGet).permitAll()
-                        .anyRequest().authenticated()
-                );
+                .cors(cors -> cors.configurationSource(corsConfigurationSource));
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(whiteList).permitAll()
+//                        .requestMatchers(swaggerWhiteList).permitAll()
+//                        .requestMatchers(HttpMethod.GET, whiteListForGet).permitAll()
+//                        .anyRequest().authenticated()
+//                );
         return http.build();
     }
 }
