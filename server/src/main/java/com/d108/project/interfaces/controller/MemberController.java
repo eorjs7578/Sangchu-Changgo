@@ -38,4 +38,10 @@ public class MemberController implements MemberApi {
     public ResponseEntity<List<MemberResponseDto>> getAllMembers() {
         return ResponseEntity.ok(memberService.getAllMember());
     }
+
+    @Override
+    public ResponseEntity<Void> logoutMember(String username) {
+        memberService.logoutMember(username);
+        return ResponseEntity.ok().build();
+    }
 }

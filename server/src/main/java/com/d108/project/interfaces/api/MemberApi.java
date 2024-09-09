@@ -24,4 +24,7 @@ public interface MemberApi {
 
     @GetMapping
     ResponseEntity<List<MemberResponseDto>> getAllMembers();
+
+    @PostMapping("/logout")
+    ResponseEntity<Void> logoutMember(String username);
 }
