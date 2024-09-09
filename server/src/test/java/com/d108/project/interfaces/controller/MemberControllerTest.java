@@ -1,6 +1,6 @@
 package com.d108.project.interfaces.controller;
 
-import com.d108.project.domain.member.MemberService;
+import com.d108.project.domain.member.service.MemberService;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;
@@ -38,7 +38,7 @@ class MemberControllerTest {
     void 회원가입_성공() {
         // given
         MemberRegisterDto 회원가입요청 = new MemberRegisterDto("sihyun","user123", "password123" );
-        MemberResponseDto 회원가입응답 = new MemberResponseDto(1, "user123", "sihyun");
+        MemberResponseDto 회원가입응답 = new MemberResponseDto(1L, "user123", "sihyun");
 
         회원가입_서비스_모의(회원가입응답);
 
@@ -62,7 +62,7 @@ class MemberControllerTest {
     void 로그인_성공() {
         // given
         MemberLoginDto 로그인요청 = new MemberLoginDto("user123", "password123");
-        MemberResponseDto 로그인응답 = new MemberResponseDto(1, "user123", "sihyun");
+        MemberResponseDto 로그인응답 = new MemberResponseDto(1L, "user123", "sihyun");
 
         로그인_서비스_모의(로그인요청, 로그인응답);
 
@@ -85,8 +85,8 @@ class MemberControllerTest {
     @DisplayName("모든 회원 조회 성공 테스트")
     void 모든회원조회_성공() {
         // given
-        MemberResponseDto 회원1 = new MemberResponseDto(1, "user1", "email1@example.com");
-        MemberResponseDto 회원2 = new MemberResponseDto(2, "user2", "email2@example.com");
+        MemberResponseDto 회원1 = new MemberResponseDto(1L, "user1", "email1@example.com");
+        MemberResponseDto 회원2 = new MemberResponseDto(2L, "user2", "email2@example.com");
         List<MemberResponseDto> 회원목록 = Arrays.asList(회원1, 회원2);
 
         모든회원조회_서비스_모의(회원목록);

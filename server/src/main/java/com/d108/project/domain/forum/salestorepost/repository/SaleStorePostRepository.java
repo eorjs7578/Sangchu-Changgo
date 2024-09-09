@@ -1,7 +1,7 @@
-package com.d108.project.domain.forum.salestorepost.repository;
+package com.d108.project.domain.forum.saleStorePost.repository;
 
-import com.d108.project.domain.forum.salestorepost.domain.SaleStorePost;
+import com.d108.project.domain.forum.saleStorePost.entity.SaleStorePost;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SaleStorePostRepository extends JpaRepository<SaleStorePost, Integer> {
+public interface SaleStorePostRepository extends JpaRepository<SaleStorePost, Long> {
 }

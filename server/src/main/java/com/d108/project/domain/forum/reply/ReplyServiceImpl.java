@@ -1,14 +1,14 @@
 package com.d108.project.domain.forum.reply;
 
-import com.d108.project.domain.forum.post.domain.Post;
+import com.d108.project.domain.forum.post.entity.Post;
 import com.d108.project.domain.forum.post.repository.PostRepository;
-import com.d108.project.domain.forum.reply.domain.Reply;
+import com.d108.project.domain.forum.reply.entity.Reply;
 import com.d108.project.domain.forum.reply.dto.ReplyByMemberIdResponseDto;
 import com.d108.project.domain.forum.reply.dto.ReplyByPostIdResponseDto;
 import com.d108.project.domain.forum.reply.dto.ReplyCreateDto;
 import com.d108.project.domain.forum.reply.dto.ReplyUpdateDto;
 import com.d108.project.domain.forum.reply.repository.ReplyRepository;
-import com.d108.project.domain.member.domain.Member;
+import com.d108.project.domain.member.entity.Member;
 import com.d108.project.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,7 +26,7 @@ public class ReplyServiceImpl implements ReplyService {
     private final PostRepository postRepository;
 
     @Override
-    public void createReply(Integer postId, ReplyCreateDto replyCreateDto) {
+    public void createReply(Long postId, ReplyCreateDto replyCreateDto) {
         Member member = memberRepository.findById(replyCreateDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 사용자 입니다."));
 
@@ -43,7 +43,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
     // 글 기준으로 전체 댓글 조회
     @Override
-    public List<ReplyByPostIdResponseDto> getAllReplyByPostId(Integer postId) {
+    public List<ReplyByPostIdResponseDto> getAllReplyByPostId(Long postId) {
         List<Reply> replyList = replyRepository.findAllByPostId(postId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글이 없습니다."));
 
@@ -53,7 +53,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
     // 유저 기준으로 전체 댓글 조회
     @Override
-    public List<ReplyByMemberIdResponseDto> getAllReplyByMemberId(Integer memberId) {
+    public List<ReplyByMemberIdResponseDto> getAllReplyByMemberId(Long memberId) {
         List<Reply> replyList = replyRepository.findAllByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글이 없습니다."));
 
@@ -63,7 +63,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void updateReply(Integer replyId, Integer memberId, ReplyUpdateDto replyUpdateDto) {
+    public void updateReply(Long replyId, Long memberId, ReplyUpdateDto replyUpdateDto) {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
 
@@ -79,7 +79,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void deleteReply(Integer replyId, Integer memberId) {
+    public void deleteReply(Long replyId, Long memberId) {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
 

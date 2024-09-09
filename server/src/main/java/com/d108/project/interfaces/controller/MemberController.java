@@ -1,6 +1,6 @@
 package com.d108.project.interfaces.controller;
 
-import com.d108.project.domain.member.MemberService;
+import com.d108.project.domain.member.service.MemberService;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;

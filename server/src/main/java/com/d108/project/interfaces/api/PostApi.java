@@ -20,26 +20,26 @@ public interface PostApi {
     ResponseEntity<List<PostResponseDto>> getAllPosts();
 
     @GetMapping("/{postId}")
-    ResponseEntity<PostResponseDto> getPostById(@PathVariable("postId") Integer postId);
+    ResponseEntity<PostResponseDto> getPostById(@PathVariable("postId") Long postId);
 
     @PostMapping
     ResponseEntity<Void> createPost(@RequestBody PostCreateDto postCreateDto);
 
     @PutMapping("/{postId}")
-    ResponseEntity<Void> updatePost(@PathVariable("postId") Integer postId, @RequestParam Integer memberId, @RequestBody PostUpdateDto postUpdateDto);
+    ResponseEntity<Void> updatePost(@PathVariable("postId") Long postId, @RequestParam Long memberId, @RequestBody PostUpdateDto postUpdateDto);
 
     @DeleteMapping("/{postId}")
-    ResponseEntity<Void> deletePost(@PathVariable("postId") Integer postId, @RequestParam Integer memberId);
+    ResponseEntity<Void> deletePost(@PathVariable("postId") Long postId, @RequestParam Long memberId);
 
     @PostMapping("/{postId}/replies")
-    ResponseEntity<Void> createReply(@PathVariable("postId") Integer postId, @RequestBody ReplyCreateDto replyCreateDto);
+    ResponseEntity<Void> createReply(@PathVariable("postId") Long postId, @RequestBody ReplyCreateDto replyCreateDto);
 
     @GetMapping("/{postId}/replies")
-    ResponseEntity<List<ReplyByPostIdResponseDto>> getAllReplyByPostId(@PathVariable("postId") Integer postId);
+    ResponseEntity<List<ReplyByPostIdResponseDto>> getAllReplyByPostId(@PathVariable("postId") Long postId);
 
     @PutMapping("/{postId}/replies/{replyId}")
-    ResponseEntity<Void> updateReply(@PathVariable("postId") Integer postId, @PathVariable("replyId") Integer replyId, @RequestParam Integer memberId, @RequestBody ReplyUpdateDto replyUpdateDto);
+    ResponseEntity<Void> updateReply(@PathVariable("postId") Long postId, @PathVariable("replyId") Long replyId, @RequestParam Long memberId, @RequestBody ReplyUpdateDto replyUpdateDto);
 
     @DeleteMapping("/{postId}/replies/{replyId}")
-    ResponseEntity<Void> deleteReply(@PathVariable("postId") Integer postId, @PathVariable("replyId") Integer replyId, @RequestParam Integer memberId);
+    ResponseEntity<Void> deleteReply(@PathVariable("postId") Long postId, @PathVariable("replyId") Long replyId, @RequestParam Long memberId);
 }

@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class ReplyCreateDto {
-    private Integer memberId;
+    private Long memberId;
     private String content;
 }

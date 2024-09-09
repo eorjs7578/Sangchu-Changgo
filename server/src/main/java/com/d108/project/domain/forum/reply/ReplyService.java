@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface ReplyService {
 
-    void createReply(Integer postId, ReplyCreateDto replyCreateDto);
+    void createReply(Long postId, ReplyCreateDto replyCreateDto);
 
-    List<ReplyByPostIdResponseDto> getAllReplyByPostId(Integer postId);
+    List<ReplyByPostIdResponseDto> getAllReplyByPostId(Long postId);
 
     // 얘는 어디로 붙이지 (MemberApi vs PostApi)
-    List<ReplyByMemberIdResponseDto> getAllReplyByMemberId(Integer memberId);
+    List<ReplyByMemberIdResponseDto> getAllReplyByMemberId(Long memberId);
 
-    void updateReply(Integer replyId, Integer memberId, ReplyUpdateDto replyUpdateDto);
+    void updateReply(Long replyId, Long memberId, ReplyUpdateDto replyUpdateDto);
 
-    void deleteReply(Integer replyId, Integer memberId);
+    void deleteReply(Long replyId, Long memberId);
 }

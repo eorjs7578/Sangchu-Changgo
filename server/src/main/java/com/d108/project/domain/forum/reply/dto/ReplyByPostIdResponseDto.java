@@ -1,11 +1,11 @@
 package com.d108.project.domain.forum.reply.dto;
 
-import com.d108.project.domain.forum.reply.domain.Reply;
+import com.d108.project.domain.forum.reply.entity.Reply;
 import lombok.Builder;
 
 @Builder
 public class ReplyByPostIdResponseDto {
-    private Integer memberId;
+    private Long memberId;
     private String content;
 
     public static ReplyByPostIdResponseDto from(Reply reply) {
