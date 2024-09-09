@@ -3,7 +3,6 @@ package com.d108.project.cache.redisEmail;
 public interface RedisEmailService {
 
     /**
-     *
      * 레디스에 저장된 인증번호와 입력된 인증번호를 비교
      * <br>
      * 이메일 인증 버튼 누르면 시작될 함수
