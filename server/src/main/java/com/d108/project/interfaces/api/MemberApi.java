@@ -1,6 +1,7 @@
 package com.d108.project.interfaces.api;
 
 
+import com.d108.project.cache.redisToken.dto.TokenResponseDto;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;
@@ -16,11 +17,14 @@ import java.util.List;
 public interface MemberApi {
 
     @PostMapping("/signup")
-    ResponseEntity<MemberResponseDto> registerMember(@RequestBody MemberRegisterDto memberRegisterDto);
+    ResponseEntity<Void> registerMember(@RequestBody MemberRegisterDto memberRegisterDto);
 
     @PostMapping("/login")
-    ResponseEntity<MemberResponseDto> loginMember(@RequestBody MemberLoginDto memberLoginDto);
+    ResponseEntity<TokenResponseDto> loginMember(@RequestBody MemberLoginDto memberLoginDto);
 
     @GetMapping
     ResponseEntity<List<MemberResponseDto>> getAllMembers();
+
+    @PostMapping("/logout")
+    ResponseEntity<Void> logoutMember(String username);
 }

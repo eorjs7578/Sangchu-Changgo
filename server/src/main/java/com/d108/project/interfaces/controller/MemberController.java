@@ -1,5 +1,6 @@
 package com.d108.project.interfaces.controller;
 
+import com.d108.project.cache.redisToken.dto.TokenResponseDto;
 import com.d108.project.domain.member.service.MemberService;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
@@ -22,24 +23,25 @@ public class MemberController implements MemberApi {
     }
 
     @Override
-    public ResponseEntity<MemberResponseDto> registerMember(MemberRegisterDto memberRegisterDto) {
+    public ResponseEntity<Void> registerMember(MemberRegisterDto memberRegisterDto) {
         memberService.registerMember(memberRegisterDto);
-
-        MemberLoginDto memberLoginDto = MemberLoginDto.builder()
-                .username(memberRegisterDto.getUsername())
-                .password(memberRegisterDto.getPassword())
-                .build();
-        // 바로 로그인
-        return ResponseEntity.ok(memberService.loginMember(memberLoginDto));
+        // 바로 로그인하지말자
+        return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<MemberResponseDto> loginMember(MemberLoginDto memberLoginDto) {
+    public ResponseEntity<TokenResponseDto> loginMember(MemberLoginDto memberLoginDto) {
         return ResponseEntity.ok(memberService.loginMember(memberLoginDto));
     }
 
     @Override
     public ResponseEntity<List<MemberResponseDto>> getAllMembers() {
         return ResponseEntity.ok(memberService.getAllMember());
+    }
+
+    @Override
+    public ResponseEntity<Void> logoutMember(String username) {
+        memberService.logoutMember(username);
+        return ResponseEntity.ok().build();
     }
 }

@@ -28,6 +28,11 @@ spring:
     redis:
       host: localhost
       port: 6379
-jwt:
-  expirationMs: 86400000 #1일
-  secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+
+  jwt:
+    salt: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+    # 코드 내부에서 1000ms 곱해서 사용
+    access-token:
+      expire-time: 60 * 60       # 60sec * 60min
+    refresh-token:
+      expire-time: 60 * 60 * 24  # 60sec * 60min * 24hour

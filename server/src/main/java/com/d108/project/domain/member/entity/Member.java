@@ -21,6 +21,8 @@ public class Member extends LoginCredential{
 
     private String nickname;
 
+    private String email;
+
     // 관심 상권
     @OneToMany(mappedBy = "member")
     private List<FavoriteBusinessArea> favoriteBusinessAreas = new ArrayList<>();
