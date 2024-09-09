@@ -19,7 +19,7 @@ public class BusinessArea {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    // 주소
+    // 이름
     private String name;
     
     // 설명
