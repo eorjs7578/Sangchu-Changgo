@@ -1,4 +1,4 @@
-ackage com.d108.project.config.security;
+package com.d108.project.config.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import com.d108.project.domain.member.domain.Member;
+import com.d108.project.domain.member.entity.Member;
 import io.jsonwebtoken.io.Decoders;
 import java.security.Key;
 import java.util.Date;
@@ -20,7 +20,7 @@ public class jwtConfiguration {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    // JWT의 유효 기간 (밀리초(ms) 단위, application.properties 또는 application.yml에서 주입됨)
+    // JWT의 유효 기간 (밀리초 단위, application.properties 또는 application.yml에서 주입됨)
     @Value("${jwt.expirationMs}")
     private int jwtExpirationMs;
 

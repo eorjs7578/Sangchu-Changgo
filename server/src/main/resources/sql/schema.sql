@@ -5,7 +5,7 @@
 DROP TABLE IF EXISTS `members`;
 
 CREATE TABLE `members` (
-                           `id`	INTEGER	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
+                           `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
                            `nickname`	VARCHAR(255)	NOT NULL	COMMENT '미 입력시 아이디를 바탕으로 자동 생성',
                            PRIMARY KEY (`id`)
 );
@@ -13,7 +13,7 @@ CREATE TABLE `members` (
 DROP TABLE IF EXISTS `login_credentials`;
 
 CREATE TABLE `login_credentials` (
-                                     `id`	INTEGER	NOT NULL AUTO_INCREMENT COMMENT 'Auto',
+                                     `id`	BIGINT	NOT NULL AUTO_INCREMENT COMMENT 'Auto',
                                      `username`	VARCHAR(255)	NOT NULL,
                                      `password`	VARCHAR(255)	NOT NULL,
                                      `created_at` TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
@@ -24,18 +24,16 @@ CREATE TABLE `login_credentials` (
 DROP TABLE IF EXISTS `boards`;
 
 CREATE TABLE `boards` (
-                          `id`	INTEGER	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
-                          `business_area_id`	INTEGER	NOT NULL	COMMENT 'Auto',
-                          `franchise_id`	INTEGER	NOT NULL	COMMENT 'Auto',
-                          `title`	VARCHAR(255)	NOT NULL,
-                          `content`	VARCHAR(255)	NULL,
+                          `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
+                          `business_area_id`	BIGINT	NOT NULL	COMMENT 'Auto',
+                          `franchise_id`	BIGINT	NOT NULL	COMMENT 'Auto',
                           PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `business_areas`;
 
 CREATE TABLE `business_areas` (
-                                  `id`	INTEGER	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
+                                  `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
                                   `name`	VARCHAR(255)	NOT NULL,
                                   `description`	VARCHAR(255)	NULL,
                                   `business_area_id` VARCHAR(255) NULL,
@@ -45,9 +43,9 @@ CREATE TABLE `business_areas` (
 DROP TABLE IF EXISTS `favorite_business_areas`;
 
 CREATE TABLE `favorite_business_areas` (
-                                           `id`	INTEGER	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
-                                           `member_id`	INTEGER	NOT NULL	COMMENT 'Auto',
-                                           `business_area_id`	INTEGER	NOT NULL	COMMENT 'Auto',
+                                           `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
+                                           `member_id`	BIGINT	NOT NULL	COMMENT 'Auto',
+                                           `business_area_id`	BIGINT	NOT NULL	COMMENT 'Auto',
                                            `created_at` TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
                                            `updated_at`	TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
                                            PRIMARY KEY (`id`)
@@ -56,9 +54,9 @@ CREATE TABLE `favorite_business_areas` (
 DROP TABLE IF EXISTS `replies`;
 
 CREATE TABLE `replies` (
-                           `id`	INTEGER	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
-                           `member_id`	INTEGER	NOT NULL	COMMENT 'Auto',
-                           `post_id`	INTEGER	NOT NULL	COMMENT 'Auto',
+                           `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
+                           `member_id`	BIGINT	NOT NULL	COMMENT 'Auto',
+                           `post_id`	BIGINT	NOT NULL	COMMENT 'Auto',
                            `content`	VARCHAR(255)	NOT NULL,
                            `created_at` TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
                            `updated_at`	TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
@@ -68,12 +66,12 @@ CREATE TABLE `replies` (
 DROP TABLE IF EXISTS `sale_store_posts`;
 
 CREATE TABLE `sale_store_posts` (
-                                    `id`	INTEGER	NOT NULL	COMMENT 'Auto',
+                                    `id`	BIGINT	NOT NULL	COMMENT 'Auto',
                                     `revenue`	BIGINT	NULL,
                                     `startup_price`	BIGINT	NULL,
                                     `rental_price`	BIGINT	NULL,
-                                    `size`	INTEGER	NULL,
-                                    `view`	INTEGER	NULL,
+                                    `size`	BIGINT	NULL,
+                                    `view`	BIGINT	NULL,
                                     `nearby_price`	VARCHAR(255)	NULL,
                                     `type`	VARCHAR(255)	NULL,
                                     `age_group`	VARCHAR(255)	NULL,
@@ -86,7 +84,7 @@ CREATE TABLE `sale_store_posts` (
 DROP TABLE IF EXISTS `franchises`;
 
 CREATE TABLE `franchises` (
-                              `id`	INTEGER	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
+                              `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
                               `name`	VARCHAR(255)	NOT NULL,
                               `description`	VARCHAR(255)	NULL,
                               PRIMARY KEY (`id`)
@@ -95,9 +93,9 @@ CREATE TABLE `franchises` (
 DROP TABLE IF EXISTS `favorite_franchises`;
 
 CREATE TABLE `favorite_franchises` (
-                                       `id`	INTEGER	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
-                                       `member_id`	INTEGER	NOT NULL	COMMENT 'Auto',
-                                       `franchise_id`	INTEGER	NOT NULL	COMMENT 'Auto',
+                                       `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
+                                       `member_id`	BIGINT	NOT NULL	COMMENT 'Auto',
+                                       `franchise_id`	BIGINT	NOT NULL	COMMENT 'Auto',
                                        `created_at` TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
                                        `updated_at`	TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
                                        PRIMARY KEY (`id`)
@@ -106,11 +104,11 @@ CREATE TABLE `favorite_franchises` (
 DROP TABLE IF EXISTS `posts`;
 
 CREATE TABLE `posts` (
-                         `id`	INTEGER	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
-                         `board_id`	INTEGER	NOT NULL	COMMENT 'Auto',
-                         `member_id`	INTEGER	NOT NULL	COMMENT 'Auto',
+                         `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
+                         `board_id`	BIGINT	NOT NULL	COMMENT 'Auto',
+                         `member_id`	BIGINT	NOT NULL	COMMENT 'Auto',
                          `title`	VARCHAR(255)	NOT NULL,
-                         `view` INTEGER NOT NULL,
+                         `view` BIGINT NOT NULL,
                          `content`	VARCHAR(255)	NULL,
                          `created_at` TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
                          `updated_at`	TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
@@ -120,9 +118,9 @@ CREATE TABLE `posts` (
 DROP TABLE IF EXISTS `franchise_evaluations`;
 
 CREATE TABLE `franchise_evaluations` (
-                                         `id`	INTEGER	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
-                                         `franchise_id`	INTEGER	NOT NULL	COMMENT 'Auto',
-                                         `member_id`	INTEGER	NOT NULL	COMMENT 'Auto',
+                                         `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
+                                         `franchise_id`	BIGINT	NOT NULL	COMMENT 'Auto',
+                                         `member_id`	BIGINT	NOT NULL	COMMENT 'Auto',
                                          `age_group`	VARCHAR(255)	NOT NULL,
                                          `foot_traffic`	VARCHAR(255)	NOT NULL,
                                          `atmosphere`	VARCHAR(255)	NOT NULL,
@@ -135,9 +133,9 @@ CREATE TABLE `franchise_evaluations` (
 DROP TABLE IF EXISTS `business_area_evaluations`;
 
 CREATE TABLE `business_area_evaluations` (
-                                             `id`	INTEGER	NOT NULL AUTO_INCREMENT COMMENT 'Auto',
-                                             `business_area_id`	INTEGER	NOT NULL	COMMENT 'Auto',
-                                             `member_id`	INTEGER	NOT NULL	COMMENT 'Auto',
+                                             `id`	BIGINT	NOT NULL AUTO_INCREMENT COMMENT 'Auto',
+                                             `business_area_id`	BIGINT	NOT NULL	COMMENT 'Auto',
+                                             `member_id`	BIGINT	NOT NULL	COMMENT 'Auto',
                                              `age_group`	VARCHAR(255)	NOT NULL,                                             `Field`	VARCHAR(255)	NOT NULL,
                                              `created_at` TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),
                                              `updated_at`	TIMESTAMP NOT NULL DEFAULT CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'),

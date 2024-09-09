@@ -28,9 +28,9 @@ import java.util.Arrays;
                 @Server(url = "/", description = "API 서버")
         },
         tags = {
-                @Tag(name = "게시판"),
-                @Tag(name = "상권"),
-                @Tag(name = "상권 평가"),
+//                @Tag(name = "게시판"),
+//                @Tag(name = "상권"),
+//                @Tag(name = "상권 평가"),
         }
 )
 public class SwaggerConfiguration {

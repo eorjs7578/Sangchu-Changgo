@@ -1,6 +1,6 @@
 package com.d108.project.domain.member.dto;
 
-import com.d108.project.domain.member.domain.Member;
+import com.d108.project.domain.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class MemberResponseDto {
-    private Integer id;
+    private Long id;
     private String username;
     private String nickname;
 

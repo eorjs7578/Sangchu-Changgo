@@ -1,6 +1,6 @@
 package com.d108.project.interfaces.controller;
 
-import com.d108.project.domain.forum.post.PostService;
+import com.d108.project.domain.forum.post.service.PostService;
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
 import com.d108.project.domain.forum.post.dto.PostDeleteDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
@@ -27,7 +27,7 @@ public class PostController implements PostApi {
 
     @Override
     public ResponseEntity<Void> createPost(PostCreateDto postCreateDto) {
-        Integer postId = postService.createPost(postCreateDto);
+        Long postId = postService.createPost(postCreateDto);
 
         // createPost 에서 글 번호 받아서, 글 번호로 redirect URL 전달하기
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -39,13 +39,13 @@ public class PostController implements PostApi {
     }
 
     @Override
-    public ResponseEntity<Void> updatePost(Integer postId, Integer memberId, PostUpdateDto postUpdateDto) {
+    public ResponseEntity<Void> updatePost(Long postId, Long memberId, PostUpdateDto postUpdateDto) {
         postService.updatePostById(postId, memberId, postUpdateDto);
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<PostResponseDto> getPostById(Integer postId) {
+    public ResponseEntity<PostResponseDto> getPostById(Long postId) {
         return ResponseEntity.ok(postService.getPostById(postId));
     }
 
@@ -55,30 +55,30 @@ public class PostController implements PostApi {
     }
 
     @Override
-    public ResponseEntity<Void> deletePost(Integer postId, Integer memberId) {
+    public ResponseEntity<Void> deletePost(Long postId, Long memberId) {
         postService.deletePostById(postId, memberId);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<Void> createReply(Integer postId, ReplyCreateDto replyCreateDto) {
+    public ResponseEntity<Void> createReply(Long postId, ReplyCreateDto replyCreateDto) {
         replyService.createReply(postId, replyCreateDto);
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<List<ReplyByPostIdResponseDto>> getAllReplyByPostId(Integer postId) {
+    public ResponseEntity<List<ReplyByPostIdResponseDto>> getAllReplyByPostId(Long postId) {
         return ResponseEntity.ok(replyService.getAllReplyByPostId(postId));
     }
 
     @Override
-    public ResponseEntity<Void> updateReply(Integer postId, Integer replyId, Integer memberId, ReplyUpdateDto replyUpdateDto) {
+    public ResponseEntity<Void> updateReply(Long postId, Long replyId, Long memberId, ReplyUpdateDto replyUpdateDto) {
         replyService.updateReply(replyId, memberId, replyUpdateDto);
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<Void> deleteReply(Integer postId, Integer replyId, Integer memberId) {
+    public ResponseEntity<Void> deleteReply(Long postId, Long replyId, Long memberId) {
         replyService.deleteReply(replyId, memberId);
         return ResponseEntity.noContent().build();
     }
