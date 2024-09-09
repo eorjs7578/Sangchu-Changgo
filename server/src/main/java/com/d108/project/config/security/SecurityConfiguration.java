@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -20,10 +21,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
         securedEnabled = true,
         jsr250Enabled = true)
 public class SecurityConfiguration {
+    private final String API_PREFIX = "/api";
+
     private final CorsConfigurationSource corsConfigurationSource;
 
     private final String[] whiteList = {
-            "/members/signup", "/members/login"
+            API_PREFIX + "/members/signup", API_PREFIX + "/members/login"
     };
 
     private final String[] swaggerWhiteList = {
@@ -31,15 +34,15 @@ public class SecurityConfiguration {
     };
 
     private final String[] whiteListForGet = {
-            "/posts/*,","/posts"
+            API_PREFIX + "/posts/*,", API_PREFIX + "/posts"
     };
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .httpBasic(httpBasic -> httpBasic.disable())
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(
                         sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource));

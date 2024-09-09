@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/favorite/franchises")
+@RequestMapping("/api/favorite/franchises")
 public interface FavoriteFranchiseApi {
 
     @GetMapping("/list")

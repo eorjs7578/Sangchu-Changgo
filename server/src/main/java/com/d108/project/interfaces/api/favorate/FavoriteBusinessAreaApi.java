@@ -2,11 +2,10 @@ package com.d108.project.interfaces.api.favorate;
 
 import com.d108.project.domain.businessArea.dto.BusinessAreaListDto;
 import com.d108.project.domain.favorite.favoriteBusinessArea.dto.FavoriteBusinessAreaRequestDto;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/favorite/business-areas")
+@RequestMapping("/api/favorite/business-areas")
 public interface FavoriteBusinessAreaApi {
 
     @GetMapping("/list")
