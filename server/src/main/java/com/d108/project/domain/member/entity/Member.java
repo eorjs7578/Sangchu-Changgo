@@ -14,6 +14,7 @@ import java.util.List;
 @Setter(value = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "members")
+@ToString(exclude = {"favoriteBusinessAreas", "favoriteFranchises"})
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id") // 상속받은 엔티티의 기본 키를 지정
 public class Member extends LoginCredential{
@@ -27,10 +28,12 @@ public class Member extends LoginCredential{
     @OneToMany(mappedBy = "member")
     private List<FavoriteFranchise> favoriteFranchises = new ArrayList<>();
 
-    public static Member createMember(MemberRegisterDto memberRegisterDto) {
+    public static Member createMember(MemberRegisterDto memberRegisterDto, String passwordEncode) {
         Member member = new Member();
         member.setNickname(memberRegisterDto.getNickname());
 
+        member.setUsername(memberRegisterDto.getUsername());
+        member.setPassword(passwordEncode);
         return member;
     }
 }

@@ -29,17 +29,19 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void registerMember (MemberRegisterDto memberRegisterDto) {
         // 회원가입 로직
+        String passwordEncode = passwordEncoder.encode(memberRegisterDto.getPassword());
         LoginCredential loginCredential = LoginCredential.builder()
                 .username(memberRegisterDto.getUsername())
                 // 비밀번호 암호화
-                .password(passwordEncoder.encode(memberRegisterDto.getPassword()))
+                .password(passwordEncode)
                 .build();
 
         // Member 생성 로직
-        Member member = Member.createMember(memberRegisterDto);
+        Member member = Member.createMember(memberRegisterDto, passwordEncode);
 
-        // 자격 증명 저장
-        loginCredentialRepository.save(loginCredential);
+        // 자격 증명 저장 (상속으로 인해서 자동으로 저장)
+//        loginCredentialRepository.save(loginCredential);
+
         // 회원 정보 저장
         memberRepository.save(member);
     }

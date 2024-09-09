@@ -2,15 +2,14 @@ package com.d108.project.domain.loginCredential.entity;
 
 import com.d108.project.domain.global.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Entity
 @Table(name = "login_credentials")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED) // 상속 전략 설정
 public class LoginCredential extends BaseTimeEntity {
@@ -18,7 +17,10 @@ public class LoginCredential extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String username;
+
+    @NotNull
     private String password;
 
     @Builder

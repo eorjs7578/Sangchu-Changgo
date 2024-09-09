@@ -22,12 +22,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfiguration {
     private final CorsConfigurationSource corsConfigurationSource;
 
-    private final String[] swaggerWhiteList = {
-            "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error",
+    private final String[] whiteList = {
+            "/members/signup", "/members/login"
     };
 
-    private final String[] whiteList = {
-            "/members/signup,", "/members/login,"
+    private final String[] swaggerWhiteList = {
+            "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error",
     };
 
     private final String[] whiteListForGet = {
