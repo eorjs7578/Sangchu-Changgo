@@ -38,8 +38,8 @@ class MemberControllerTest {
     @DisplayName("회원가입 성공 테스트")
     void 회원가입_성공() {
         // given
-        MemberRegisterDto 회원가입요청 = new MemberRegisterDto("sihyun","user123", "password123" );
-        MemberResponseDto 회원가입응답 = new MemberResponseDto(1L, "user123", "sihyun");
+        MemberRegisterDto 회원가입요청 = new MemberRegisterDto("sihyun","user123", "password123");
+        MemberResponseDto 회원가입응답 = new MemberResponseDto(1L, "user123", "sihyun", "test@test.com");
 
         회원가입_서비스_모의(회원가입응답);
 

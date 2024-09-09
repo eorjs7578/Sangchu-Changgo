@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,22 +31,37 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final RedisTokenService redisTokenService;
 
+
+    // 이메일 정규표현식(aaa@a~)
+    private static final String EMAIL_PATTERN = "^[A-Za-z0-9]+@(.+)$";
+    // 비밀번호 정규표현식(8자 이상, 숫자 1, 특수문자 1 포함)
+    private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,}$";
+    // 닉네임 정규표현식
+    private static final String NICKNAME_PATTERN = "^(?!.*[ㄱ-ㅎㅏ-ㅣ])[A-Za-z0-9가-힣]{1,10}$";
+
     @Override
     @Transactional
-    public void registerMember (MemberRegisterDto memberRegisterDto) {
+    public void registerMember(MemberRegisterDto memberRegisterDto) {
         // 회원가입 로직
+        // 이거 프론트에서만 하면 안되나..
+        String email = memberRegisterDto.getEmail();
+        String password = memberRegisterDto.getPassword();
+        String nickname = memberRegisterDto.getNickname();
+        String username = memberRegisterDto.getUsername();
+
+        // 1. 정규 표현식을 통한 유효성 검증
+        isValidate(email, password, nickname);
+        // 2. 중복 검증
+        isNicknameDuplicated(nickname);
+        isEmailDuplicated(email);
+        isUsernameDuplicated(username);
+        // 3. 이메일 중복 검사는 따로 하고 프론트에서 고정 시키면 될듯
+
+
         String passwordEncode = passwordEncoder.encode(memberRegisterDto.getPassword());
-//        LoginCredential loginCredential = LoginCredential.builder()
-//                .username(memberRegisterDto.getUsername())
-//                // 비밀번호 암호화
-//                .password(passwordEncode)
-//                .build();
 
         // Member 생성 로직
         Member member = Member.createMember(memberRegisterDto, passwordEncode);
-
-        // 자격 증명 저장 (상속으로 인해서 자동으로 저장)
-        // loginCredentialRepository.save(loginCredential);
 
         // 회원 정보 저장
         memberRepository.save(member);
@@ -75,11 +91,40 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
-    // 로그아웃 시 레디스에서 나가
+    // 로그아웃 시 레디스에서 삭제
     @Override
     public void logoutMember(String username) {
         if (redisUtil.getData(username) != null) {
             redisUtil.deleteData(username);
+        }
+    }
+
+    // 유효성 검증 함수
+    private void isValidate(String email, String password, String nickname) {
+        if (!Pattern.matches(EMAIL_PATTERN, email)) {
+            throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다.");
+        } else if (!Pattern.matches(NICKNAME_PATTERN, nickname)) {
+            throw new IllegalArgumentException("유효하지 않은 닉네임 형식입니다.");
+        } else if (!Pattern.matches(PASSWORD_PATTERN, password)) {
+            throw new IllegalArgumentException("유효하지 않은 비밀번호 형식입니다.");
+        }
+    }
+
+    private void isEmailDuplicated(String email) {
+        if (memberRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
+    }
+
+    private void isNicknameDuplicated(String nickname) {
+        if (memberRepository.findByNickname(nickname).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+        }
+    }
+
+    private void isUsernameDuplicated(String username) {
+        if (loginCredentialRepository.findByUsername(username).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
     }
 }
