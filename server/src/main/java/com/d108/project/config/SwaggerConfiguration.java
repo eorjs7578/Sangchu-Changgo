@@ -10,15 +10,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Arrays;
-
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
                 title = "창업레츠고 백엔드 API 명세서",
                 description = """
-                        창업레츠고 백엔드 API 명세입니다.<br>
                         <h2>401: 만료된 토큰 or 유효하지 않은 토큰 사용</h2>
+                        <h2>403: 사용자 권한 없음</h2>
                         <h2>404: 잘못된 입력</h2>
                         <h2>500: 서버에러</h2>
                         """,
@@ -28,9 +26,8 @@ import java.util.Arrays;
                 @Server(url = "/", description = "API 서버")
         },
         tags = {
-//                @Tag(name = "게시판"),
-//                @Tag(name = "상권"),
-//                @Tag(name = "상권 평가"),
+                @Tag(name = "관심 상권"),
+                @Tag(name = "관심 프랜차이즈"),
         }
 )
 public class SwaggerConfiguration {
@@ -46,7 +43,7 @@ public class SwaggerConfiguration {
         return new ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE));
     }
 
-    //    @Bean
+//    @Bean
 //    public OpenAPI openAPI() {
 //        //jwt 토큰 자동추가 설정
 //        SecurityScheme securityScheme = new SecurityScheme()
