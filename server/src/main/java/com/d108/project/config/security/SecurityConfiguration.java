@@ -19,8 +19,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
         securedEnabled = true,
         jsr250Enabled = true)
 public class SecurityConfiguration {
-    private static final String API_PREFIX = "/api/v1";
-
     private final CorsConfigurationSource corsConfigurationSource;
 
     private final String[] swaggerWhiteList = {
