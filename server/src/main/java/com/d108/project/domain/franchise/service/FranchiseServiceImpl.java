@@ -14,6 +14,6 @@ public class FranchiseServiceImpl implements FranchiseService {
     @Override
     public FranchiseListDto getFranchiseList(List<Long> franchiseIds) {
         List<Franchise> franchises = franchiseRepository.findAllById(franchiseIds);
-        return FranchiseListDto.to(franchises);
+        return FranchiseListDto.createFranchiseListDto(franchises);
     }
 }
