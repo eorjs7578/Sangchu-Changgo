@@ -1,0 +1,3 @@
+[submodule "server/submodule"]
+	path = server/submodule
+	url = https://lab.ssafy.com/si4018/d108_secret.git
