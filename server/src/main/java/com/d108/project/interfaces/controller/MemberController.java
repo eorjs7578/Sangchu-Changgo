@@ -2,6 +2,7 @@ package com.d108.project.interfaces.controller;
 
 import com.d108.project.cache.redisEmail.RedisEmailService;
 import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
+import com.d108.project.cache.redisEmail.dto.MailSendRequestDto;
 import com.d108.project.cache.redisToken.dto.TokenResponseDto;
 import com.d108.project.domain.member.service.MemberService;
 import com.d108.project.domain.member.dto.MemberLoginDto;

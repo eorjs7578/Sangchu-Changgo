@@ -35,15 +35,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         // 여기는 토큰이 필요하지 않은 API URL의 리스트
         List<String> list = Arrays.asList(
                 "/members/login",
-                "/members/signup"
+                "/members/signup",
+                "/members/auth-email"
         );
-        log.info("jwtfilter");
         // 토큰이 필요하지 않은 API의 경우 로직 처리 없이 다음 필터로 이동한다.
-        if (list.contains(request.getRequestURI())) {
+
+        String requestURI = request.getRequestURI();
+        if (list.stream().anyMatch(requestURI::startsWith)) {
             filterChain.doFilter(request, response);
             return;
         }
-
         // 3. OPTIONS 요청일 경우 -> 로직 처리 없이 다음 필터로 이동
         if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
             filterChain.doFilter(request, response);

@@ -25,6 +25,9 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
         if (request.getRequestURI().equals("/favicon.ico")) {
             return true;
         }
+        if (request.getRequestURI().startsWith("/members")) {
+            return true;
+        }
         // TODO: 나는 레디스에서 가져와야한다
         String accessToken = null;
         String refreshToken = null;

@@ -7,6 +7,7 @@ import com.d108.project.config.security.handler.CustomAuthSuccessHandler;
 import com.d108.project.config.security.util.JwtUtil;
 import com.d108.project.domain.security.SecurityUserDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,11 +48,10 @@ public class SecurityConfiguration {
 
     private final String API_PREFIX = "/api";
 
-
     private final JwtUtil jwtUtil;
 
     private final String[] whiteList = {
-            API_PREFIX + "/members/signup", API_PREFIX + "/members/login"
+            "/members/auth-email", API_PREFIX + "/members/signup", API_PREFIX + "/members/login", API_PREFIX + "/members/auth-email"
     };
 
     private final String[] swaggerWhiteList = {
