@@ -1,4 +1,4 @@
-package com.d108.project.interfaces.api;
+package com.d108.project.interfaces.api.forum;
 
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;

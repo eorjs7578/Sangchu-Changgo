@@ -1,10 +1,10 @@
-package com.d108.project.interfaces.controller;
+package com.d108.project.interfaces.controller.forum;
 
 import com.d108.project.domain.forum.post.service.PostService;
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
-import com.d108.project.interfaces.api.PostApi;
+import com.d108.project.interfaces.api.forum.PostApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
