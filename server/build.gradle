@@ -74,5 +74,14 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+task copyYML(type: Copy) {
+	copy {
+		from './submodule'
+		include "*.yml"
+		into 'src/main/resources'
+	}
+}
+
+
 // 분리된 설정 파일 포함
 apply from: 'querydsl.gradle'
