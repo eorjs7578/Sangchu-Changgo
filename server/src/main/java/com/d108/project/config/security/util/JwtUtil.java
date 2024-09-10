@@ -1,4 +1,4 @@
-package com.d108.project.config.security;
+package com.d108.project.config.security.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -6,14 +6,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.io.Decoders;
+
 import java.security.Key;
 import java.util.Date;
 
 @Component
-public class JwtConfiguration {
+public class JwtUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtConfiguration.class);
+    @Value("${spring.jwt.access-token.expire-time}")
+    public Long ACCESS_TOKEN_EXPIRE;
+    @Value("${spring.jwt.refresh-token.expire-time}")
+    public Long REFRESH_TOKEN_EXPIRE;
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     // JWT 서명에 사용할 비밀키 (application.properties 또는 application.yml에서 주입됨)
     @Value("${spring.jwt.salt}")
@@ -42,7 +47,7 @@ public class JwtConfiguration {
 
     // 주어진 JWT 토큰을 검증하는 메서드
     // 토큰이 유효하면 true를 반환하고, 그렇지 않으면 관련 예외를 처리함
-    public boolean validateToken(String token) {
+    public boolean isTokenValid(String token) {
         try {
             Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
