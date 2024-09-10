@@ -18,9 +18,9 @@ public class RedisTokenServiceImpl implements RedisTokenService {
     private static final String REDIS_ACCESS_TOKEN_PREFIX = "auth:accessToken:";
 
     @Value("${spring.jwt.access-token.expire-time}")
-    private static Long ACCESS_TOKEN_EXPIRE;
+    private Long ACCESS_TOKEN_EXPIRE;
     @Value("${spring.jwt.refresh-token.expire-time}")
-    private static Long REFRESH_TOKEN_EXPIRE;
+    private Long REFRESH_TOKEN_EXPIRE;
     private final LoginCredentialRepository loginCredentialRepository;
 
     // 토큰을 새로 만드는 경우 (로그인 시)
@@ -38,7 +38,6 @@ public class RedisTokenServiceImpl implements RedisTokenService {
                 .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 회원입니다."));
         loginCredential.setRefreshToken(refreshToken);
         loginCredentialRepository.save(loginCredential);
-
         return TokenResponseDto.from(refreshToken,accessToken);
     }
     

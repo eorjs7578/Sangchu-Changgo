@@ -33,6 +33,6 @@ spring:
     salt: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
     # 코드 내부에서 1000ms 곱해서 사용
     access-token:
-      expire-time: 60 * 60       # 60sec * 60min
+      expire-time: 3600       # 60sec * 60min
     refresh-token:
-      expire-time: 60 * 60 * 24  # 60sec * 60min * 24hour
+      expire-time: 864000     # 60sec * 60min * 24hour

@@ -19,13 +19,16 @@ public class JwtConfiguration {
     @Value("${spring.jwt.salt}")
     private String jwtSecret;
 
-    // 서명 키를 생성하는 메서드
-    // Base64로 인코딩된 비밀키를 디코딩하여 Key 객체를 반환함
+//    // 서명 키를 생성하는 메서드
+//    // Base64로 인코딩된 비밀키를 디코딩하여 Key 객체를 반환함
+//    private Key getSigningKey() {
+//        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+//        return Keys.hmacShaKeyFor(keyBytes);
+//    }
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        // 키 생성 방식 변경
+        return Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
-
     // 주어진 Member 객체를 기반으로 JWT 토큰을 생성하는 메서드
     // 토큰에는 사용자의 사용자 이름(subject), 발행 시간, 만료 시간이 포함됨
     public String generateToken(String username, Long expireTime) {
