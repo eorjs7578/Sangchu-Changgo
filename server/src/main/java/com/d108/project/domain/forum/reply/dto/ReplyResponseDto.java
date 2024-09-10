@@ -6,15 +6,15 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public class ReplyByMemberIdResponseDto {
-    private Long postId;
+public class ReplyResponseDto {
+    private Long memberId;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static ReplyByMemberIdResponseDto from(Reply reply) {
-        return ReplyByMemberIdResponseDto.builder()
-                .postId(reply.getPost().getId())
+    public static ReplyResponseDto from(Reply reply) {
+        return ReplyResponseDto.builder()
+                .memberId(reply.getMember().getId())
                 .content(reply.getContent())
                 .createdAt(reply.getCreatedAt())
                 .updatedAt(reply.getUpdatedAt())
