@@ -1,12 +1,12 @@
 package com.d108.project.domain.member.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class MemberLoginDto {
     private String username;
     private String password;

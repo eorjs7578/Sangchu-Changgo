@@ -1,8 +1,12 @@
 package com.d108.project.cache.redisToken.dto;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Builder
+@Getter
+@Setter
 public class TokenResponseDto {
     private String refreshToken;
     private String accessToken;

@@ -1,6 +1,7 @@
 package com.d108.project.domain.forum.post.entity;
 
 import com.d108.project.domain.forum.board.entity.Board;
+import com.d108.project.domain.forum.reply.entity.Reply;
 import com.d108.project.domain.global.BaseTimeEntity;
 import com.d108.project.domain.member.entity.Member;
 import jakarta.persistence.*;
@@ -8,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 
 @Entity
@@ -28,6 +31,10 @@ public class Post extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", updatable = false)
     private Member member;
+
+    // 댓글 역참조
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reply> replies;
 
     private String title;
     private String content;

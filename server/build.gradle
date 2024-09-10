@@ -68,6 +68,10 @@ dependencies {
 
 	// mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//jsonObject
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+	implementation 'org.json:json:20211205'
 }
 
 tasks.named('test') {

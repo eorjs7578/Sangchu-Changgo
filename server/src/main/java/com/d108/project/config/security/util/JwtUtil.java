@@ -1,4 +1,4 @@
-package com.d108.project.config.security;
+package com.d108.project.config.security.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -6,26 +6,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.io.Decoders;
+
 import java.security.Key;
 import java.util.Date;
 
 @Component
-public class JwtConfiguration {
+public class JwtUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtConfiguration.class);
+    @Value("${spring.jwt.access-token.expire-time}")
+    public Long ACCESS_TOKEN_EXPIRE;
+    @Value("${spring.jwt.refresh-token.expire-time}")
+    public Long REFRESH_TOKEN_EXPIRE;
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     // JWT 서명에 사용할 비밀키 (application.properties 또는 application.yml에서 주입됨)
     @Value("${spring.jwt.salt}")
     private String jwtSecret;
 
-    // 서명 키를 생성하는 메서드
-    // Base64로 인코딩된 비밀키를 디코딩하여 Key 객체를 반환함
+//    // 서명 키를 생성하는 메서드
+//    // Base64로 인코딩된 비밀키를 디코딩하여 Key 객체를 반환함
+//    private Key getSigningKey() {
+//        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+//        return Keys.hmacShaKeyFor(keyBytes);
+//    }
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        // 키 생성 방식 변경
+        return Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
-
     // 주어진 Member 객체를 기반으로 JWT 토큰을 생성하는 메서드
     // 토큰에는 사용자의 사용자 이름(subject), 발행 시간, 만료 시간이 포함됨
     public String generateToken(String username, Long expireTime) {
@@ -39,7 +47,7 @@ public class JwtConfiguration {
 
     // 주어진 JWT 토큰을 검증하는 메서드
     // 토큰이 유효하면 true를 반환하고, 그렇지 않으면 관련 예외를 처리함
-    public boolean validateToken(String token) {
+    public boolean isTokenValid(String token) {
         try {
             Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())

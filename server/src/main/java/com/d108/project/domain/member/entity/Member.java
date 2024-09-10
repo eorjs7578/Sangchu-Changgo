@@ -2,6 +2,7 @@ package com.d108.project.domain.member.entity;
 
 import com.d108.project.domain.favorite.favoriteBusinessArea.entity.FavoriteBusinessArea;
 import com.d108.project.domain.favorite.favoriteFranchise.entity.FavoriteFranchise;
+import com.d108.project.domain.global.enums.RoleType;
 import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import jakarta.persistence.*;
@@ -9,6 +10,8 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.d108.project.domain.global.enums.RoleType.USER;
 
 @Getter
 @Setter(value = AccessLevel.PROTECTED)
@@ -23,6 +26,8 @@ public class Member extends LoginCredential{
 
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private RoleType roleType;
     // 관심 상권
     @OneToMany(mappedBy = "member")
     private List<FavoriteBusinessArea> favoriteBusinessAreas = new ArrayList<>();
@@ -33,9 +38,11 @@ public class Member extends LoginCredential{
     public static Member createMember(MemberRegisterDto memberRegisterDto, String passwordEncode) {
         Member member = new Member();
         member.setNickname(memberRegisterDto.getNickname());
-
         member.setUsername(memberRegisterDto.getUsername());
+        member.setEmail(memberRegisterDto.getEmail());
         member.setPassword(passwordEncode);
+        member.setRoleType(USER);
+
         return member;
     }
 }
