@@ -17,6 +17,8 @@ import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,7 +44,11 @@ import java.util.function.Supplier;
         securedEnabled = true,
         jsr250Enabled = true)
 public class SecurityConfiguration {
-    private final CorsConfigurationSource corsConfigurationSource;
+
+    private final String API_PREFIX = "/api";
+
+
+    private final JwtUtil jwtUtil;
 
     private final String[] whiteList = {
             API_PREFIX + "/members/signup", API_PREFIX + "/members/login"
@@ -70,7 +76,7 @@ public class SecurityConfiguration {
      * <ul>
      *     <li>CSRF 방지 기능 비활성화</li>
      *     <li>CORS 설정 적용</li>
-     *     <li>`/resources/**`, `/main/rootPage` 경로 접근 허용</li>
+     *     <li>정적 파일 및 화이트리스트 경로 접근 허용</li>
      *     <li>나머지 요청은 인증된 사용자만 접근 허용</li>
      *     <li>헤더의 JWT 토큰을 추출하고 검증하는 `JwtAuthorizationFilter` 적용</li>
      *     <li>세션을 상태 없이 관리</li>
@@ -211,19 +217,16 @@ public class SecurityConfiguration {
 
     // cors에 대한 설정
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .httpBasic(httpBasic -> httpBasic.disable())
-                .sessionManagement(
-                        sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(cors -> cors.configurationSource(corsConfigurationSource));
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(whiteList).permitAll()
-//                        .requestMatchers(swaggerWhiteList).permitAll()
-//                        .requestMatchers(HttpMethod.GET, whiteListForGet).permitAll()
-//                        .anyRequest().authenticated()
-//                );
-        return http.build();
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Content-Type", "Authorization", "X-XSRF-token"));
+        configuration.setAllowCredentials(false);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
