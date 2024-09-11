@@ -1,5 +1,6 @@
 package com.d108.project.config.security.handler;
 
+import com.d108.project.cache.redisToken.dto.TokenResponseDto;
 import com.d108.project.config.security.util.JwtUtil;
 import com.d108.project.domain.security.dto.SecurityUserDetailsDto;
 import com.d108.project.domain.security.dto.SecurityUserDto;
@@ -26,9 +27,8 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
 
     private final JwtUtil jwtUtil;
     /**
-     * 이 메서드는 HTTP 요청, HTTP 응답, 그리고 인증 객체를 인자로 받는다.
-     * 인증 객체에서 사용자 정보를 가져와 JSON 형태로 변환하고, 이를 클라이언트에 응답한다.
-     * 코드를 살펴보면, 사용자의 상태에 따라 응답을 다르게 구성하고 있다. 사용자의 상태가 '휴먼 상태'인 경우와 그렇지 않은 경우에 대해 각각 다른 응답을 구성하고 있다.
+     * 여기는 로그인을 성공한 세계선이다.
+     * 로그인을 성공했으니 리프레시 토큰과 엑세스 토큰을 돌려주도록 하자.
      */
     @Override
     public void onAuthenticationSuccess(
@@ -37,7 +37,6 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
             Authentication authentication
     ) throws IOException {
 
-        log.debug("3.CustomLoginSuccessHandler");
 
         // 1. 사용자와 관련된 정보를 모두 조회한다.
         SecurityUserDto securityUserDto = ((SecurityUserDetailsDto) authentication.getPrincipal()).getSecurityUserDto();
@@ -56,14 +55,16 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
         responseMap.put("failMessage", null);
         jsonObject = new JSONObject(responseMap);
 
-;
-        // 엑세스 토큰과 리프레시 토큰 생성
-        String accessToken = jwtUtil.generateToken(securityUserDto.getUsername(), jwtUtil.ACCESS_TOKEN_EXPIRE);
-        jsonObject.put("access_token", accessToken);
 
-        String refreshToken = jwtUtil.generateToken(securityUserDto.getUsername(), jwtUtil.REFRESH_TOKEN_EXPIRE);
+        // 엑세스 토큰과 리프레시 토큰 생성
+        TokenResponseDto tokenResponseDto = jwtUtil.getToken(securityUserDto.getUsername());
+        String accessToken = tokenResponseDto.getAccessToken();
+        String refreshToken = tokenResponseDto.getRefreshToken();
+
+        jsonObject.put("access_token", accessToken);
         jsonObject.put("refresh_token", refreshToken);
 
+        // 프론트 파트
         // 쿠키에 JWT 토큰 저장
         Cookie accessTokenCookie = new Cookie("access_token", accessToken);
         Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);

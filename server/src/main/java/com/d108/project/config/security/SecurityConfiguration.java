@@ -5,9 +5,9 @@ import com.d108.project.config.security.filter.JwtAuthorizationFilter;
 import com.d108.project.config.security.handler.CustomAuthFailureHandler;
 import com.d108.project.config.security.handler.CustomAuthSuccessHandler;
 import com.d108.project.config.security.util.JwtUtil;
+import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
 import com.d108.project.domain.security.SecurityUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,8 +47,6 @@ import java.util.function.Supplier;
 public class SecurityConfiguration {
 
     private final String API_PREFIX = "";
-
-    private final JwtUtil jwtUtil;
 
     private final String[] whiteList = {
             API_PREFIX + "/members/auth-email",
@@ -181,7 +179,9 @@ public class SecurityConfiguration {
      * customLoginSuccessHandler: 이 메서드는 인증 성공 핸들러를 생성한다. 인증 성공 핸들러는 인증 성공시 수행할 작업을 정의한다.
      */
     @Bean
-    public CustomAuthSuccessHandler customLoginSuccessHandler() {
+    public CustomAuthSuccessHandler customLoginSuccessHandler(
+            JwtUtil jwtUtil
+    ) {
         return new CustomAuthSuccessHandler(jwtUtil);
     }
 
@@ -199,8 +199,12 @@ public class SecurityConfiguration {
      * JWT 인증 필터는 요청 헤더의 JWT 토큰을 검증하고, 토큰이 유효하면 토큰에서 사용자의 정보와 권한을 추출하여 SecurityContext에 저장한다.
      */
     @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter(SecurityUserDetailsService userDetailsService) {
-        return new JwtAuthorizationFilter(userDetailsService, jwtUtil);
+    public JwtAuthorizationFilter jwtAuthorizationFilter(
+            SecurityUserDetailsService userDetailsService,
+            LoginCredentialRepository loginCredentialRepository,
+            JwtUtil jwtUtil
+    ) {
+        return new JwtAuthorizationFilter(loginCredentialRepository, userDetailsService, jwtUtil);
     }
 
     /**
