@@ -6,19 +6,23 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class WhiteListConfig {
-    private final String API_PREFIX = "/api";
 
     private final String[] whiteList = {
-            API_PREFIX + "/members/auth-email",
-            API_PREFIX + "/members/signup",
-            API_PREFIX + "/members/login"
+            "/members/auth-email",
+            "/members/signup",
+            "/members/login"
     };
     private final String[] whiteListForGet = {
-            API_PREFIX + "/posts/*,", API_PREFIX + "/posts"
+            "/posts/*,",
+            "/posts"
     };
 
     private final String[] swaggerWhiteList = {
-            "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/api-docs/**",
+            "/error"
     };
 
 }

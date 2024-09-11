@@ -1,5 +1,6 @@
 package com.d108.project.config.security.filter;
 
+import com.d108.project.config.WhiteListConfig;
 import com.d108.project.config.security.util.JwtUtil;
 import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
 import jakarta.annotation.Nonnull;
@@ -11,6 +12,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -24,26 +26,34 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final LoginCredentialRepository loginCredentialRepository;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
+    private final WhiteListConfig whiteListConfig;
 
-    private static final List<String> whiteList = Arrays.asList(
-            "/members/login",
-            "/members/signup",
-            "/members/auth-email"
-    );
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
+            @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @Nonnull FilterChain filterChain
     ) throws ServletException, IOException {
-        // 여기는 토큰이 필요하지 않은 API URL의 리스트
-        // 화이트리스트에 포함되는 경우 무시
-        String requestURI = request.getRequestURI();
-        if (whiteList.stream().anyMatch(requestURI::startsWith)) {
+
+        if (Arrays.stream(whiteListConfig.getWhiteListForGet())
+                .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
             filterChain.doFilter(request, response);
             return;
         }
+
+        if (Arrays.stream(whiteListConfig.getSwaggerWhiteList())
+                .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (Arrays.stream(whiteListConfig.getWhiteList())
+                .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // OPTION으로 요청한 경우 무시
         if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
             filterChain.doFilter(request, response);

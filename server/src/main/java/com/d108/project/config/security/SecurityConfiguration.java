@@ -1,5 +1,6 @@
 package com.d108.project.config.security;
 
+import com.d108.project.config.WhiteListConfig;
 import com.d108.project.config.security.filter.CustomAuthenticationFilter;
 import com.d108.project.config.security.filter.JwtAuthorizationFilter;
 import com.d108.project.config.security.handler.CustomAuthFailureHandler;
@@ -46,21 +47,7 @@ import java.util.function.Supplier;
         jsr250Enabled = true)
 public class SecurityConfiguration {
 
-    private final String API_PREFIX = "/api";
 
-    private final String[] whiteList = {
-            API_PREFIX + "/members/auth-email",
-            API_PREFIX + "/members/signup",
-            API_PREFIX + "/members/login"
-    };
-
-    private final String[] swaggerWhiteList = {
-            "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error",
-    };
-
-    private final String[] whiteListForGet = {
-            API_PREFIX + "/posts/*,", API_PREFIX + "/posts"
-    };
 
     // 정적 자원에 대한 보안 적용 해제
     @Bean
@@ -94,7 +81,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(
             HttpSecurity http,
             CustomAuthenticationFilter customAuthenticationFilter,
-            JwtAuthorizationFilter jwtAuthorizationFilter
+            JwtAuthorizationFilter jwtAuthorizationFilter,
+            WhiteListConfig whiteListConfig
     ) throws Exception {
         return http
                 // csrf 토큰 없이도 요청 처리할 수 있도록 설정
@@ -106,9 +94,10 @@ public class SecurityConfiguration {
                         // 리소스 및 정적 파일에 대한 권한 허용
                         .requestMatchers("/resources/**", "/static/**").permitAll()
                         // 화이트리스트에 대한 권한 허용
-                        .requestMatchers(whiteList).permitAll()
-                        .requestMatchers(swaggerWhiteList).permitAll()
-                        .requestMatchers(whiteListForGet).permitAll()
+                        .requestMatchers("/members/auth-email").permitAll()
+                        .requestMatchers(whiteListConfig.getWhiteList()).permitAll()
+                        .requestMatchers(whiteListConfig.getSwaggerWhiteList()).permitAll()
+                        .requestMatchers(whiteListConfig.getWhiteListForGet()).permitAll()
                         .anyRequest().authenticated()
                 )
                 // 이러면 JWT에서 리프레시 토큰을 통해 엑세스 토큰을 재발급하는게 맞는 것 같고
@@ -215,9 +204,10 @@ public class SecurityConfiguration {
     public JwtAuthorizationFilter jwtAuthorizationFilter(
             SecurityUserDetailsService userDetailsService,
             LoginCredentialRepository loginCredentialRepository,
-            JwtUtil jwtUtil
+            JwtUtil jwtUtil,
+            WhiteListConfig whiteListConfig
     ) {
-        return new JwtAuthorizationFilter(loginCredentialRepository, userDetailsService, jwtUtil);
+        return new JwtAuthorizationFilter(loginCredentialRepository, userDetailsService, jwtUtil, whiteListConfig);
     }
 
     /**
