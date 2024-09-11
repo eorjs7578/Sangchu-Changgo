@@ -14,7 +14,7 @@
 //@Component
 //@RequiredArgsConstructor
 //public class JwtTokenInterceptor implements HandlerInterceptor {
-//    // TODO: 내 생각에 여기 겹치는 것 같음. 인터셉터 지우고 Filter에 통합
+//    // 내 생각에 여기 겹치는 것 같음. 인터셉터 지우고 Filter에 통합
 //    private final JwtUtil jwtUtil;
 //    private final RedisTokenService redisTokenService;
 //
