@@ -37,10 +37,10 @@ spring:
     username: test@test.com
     password: test
 
-  data:
-    redis:
-      host: localhost
-      port: 6379
+#  data:
+#    redis:
+#      host: localhost
+#      port: 6379
 jwt:
   expirationMs: 86400000 #1일
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
