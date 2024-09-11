@@ -1,6 +1,5 @@
 package com.d108.project.domain.security.dto;
 
-import com.d108.project.domain.global.enums.RoleType;
 import com.d108.project.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +15,6 @@ public class SecurityUserDto {
     private String email;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private RoleType roleType;
 
     public static SecurityUserDto from(Member member) {
         return SecurityUserDto.builder()
@@ -26,7 +24,6 @@ public class SecurityUserDto {
                 .email(member.getEmail())
                 .createdAt(member.getCreatedAt())
                 .updatedAt(member.getUpdatedAt())
-                .roleType(member.getRoleType())
                 .build();
     }
 }

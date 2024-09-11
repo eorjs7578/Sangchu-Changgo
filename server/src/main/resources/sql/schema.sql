@@ -8,7 +8,6 @@ CREATE TABLE `members` (
                            `id`	BIGINT	NOT NULL AUTO_INCREMENT	COMMENT 'Auto',
                            `nickname`	VARCHAR(255)	NOT NULL	COMMENT '미 입력시 아이디를 바탕으로 자동 생성',
                             `email` VARCHAR(255) NOT NULL,
-                            `role_type` VARCHAR(255) NOT NULL,
                            PRIMARY KEY (`id`)
 );
 

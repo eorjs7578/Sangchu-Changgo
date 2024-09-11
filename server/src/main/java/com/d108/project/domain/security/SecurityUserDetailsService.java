@@ -37,7 +37,6 @@ public class SecurityUserDetailsService implements UserDetailsService {
                 Collections.singleton(
                         new SimpleGrantedAuthority(
                                 securityUserDto
-                                        .getRoleType()
                                         .toString()))
         );
     }
