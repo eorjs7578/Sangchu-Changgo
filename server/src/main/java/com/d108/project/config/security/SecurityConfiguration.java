@@ -46,7 +46,7 @@ import java.util.function.Supplier;
         jsr250Enabled = true)
 public class SecurityConfiguration {
 
-    private final String API_PREFIX = "";
+    private final String API_PREFIX = "/api";
 
     private final String[] whiteList = {
             API_PREFIX + "/members/auth-email",
@@ -111,15 +111,15 @@ public class SecurityConfiguration {
                         .requestMatchers(whiteListForGet).permitAll()
                         .anyRequest().authenticated()
                 )
-                // TODO: 이러면 JWT에서 리프레시 토큰을 통해 엑세스 토큰을 재발급하는게 맞는 것 같고
+                // 이러면 JWT에서 리프레시 토큰을 통해 엑세스 토큰을 재발급하는게 맞는 것 같고
                 // JWTAuthorizationFilter에서 우선 토큰의 유효성을 검증
                 .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
-                // TODO: 로그인 시에 리프레시 토큰과 엑세스 토큰 둘다 발급해주는게 맞는 것 같음
+                // 로그인 시에 리프레시 토큰과 엑세스 토큰 둘다 발급해주는게 맞는 것 같음
                 // 로그인 (인증) 시에 올바른 데이터인지 검증
                 .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // 스프링 시큐리티가 세션을 생성하거나 사용하지 않도록 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // 로그인 페이지에 대한 설정
+                // 로그인에 대한 설정
                 .formLogin(login -> login
                         // 로그인 페이지에 대한 설정
                         .loginPage("/members/login")
@@ -127,6 +127,19 @@ public class SecurityConfiguration {
                         .successHandler(new SimpleUrlAuthenticationSuccessHandler("/main"))
                         // 로그인 페이지는 인증 없이 접근을 허용
                         .permitAll()
+                )
+                // 로그아웃에 대한 설정
+                .logout(logout -> logout
+                        // 로그아웃 페이지에 대한 설정
+                        .logoutUrl("/members/logout")
+                        // 로그아웃 하면서 인증 정보를 삭제하고
+                        .clearAuthentication(true)
+                        // 쿠키를 삭제함
+                        .deleteCookies("access_token", "refresh_token")
+                        // 세션 무효화
+                        .invalidateHttpSession(true)
+                        // 로그아웃에 성공하면 여기로 보냄
+                        .logoutSuccessUrl("/main")
                 )
                 .build();
     }
