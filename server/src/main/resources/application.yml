@@ -18,7 +18,7 @@ spring:
 #    username: root
 #    password: 1234
 
-# 컨테이너 간 네트워킹
+#  컨테이너 간 네트워킹
   datasource:
     url: jdbc:mysql://mariadb-container:3306/S11P21D108?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
     username: root
@@ -26,7 +26,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
@@ -37,10 +37,10 @@ spring:
     username: test@test.com
     password: test
 
-#  data:
-#    redis:
-#      host: localhost
-#      port: 6379
+  data:
+    redis:
+      host: localhost
+      port: 6379
 jwt:
   expirationMs: 86400000 #1일
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
