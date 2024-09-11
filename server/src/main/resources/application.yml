@@ -18,7 +18,7 @@ spring:
 #    username: root
 #    password: 1234
 
-#  컨테이너 간 네트워킹
+#  컨테이너 간 네트워킹 ###
   datasource:
     url: jdbc:mysql://mariadb-container:3306/S11P21D108?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
     username: root
