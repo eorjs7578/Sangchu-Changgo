@@ -46,12 +46,14 @@ import java.util.function.Supplier;
         jsr250Enabled = true)
 public class SecurityConfiguration {
 
-    private final String API_PREFIX = "/api";
+    private final String API_PREFIX = "";
 
     private final JwtUtil jwtUtil;
 
     private final String[] whiteList = {
-            "/members/auth-email", API_PREFIX + "/members/signup", API_PREFIX + "/members/login", API_PREFIX + "/members/auth-email"
+            API_PREFIX + "/members/auth-email",
+            API_PREFIX + "/members/signup",
+            API_PREFIX + "/members/login"
     };
 
     private final String[] swaggerWhiteList = {
@@ -111,8 +113,11 @@ public class SecurityConfiguration {
                         .requestMatchers(whiteListForGet).permitAll()
                         .anyRequest().authenticated()
                 )
+                // TODO: 이러면 JWT에서 리프레시 토큰을 통해 엑세스 토큰을 재발급하는게 맞는 것 같고
                 // JWTAuthorizationFilter에서 우선 토큰의 유효성을 검증
                 .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
+                // TODO: 로그인 시에 리프레시 토큰과 엑세스 토큰 둘다 발급해주는게 맞는 것 같음
+                // 로그인 (인증) 시에 올바른 데이터인지 검증
                 .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // 스프링 시큐리티가 세션을 생성하거나 사용하지 않도록 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
