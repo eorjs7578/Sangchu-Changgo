@@ -67,8 +67,10 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // 로그인은 시큐리티에 의해 대체되었습니다.
     @Override
     public TokenResponseDto loginMember(MemberLoginDto memberLoginDto) {
+        System.out.println("기존 로그인 로직");
         // 로그인 로직
         LoginCredential loginCredential = loginCredentialRepository.findByUsername(memberLoginDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디 입니다."));
