@@ -24,7 +24,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/main",
                         "/posts/*,","/posts",
-                        "/members/login", "/members/signup",
+                        "/members/login", "/members/signup", "/members/auth-email",
                         "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error"
                 );
     }
