@@ -3,6 +3,7 @@ package com.d108.project.domain.forum.post.dto;
 import com.d108.project.domain.forum.post.entity.Post;
 import com.d108.project.domain.forum.reply.dto.ReplyResponseDto;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
+@Getter
 @Setter
 public class PostResponseDto {
     private Long id;
