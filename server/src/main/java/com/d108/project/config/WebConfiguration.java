@@ -1,6 +1,6 @@
 package com.d108.project.config;
 
-import com.d108.project.config.security.interceptor.JwtTokenInterceptor;
+// import com.d108.project.config.security.interceptor.JwtTokenInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -13,21 +13,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebConfiguration implements WebMvcConfigurer {
 
-    private final JwtTokenInterceptor jwtTokenInterceptor;
+//    private final JwtTokenInterceptor jwtTokenInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        // 인터셉터를 설정해 토큰의 유효성을 검증
-        registry.addInterceptor(jwtTokenInterceptor)
-                .addPathPatterns("/**") // 모든 URL에 대해 JWT 토큰 검사를 적용
-                // 예외 페이지 설정하기
-                .excludePathPatterns(
-                        "/main",
-                        "/posts/*,","/posts",
-                        "/members/login", "/members/signup", "/members/auth-email",
-                        "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error"
-                );
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        // 인터셉터를 설정해 토큰의 유효성을 검증
+//        registry.addInterceptor(jwtTokenInterceptor)
+//                .addPathPatterns("/**") // 모든 URL에 대해 JWT 토큰 검사를 적용
+//                // 예외 페이지 설정하기
+//                .excludePathPatterns(
+//                        "/main",
+//                        "/posts/*,","/posts",
+//                        "/members/login", "/members/signup", "/members/auth-email",
+//                        "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error"
+//                );
+//    }
+
     // 백엔드 서버의 정적 리소스 위치 경로
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
             "classpath:/",
