@@ -6,8 +6,6 @@ import com.d108.project.config.security.filter.JwtAuthorizationFilter;
 import com.d108.project.config.security.handler.CustomAuthFailureHandler;
 import com.d108.project.config.security.handler.CustomAuthSuccessHandler;
 import com.d108.project.config.security.util.JwtUtil;
-import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
-import com.d108.project.domain.security.SecurityUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -15,18 +13,14 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -36,7 +30,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Supplier;
 
 
 @Configuration
@@ -46,17 +39,12 @@ import java.util.function.Supplier;
         securedEnabled = true,
         jsr250Enabled = true)
 public class SecurityConfiguration {
-
-
-
     // 정적 자원에 대한 보안 적용 해제
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
-
-
 
     /**
      * Spring Security 설정을 정의하는 메서드.
@@ -94,7 +82,6 @@ public class SecurityConfiguration {
                         // 리소스 및 정적 파일에 대한 권한 허용
                         .requestMatchers("/resources/**", "/static/**").permitAll()
                         // 화이트리스트에 대한 권한 허용
-                        .requestMatchers("/members/auth-email").permitAll()
                         .requestMatchers(whiteListConfig.getWhiteList()).permitAll()
                         .requestMatchers(whiteListConfig.getSwaggerWhiteList()).permitAll()
                         .requestMatchers(whiteListConfig.getWhiteListForGet()).permitAll()
@@ -105,7 +92,7 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
                 // 로그인 시에 리프레시 토큰과 엑세스 토큰 둘다 발급해주는게 맞는 것 같음
                 // 로그인 (인증) 시에 올바른 데이터인지 검증
-                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // 스프링 시큐리티가 세션을 생성하거나 사용하지 않도록 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 로그인에 대한 설정
@@ -202,27 +189,10 @@ public class SecurityConfiguration {
      */
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter(
-            SecurityUserDetailsService userDetailsService,
-            LoginCredentialRepository loginCredentialRepository,
             JwtUtil jwtUtil,
             WhiteListConfig whiteListConfig
     ) {
-        return new JwtAuthorizationFilter(loginCredentialRepository, userDetailsService, jwtUtil, whiteListConfig);
-    }
-
-    /**
-     * isAdmin 메소드는 Supplier<Authentication>와 RequestAuthorizationContext를 인자로 받아서 "ADMIN" 역할을 가진 사용자인지 확인한다.
-     * 만약 사용자가 "ADMIN" 역할을 가지고 있다면, AuthorizationDecision 객체는 true를 반환하고, 그렇지 않다면 false를 반환한다.
-     */
-    private AuthorizationDecision isAdmin(
-            Supplier<Authentication> authenticationSupplier,
-            RequestAuthorizationContext requestAuthorizationContext
-    ) {
-        return new AuthorizationDecision(
-                authenticationSupplier.get()
-                        .getAuthorities()
-                        .contains(new SimpleGrantedAuthority("ADMIN"))
-        );
+        return new JwtAuthorizationFilter(jwtUtil, whiteListConfig);
     }
 
 

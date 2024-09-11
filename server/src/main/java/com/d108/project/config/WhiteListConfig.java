@@ -10,11 +10,11 @@ public class WhiteListConfig {
     private final String[] whiteList = {
             "/members/auth-email",
             "/members/signup",
-            "/members/login"
     };
     private final String[] whiteListForGet = {
-            "/posts/*,",
-            "/posts"
+            "/posts/*",
+            "/posts",
+            "/posts/*/replies"
     };
 
     private final String[] swaggerWhiteList = {

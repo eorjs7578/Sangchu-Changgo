@@ -14,6 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -28,7 +32,9 @@ public class JwtUtil {
     public Long ACCESS_TOKEN_EXPIRE;
     @Value("${spring.jwt.refresh-token.expire-time}")
     public Long REFRESH_TOKEN_EXPIRE;
+    
     private final RedisUtil redisUtil;
+    private final UserDetailsService userDetailsService;
     private final LoginCredentialRepository loginCredentialRepository;
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
     private static final String REDIS_ACCESS_TOKEN_PREFIX = "auth:accessToken:";
@@ -158,5 +164,16 @@ public class JwtUtil {
         loginCredential.setRefreshToken(refreshToken);
         loginCredentialRepository.save(loginCredential);
         return TokenResponseDto.from(refreshToken,accessToken);
+    }
+
+    public void authenticateWithToken(String token) throws RuntimeException {
+        String username = getUsernameFromToken(token);
+        if (username != null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } else {
+            throw new RuntimeException("아이디가 존재하지 않습니다.");
+        }
     }
 }
