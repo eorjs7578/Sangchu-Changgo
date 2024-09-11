@@ -2,7 +2,6 @@ package com.d108.project.config.security.filter;
 
 import com.d108.project.config.WhiteListConfig;
 import com.d108.project.config.security.util.JwtUtil;
-import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,16 +10,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
