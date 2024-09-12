@@ -6,8 +6,8 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Getter
+@Builder
 public class ReplyResponseDto {
     private Long memberId;
     private String content;
