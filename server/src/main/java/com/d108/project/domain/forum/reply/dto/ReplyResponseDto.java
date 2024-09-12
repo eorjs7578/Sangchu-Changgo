@@ -2,10 +2,12 @@ package com.d108.project.domain.forum.reply.dto;
 
 import com.d108.project.domain.forum.reply.entity.Reply;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Builder
+@Getter
 public class ReplyResponseDto {
     private Long memberId;
     private String content;
