@@ -2,7 +2,6 @@ package com.d108.project.config.security.filter;
 
 import com.d108.project.config.WhiteListConfig;
 import com.d108.project.config.security.util.JwtUtil;
-import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,20 +10,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     // 의존성 주입
-    private final LoginCredentialRepository loginCredentialRepository;
-    private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
     private final WhiteListConfig whiteListConfig;
 
@@ -74,6 +69,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                         // TODO: 엑세스 토큰은 유효한 값을 가져왔는데, 리프레시 토큰은 유효하지 않은 경우(DB와 비교해도 같고, 만료된 경우) 새로 만들어 주는게 문제가 될까?
                         jwtUtil.tokenRefresh(response, refreshToken);
                     }
+                    jwtUtil.authenticateWithToken(accessToken);
                     filterChain.doFilter(request, response);
                 }
 
@@ -83,6 +79,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     // 근데 리프레시 토큰은 유효한 경우
                     if (jwtUtil.isTokenValid(refreshToken)) {
                         jwtUtil.tokenRefresh(response, refreshToken);
+                        jwtUtil.authenticateWithToken(refreshToken);
                         filterChain.doFilter(request, response);
                     }
                     // 리프레시 토큰도 유효하지 않은 경우

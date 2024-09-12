@@ -22,8 +22,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
-        // 로그인 엔드포인트로 요청 시 감지
-        this.setFilterProcessesUrl("/members/login");
     }
 
     /**
