@@ -3,6 +3,7 @@ package com.d108.project.interfaces.api;
 
 import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
 import com.d108.project.cache.redisToken.dto.TokenResponseDto;
+import com.d108.project.domain.forum.reply.dto.ReplyByMemberIdResponseDto;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;
@@ -32,4 +33,7 @@ public interface MemberApi {
 
     @PostMapping("/auth-email")
     ResponseEntity<Void> checkAuthCode(EmailAuthCheckDto emailAuthCheckDto);
+
+    @GetMapping("/replies")
+    ResponseEntity<List<ReplyByMemberIdResponseDto>> getMembersReplies(@RequestParam Long memberId);
 }
