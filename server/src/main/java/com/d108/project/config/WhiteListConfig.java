@@ -8,21 +8,18 @@ import org.springframework.stereotype.Component;
 public class WhiteListConfig {
 
     private final String[] whiteList = {
+            // 로그인 관련 엔드포인트
             "/members/auth-email",
             "/members/signup",
-    };
-    private final String[] whiteListForGet = {
-            "/posts/*",
-            "/posts",
-            "/posts/*/replies"
-    };
-
-    private final String[] swaggerWhiteList = {
+            // 스웨거 관련 엔드포인트
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/api-docs/**",
-            "/error"
+            "/error",
+            // GET요청 관련 엔드포인트
+            "/posts/*",
+            "/posts",
+            "/posts/*/replies"
     };
-
 }

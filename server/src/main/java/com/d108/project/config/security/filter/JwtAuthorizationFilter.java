@@ -31,21 +31,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             @Nonnull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        if (Arrays.stream(whiteListConfig.getWhiteListForGet())
-                .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
-            System.out.println("ㅎㅇ");
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if (Arrays.stream(whiteListConfig.getSwaggerWhiteList())
-                .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         if (Arrays.stream(whiteListConfig.getWhiteList())
                 .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
+            log.info("JWT FILTER PASS BY WHITELIST");
             filterChain.doFilter(request, response);
             return;
         }
