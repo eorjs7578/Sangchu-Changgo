@@ -1,5 +1,6 @@
 package com.d108.project.domain.member.service;
 
+import com.d108.project.cache.redisToken.dto.TokenResponseDto;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;
@@ -10,7 +11,11 @@ public interface MemberService {
 
     void registerMember(MemberRegisterDto memberRegisterDto);
 
-    MemberResponseDto loginMember(MemberLoginDto memberLoginDto);
+    TokenResponseDto loginMember(MemberLoginDto memberLoginDto);
 
     List<MemberResponseDto> getAllMember();
+
+    void logoutMember(String username);
+
+    MemberResponseDto getMyInfo();
 }

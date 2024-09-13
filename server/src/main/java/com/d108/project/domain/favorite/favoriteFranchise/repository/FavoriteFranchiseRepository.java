@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface FavoriteFranchiseRepository extends JpaRepository<FavoriteFranchise, Long> {
-    List<FavoriteFranchise> findAllByMember(Member member);
+    List<FavoriteFranchise> findAllByMemberId(Long memberId);
 }

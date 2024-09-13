@@ -1,18 +1,17 @@
 package com.d108.project.interfaces.api.favorate;
 
-import com.d108.project.domain.favorite.favoriteFranchise.FavoriteFranchiseRequestDto;
-import com.d108.project.domain.favorite.favoriteFranchise.FavoriteFranchiseResponseDto;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import com.d108.project.domain.favorite.favoriteFranchise.dto.FavoriteFranchiseRequestDto;
+import com.d108.project.domain.franchise.dto.FranchiseListDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/favorite/franchises")
+@RequestMapping("/api/favorite/franchises")
 public interface FavoriteFranchiseApi {
 
     @GetMapping("/list")
-    ResponseEntity<List<FavoriteFranchiseResponseDto>> getFavoriteFranchisesByMember(@RequestParam Long memberId);
+    ResponseEntity<FranchiseListDto> getFavoriteFranchisesByMember(@RequestParam Long memberId);
 
     @DeleteMapping("{favoriteFranchiseId}")
     ResponseEntity<Object> deleteFavoriteFranchise(@RequestParam Long memberId, @PathVariable Long favoriteFranchiseId);

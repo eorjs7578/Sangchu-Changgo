@@ -19,6 +19,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -68,11 +69,24 @@ dependencies {
 
 	// mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//jsonObject
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+	implementation 'org.json:json:20211205'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+task copyYML(type: Copy) {
+	copy {
+		from './submodule'
+		include "*.yml"
+		into 'src/main/resources'
+	}
+}
+
 
 // 분리된 설정 파일 포함
 apply from: 'querydsl.gradle'

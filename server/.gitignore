@@ -41,3 +41,7 @@ out/
 
 ### build ###
 !gradle/wrapper/gradle-wrapper.properties
+
+### etc ###
+application*.yml
+application*.properties
