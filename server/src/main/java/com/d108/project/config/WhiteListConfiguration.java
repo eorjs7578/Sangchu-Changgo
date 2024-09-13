@@ -11,6 +11,7 @@ public class WhiteListConfiguration {
             // 로그인 관련 엔드포인트
             "/members/auth-email",
             "/members/signup",
+            "/members/social-login",
             // 스웨거 관련 엔드포인트
             "/swagger-resources/**",
             "/swagger-ui/**",
