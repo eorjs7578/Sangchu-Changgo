@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-public class WhiteListConfig {
+public class WhiteListConfiguration {
 
     private final String[] whiteList = {
             // 로그인 관련 엔드포인트

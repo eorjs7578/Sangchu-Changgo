@@ -1,6 +1,6 @@
 package com.d108.project.config.security;
 
-import com.d108.project.config.WhiteListConfig;
+import com.d108.project.config.WhiteListConfiguration;
 import com.d108.project.config.security.filter.CustomAuthenticationFilter;
 import com.d108.project.config.security.filter.JwtAuthorizationFilter;
 import com.d108.project.config.security.handler.CustomAuthFailureHandler;
@@ -70,7 +70,7 @@ public class SecurityConfiguration {
             HttpSecurity http,
             CustomAuthenticationFilter customAuthenticationFilter,
             JwtAuthorizationFilter jwtAuthorizationFilter,
-            WhiteListConfig whiteListConfig
+            WhiteListConfiguration whiteListConfiguration
     ) throws Exception {
         return http
                 // csrf 토큰 없이도 요청 처리할 수 있도록 설정
@@ -82,7 +82,7 @@ public class SecurityConfiguration {
                         // 리소스 및 정적 파일에 대한 권한 허용
                         .requestMatchers("/resources/**", "/static/**").permitAll()
                         // 화이트리스트에 대한 권한 허용
-                        .requestMatchers(whiteListConfig.getWhiteList()).permitAll()
+                        .requestMatchers(whiteListConfiguration.getWhiteList()).permitAll()
                         .anyRequest().authenticated()
                 )
                 // 모든 요청에서 토큰을 검증하게 된다.
@@ -190,9 +190,9 @@ public class SecurityConfiguration {
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter(
             JwtUtil jwtUtil,
-            WhiteListConfig whiteListConfig
+            WhiteListConfiguration whiteListConfiguration
     ) {
-        return new JwtAuthorizationFilter(jwtUtil, whiteListConfig);
+        return new JwtAuthorizationFilter(jwtUtil, whiteListConfiguration);
     }
 
 

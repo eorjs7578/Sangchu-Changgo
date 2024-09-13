@@ -1,6 +1,6 @@
 package com.d108.project.config.security.filter;
 
-import com.d108.project.config.WhiteListConfig;
+import com.d108.project.config.WhiteListConfiguration;
 import com.d108.project.config.security.util.JwtUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
@@ -21,7 +21,7 @@ import java.util.Arrays;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     // 의존성 주입
     private final JwtUtil jwtUtil;
-    private final WhiteListConfig whiteListConfig;
+    private final WhiteListConfiguration whiteListConfiguration;
 
 
     @Override
@@ -31,7 +31,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             @Nonnull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        if (Arrays.stream(whiteListConfig.getWhiteList())
+        if (Arrays.stream(whiteListConfiguration.getWhiteList())
                 .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
             log.info("JWT FILTER PASS BY WHITELIST");
             filterChain.doFilter(request, response);
