@@ -5,6 +5,10 @@ import com.d108.project.config.security.filter.CustomAuthenticationFilter;
 import com.d108.project.config.security.filter.JwtAuthorizationFilter;
 import com.d108.project.config.security.handler.CustomAuthFailureHandler;
 import com.d108.project.config.security.handler.CustomAuthSuccessHandler;
+import com.d108.project.config.security.oauth2.OAuth2UserService;
+import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
+import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
 import com.d108.project.config.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -39,6 +43,11 @@ import java.util.Collections;
         securedEnabled = true,
         jsr250Enabled = true)
 public class SecurityConfiguration {
+
+//    private final OAuth2Repository oAuth2Repository;
+    private final OAuth2UserService oAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     // 정적 자원에 대한 보안 적용 해제
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -70,7 +79,8 @@ public class SecurityConfiguration {
             HttpSecurity http,
             CustomAuthenticationFilter customAuthenticationFilter,
             JwtAuthorizationFilter jwtAuthorizationFilter,
-            WhiteListConfiguration whiteListConfiguration
+            WhiteListConfiguration whiteListConfiguration,
+            OAuth2Repository c
     ) throws Exception {
         return http
                 // csrf 토큰 없이도 요청 처리할 수 있도록 설정
@@ -117,6 +127,13 @@ public class SecurityConfiguration {
                         // 로그아웃에 성공하면 여기로 보냄
                         .logoutSuccessUrl("/main")
                 )
+                .oauth2Login(configure ->
+                        configure.authorizationEndpoint(
+                                config -> config.authorizationRequestRepository(c))
+                                .userInfoEndpoint(config -> config.userService(oAuth2UserService))
+                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                                .failureHandler(oAuth2AuthenticationFailureHandler)
+                        )
                 .build();
     }
 
