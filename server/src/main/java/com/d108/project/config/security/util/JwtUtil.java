@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -150,20 +151,27 @@ public class JwtUtil {
         getToken(username);
     }
 
+    @Transactional
     public TokenResponseDto getToken(String username) {
 
         String accessToken = generateToken(username, 1000 * ACCESS_TOKEN_EXPIRE);
         String refreshToken = generateToken(username, 1000 * REFRESH_TOKEN_EXPIRE);
 
-        // accessToken은 레디스에
-        redisUtil.setDataExpire(REDIS_ACCESS_TOKEN_PREFIX + username, accessToken, ACCESS_TOKEN_EXPIRE);
+        try {
+            // accessToken은 레디스에
+            redisUtil.setDataExpire(REDIS_ACCESS_TOKEN_PREFIX + username, accessToken, ACCESS_TOKEN_EXPIRE);
 
-        // refreshToken 은 DB에 저장
-        LoginCredential loginCredential = loginCredentialRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 회원입니다."));
-        loginCredential.setRefreshToken(refreshToken);
-        loginCredentialRepository.save(loginCredential);
-        return TokenResponseDto.from(refreshToken,accessToken);
+            // refreshToken 은 DB에 저장
+            LoginCredential loginCredential = loginCredentialRepository.findByUsername(username)
+                    .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 회원입니다."));
+            loginCredential.setRefreshToken(refreshToken);
+            loginCredentialRepository.save(loginCredential);
+
+        } catch (Exception e) {
+            throw new RuntimeException("토큰 발급 중 오류가 발생했습니다.");
+        }
+
+        return TokenResponseDto.from(refreshToken, accessToken);
     }
 
     public void authenticateWithToken(String token) throws RuntimeException {

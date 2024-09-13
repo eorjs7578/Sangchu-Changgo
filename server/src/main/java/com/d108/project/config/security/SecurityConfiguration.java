@@ -1,6 +1,6 @@
 package com.d108.project.config.security;
 
-import com.d108.project.config.WhiteListConfig;
+import com.d108.project.config.WhiteListConfiguration;
 import com.d108.project.config.security.filter.CustomAuthenticationFilter;
 import com.d108.project.config.security.filter.JwtAuthorizationFilter;
 import com.d108.project.config.security.handler.CustomAuthFailureHandler;
@@ -70,7 +70,7 @@ public class SecurityConfiguration {
             HttpSecurity http,
             CustomAuthenticationFilter customAuthenticationFilter,
             JwtAuthorizationFilter jwtAuthorizationFilter,
-            WhiteListConfig whiteListConfig
+            WhiteListConfiguration whiteListConfiguration
     ) throws Exception {
         return http
                 // csrf 토큰 없이도 요청 처리할 수 있도록 설정
@@ -82,17 +82,17 @@ public class SecurityConfiguration {
                         // 리소스 및 정적 파일에 대한 권한 허용
                         .requestMatchers("/resources/**", "/static/**").permitAll()
                         // 화이트리스트에 대한 권한 허용
-                        .requestMatchers(whiteListConfig.getWhiteList()).permitAll()
-                        .requestMatchers(whiteListConfig.getSwaggerWhiteList()).permitAll()
-                        .requestMatchers(whiteListConfig.getWhiteListForGet()).permitAll()
+                        .requestMatchers(whiteListConfiguration.getWhiteList()).permitAll()
                         .anyRequest().authenticated()
                 )
-                // 이러면 JWT에서 리프레시 토큰을 통해 엑세스 토큰을 재발급하는게 맞는 것 같고
-                // JWTAuthorizationFilter에서 우선 토큰의 유효성을 검증
+                // 모든 요청에서 토큰을 검증하게 된다.
+                // 그렇기에 jwtauthenticationfilter 내부에서 한번더 화이트리스트에 대한 체크를 해줘야한다.
+                // 그렇기에 때문에 interceptor 로서 작동하는 것이고, 인증과 intercept를 동시에 담당하고 있다.
                 .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
-                // 로그인 시에 리프레시 토큰과 엑세스 토큰 둘다 발급해주는게 맞는 것 같음
-                // 로그인 (인증) 시에 올바른 데이터인지 검증
-                .addFilterAt(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                // 화이트리스트에 설정하지 않은 경우 여기로 들어온다.
+                // 로그인 정보를 담아서 필터를 통과한다.
+                // 로그인이 아닌 애들은 JWT 필터에서 로그인 관련 정보를 저장해서 보내준다.
+                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // 스프링 시큐리티가 세션을 생성하거나 사용하지 않도록 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 로그인에 대한 설정
@@ -190,9 +190,9 @@ public class SecurityConfiguration {
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter(
             JwtUtil jwtUtil,
-            WhiteListConfig whiteListConfig
+            WhiteListConfiguration whiteListConfiguration
     ) {
-        return new JwtAuthorizationFilter(jwtUtil, whiteListConfig);
+        return new JwtAuthorizationFilter(jwtUtil, whiteListConfiguration);
     }
 
 

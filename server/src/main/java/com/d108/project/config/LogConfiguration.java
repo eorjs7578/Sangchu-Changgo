@@ -1,6 +1,6 @@
 package com.d108.project.config;
 
-public class LogConfig {
+public class LogConfiguration {
     public static void configureLog4j() {
         // 환경 변수 LOG_CONFIG를 통해 log4j 설정 파일 경로를 설정
         String logConfigFile = System.getenv("LOG_CONFIG");
