@@ -63,4 +63,9 @@ public class MemberController implements MemberApi {
     public ResponseEntity<List<ReplyByMemberIdResponseDto>> getMembersReplies(Long memberId) {
         return ResponseEntity.ok(replyService.getAllReplyByMemberId(memberId));
     }
+
+    @Override
+    public ResponseEntity<MemberResponseDto> getMyInfo() {
+        return ResponseEntity.ok(memberService.getMyInfo());
+    }
 }

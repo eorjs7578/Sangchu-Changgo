@@ -16,4 +16,6 @@ public interface MemberService {
     List<MemberResponseDto> getAllMember();
 
     void logoutMember(String username);
+
+    MemberResponseDto getMyInfo();
 }

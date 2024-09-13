@@ -13,8 +13,12 @@ import com.d108.project.domain.member.dto.MemberResponseDto;
 import com.d108.project.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -101,6 +105,36 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    // 쿠키에서 내 정보를 뽑아와서 정보를 쿠키에 저장
+    @Override
+    public MemberResponseDto getMyInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            // 일반 로그인 유저의 경우 처리
+            if (principal instanceof UserDetails) {
+                String username = ((UserDetails) principal).getUsername();
+                Member member = memberRepository.findByUsername(username)
+                        .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
+                return MemberResponseDto.from(member);
+            }
+            // 소셜 로그인 유저의 경우 처리
+            else if (principal instanceof OAuth2User oAuth2User) {
+                String username = oAuth2User.getName();
+                String nickname = oAuth2User.getAttribute("nickname");
+                String email = oAuth2User.getAttribute("email");
+                // TODO: 여기 아직 pk 없음
+                return new MemberResponseDto(
+                        username,
+                        nickname,
+                        email
+                );
+            }
+        }
+        return null;
+    }
+
     // 유효성 검증 함수
     private void isValidate(String email, String password, String nickname) {
         if (!Pattern.matches(EMAIL_PATTERN, email)) {
@@ -129,4 +163,5 @@ public class MemberServiceImpl implements MemberService {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
     }
+    
 }

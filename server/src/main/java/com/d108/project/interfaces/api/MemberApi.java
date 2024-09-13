@@ -36,4 +36,7 @@ public interface MemberApi {
 
     @GetMapping("/replies")
     ResponseEntity<List<ReplyByMemberIdResponseDto>> getMembersReplies(@RequestParam Long memberId);
+
+    @GetMapping("/my-info")
+    ResponseEntity<MemberResponseDto> getMyInfo();
 }
