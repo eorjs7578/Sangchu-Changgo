@@ -28,21 +28,18 @@ public class TokenProvider {
     private String secret;
     private Key key;
 
-    @PostConstruct
-    public void init() {
-
-        byte[] key = Decoders.BASE64URL.decode(secret);
-        this.key = Keys.hmacShaKeyFor(key);
-    }
+//    @PostConstruct
+//    public void init() {
+//        byte[] key = Decoders.BASE64URL.decode(secret);
+//        this.key = Keys.hmacShaKeyFor(key);
+//    }
 
     public boolean validateToken(String token) {
-
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
-
             return true;
         } catch (UnsupportedJwtException | MalformedJwtException exception) {
             log.error("JWT is not valid");

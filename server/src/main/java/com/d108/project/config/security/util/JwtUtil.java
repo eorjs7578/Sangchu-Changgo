@@ -59,7 +59,13 @@ public class JwtUtil {
 
     // 주어진 Member 객체를 기반으로 JWT 토큰을 생성하는 메서드
     // 토큰에는 사용자의 사용자 이름(subject), 발행 시간, 만료 시간이 포함됨
-    public String generateToken(String username, Long expireTime) {
+    public String generateToken(String username, String tokenType) {
+        Long expireTime = 0L;
+        if (tokenType.equals("accessToken")) {
+            expireTime = ACCESS_TOKEN_EXPIRE;
+        } else if (tokenType.equals("refreshToken")) {
+            expireTime = REFRESH_TOKEN_EXPIRE;
+        }
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
@@ -154,8 +160,8 @@ public class JwtUtil {
     @Transactional
     public TokenResponseDto getToken(String username) {
 
-        String accessToken = generateToken(username, 1000 * ACCESS_TOKEN_EXPIRE);
-        String refreshToken = generateToken(username, 1000 * REFRESH_TOKEN_EXPIRE);
+        String accessToken = generateToken(username, "accessToken");
+        String refreshToken = generateToken(username, "refreshToken");
 
         try {
             // accessToken은 레디스에
