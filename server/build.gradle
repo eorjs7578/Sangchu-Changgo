@@ -90,3 +90,8 @@ task copyYML(type: Copy) {
 
 // 분리된 설정 파일 포함
 apply from: 'querydsl.gradle'
+
+// 스프링 부트 2.5 버전 이후, 프로젝트를 빌드할 때 .jar 파일이 두 개가 생성 -> 방지 -> 올바른 jar 파일 사용
+jar {
+	enabled = false
+}

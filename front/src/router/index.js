@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Login from '@/views/Login.vue';
-import SignUp from '@/views/SignUp.vue';
+import Login from '@/views/accounts/Login.vue';
+import SignUp from '@/views/accounts/SignUp.vue';
+import PasswordRecovery from '@/views/accounts/PasswordRecovery.vue';
 import Community from '@/views/Community.vue';
 import Franchise from '@/views/Franchise.vue';
 import InterestAreas from '@/views/InterestAreas.vue';
@@ -16,6 +17,11 @@ const routes = [
     path: '/signup',
     name: 'SignUp',
     component: SignUp
+  },
+  {
+    path: '/passwordrecovery',
+    name: 'PasswordRecovery',
+    component: PasswordRecovery
   },
   {
     path: '/community',

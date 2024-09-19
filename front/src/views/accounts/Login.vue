@@ -9,7 +9,7 @@
       <label for="password">Password</label>
       <input type="password" id="password" placeholder="Your password" v-model="password" />
 
-      <p><a href="#">비밀번호가 생각나지 않으신가요?</a></p>
+      <p><router-link to="/passwordrecovery">비밀번호가 생각나지 않으신가요?</router-link></p>
       <button type="submit">Log In</button>
     </form>
 

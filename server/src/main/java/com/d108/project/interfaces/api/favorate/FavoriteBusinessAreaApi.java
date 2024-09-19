@@ -5,7 +5,7 @@ import com.d108.project.domain.favorite.favoriteBusinessArea.dto.FavoriteBusines
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/favorite/business-areas")
+@RequestMapping("/api/favorite/business-areas")
 public interface FavoriteBusinessAreaApi {
 
     @GetMapping("/list")
