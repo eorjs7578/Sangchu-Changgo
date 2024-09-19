@@ -25,7 +25,7 @@ public class SalePostController implements SaleStorePostApi {
 
         // 생성된 게시글의 ID로 리다이렉션 URL 생성
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("sale-posts/{postId}")
+                .path("sale-store-posts/{postId}")
                 .buildAndExpand(postId)
                 .toUri();
 

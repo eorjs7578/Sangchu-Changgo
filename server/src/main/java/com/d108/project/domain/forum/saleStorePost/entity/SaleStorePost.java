@@ -54,7 +54,6 @@ public class SaleStorePost extends Post{
     private Long desiredSalePrice;
 
     // 생성자
-    @Builder
     public SaleStorePost(Board board, Member member, String title, String content, Long startupPrice, Long rentalPrice,
                          Long revenue, Long size, AgeGroup ageGroup, FootTraffic footTraffic, Atmosphere atmosphere,
                          NearbyPrice nearbyPrice, FranchiseType franchiseType, Long desiredSalePrice) {
