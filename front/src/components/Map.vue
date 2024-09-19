@@ -39,12 +39,12 @@ const initMap = () => {
 
 <style scoped>
 .map-container {
-    
-  position: relative;
+    width: 100%;
+    height: 100%;
 }
 #map {
-  width: 90vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   position: relative;
   overflow: hidden;
 }

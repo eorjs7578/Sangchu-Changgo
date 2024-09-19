@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="map-container">
     <Map></Map>
   </div>
 </template>
@@ -15,5 +15,9 @@ export default {
 </script>
 
 <style scoped>
-
+.map-container{
+  padding: 0px;
+  width: 90%;
+  height: 100%;
+}
 </style>
