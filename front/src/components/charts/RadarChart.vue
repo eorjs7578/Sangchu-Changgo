@@ -2,8 +2,6 @@
   <div class="container-fluid">
     <div class="card mb-3 shadow-sm">
       <div class="card-body">
-        <h3>연령별 유동인구</h3>
-        <!-- 차트 크기를 제한하기 위해 div에 width와 height 설정 -->
         <div style="max-width: 600px; height: 300px">
           <Radar :data="chartData" :options="chartOptions" />
         </div>
@@ -34,8 +32,14 @@ ChartJS.register(
 );
 
 export default {
-  name: "AgeGroupChart",
+  name: "RadarChart",
   components: { Radar },
+  props: {
+    title: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
       chartData: {
@@ -59,15 +63,20 @@ export default {
       },
       chartOptions: {
         responsive: true,
-        maintainAspectRatio: false, // 부모 요소의 크기에 따라 반응형으로 동작
+        maintainAspectRatio: false,
         plugins: {
-          legend: {
-            position: "top", // 범례를 차트 상단에 표시
+          title: {
+            display: true,
+            text: this.title,
           },
         },
         scales: {
           r: {
-            beginAtZero: true, // 라디얼 스케일 시작 값을 0으로
+            angleLines: {
+              display: false,
+            },
+            suggestedMin: 0,
+            suggestedMax: 100,
           },
         },
       },
