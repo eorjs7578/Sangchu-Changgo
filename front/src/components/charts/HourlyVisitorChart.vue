@@ -1,0 +1,114 @@
+<!-- 이 문제는 vue-chartjs에서 최신 버전에서는 chart-data와 chart-options라는 props 대신, data와 options를 사용해야 합니다.
+  따라서 LineChart에 전달하는 props의 이름을 :chart-data와 :chart-options에서 :data와 :options로 변경해야 합니다. -->
+<template>
+  <div class="container-fluid">
+    <div class="card mb-3 shadow-sm">
+      <div class="card-body">
+        <h3 class="card-title">시간대별 유동인구</h3>
+        <br />
+        <div style="max-width: 100%; height: 200px">
+          <Line :data="chartData" :options="chartOptions" />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { Line } from "vue-chartjs";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  CategoryScale,
+} from "chart.js";
+
+// Chart.js에 필요한 구성 요소 등록
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  CategoryScale
+);
+
+export default {
+  name: "HourlyVisitorChart",
+  components: { Line },
+  data() {
+    return {
+      // chartData 설정
+      chartData: {
+        labels: [
+          "07",
+          "08",
+          "09",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+        ],
+        datasets: [
+          {
+            label: "Hourly Visitors",
+            backgroundColor: "#36A2EB",
+            borderColor: "#36A2EB",
+            pointBackgroundColor: "#36A2EB",
+            pointBorderColor: "#fff",
+            data: [
+              30, 60, 80, 120, 180, 220, 260, 320, 400, 450, 430, 380, 320, 250,
+              150,
+            ],
+            borderWidth: 2,
+            tension: 0.1, // 부드러운 선을 만들기 위한 옵션
+            fill: false,
+          },
+        ],
+      },
+      // chartOptions 설정
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: true, // 비율을 유지하도록 설정
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "시간대",
+            },
+          },
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: "방문자 수",
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: "top",
+          },
+          tooltip: {
+            enabled: true,
+          },
+        },
+      },
+    };
+  },
+};
+</script>
