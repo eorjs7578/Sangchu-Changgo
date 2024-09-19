@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="map-container">
     <div id="map">
     
     </div>
@@ -8,7 +8,7 @@
 
 <script setup>
 import {ref, onMounted} from 'vue'
-
+let map = null;
 onMounted(() => {
  
   if (window.kakao && window.kakao.maps) {
@@ -29,8 +29,8 @@ onMounted(() => {
 const initMap = () => {
   const container = document.getElementById("map");
   const options = {
-    center: new kakao.maps.LatLng(35.8656, 128.59373),
-    level: 6,
+    center: new kakao.maps.LatLng(37.5665, 126.9780),
+    level:8,
   };
   map = new kakao.maps.Map(container, options);
 
@@ -38,5 +38,14 @@ const initMap = () => {
 </script>
 
 <style scoped>
-
+.map-container {
+    
+  position: relative;
+}
+#map {
+  width: 90vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
 </style>

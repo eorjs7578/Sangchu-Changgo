@@ -55,7 +55,7 @@ const closeCommunitySubmenu = () => {
 
 .navbar {
   position: relative;
-  width: 150px;
+  width: 10vw;
   background-color: #f8f8f8;
   padding: 2rem;
   height: 100vh; /* 네비게이션 바의 높이를 화면 전체로 설정 */

@@ -1,14 +1,12 @@
 <template>
-  <div class="container text-center w-100">
-  <div class="container-fluid">
+  <div class="container">
     <Map></Map>
   </div>
-  <button type="button" class="btn btn-outline-success">Success</button>
-</div>
 </template>
-
-<script>
+<script setup>
 import Map from "@/components/Map.vue";
+</script>
+<script>
 export default {
   components: {
     Map,
