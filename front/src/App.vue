@@ -21,3 +21,11 @@ export default {
 
 }
 </style>
+
+<style>
+.container {
+  padding: 0;
+  margin: 0;
+
+}
+</style>
