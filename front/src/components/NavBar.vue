@@ -1,14 +1,24 @@
 <template>
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
-      <h1>상추창고</h1>
+      <h5>상추창고</h5>
       <ul>
         <li @click="closeCommunitySubmenu"><router-link to="/marketanalysis">상권분석</router-link></li>
         <li @click="closeCommunitySubmenu"><router-link to="/interestareas">관심상권</router-link></li>
-        <li @click="toggleCommunitySubmenu" class="community-link">
+        <li @click="toggleCommunitySubmenu" class="link">
           커뮤니티
         </li>
-        <li @click="closeCommunitySubmenu"><router-link to="/franchise">프랜차이즈</router-link></li>
+         <!-- 프랜차이즈 메뉴 -->
+         <li @click="toggleFranchiseSubmenu" class="link">
+          프랜차이즈
+        </li>
+        
+        <!-- 프랜차이즈 하위 메뉴 -->
+        <ul v-show="isFranchiseOpen ">
+          <li><router-link to="/franchise/franchiseinfo">관심프차</router-link></li>
+          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal">예상비용</li>
+          <FranchiseCompareModal class="modal fade fullscreen-modal" id="exampleModal"></FranchiseCompareModal>
+        </ul>
       </ul>
 
       <!-- 로그인/회원가입 링크 -->
@@ -36,8 +46,10 @@
 
 <script setup>
 import {ref} from 'vue'
+import FranchiseCompareModal from '@/views/franchiseCompare/FranchiseCompareMain.vue'
 
 const isCommunityOpen = ref(false)
+const isFranchiseOpen = ref(false)
 
 const toggleCommunitySubmenu = () => {
   isCommunityOpen.value = !isCommunityOpen.value;
@@ -45,6 +57,11 @@ const toggleCommunitySubmenu = () => {
 
 const closeCommunitySubmenu = () => {
   isCommunityOpen.value = false
+}
+
+const toggleFranchiseSubmenu = () => {
+  isCommunityOpen.value = false
+  isFranchiseOpen.value = !isFranchiseOpen.value
 }
 </script>
 
@@ -72,7 +89,7 @@ const closeCommunitySubmenu = () => {
 }
 
 /* 커뮤니티 링크에 대한 hover 스타일 추가 */
-.community-link:hover {
+.link:hover {
   color: blue; /* 마우스를 올렸을 때 파란색으로 변경 */
   cursor: pointer; /* 커서를 포인터로 변경 */
 }

@@ -3,7 +3,6 @@
   <div class="container-fluid">
     <Map></Map>
   </div>
-  <button type="button" class="btn btn-outline-success">Success</button>
 </div>
 </template>
 
