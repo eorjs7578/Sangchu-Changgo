@@ -35,18 +35,22 @@ public class SaleStorePost extends Post{
     // TODO: 아래 String 이나 Enum 일지 추후 결정
     // 유동 인구
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private FootTraffic footTraffic;
 
     // 분위기 (여기 타입 뭐씀?)
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private Atmosphere atmosphere;
 
     // 주변 물가
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private NearbyPrice nearbyPrice;
 
     // 프랜차이즈 (여기 타입 뭐씀?)
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private FranchiseType franchiseType;
 
 
