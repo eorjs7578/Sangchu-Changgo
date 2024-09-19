@@ -98,7 +98,7 @@ public class SecurityConfiguration {
                 // 로그인에 대한 설정
                 .formLogin(login -> login
                         // 로그인 페이지에 대한 설정
-                        .loginPage("/members/login")
+                        .loginPage("/api/members/login")
                         // 로그인에 성공하면 /main 페이지로 이동하도록 설정
                         .successHandler(new SimpleUrlAuthenticationSuccessHandler("/main"))
                         // 로그인 페이지는 인증 없이 접근을 허용
@@ -134,7 +134,7 @@ public class SecurityConfiguration {
     ) {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
         // "/members/login" 엔드포인트로 들어오는 요청을 CustomAuthenticationFilter에서 처리하도록 지정한다.
-        customAuthenticationFilter.setFilterProcessesUrl("/members/login");
+        customAuthenticationFilter.setFilterProcessesUrl("/api/members/login");
         customAuthenticationFilter.setAuthenticationSuccessHandler(customAuthSuccessHandler);    // '인증' 성공 시 해당 핸들러로 처리를 전가한다.
         customAuthenticationFilter.setAuthenticationFailureHandler(customAuthFailureHandler);    // '인증' 실패 시 해당 핸들러로 처리를 전가한다.
         customAuthenticationFilter.afterPropertiesSet();

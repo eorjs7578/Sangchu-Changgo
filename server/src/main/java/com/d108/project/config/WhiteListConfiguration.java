@@ -10,7 +10,8 @@ public class WhiteListConfiguration {
     private final String[] whiteList = {
             // 로그인 관련 엔드포인트
             "/members/auth-email",
-            "/members/signup",
+            "/api/members/signup",
+            "/api/members/login",
             // 스웨거 관련 엔드포인트
             "/swagger-resources/**",
             "/swagger-ui/**",
