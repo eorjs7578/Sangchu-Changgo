@@ -4,23 +4,23 @@
     <nav class="navbar">
       <h1>상추창고</h1>
       <ul>
-        <li><router-link to="/marketanalysis">상권분석</router-link></li>
-        <li><router-link to="/interestareas">관심상권</router-link></li>
+        <li @click="closeCommunitySubmenu"><router-link to="/marketanalysis">상권분석</router-link></li>
+        <li @click="closeCommunitySubmenu"><router-link to="/interestareas">관심상권</router-link></li>
         <li @click="toggleCommunitySubmenu" class="community-link">
           커뮤니티
         </li>
-        <li><router-link to="/franchise">프랜차이즈</router-link></li>
+        <li @click="closeCommunitySubmenu"><router-link to="/franchise">프랜차이즈</router-link></li>
       </ul>
 
       <!-- 로그인/회원가입 링크 -->
       <ul class="auth-links">
-        <li><router-link to="/login">로그인</router-link></li>
-        <li><router-link to="/signup">회원가입</router-link></li>
+        <li @click="closeCommunitySubmenu"><router-link to="/login">로그인</router-link></li>
+        <li @click="closeCommunitySubmenu"><router-link to="/signup">회원가입</router-link></li>
       </ul>
     </nav>
 
     <!-- 두 번째 서브메뉴 (커뮤니티를 클릭할 때 표시) -->
-    <nav class="submenu" v-if="isCommunityOpen">
+    <nav class="submenu" v-show="isCommunityOpen">
       <h1>커뮤니티</h1>
       <ul>
         <li><router-link to="/community/marketboard">상권 게시판</router-link></li>
@@ -31,25 +31,23 @@
 
     <!-- 메인 콘텐츠 영역 -->
     <div class="content">
-    
+      <div>aaa</div>
     </div>
   </div>
 </template>
 
 
-<script>
-export default {
-  name: 'NavBar',
-  data() {
-    return {
-      isCommunityOpen: false
-    };
-  },
-  methods: {
-    toggleCommunitySubmenu() {
-      this.isCommunityOpen = !this.isCommunityOpen;
-    },
-  }
+<script setup>
+import {ref} from 'vue'
+
+const isCommunityOpen = ref(true)
+
+const toggleCommunitySubmenu = () => {
+  isCommunityOpen.value = !isCommunityOpen.value;
+}
+
+const closeCommunitySubmenu = () => {
+  isCommunityOpen.value = false
 }
 </script>
 
