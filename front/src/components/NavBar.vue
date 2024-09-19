@@ -1,5 +1,4 @@
 <template>
-  <div class="container">
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
       <h1>상추창고</h1>
@@ -20,7 +19,7 @@
     </nav>
 
     <!-- 두 번째 서브메뉴 (커뮤니티를 클릭할 때 표시) -->
-    <nav class="submenu" v-show="isCommunityOpen">
+    <nav class="submenu" v-if="isCommunityOpen">
       <h1>커뮤니티</h1>
       <ul>
         <li><router-link to="/community/marketboard">상권 게시판</router-link></li>
@@ -29,18 +28,16 @@
       </ul>
     </nav>
 
-    <!-- 메인 콘텐츠 영역 -->
+    <!-- 메인 콘텐츠 영역
     <div class="content">
-      <div>aaa</div>
-    </div>
-  </div>
+    </div> -->
 </template>
 
 
 <script setup>
 import {ref} from 'vue'
 
-const isCommunityOpen = ref(true)
+const isCommunityOpen = ref(false)
 
 const toggleCommunitySubmenu = () => {
   isCommunityOpen.value = !isCommunityOpen.value;

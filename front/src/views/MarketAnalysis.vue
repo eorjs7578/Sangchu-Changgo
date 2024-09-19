@@ -1,16 +1,6 @@
 <template>
-<div class="container text-center">
-  <div class="row">
-    <div class="col">
-      Column
-    </div>
-    <div class="col">
-      Column
-    </div>
-    <div class="col">
-      Column
-    </div>
-  </div>
+<div class="container text-center w-100">
+  <button type="button" class="btn btn-outline-success">Success</button>
 </div>
 </template>
 
