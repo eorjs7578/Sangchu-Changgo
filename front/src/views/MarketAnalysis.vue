@@ -1,20 +1,18 @@
 <template>
 <div class="container text-center">
-  <div class="row">
-    <div class="col">
-      Column
-    </div>
-    <div class="col">
-      Column
-    </div>
-    <div class="col">
-      Column
-    </div>
+  <div class="container-fluid">
+    <Map></Map>
   </div>
 </div>
 </template>
 
 <script>
+import Map from "@/components/Map.vue";
+export default {
+  components: {
+    Map,
+  },
+};
 </script>
 
 <style scoped>
