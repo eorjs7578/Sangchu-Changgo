@@ -17,6 +17,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id") // 상속받은 엔티티의 기본 키를 지정
 public class SaleStorePost extends Post{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     // 창업 가격
     private Long startupPrice;
