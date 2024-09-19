@@ -5,6 +5,8 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 
+import 'vue-chartjs';
+
 const app = createApp(App);
 // pinia 설정
 const pinia = createPinia();
