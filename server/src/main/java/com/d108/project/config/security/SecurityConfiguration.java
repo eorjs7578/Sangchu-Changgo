@@ -44,7 +44,7 @@ import java.util.Collections;
         jsr250Enabled = true)
 public class SecurityConfiguration {
 
-//    private final OAuth2Repository oAuth2Repository;
+    private final OAuth2Repository oAuth2Repository;
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
@@ -80,7 +80,10 @@ public class SecurityConfiguration {
             CustomAuthenticationFilter customAuthenticationFilter,
             JwtAuthorizationFilter jwtAuthorizationFilter,
             WhiteListConfiguration whiteListConfiguration,
-            OAuth2Repository c
+            OAuth2Repository oAuth2Repository,
+            OAuth2UserService oAuth2UserService,
+            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
+            OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler
     ) throws Exception {
         return http
                 // csrf 토큰 없이도 요청 처리할 수 있도록 설정
@@ -117,7 +120,7 @@ public class SecurityConfiguration {
                 // 로그아웃에 대한 설정
                 .logout(logout -> logout
                         // 로그아웃 페이지에 대한 설정
-                        .logoutUrl("/members/logout")
+                        .logoutUrl("/api/members/logout")
                         // 로그아웃 하면서 인증 정보를 삭제하고
                         .clearAuthentication(true)
                         // 쿠키를 삭제함
@@ -129,7 +132,7 @@ public class SecurityConfiguration {
                 )
                 .oauth2Login(configure ->
                         configure.authorizationEndpoint(
-                                config -> config.authorizationRequestRepository(c))
+                                config -> config.authorizationRequestRepository(oAuth2Repository))
                                 .userInfoEndpoint(config -> config.userService(oAuth2UserService))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)

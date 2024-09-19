@@ -30,6 +30,7 @@ public class OAuth2Repository implements AuthorizationRequestRepository<OAuth2Au
     public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request,
                                          HttpServletResponse response) {
         System.out.println("SaveAuthorizationRequest");
+
         if (authorizationRequest == null) {
             CookieUtil.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
             CookieUtil.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
@@ -43,6 +44,7 @@ public class OAuth2Repository implements AuthorizationRequestRepository<OAuth2Au
                 COOKIE_EXPIRE_SECONDS);
 
         String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
+        System.out.println(redirectUriAfterLogin);
         if (StringUtils.hasText(redirectUriAfterLogin)) {
             CookieUtil.addCookie(response,
                     REDIRECT_URI_PARAM_COOKIE_NAME,
