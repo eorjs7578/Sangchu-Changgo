@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: S11P21D108
+    ports:
+      - "3306:3306"
+    networks:
+      - my-network
+
+  jenkins:
+    image: jenkins/jenkins:jdk17
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    networks:
+      - my-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker 권한
+      - /your/local/path/jenkins_home:/var/jenkins_home  # Jenkins 데이터 영속화
+
+networks:
+  my-network:

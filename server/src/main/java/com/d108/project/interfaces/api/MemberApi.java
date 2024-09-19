@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 public interface MemberApi {
 
     @PostMapping("/signup")
