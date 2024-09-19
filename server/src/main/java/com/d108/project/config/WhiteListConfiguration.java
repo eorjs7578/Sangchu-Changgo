@@ -14,6 +14,8 @@ public class WhiteListConfiguration {
             API_PREFIX+"/members/auth-email",
             API_PREFIX+"/members/signup",
             API_PREFIX+"/members/social-login",
+            "/login/oauth2/code/kakao",
+            "/api/oauth2/authorization/kakao",
             // 스웨거 관련 엔드포인트
             API_PREFIX+"/swagger-resources/**",
             API_PREFIX+"/swagger-ui/**",
@@ -23,6 +25,8 @@ public class WhiteListConfiguration {
             // GET요청 관련 엔드포인트
             API_PREFIX+"/posts/*",
             API_PREFIX+"/posts",
-            API_PREFIX+"/posts/*/replies"
+            API_PREFIX+"/posts/*/replies",
+            // 기본 설정 관련
+            "/favicon.ico"
     };
 }

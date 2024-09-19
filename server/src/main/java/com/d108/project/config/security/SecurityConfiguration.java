@@ -106,9 +106,18 @@ public class SecurityConfiguration {
                 // 로그인 정보를 담아서 필터를 통과한다.
                 // 로그인이 아닌 애들은 JWT 필터에서 로그인 관련 정보를 저장해서 보내준다.
                 .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(configure ->
+                        configure.authorizationEndpoint(
+                                config -> config.authorizationRequestRepository(oAuth2Repository))
+                                .userInfoEndpoint(config -> config.userService(oAuth2UserService))
+                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                                .failureHandler(oAuth2AuthenticationFailureHandler)
+                        )
+
                 // 스프링 시큐리티가 세션을 생성하거나 사용하지 않도록 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 로그인에 대한 설정
+
                 .formLogin(login -> login
                         // 로그인 페이지에 대한 설정
                         .loginPage("/api/members/login")
@@ -130,13 +139,6 @@ public class SecurityConfiguration {
                         // 로그아웃에 성공하면 여기로 보냄
                         .logoutSuccessUrl("/main")
                 )
-                .oauth2Login(configure ->
-                        configure.authorizationEndpoint(
-                                config -> config.authorizationRequestRepository(oAuth2Repository))
-                                .userInfoEndpoint(config -> config.userService(oAuth2UserService))
-                                .successHandler(oAuth2AuthenticationSuccessHandler)
-                                .failureHandler(oAuth2AuthenticationFailureHandler)
-                        )
                 .build();
     }
 
@@ -154,7 +156,7 @@ public class SecurityConfiguration {
     ) {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
         // "/members/login" 엔드포인트로 들어오는 요청을 CustomAuthenticationFilter에서 처리하도록 지정한다.
-        customAuthenticationFilter.setFilterProcessesUrl("/members/login");
+        customAuthenticationFilter.setFilterProcessesUrl("/api/members/login");
         customAuthenticationFilter.setAuthenticationSuccessHandler(customAuthSuccessHandler);    // '인증' 성공 시 해당 핸들러로 처리를 전가한다.
         customAuthenticationFilter.setAuthenticationFailureHandler(customAuthFailureHandler);    // '인증' 실패 시 해당 핸들러로 처리를 전가한다.
         customAuthenticationFilter.afterPropertiesSet();

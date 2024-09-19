@@ -30,7 +30,13 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private OAuth2User processOAuth2User(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
+
         System.out.println("processOAuth2User: " + oAuth2User);
+
+        // oAuth2User.getName() => 이걸 유저의 아이디로 재활용할 계획
+        // case1: kakao의 경우 k@3711282604
+        // case2: naver의 경우 n@3711282604
+
         String registeredId = userRequest.getClientRegistration()
                 .getRegistrationId();
 
