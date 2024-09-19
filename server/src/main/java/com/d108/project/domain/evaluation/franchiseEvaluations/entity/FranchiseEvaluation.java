@@ -25,6 +25,7 @@ public class FranchiseEvaluation {
     private Member member;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private AgeGroup ageGroup;
 
     private String footTraffic;

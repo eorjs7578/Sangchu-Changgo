@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/posts/{postId}/replies")
+@RequestMapping("/api/posts/{postId}/replies")
 public interface ReplyApi {
     @PostMapping
     ResponseEntity<Void> createReply(@PathVariable("postId") Long postId, @RequestBody ReplyCreateDto replyCreateDto);

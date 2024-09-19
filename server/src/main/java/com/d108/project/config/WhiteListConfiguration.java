@@ -7,20 +7,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class WhiteListConfiguration {
 
+    private static String API_PREFIX = "/api";
+
     private final String[] whiteList = {
             // 로그인 관련 엔드포인트
-            "/members/auth-email",
-            "/api/members/signup",
-            "/api/members/login",
+            API_PREFIX+"/members/auth-email",
+            API_PREFIX+"/members/signup",
+            API_PREFIX+"/members/social-login",
+            "/login/oauth2/code/kakao",
+            "/api/oauth2/authorization/kakao",
             // 스웨거 관련 엔드포인트
-            "/swagger-resources/**",
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/api-docs/**",
-            "/error",
+            API_PREFIX+"/swagger-resources/**",
+            API_PREFIX+"/swagger-ui/**",
+            API_PREFIX+"/v3/api-docs/**",
+            API_PREFIX+"/api-docs/**",
+            API_PREFIX+"/error",
             // GET요청 관련 엔드포인트
-            "/posts/*",
-            "/posts",
-            "/posts/*/replies"
+            API_PREFIX+"/posts/*",
+            API_PREFIX+"/posts",
+            API_PREFIX+"/posts/*/replies",
+            // 기본 설정 관련
+            "/favicon.ico"
     };
 }

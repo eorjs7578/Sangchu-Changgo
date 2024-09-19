@@ -105,7 +105,7 @@ public class JwtUtil {
             String tokenType
     ) {
         Cookie[] cookies = request.getCookies();
-        String token = null;
+        String token;
         // 쿠키에서 토큰 추출
         if (cookies != null) {
             for (Cookie cookie : cookies) {

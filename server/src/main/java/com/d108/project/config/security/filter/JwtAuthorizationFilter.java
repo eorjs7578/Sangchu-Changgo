@@ -30,7 +30,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @Nonnull FilterChain filterChain
     ) throws ServletException, IOException {
-
+        System.out.println(request.getRequestURI());
         if (Arrays.stream(whiteListConfiguration.getWhiteList())
                 .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
             log.info("JWT FILTER PASS BY WHITELIST");
