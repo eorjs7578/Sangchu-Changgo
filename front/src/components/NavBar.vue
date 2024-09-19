@@ -49,9 +49,6 @@ export default {
     toggleCommunitySubmenu() {
       this.isCommunityOpen = !this.isCommunityOpen;
     },
-    closeSubmenu() {
-      this.isCommunityOpen = false;
-    }
   }
 }
 </script>
