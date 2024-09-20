@@ -17,7 +17,7 @@
         <ul v-show="isFranchiseOpen ">
           <li><router-link to="/franchise/franchiseinfo">관심프차</router-link></li>
           <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal">예상비용</li>
-          <FranchiseCompareModal class="modal fade fullscreen-modal" id="exampleModal"></FranchiseCompareModal>
+          <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal"></FranchiseFee>
         </ul>
       </ul>
 
@@ -46,7 +46,7 @@
 
 <script setup>
 import {ref} from 'vue'
-import FranchiseCompareModal from '@/views/franchiseCompare/FranchiseCompareMain.vue'
+import FranchiseFee from '@/views/franchise/FranchiseFee.vue'
 
 const isCommunityOpen = ref(false)
 const isFranchiseOpen = ref(false)
