@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -96,6 +97,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/resources/**", "/static/**").permitAll()
                         // 화이트리스트에 대한 권한 허용
                         .requestMatchers(whiteListConfiguration.getWhiteList()).permitAll()
+                        .requestMatchers(HttpMethod.GET, whiteListConfiguration.getWhiteListForGet()).permitAll()
                         .anyRequest().authenticated()
                 )
                 // 모든 요청에서 토큰을 검증하게 된다.

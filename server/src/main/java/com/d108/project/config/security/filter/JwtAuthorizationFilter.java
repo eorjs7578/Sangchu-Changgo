@@ -30,10 +30,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @Nonnull FilterChain filterChain
     ) throws ServletException, IOException {
-        System.out.println(request.getRequestURI());
+
+        log.info("JWT FILTER START");
+
         if (Arrays.stream(whiteListConfiguration.getWhiteList())
                 .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
             log.info("JWT FILTER PASS BY WHITELIST");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (request.getMethod().equalsIgnoreCase("GET") &&
+        Arrays.stream(whiteListConfiguration.getWhiteListForGet())
+                .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
+            log.info("JWT FILTER PASS BY WHITELIST FOR GET");
             filterChain.doFilter(request, response);
             return;
         }
@@ -43,6 +53,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
         // 1. 토큰 추출
         String accessToken = tokenUtil.extractToken(request, "access_token");
         String refreshToken = tokenUtil.extractToken(request, "refresh_token");

@@ -25,11 +25,15 @@ public class WhiteListConfiguration {
             API_PREFIX+"/v3/api-docs/**",
             API_PREFIX+"/api-docs/**",
             API_PREFIX+"/error",
+
+            // 기본 설정 관련
+            "/favicon.ico"
+    };
+
+    private final String[] whiteListForGet = {
             // GET요청 관련 엔드포인트
             API_PREFIX+"/posts/*",
             API_PREFIX+"/posts",
             API_PREFIX+"/posts/*/replies",
-            // 기본 설정 관련
-            "/favicon.ico"
     };
 }
