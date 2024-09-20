@@ -34,7 +34,7 @@ public class OAuth2UserPrincipal implements UserDetails, OAuth2User {
         if (userInfo.getProvider().toString().equalsIgnoreCase("kakao")) {
             username = "K@" + username;
         } else if (userInfo.getProvider().toString().equalsIgnoreCase("naver")) {
-            username = "N@" + username;
+            username = "N@" + username.substring(0,10);
         }
         return username;
     }
@@ -75,7 +75,14 @@ public class OAuth2UserPrincipal implements UserDetails, OAuth2User {
     }
 
     public String getNickname() {
-        return userInfo.getAttributes().get("nickname").toString();
+        // 임시 닉네임 발급
+        String nickname = userInfo.getNickname();
+        if (userInfo.getProvider().toString().equalsIgnoreCase("kakao")) {
+            nickname = "kakao@" + nickname;
+        } else if (userInfo.getProvider().toString().equalsIgnoreCase("naver")) {
+            nickname = "naver@" + nickname;
+        }
+        return nickname;
     }
 
     public String getEmail() {
