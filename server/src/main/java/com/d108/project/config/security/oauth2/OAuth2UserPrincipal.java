@@ -31,7 +31,7 @@ public class OAuth2UserPrincipal implements UserDetails, OAuth2User {
     @Override
     public String getUsername() {
         String username = userInfo.getId();
-        if (userInfo.getProvider().toString().equalsIgnoreCase("kakako")) {
+        if (userInfo.getProvider().toString().equalsIgnoreCase("kakao")) {
             username = "K@" + username;
         } else if (userInfo.getProvider().toString().equalsIgnoreCase("naver")) {
             username = "N@" + username;
