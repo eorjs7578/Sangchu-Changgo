@@ -62,9 +62,9 @@ public class JwtUtil {
     public String generateToken(String username, String tokenType) {
         Long expireTime = 0L;
         if (tokenType.equals("accessToken")) {
-            expireTime = ACCESS_TOKEN_EXPIRE;
+            expireTime = ACCESS_TOKEN_EXPIRE*1000;
         } else if (tokenType.equals("refreshToken")) {
-            expireTime = REFRESH_TOKEN_EXPIRE;
+            expireTime = REFRESH_TOKEN_EXPIRE*1000;
         }
         return Jwts.builder()
                 .setSubject(username)
@@ -161,14 +161,20 @@ public class JwtUtil {
     @Transactional
     public TokenResponseDto getToken(String username) {
 
+        System.out.println(username);
+
         String accessToken = generateToken(username, "accessToken");
         String refreshToken = generateToken(username, "refreshToken");
+
+        System.out.println(accessToken);
+        System.out.println(refreshToken);
 
         try {
             // accessToken은 레디스에
             redisUtil.setDataExpire(REDIS_ACCESS_TOKEN_PREFIX + username, accessToken, ACCESS_TOKEN_EXPIRE);
 
             // refreshToken 은 DB에 저장
+
             LoginCredential loginCredential = loginCredentialRepository.findByUsername(username)
                     .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 회원입니다."));
             loginCredential.setRefreshToken(refreshToken);
@@ -197,12 +203,17 @@ public class JwtUtil {
         Cookie accessTokenCookie = new Cookie("access_token", accessToken);
         Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
         // 각각 
+        // accessTokenCookie.setSecure(true);
         accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(Math.toIntExact(ACCESS_TOKEN_EXPIRE));
         response.addCookie(accessTokenCookie);
         // 셋팅해서 넘겨주기
+        // refreshTokenCookie.setSecure(true);
+        //
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(Math.toIntExact(REFRESH_TOKEN_EXPIRE));
         response.addCookie(refreshTokenCookie);
     }
 }
