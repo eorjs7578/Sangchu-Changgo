@@ -1,164 +1,108 @@
 <template>
-  <div class="p-4 max-w-md mx-auto">
-    <h1 class="text-2xl font-bold mb-4">상권분석</h1>
-    <p class="mb-4">상권별 단위의 다양한 정보를 조회할 수 있습니다.</p>
-
-    <h2 class="text-xl font-semibold mb-2">위치 선택</h2>
-    <p class="mb-2">분석하고 싶은 상권을 선택해주세요.</p>
-    <LocationSelector v-model="selectedLocation" />
-
-    <h2 class="text-xl font-semibold mt-6 mb-2">업종 선택</h2>
-    <p class="mb-2">분석하고 싶은 업종을 선택해주세요.</p>
-    <BusinessTypeSelector v-model="selectedBusinessType" />
-
-    <h3 class="text-lg font-semibold mt-6 mb-2">한식음식점</h3>
-    <RestaurantList :restaurants="store.restaurants" />
-
-    <button class="w-full bg-green-500 text-white py-3 rounded-md mt-6" @click="startAnalysis">
-      상권분석 시작하기
-    </button>
-  </div>
-</template>
-
-<script>
-import { ref } from 'vue'
-import { useStoreAnalysisStore } from '@/stores/storeAnalysisStore.js'
-import LocationSelector from '@/components/areaAnalytics/LocationSelector.vue'
-import BusinessTypeSelector from '@/components/areaAnalytics/BusinessTypeSelector.vue'
-import RestaurantList from '@/components/areaAnalytics/RestaurantList.vue'
-
-export default {
-  name: 'StoreAnalysis',
-  components: {
-    LocationSelector,
-    BusinessTypeSelector,
-    RestaurantList
-  },
-  setup() {
-    const store = useStoreAnalysisStore()
-    const selectedLocation = ref('')
-    const selectedBusinessType = ref('음식점')
-
-    const startAnalysis = () => {
-      console.log('Starting analysis...')
-      // 분석 로직 구현
-    }
-
-    return {
-      store,
-      selectedLocation,
-      selectedBusinessType,
-      startAnalysis
-    }
-  }
-}
-</script>
-
-<style scoped>
-/* 원하는 스타일 추가 */
-</style>
-
-
-
-
-
-<!-- <template>
   <div class="container mt-4">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="d-flex align-items-center mb-3">
-          <img src="/placeholder.svg" alt="Map icon" class="me-2" style="height: 40; width: 40">
-          <h1 class="mb-0">상권분석</h1>
-        </div>
-        <p class="mb-4">상권별 단위의 다양한 정보를 조회할 수 있습니다.</p>
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title mb-4">
+          <i class="bi bi-map"></i> 상권분석
+        </h2>
+        <p class="card-text">상권별 다양의 다양한 정보를 조회할 수 있습니다.</p>
 
         <div class="mb-4">
-          <div class="d-flex align-items-center mb-2">
-            <img src="/placeholder.svg" alt="Location icon" class="me-2" style="height: 24; width: 24">
-            <h2 class="h5 mb-0">위치 선택</h2>
-          </div>
+          <h3 class="h5">
+            <i class="bi bi-geo-alt-fill text-danger"></i> 위치 선택
+          </h3>
           <p>분석하고 싶은 상권을 선택해주세요.</p>
-          <div class="d-flex">
-            <select class="form-select me-2" v-model="selectedDistrict">
-              <option value="">자치구</option>
-            </select>
-            <select class="form-select me-2" v-model="selectedTown">
-              <option value="">행정동</option>
-            </select>
-            <select class="form-select" v-model="selectedArea">
-              <option value="">상권</option>
-            </select>
+          <div class="row g-2">
+            <div class="col-md-4">
+              <select class="form-select">
+                <option>자치구</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select class="form-select">
+                <option>행정동</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select class="form-select">
+                <option>상권</option>
+              </select>
+            </div>
           </div>
         </div>
 
         <div class="mb-4">
-          <div class="d-flex align-items-center mb-2">
-            <img src="/placeholder.svg" alt="Business icon" class="me-2" style="height: 24; width: 24">
-            <h2 class="h5 mb-0">업종 선택</h2>
-          </div>
+          <h3 class="h5">
+            <i class="bi bi-search"></i> 업종 선택
+          </h3>
           <p>분석하고 싶은 업종을 선택해주세요.</p>
-          <div class="d-flex flex-wrap">
-            <button v-for="(type, index) in businessTypes" :key="index" 
-                    class="btn btn-outline-secondary me-2 mb-2" 
-                    :class="{ 'active': type.name === '음식점' }"
-                    style="height: 24; width: 24">
-              <img :src="type.icon" :alt="type.name" class="me-1" style="width: 20px; height: 20px;">
-              {{ type.name }}
+          <div class="row g-2">
+            <div v-for="(category, index) in categories" :key="index" class="col-4 col-md-2">
+              <button class="btn btn-outline-secondary w-100" :class="{ 'active': index === 0 }">
+                <i :class="category.icon"></i>
+                <div class="small mt-1">{{ category.name }}</div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-4">
+          <div v-for="(category, index) in two_categories" :key="index" class="col-6 col-md-3">
+            <button class="btn btn-outline-secondary w-100" :class="{ 'active': index === 2 }">
+              <!-- 아이콘과 텍스트를 동적으로 출력 -->
+              <i :class="category.icon"></i> {{ category.name }}
             </button>
           </div>
         </div>
 
-        <div class="mb-4">
-          <h3 class="h6 mb-3">한식음식점</h3>
-          <div class="d-flex flex-wrap">
-            <button v-for="(restaurant, index) in restaurants" :key="index" 
-                    class="btn btn-outline-secondary me-2 mb-2" 
-                    :class="{ 'btn-success': index === 1 }">
-              {{ restaurant }}
-            </button>
-          </div>
-        </div>
-
-        <button class="btn btn-success w-100 py-3">상권분석 시작하기</button>
+        <button class="btn btn-success w-100 py-3">
+          상권분석 시작하기
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-const selectedDistrict = ref('');
-const selectedTown = ref('');
-const selectedArea = ref('');
+const categories = ref([
+  { name: '음식점', icon: 'bi bi-cup-hot-fill' },
+  { name: '교육', icon: 'bi bi-mortarboard-fill' },
+  { name: '레저/오락', icon: 'bi bi-controller' },
+  { name: '서비스', icon: 'bi bi-person-circle' },
+  { name: '도소매업', icon: 'bi bi-cart-fill' },
+  { name: '생활용품', icon: 'bi bi-basket-fill' },
+])
 
-const businessTypes = [
-  { name: '음식점', icon: '/placeholder.svg' },
-  { name: '교육', icon: '/placeholder.svg' },
-  { name: '레저/오락', icon: '/placeholder.svg' },
-  { name: '서비스', icon: '/placeholder.svg' },
-  { name: '도소매업', icon: '/placeholder.svg' },
-  { name: '생활용품', icon: '/placeholder.svg' },
-];
-
-const restaurants = [
-  '한식음식점', '한식음식점', '한식음식점', '한식음식점',
-  '한식음식점', '한식음식점', '한식음식점', '한식음식점',
-  '한식음식점', '한식음식점', '한식음식점', '한식음식점',
-];
+const two_categories = ref([
+  { name: '음식점', icon: 'bi bi-cup-hot-fill' },
+  { name: '교육', icon: 'bi bi-mortarboard-fill' },
+  { name: '레저/오락', icon: 'bi bi-controller' },
+  { name: '서비스', icon: 'bi bi-person-circle' },
+  { name: '도소매업', icon: 'bi bi-cart-fill' },
+  { name: '생활용품', icon: 'bi bi-basket-fill' },
+  { name: '패션', icon: 'bi bi-shirt' },
+  { name: '화장품', icon: 'bi bi-brush' },
+  { name: '스포츠', icon: 'bi bi-basketball' },
+  { name: '카페', icon: 'bi bi-cup-fill' },
+  { name: '편의점', icon: 'bi bi-shop' },
+  { name: '기타', icon: 'bi bi-three-dots' }
+])
 </script>
 
 <style scoped>
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
 .btn-outline-secondary {
   border-color: #dee2e6;
 }
-.btn-outline-secondary:hover, .btn-outline-secondary.active {
+
+.btn-outline-secondary:hover,
+.btn-outline-secondary.active {
   background-color: #f8f9fa;
+  color: #000;
   border-color: #dee2e6;
-  color: #212529;
 }
-.btn-success {
-  background-color: #5cb85c;
-  border-color: #5cb85c;
-}
-</style> -->
+</style>

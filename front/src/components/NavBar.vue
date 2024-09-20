@@ -1,4 +1,5 @@
 <template>
+  <div class="container">
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
       <h5>상추창고</h5>
@@ -20,6 +21,7 @@
           <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal">예상비용</li>
           <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal"></FranchiseFee>
         </ul>
+
       </ul>
 
       <!-- 로그인/회원가입 링크 -->
@@ -39,16 +41,18 @@
       </ul>
     </nav>
 
-    <!-- 메인 콘텐츠 영역
+    <!-- 메인 콘텐츠 영역 -->
     <div class="content">
-    </div> -->
-</template>
 
+    </div>
+  </div>
+</template>
 
 <script setup>
 import {ref} from 'vue'
 import FranchiseFee from '@/views/franchise/FranchiseFee.vue'
 import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue'
+
 
 const isCommunityOpen = ref(false)
 const isFranchiseOpen = ref(false)
@@ -68,16 +72,20 @@ const toggleFranchiseSubmenu = () => {
 </script>
 
 <style scoped>
+/* 컨테이너 설정 */
 .container {
   display: flex;
+  height: 100vh;
+  width: 100vw;
 }
 
+/* 네비게이션 바 설정 */
 .navbar {
   position: relative;
-  width: 150px;
+  width: 200px; /* 사이드바 너비 */
   background-color: #f8f8f8;
   padding: 2rem;
-  height: 100vh; /* 네비게이션 바의 높이를 화면 전체로 설정 */
+  height: 100vh;
 }
 
 .navbar ul {
@@ -99,26 +107,18 @@ const toggleFranchiseSubmenu = () => {
 /* 두 번째 서브메뉴 */
 .submenu {
   width: 300px;
-  background-color: #e6f0ff; /* 하늘색 배경 */
+  background-color: #e6f0ff;
   padding: 2rem;
   height: 100vh;
-  text-align: center;
+  transition: transform 0.3s ease-in-out;
 }
 
-.submenu ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.submenu ul li{
-  margin-bottom: 1.5rem;
-  font-size: 1.2rem;
-}
-
-.submenu ul li a {
-  text-decoration: none;
-  color: inherit; /* 기본 상태에서는 부모 요소의 색상 유지 */
+/* 메인 콘텐츠 영역 */
+.content {
+  flex-grow: 1; /* 메인 콘텐츠가 사이드바를 제외한 나머지 공간을 채움 */
+  padding: 2rem;
+  background-color: #f3f4f6;
+  overflow-y: auto;
 }
 
 /* 로그인/회원가입 링크를 네비게이션 바의 하단에 고정 */
@@ -134,18 +134,16 @@ const toggleFranchiseSubmenu = () => {
 }
 
 /* 기본 링크 스타일 */
-.auth-links a, .navbar ul li a {
+.auth-links a,
+.navbar ul li a {
   text-decoration: none;
-  color: inherit; /* 기본 상태에서는 부모 요소의 색상 유지 */
-}
-
-/* 현재 페이지에 해당하는 링크를 파란색으로 유지 */
-.active-link {
-  color: blue;
+  color: inherit;
 }
 
 /* 마우스를 올렸을 때 파란색으로 변경 */
-.auth-links a:hover, .navbar ul li a:hover, .submenu ul li a:hover {
+.auth-links a:hover,
+.navbar ul li a:hover,
+.submenu ul li a:hover {
   color: blue;
 }
 </style>

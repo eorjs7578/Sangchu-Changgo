@@ -17,13 +17,46 @@
 
     <!-- 외부 로그인 버튼 -->
     <div class="external-login-buttons">
-      <button class="kakao-btn" @click="kakaoLogin()">Kakao Login</button>
-      <button class="naver-btn" @click="naverLogin()">Naver Login</button>
+      <img 
+        src="@/assets/img/카카오 로그인.png" 
+        alt="Kakao Login" 
+        class="kakao-login-btn"
+        @click="kakaoLogin"
+      />
+      <img 
+        src="@/assets/img/btnG_축약형.png" 
+        alt="Naver Login" 
+        class="naver-login-btn"
+        @click="naverLogin"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
+import axios from 'axios';
+import { ref } from 'vue';
+
+const email = ref('');
+const password = ref('');
+
+const submitLogin = async () => {
+  const loginData = {
+    email: email.value,
+    password: password.value,
+  };
+
+  try {
+    // 로그인 API 호출
+    const response = await axios.post('http://localhost:8080/api/members/login', loginData);
+    const token = response.data.token;
+    localStorage.setItem('jwtToken', token);  // 토큰 저장
+    alert('로그인에 성공했습니다.');
+  } catch (error) {
+    console.error(error);
+    alert('로그인에 실패했습니다.');
+  }
+};
   const kakaoLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:5173&mode=login";
   }
@@ -80,25 +113,15 @@
 
 .external-login-buttons {
   display: flex;
-  justify-content: space-around;
+  justify-content: center; /* 버튼들을 가운데 정렬 */
+  gap: 20px; /* 버튼 간의 간격 조정 */
   margin-top: 1rem;
 }
 
-.kakao-btn {
-  background-color: #fee500;
-  color: black;
-  padding: 0.8rem;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-}
-
-.naver-btn {
-  background-color: #03c75a;
-  color: white;
-  padding: 0.8rem;
-  border-radius: 4px;
-  border: none;
+.kakao-login-btn,
+.naver-login-btn {
+  width: 100px; /* 버튼의 너비 설정 */
+  height: auto; /* 비율을 유지하면서 높이 자동 설정 */
   cursor: pointer;
 }
 </style>
