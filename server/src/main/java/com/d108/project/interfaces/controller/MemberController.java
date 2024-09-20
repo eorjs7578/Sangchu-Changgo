@@ -5,6 +5,7 @@ import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
 import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.domain.forum.reply.ReplyService;
 import com.d108.project.domain.forum.reply.dto.ReplyByMemberIdResponseDto;
+import com.d108.project.domain.member.entity.Member;
 import com.d108.project.domain.member.service.MemberService;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
@@ -42,8 +43,8 @@ public class MemberController implements MemberApi {
     }
 
     @Override
-    public ResponseEntity<Void> logoutMember(String username) {
-        memberService.logoutMember(username);
+    public ResponseEntity<Void> logoutMember(Member member) {
+        memberService.logoutMember(member.getUsername());
         return ResponseEntity.ok().build();
     }
 
@@ -60,12 +61,12 @@ public class MemberController implements MemberApi {
     }
 
     @Override
-    public ResponseEntity<List<ReplyByMemberIdResponseDto>> getMembersReplies(Long memberId) {
-        return ResponseEntity.ok(replyService.getAllReplyByMemberId(memberId));
+    public ResponseEntity<List<ReplyByMemberIdResponseDto>> getMembersReplies(Member member) {
+        return ResponseEntity.ok(replyService.getAllReplyByMemberId(member.getId()));
     }
 
     @Override
-    public ResponseEntity<MemberResponseDto> getMyInfo() {
-        return ResponseEntity.ok(memberService.getMyInfo());
+    public ResponseEntity<MemberResponseDto> getMyInfo(Member member) {
+        return ResponseEntity.ok(memberService.getMyInfo(member));
     }
 }

@@ -105,34 +105,9 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    // 쿠키에서 내 정보를 뽑아와서 정보를 쿠키에 저장
     @Override
-    public MemberResponseDto getMyInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            // 일반 로그인 유저의 경우 처리
-            if (principal instanceof UserDetails) {
-                String username = ((UserDetails) principal).getUsername();
-                Member member = memberRepository.findByUsername(username)
-                        .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
-                return MemberResponseDto.from(member);
-            }
-            // 소셜 로그인 유저의 경우 처리
-            else if (principal instanceof OAuth2User oAuth2User) {
-                String username = oAuth2User.getName();
-                String nickname = oAuth2User.getAttribute("nickname");
-                String email = oAuth2User.getAttribute("email");
-                // TODO: 여기 아직 pk 없음
-                return new MemberResponseDto(
-                        username,
-                        nickname,
-                        email
-                );
-            }
-        }
-        return null;
+    public MemberResponseDto getMyInfo(Member member) {
+        return MemberResponseDto.from(member);
     }
 
     // 유효성 검증 함수

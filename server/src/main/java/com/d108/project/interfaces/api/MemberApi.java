@@ -7,8 +7,10 @@ import com.d108.project.domain.forum.reply.dto.ReplyByMemberIdResponseDto;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;
+import com.d108.project.domain.member.entity.Member;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public interface MemberApi {
     ResponseEntity<List<MemberResponseDto>> getAllMembers();
 
     @PostMapping("/logout")
-    ResponseEntity<Void> logoutMember(String username);
+    ResponseEntity<Void> logoutMember(@AuthenticationPrincipal Member member);
 
     @GetMapping("/auth-email")
     ResponseEntity<Void> sendAuthEmail(@RequestParam String email) throws MessagingException;
@@ -35,8 +37,8 @@ public interface MemberApi {
     ResponseEntity<Void> checkAuthCode(EmailAuthCheckDto emailAuthCheckDto);
 
     @GetMapping("/replies")
-    ResponseEntity<List<ReplyByMemberIdResponseDto>> getMembersReplies(@RequestParam Long memberId);
+    ResponseEntity<List<ReplyByMemberIdResponseDto>> getMembersReplies(@AuthenticationPrincipal Member member);
 
     @GetMapping("/my-info")
-    ResponseEntity<MemberResponseDto> getMyInfo();
+    ResponseEntity<MemberResponseDto> getMyInfo(@AuthenticationPrincipal Member member);
 }

@@ -4,6 +4,7 @@ import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;
+import com.d108.project.domain.member.entity.Member;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface MemberService {
 
     void logoutMember(String username);
 
-    MemberResponseDto getMyInfo();
+    MemberResponseDto getMyInfo(Member member);
 }
