@@ -34,6 +34,29 @@
 </template>
 
 <script setup>
+import axios from 'axios';
+import { ref } from 'vue';
+
+const email = ref('');
+const password = ref('');
+
+const submitLogin = async () => {
+  const loginData = {
+    email: email.value,
+    password: password.value,
+  };
+
+  try {
+    // 로그인 API 호출
+    const response = await axios.post('http://localhost:8080/api/members/login', loginData);
+    const token = response.data.token;
+    localStorage.setItem('jwtToken', token);  // 토큰 저장
+    alert('로그인에 성공했습니다.');
+  } catch (error) {
+    console.error(error);
+    alert('로그인에 실패했습니다.');
+  }
+};
   const kakaoLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:5173&mode=login";
   }

@@ -49,6 +49,7 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { ref } from 'vue';
 
 const name = ref('');
@@ -59,20 +60,50 @@ const repeatPassword = ref('');
 const verificationCode = ref('');
 const nicknameExists = ref(false);
 
-const submitSignup = () => {
+const submitSignup = async () => {
   if (password.value !== repeatPassword.value) {
-    alert('Passwords do not match');
+    alert('패스워드가 일치하지 않습니다.');
     return;
   }
-  console.log('Signing up with', name.value, nickname.value, email.value);
+
+  const signupData = {
+    username: name.value,
+    nickname: nickname.value,
+    email: email.value,
+    password: password.value,
+  };
+
+  try {
+    // 회원가입 API 호출
+    await axios.post('http://localhost:8080/api/members/signup', signupData);
+    alert('회원가입이 완료되었습니다.');
+  } catch (error) {
+    console.error(error);
+    alert('회원가입에 실패했습니다.');
+  }
 };
 
-const sendEmailVerification = () => {
-  console.log('Sending email verification to', email.value);
+const sendEmailVerification = async () => {
+  try {
+    // 이메일 인증 API 호출
+    await axios.get(`http://localhost:8080/api/members/auth-email?email=${email.value}`);
+    alert('인증번호가 전송되었습니다.');
+  } catch (error) {
+    console.error(error);
+    alert('인증번호 전송에 실패했습니다.');
+  }
 };
 
-const verifyCode = () => {
-  console.log('Verifying code', verificationCode.value);
+const verifyCode = async () => {
+  try {
+    // 인증번호 확인 API 호출
+    const data = { email: email.value, code: verificationCode.value };
+    await axios.post('http://localhost:8080/api/members/auth-email', data);
+    alert('인증번호가 확인되었습니다.');
+  } catch (error) {
+    console.error(error);
+    alert('인증번호 확인에 실패했습니다.');
+  }
 };
 </script>
 
