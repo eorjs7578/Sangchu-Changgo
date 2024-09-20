@@ -84,23 +84,26 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     principal.getUserInfo().getAccessToken()
             );
 
-            // 토큰 생성
-            TokenResponseDto tokenResponseDto = jwtUtil.getToken(authentication.getName());
-            String accessToken = tokenResponseDto.getAccessToken();
-            String refreshToken = tokenResponseDto.getRefreshToken();
             // 존재하지 않는 멤버면 회원 가입 시키고
             Member member = memberRepository.findByUsername(principal.getUsername())
-                    .orElse(Member.createMember(
-                            principal.getUsername(),
-                            passwordEncoder.encode(principal.getUserInfo().getAccessToken()),
-                            principal.getNickname(),
-                            principal.getEmail()
-                    ));
+                    .orElseGet(() ->
+                         memberRepository.save(Member.createMember(
+                                principal.getUsername(),
+                                passwordEncoder.encode(principal.getUserInfo().getAccessToken()),
+                                principal.getNickname(),
+                                principal.getEmail()
+                        ))
+                    );
+
+            // 토큰 생성
+            TokenResponseDto tokenResponseDto = jwtUtil.getToken(member.getUsername());
+            String accessToken = tokenResponseDto.getAccessToken();
+            String refreshToken = tokenResponseDto.getRefreshToken();
+
             // 리프레시 토큰 넣어주고
             member.setRefreshToken(refreshToken);
             // 저장
             memberRepository.save(member);
-
             // 쿠키에 푸시하고
             jwtUtil.pushTokenOnResponse(response, accessToken, refreshToken);
 
