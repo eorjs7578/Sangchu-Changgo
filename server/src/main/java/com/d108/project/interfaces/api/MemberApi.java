@@ -2,7 +2,7 @@ package com.d108.project.interfaces.api;
 
 
 import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
-import com.d108.project.cache.redisToken.dto.TokenResponseDto;
+import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.domain.forum.reply.dto.ReplyByMemberIdResponseDto;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;

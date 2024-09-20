@@ -1,4 +1,4 @@
-package com.d108.project.config.security.util;
+package com.d108.project.config.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

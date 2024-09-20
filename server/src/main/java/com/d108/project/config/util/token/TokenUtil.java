@@ -1,7 +1,7 @@
-package com.d108.project.config.security.util;
+package com.d108.project.config.util.token;
 
 import com.d108.project.cache.redis.RedisUtil;
-import com.d108.project.cache.redisToken.dto.TokenResponseDto;
+import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
 import io.jsonwebtoken.*;
@@ -27,7 +27,7 @@ import java.util.Date;
 
 @RequiredArgsConstructor
 @Component
-public class JwtUtil {
+public class TokenUtil {
 
     @Value("${spring.jwt.access-token.expire-time}")
     public Long ACCESS_TOKEN_EXPIRE;
@@ -37,7 +37,7 @@ public class JwtUtil {
     private final RedisUtil redisUtil;
     private final UserDetailsService userDetailsService;
     private final LoginCredentialRepository loginCredentialRepository;
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(TokenUtil.class);
     private static final String REDIS_ACCESS_TOKEN_PREFIX = "auth:accessToken:";
 
 
@@ -161,13 +161,8 @@ public class JwtUtil {
     @Transactional
     public TokenResponseDto getToken(String username) {
 
-        System.out.println(username);
-
         String accessToken = generateToken(username, "accessToken");
         String refreshToken = generateToken(username, "refreshToken");
-
-        System.out.println(accessToken);
-        System.out.println(refreshToken);
 
         try {
             // accessToken은 레디스에

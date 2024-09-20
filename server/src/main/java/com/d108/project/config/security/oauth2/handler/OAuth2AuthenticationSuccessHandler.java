@@ -1,12 +1,12 @@
 package com.d108.project.config.security.oauth2.handler;
 
-import com.d108.project.cache.redisToken.dto.TokenResponseDto;
+import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.config.security.oauth2.OAuth2Provider;
 import com.d108.project.config.security.oauth2.OAuth2UserPrincipal;
 import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
 import com.d108.project.config.security.oauth2.unlink.OAuth2UserUnlinkManager;
-import com.d108.project.config.security.util.CookieUtil;
-import com.d108.project.config.security.util.JwtUtil;
+import com.d108.project.config.util.CookieUtil;
+import com.d108.project.config.util.token.TokenUtil;
 import com.d108.project.domain.member.entity.Member;
 import com.d108.project.domain.member.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
@@ -33,7 +33,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final TokenUtil tokenUtil;
     private final OAuth2Repository oAuth2Repository;
     private final OAuth2UserUnlinkManager oAuth2UserUnlinkManager;
 
@@ -96,7 +96,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     );
 
             // 토큰 생성
-            TokenResponseDto tokenResponseDto = jwtUtil.getToken(member.getUsername());
+            TokenResponseDto tokenResponseDto = tokenUtil.getToken(member.getUsername());
             String accessToken = tokenResponseDto.getAccessToken();
             String refreshToken = tokenResponseDto.getRefreshToken();
 
@@ -105,7 +105,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             // 저장
             memberRepository.save(member);
             // 쿠키에 푸시하고
-            jwtUtil.pushTokenOnResponse(response, accessToken, refreshToken);
+            tokenUtil.pushTokenOnResponse(response, accessToken, refreshToken);
 
             // 리턴
             return UriComponentsBuilder.fromUriString(targetUrl)

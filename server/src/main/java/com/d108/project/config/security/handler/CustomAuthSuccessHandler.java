@@ -1,12 +1,11 @@
 package com.d108.project.config.security.handler;
 
-import com.d108.project.cache.redisToken.dto.TokenResponseDto;
-import com.d108.project.config.security.util.JwtUtil;
+import com.d108.project.config.util.token.dto.TokenResponseDto;
+import com.d108.project.config.util.token.TokenUtil;
 import com.d108.project.domain.security.dto.SecurityUserDetailsDto;
 import com.d108.project.domain.security.dto.SecurityUserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +24,10 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private final JwtUtil jwtUtil;
+    private final TokenUtil tokenUtil;
     /**
-     * 여기는 로그인을 성공한 세계선이다.
-     * 로그인을 성공했으니 리프레시 토큰과 엑세스 토큰을 돌려주도록 하자.
+     * 로그인 성공
+     * 토큰 쥐어주고 보내기
      */
     @Override
     public void onAuthenticationSuccess(
@@ -58,11 +57,11 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
 
 
         // 프론트 파트
-        TokenResponseDto tokenResponseDto = jwtUtil.getToken(securityUserDto.getUsername());
+        TokenResponseDto tokenResponseDto = tokenUtil.getToken(securityUserDto.getUsername());
         String accessToken = tokenResponseDto.getAccessToken();
         String refreshToken = tokenResponseDto.getRefreshToken();
         // 쿠키에 푸시
-        jwtUtil.pushTokenOnResponse(response, accessToken, refreshToken);
+        tokenUtil.pushTokenOnResponse(response, accessToken, refreshToken);
 
         // 4. 구성한 응답값을 전달한다.
         response.setCharacterEncoding("UTF-8");

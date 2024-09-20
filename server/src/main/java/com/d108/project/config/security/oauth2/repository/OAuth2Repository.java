@@ -1,6 +1,6 @@
 package com.d108.project.config.security.oauth2.repository;
 
-import com.d108.project.config.security.util.CookieUtil;
+import com.d108.project.config.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

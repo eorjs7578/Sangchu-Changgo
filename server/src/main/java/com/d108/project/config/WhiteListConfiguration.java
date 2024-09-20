@@ -17,8 +17,8 @@ public class WhiteListConfiguration {
             API_PREFIX+"/login/**",
             "/login/oauth2/code/kakao",
             "/login/oauth2/code/naver",
-            "/api/oauth2/authorization/kakao",
-            "/api/oauth2/authorization/naver",
+            "/oauth2/authorization/kakao",
+            "/oauth2/authorization/naver",
             // 스웨거 관련 엔드포인트
             API_PREFIX+"/swagger-resources/**",
             API_PREFIX+"/swagger-ui/**",

@@ -2,8 +2,8 @@ package com.d108.project.domain.member.service;
 
 
 import com.d108.project.cache.redis.RedisUtil;
-import com.d108.project.cache.redisToken.dto.TokenResponseDto;
-import com.d108.project.config.security.util.JwtUtil;
+import com.d108.project.config.util.token.dto.TokenResponseDto;
+import com.d108.project.config.util.token.TokenUtil;
 import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
 import com.d108.project.domain.member.entity.Member;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-    private final JwtUtil jwtUtil;
+    private final TokenUtil tokenUtil;
     private final RedisUtil redisUtil;
     private final MemberRepository memberRepository;
     private final LoginCredentialRepository loginCredentialRepository;
@@ -81,7 +81,7 @@ public class MemberServiceImpl implements MemberService {
         // 비밀번호 확인
         if (passwordEncoder.matches(memberLoginDto.getPassword(), loginCredential.getPassword())) {
             // 비밀번호 검증이 성공 했으면, 토큰을 발급하고 반환
-            return jwtUtil.getToken(memberLoginDto.getUsername());
+            return tokenUtil.getToken(memberLoginDto.getUsername());
         } else {
             throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
         }

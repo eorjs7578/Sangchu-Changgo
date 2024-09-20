@@ -1,6 +1,6 @@
 package com.d108.project.domain.member.service;
 
-import com.d108.project.cache.redisToken.dto.TokenResponseDto;
+import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;
