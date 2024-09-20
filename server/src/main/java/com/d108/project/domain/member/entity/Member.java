@@ -33,10 +33,21 @@ public class Member extends LoginCredential{
 
     public static Member createMember(MemberRegisterDto memberRegisterDto, String passwordEncode) {
         Member member = new Member();
-        member.setNickname(memberRegisterDto.getNickname());
         member.setUsername(memberRegisterDto.getUsername());
-        member.setEmail(memberRegisterDto.getEmail());
         member.setPassword(passwordEncode);
+        member.setNickname(memberRegisterDto.getNickname());
+        member.setEmail(memberRegisterDto.getEmail());
+
+        return member;
+    }
+
+    // 소셜 로그인 용
+    public static Member createMember(String username, String password, String nickname, String email) {
+        Member member = new Member();
+        member.setUsername(username);
+        member.setPassword(password);
+        member.setNickname(nickname);
+        member.setEmail(email);
 
         return member;
     }
