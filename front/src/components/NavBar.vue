@@ -1,7 +1,7 @@
 <template>
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
-      <h1>상추창고</h1>
+      <h2>상추창고</h2>
       <ul>
         <li @click="closeCommunitySubmenu"><router-link to="/marketanalysis">상권분석</router-link></li>
         <li @click="closeCommunitySubmenu"><router-link to="/interestareas">관심상권</router-link></li>
@@ -55,10 +55,12 @@ const closeCommunitySubmenu = () => {
 
 .navbar {
   position: relative;
-  width: 10vw;
+  width: 12vw;
   background-color: #f8f8f8;
-  padding: 2rem;
+  padding: 1rem;
   height: 100vh; /* 네비게이션 바의 높이를 화면 전체로 설정 */
+  display: flex;
+  justify-content: center;
 }
 
 .navbar ul {
@@ -69,6 +71,7 @@ const closeCommunitySubmenu = () => {
 .navbar ul li {
   margin-bottom: 1.5rem;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 /* 커뮤니티 링크에 대한 hover 스타일 추가 */
@@ -104,14 +107,16 @@ const closeCommunitySubmenu = () => {
 
 /* 로그인/회원가입 링크를 네비게이션 바의 하단에 고정 */
 .auth-links {
-  position: absolute;
-  bottom: 2rem;
+  /* position: absolute; */
+  bottom: 0;
   left: 2rem;
+  margin: 0;
 }
 
 .auth-links li {
   margin-bottom: 1.5rem;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 /* 기본 링크 스타일 */

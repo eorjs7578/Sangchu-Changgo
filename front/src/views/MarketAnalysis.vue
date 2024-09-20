@@ -17,7 +17,8 @@ export default {
 <style scoped>
 .map-container{
   padding: 0px;
-  width: 90%;
-  height: 100%;
+  width: 88vw;
+  height: 100vh;
+  float: right;
 }
 </style>
