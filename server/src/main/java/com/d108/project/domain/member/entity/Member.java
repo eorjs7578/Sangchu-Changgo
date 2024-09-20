@@ -18,7 +18,7 @@ import java.util.List;
 @ToString(exclude = {"favoriteBusinessAreas", "favoriteFranchises"})
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id") // 상속받은 엔티티의 기본 키를 지정
-public class Member extends LoginCredential{
+public class Member extends LoginCredential {
 
     private String nickname;
 
