@@ -9,7 +9,7 @@ import com.d108.project.config.security.oauth2.OAuth2UserService;
 import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
-import com.d108.project.config.security.util.JwtUtil;
+import com.d108.project.config.util.token.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -191,9 +191,9 @@ public class SecurityConfiguration {
      */
     @Bean
     public CustomAuthSuccessHandler customLoginSuccessHandler(
-            JwtUtil jwtUtil
+            TokenUtil tokenUtil
     ) {
-        return new CustomAuthSuccessHandler(jwtUtil);
+        return new CustomAuthSuccessHandler(tokenUtil);
     }
 
     /**
@@ -211,10 +211,10 @@ public class SecurityConfiguration {
      */
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter(
-            JwtUtil jwtUtil,
+            TokenUtil tokenUtil,
             WhiteListConfiguration whiteListConfiguration
     ) {
-        return new JwtAuthorizationFilter(jwtUtil, whiteListConfiguration);
+        return new JwtAuthorizationFilter(tokenUtil, whiteListConfiguration);
     }
 
 

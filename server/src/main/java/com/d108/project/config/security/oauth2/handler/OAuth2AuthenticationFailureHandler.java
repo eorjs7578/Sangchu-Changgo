@@ -1,7 +1,7 @@
 package com.d108.project.config.security.oauth2.handler;
 
 import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
-import com.d108.project.config.security.oauth2.util.CookieUtil;
+import com.d108.project.config.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
