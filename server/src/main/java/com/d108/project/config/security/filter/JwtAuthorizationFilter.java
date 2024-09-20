@@ -73,13 +73,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     }
                     // 리프레시 토큰도 유효하지 않은 경우
                     else {
-                        jwtUtil.deleteCookie(response);
+                        jwtUtil.deleteTokenOnCookie(response);
                         throw new RuntimeException("토큰이 유효하지 않습니다.");
                     }
                 }
                 // 토큰이 제대로 추출되지 않은 경우
             } else {
-                jwtUtil.deleteCookie(response);
+                jwtUtil.deleteTokenOnCookie(response);
                 throw new RuntimeException("토큰이 유효하지 않습니다.");
             }
         } catch (Exception e) {

@@ -55,30 +55,21 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
 
 
         // 엑세스 토큰과 리프레시 토큰 생성
+
+
+        // 프론트 파트
         TokenResponseDto tokenResponseDto = jwtUtil.getToken(securityUserDto.getUsername());
         String accessToken = tokenResponseDto.getAccessToken();
         String refreshToken = tokenResponseDto.getRefreshToken();
-
-        jsonObject.put("access_token", accessToken);
-        jsonObject.put("refresh_token", refreshToken);
-
-        // 프론트 파트
-        // 쿠키에 JWT 토큰 저장
-        Cookie accessTokenCookie = new Cookie("access_token", accessToken);
-        Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
-
-        accessTokenCookie.setHttpOnly(true); // JavaScript에서 쿠키에 접근할 수 없도록 설정
-        accessTokenCookie.setPath("/"); // 모든 경로에서 쿠키에 접근 가능하도록 설정
-        response.addCookie(accessTokenCookie); // 응답에 쿠키 추가
-
-        refreshTokenCookie.setHttpOnly(true); // JavaScript에서 쿠키에 접근할 수 없도록 설정
-        refreshTokenCookie.setPath("/"); // 모든 경로에서 쿠키에 접근 가능하도록 설정
-        response.addCookie(refreshTokenCookie); // 응답에 쿠키 추가
+        // 쿠키에 푸시
+        jwtUtil.pushTokenOnResponse(response, accessToken, refreshToken);
 
         // 4. 구성한 응답값을 전달한다.
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
 
+        jsonObject.put("access_token", accessToken);
+        jsonObject.put("refresh_token", refreshToken);
         try (PrintWriter printWriter = response.getWriter()){
             printWriter.print(jsonObject); // 최종 저장된 '사용자 정보', '사이트 정보'를 Front에 전달
             printWriter.flush();

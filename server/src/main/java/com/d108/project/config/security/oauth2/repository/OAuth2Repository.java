@@ -1,6 +1,6 @@
 package com.d108.project.config.security.oauth2.repository;
 
-import com.d108.project.config.security.oauth2.util.CookieUtil;
+import com.d108.project.config.security.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +33,6 @@ public class OAuth2Repository implements AuthorizationRequestRepository<OAuth2Au
     @Override
     public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request,
                                          HttpServletResponse response) {
-
-        System.out.println("SaveAuthorizationRequest");
 
         if (authorizationRequest == null) {
             CookieUtil.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);

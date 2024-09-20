@@ -1,13 +1,12 @@
 package com.d108.project.config.security.oauth2.handler;
 
+import com.d108.project.cache.redisToken.dto.TokenResponseDto;
 import com.d108.project.config.security.oauth2.OAuth2Provider;
 import com.d108.project.config.security.oauth2.OAuth2UserPrincipal;
-import com.d108.project.config.security.oauth2.TokenProvider;
 import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
 import com.d108.project.config.security.oauth2.unlink.OAuth2UserUnlinkManager;
-import com.d108.project.config.security.oauth2.util.CookieUtil;
+import com.d108.project.config.security.util.CookieUtil;
 import com.d108.project.config.security.util.JwtUtil;
-import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import com.d108.project.domain.member.entity.Member;
 import com.d108.project.domain.member.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
@@ -85,9 +84,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     principal.getUserInfo().getAccessToken()
             );
 
-            String accessToken = jwtUtil.generateToken(authentication.getName(), "accessToken");
-            String refreshToken = jwtUtil.generateToken(authentication.getName(), "refreshToken");
-
+            // 토큰 생성
+            TokenResponseDto tokenResponseDto = jwtUtil.getToken(authentication.getName());
+            String accessToken = tokenResponseDto.getAccessToken();
+            String refreshToken = tokenResponseDto.getRefreshToken();
             // 존재하지 않는 멤버면 회원 가입 시키고
             Member member = memberRepository.findByUsername(principal.getUsername())
                     .orElse(Member.createMember(
@@ -101,33 +101,21 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             // 저장
             memberRepository.save(member);
 
-            // 쿠키도 넣어주기
-            // TODO: 함수로 변환해서 중복 줄이기
-            Cookie accessTokenCookie = new Cookie("access_token", accessToken);
-            Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
+            // 쿠키에 푸시하고
+            jwtUtil.pushTokenOnResponse(response, accessToken, refreshToken);
 
-            accessTokenCookie.setHttpOnly(true); // JavaScript에서 쿠키에 접근할 수 없도록 설정
-            accessTokenCookie.setPath("/"); // 모든 경로에서 쿠키에 접근 가능하도록 설정
-            response.addCookie(accessTokenCookie); // 응답에 쿠키 추가
-
-            refreshTokenCookie.setHttpOnly(true); // JavaScript에서 쿠키에 접근할 수 없도록 설정
-            refreshTokenCookie.setPath("/"); // 모든 경로에서 쿠키에 접근 가능하도록 설정
-            response.addCookie(refreshTokenCookie); // 응답에 쿠키 추가
-
+            // 리턴
             return UriComponentsBuilder.fromUriString(targetUrl)
-                    .queryParam("access_token", accessToken)
-                    .queryParam("refresh_token", refreshToken)
                     .build().toUriString();
-
         }
-
+        // 언링크는 후순위
         else if ("unlink".equalsIgnoreCase(mode)) {
 
             String accessToken = principal.getUserInfo().getAccessToken();
             OAuth2Provider provider = principal.getUserInfo().getProvider();
 
-            // TODO: DB 삭제
-            // TODO: 리프레시 토큰 삭제
+            // DB 삭제
+            // 리프레시 토큰 삭제
             oAuth2UserUnlinkManager.unlink(provider, accessToken);
 
             return UriComponentsBuilder.fromUriString(targetUrl)

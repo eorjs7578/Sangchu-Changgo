@@ -1,4 +1,4 @@
-package com.d108.project.config.security.oauth2.util;
+package com.d108.project.config.security.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,6 @@ public class CookieUtil {
     }
 
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
-        System.out.println(name + " " + value);
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);

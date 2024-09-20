@@ -124,7 +124,7 @@ public class JwtUtil {
         return null;
     }
 
-    public void deleteCookie(
+    public void deleteTokenOnCookie(
             @NonNull HttpServletResponse response
     ) {
         Cookie cookieRefresh = new Cookie("refresh_token", "");
@@ -138,6 +138,7 @@ public class JwtUtil {
         response.addCookie(cookieAccess);
     }
 
+    @Transactional
     public void tokenRefresh(
             @NonNull HttpServletResponse response,
             String refreshToken) throws RuntimeException {
@@ -147,7 +148,7 @@ public class JwtUtil {
 
         // 근데 토큰이 DB에 저장된 것과 다른 경우
         if (!refreshToken.equals(storedToken)) {
-            deleteCookie(response);
+            deleteTokenOnCookie(response);
             throw new RuntimeException("토큰이 유효하지 않습니다.");
         }
 
@@ -190,4 +191,19 @@ public class JwtUtil {
             throw new RuntimeException("아이디가 존재하지 않습니다.");
         }
     }
+
+    public void pushTokenOnResponse(HttpServletResponse response, String accessToken, String refreshToken) {
+        // 생성된 토큰을 쿠키로 만들어서
+        Cookie accessTokenCookie = new Cookie("access_token", accessToken);
+        Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
+        // 각각 
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setPath("/");
+        response.addCookie(accessTokenCookie);
+        // 셋팅해서 넘겨주기
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/");
+        response.addCookie(refreshTokenCookie);
+    }
 }
+
