@@ -4,13 +4,12 @@
       <div class="modal-content">
         <div class="modal-header bg-success text-white">
           <h5 class="modal-title" id="koreanModalLabel">창업 예상 비용 확인</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button @click="setParamsDefault" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <transition name="fade" mode="out-in">
             <!-- Step 1 -->
-            <div v-if="currentStep === 1" key="step1">
-              <form @submit.prevent="nextStep">
+            <div v-if="currentStep === 1" key="step1" class="h-100 d-flex flex-column justify-content-between">
                 <div class="mb-4"> <!-- 간격 조정 -->
                   <label for="location" class="form-label">창업하시려는 위치를 입력해 주세요</label>
                   <div class="input-group">
@@ -20,7 +19,7 @@
                 </div>
                 <div class="mb-4"> <!-- 간격 조정 -->
                   <label class="form-label">원하는 프랜차이즈를 선택해주세요</label>
-                  <div class="row g-3"> <!-- 간격 조정 -->
+                  <div class="row"> <!-- 간격 조정 -->
                     <div class="col-md-6">
                       <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-search"></i></span>
@@ -34,20 +33,20 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="mb-4"> <!-- 간격 조정 -->
-                  <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control" v-model="franchise" placeholder="프랜차이즈 선택">
+                  <div class="mt-4">
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-search"></i></span>
+                      <input type="text" class="form-control" v-model="franchise" placeholder="프랜차이즈 선택">
+                    </div>
                   </div>
                 </div>
-                <button type="submit" class="btn btn-success w-100">다음</button>
-              </form>
+                <button @click="nextStep" class="btn btn-success w-100">다음</button>
             </div>
 
             <!-- Step 2 -->
-            <div v-else-if="currentStep === 2" key="step2">
-              <h6 class="mb-4">매장크기를 선택해 주세요.</h6>
+            <div v-else-if="currentStep === 2" key="step2" class="h-100 d-flex flex-column justify-content-between">
+              <div>
+                <h6 class="mb-4">매장크기를 선택해 주세요.</h6>
               <div class="row mb-4">
                 <div class="col-6">
                   <div class="card" :class="{ 'border-primary': storeSize === 'small' }" @click="storeSize = 'small'">
@@ -68,16 +67,21 @@
                   </div>
                 </div>
               </div>
-              <h6 class="mb-4">층수를 선택해 주세요.</h6>
-              <div class="row mb-4">
-                <div class="col-4" v-for="floor in ['지하', '1층', '1층 이상']" :key="floor">
-                  <div class="card" :class="{ 'border-primary': selectedFloor === floor }" @click="selectedFloor = floor">
-                    <div class="card-body text-center">
-                      <h6>{{ floor }}</h6>
+              </div>
+              
+              <div>
+                <h6 class="mb-4">층수를 선택해 주세요.</h6>
+                  <div class="row mb-4">
+                    <div class="col-4" v-for="floor in ['지하', '1층', '1층 이상']" :key="floor">
+                      <div class="card" :class="{ 'border-primary': selectedFloor === floor }" @click="selectedFloor = floor">
+                        <div class="card-body text-center">
+                          <h6>{{ floor }}</h6>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
               </div>
+              
               <div class="d-flex justify-content-between">
                 <button @click="prevStep" class="btn btn-secondary w-100 me-2">이전</button>
                 <button @click="showCostBreakdown" class="btn btn-success w-100 ms-2">비용 확인</button>
@@ -174,6 +178,7 @@ const otherFranchises = ref([
   }
 ])
 
+
 const nextStep = () => {
   currentStep.value++
 }
@@ -195,6 +200,16 @@ const submitForm = () => {
     storeSize: storeSize.value,
     selectedFloor: selectedFloor.value
   })
+}
+
+const setParamsDefault = () => {
+  currentStep.value = 1
+  location.value = ''
+  mainCategory.value = ''
+  subCategory.value = ''
+  franchise.value = ''
+  storeSize.value = ''
+  selectedFloor.value = ''
 }
 </script>
 
