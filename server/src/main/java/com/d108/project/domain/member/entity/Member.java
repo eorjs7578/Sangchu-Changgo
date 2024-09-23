@@ -31,24 +31,25 @@ public class Member extends LoginCredential {
     @OneToMany(mappedBy = "member")
     private List<FavoriteFranchise> favoriteFranchises = new ArrayList<>();
 
+    // 일반 유저 회원가입
     public static Member createMember(MemberRegisterDto memberRegisterDto, String passwordEncode) {
         Member member = new Member();
         member.setUsername(memberRegisterDto.getUsername());
         member.setPassword(passwordEncode);
         member.setNickname(memberRegisterDto.getNickname());
         member.setEmail(memberRegisterDto.getEmail());
-
+        member.setSocialUser(false);
         return member;
     }
 
-    // 소셜 로그인 용
+    // 소셜 유저 회원가입
     public static Member createMember(String username, String password, String nickname, String email) {
         Member member = new Member();
         member.setUsername(username);
         member.setPassword(password);
         member.setNickname(nickname);
         member.setEmail(email);
-
+        member.setSocialUser(true);
         return member;
     }
 }
