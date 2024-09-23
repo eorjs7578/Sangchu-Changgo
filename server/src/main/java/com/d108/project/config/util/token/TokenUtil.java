@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -127,6 +128,7 @@ public class TokenUtil {
     public void deleteTokenOnCookie(
             @NonNull HttpServletResponse response
     ) {
+
         Cookie cookieRefresh = new Cookie("refresh_token", "");
         cookieRefresh.setMaxAge(0);
         cookieRefresh.setPath("/");
@@ -136,6 +138,9 @@ public class TokenUtil {
         cookieAccess.setMaxAge(0);
         cookieAccess.setPath("/");
         response.addCookie(cookieAccess);
+
+        response.setHeader("access_token", "access_token=; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=0");
+        response.setHeader("refresh_token", "refresh_token=; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=0");
     }
 
     @Transactional
@@ -195,21 +200,39 @@ public class TokenUtil {
 
     public void pushTokenOnResponse(HttpServletResponse response, String accessToken, String refreshToken) {
         // 생성된 토큰을 쿠키로 만들어서
-        Cookie accessTokenCookie = new Cookie("access_token", accessToken);
-        Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
-        // 각각 
-        // accessTokenCookie.setSecure(true);
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(Math.toIntExact(ACCESS_TOKEN_EXPIRE));
-        response.addCookie(accessTokenCookie);
-        // 셋팅해서 넘겨주기
-        // refreshTokenCookie.setSecure(true);
-        //
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(Math.toIntExact(REFRESH_TOKEN_EXPIRE));
-        response.addCookie(refreshTokenCookie);
+        ResponseCookie accessTokenCookie = ResponseCookie.from("access_token", accessToken)
+                .httpOnly(true)
+                .path("/")
+//                .sameSite("None")
+                .maxAge(Math.toIntExact(ACCESS_TOKEN_EXPIRE))
+//                .secure(true)
+                .build();
+        response.addHeader("Set-Cookie", accessTokenCookie.toString());
+
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
+                .httpOnly(true)
+                .path("/")
+//                .sameSite("None")
+                .maxAge(Math.toIntExact(REFRESH_TOKEN_EXPIRE))
+//                .secure(true)
+                .build();
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
+
+//        Cookie accessTokenCookie = new Cookie("access_token", accessToken);
+//        Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
+//        // 각각
+//        // accessTokenCookie.setSecure(true);
+//        accessTokenCookie.setHttpOnly(true);
+//        accessTokenCookie.setPath("/");
+//        accessTokenCookie.setMaxAge(Math.toIntExact(ACCESS_TOKEN_EXPIRE));
+//        response.addCookie(accessTokenCookie);
+//        // 셋팅해서 넘겨주기
+//        // refreshTokenCookie.setSecure(true);
+//        //
+//        refreshTokenCookie.setHttpOnly(true);
+//        refreshTokenCookie.setPath("/");
+//        refreshTokenCookie.setMaxAge(Math.toIntExact(REFRESH_TOKEN_EXPIRE));
+//        response.addCookie(refreshTokenCookie);
     }
 }
 

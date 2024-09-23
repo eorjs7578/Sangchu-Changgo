@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -89,6 +90,7 @@ public class MemberController implements MemberApi {
     )
     @Override
     public ResponseEntity<MemberResponseDto> getMyInfo(Member member) {
+        System.out.println(member);
         return ResponseEntity.ok(memberService.getMyInfo(member));
     }
 
