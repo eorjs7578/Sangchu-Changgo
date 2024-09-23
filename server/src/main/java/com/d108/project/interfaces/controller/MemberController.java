@@ -61,7 +61,7 @@ public class MemberController implements MemberApi {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "인증 메일 발송", description = "레디스에 인증번호 저장됨")
+    @Operation(summary = "인증 메일 발송", description = "레디스에 인증번호 저장")
     @Override
     public ResponseEntity<Void> sendAuthEmail(String email) throws MessagingException {
         redisEmailService.sendEmail(email);

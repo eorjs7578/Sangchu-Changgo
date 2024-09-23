@@ -30,9 +30,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @Nonnull FilterChain filterChain
     ) throws ServletException, IOException {
+        log.info("요청 주소: {}", request.getRequestURI());
 
         log.info("JWT FILTER START");
-        System.out.println(request.getRequestURI());
 
         if (Arrays.stream(whiteListConfiguration.getWhiteList())
                 .anyMatch(whiteList -> new AntPathRequestMatcher(whiteList).matches(request))) {
