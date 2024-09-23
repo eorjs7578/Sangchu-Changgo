@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="App_container">
     <NavBar />
     <router-view />
   </div>
@@ -16,16 +16,20 @@ export default {
 </script>
 
 <style scoped>
-.container {
+.App_container {
   display: flex;
-
+  justify-content: flex-start;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 </style>
 
 <style>
-.container {
-  padding: 0;
+* {
   margin: 0;
-
+  padding: 0;
+  box-sizing: border-box;
 }
+
 </style>

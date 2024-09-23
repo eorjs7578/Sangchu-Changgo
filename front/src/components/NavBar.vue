@@ -82,10 +82,12 @@ const toggleFranchiseSubmenu = () => {
 /* 네비게이션 바 설정 */
 .navbar {
   position: relative;
-  width: 200px; /* 사이드바 너비 */
+  width: 12vw;
   background-color: #f8f8f8;
-  padding: 2rem;
-  height: 100vh;
+  padding: 1rem;
+  height: 100vh; /* 네비게이션 바의 높이를 화면 전체로 설정 */
+  display: flex;
+  justify-content: center;
 }
 
 .navbar ul {
@@ -96,6 +98,7 @@ const toggleFranchiseSubmenu = () => {
 .navbar ul li {
   margin-bottom: 1.5rem;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 /* 커뮤니티 링크에 대한 hover 스타일 추가 */
@@ -123,14 +126,16 @@ const toggleFranchiseSubmenu = () => {
 
 /* 로그인/회원가입 링크를 네비게이션 바의 하단에 고정 */
 .auth-links {
-  position: absolute;
-  bottom: 2rem;
+  /* position: absolute; */
+  bottom: 0;
   left: 2rem;
+  margin: 0;
 }
 
 .auth-links li {
   margin-bottom: 1.5rem;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 /* 기본 링크 스타일 */
