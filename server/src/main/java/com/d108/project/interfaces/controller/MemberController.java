@@ -57,7 +57,7 @@ public class MemberController implements MemberApi {
     )
     @Override
     public ResponseEntity<Void> logoutMember(Member member) {
-        memberService.logoutMember(member.getUsername());
+        memberService.logoutMember(member);
         return ResponseEntity.ok().build();
     }
 
