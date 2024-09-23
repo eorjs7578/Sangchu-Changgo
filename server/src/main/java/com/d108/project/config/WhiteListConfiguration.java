@@ -25,9 +25,7 @@ public class WhiteListConfiguration {
 
     private final String[] whiteListForSwagger = {
             // 스웨거 관련 엔드포인트
-            "/api/v1/**",
             "/v1/swagger-ui/**",
-            "/v1/swagger-ui/*",
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/v1/swagger-ui/**",
