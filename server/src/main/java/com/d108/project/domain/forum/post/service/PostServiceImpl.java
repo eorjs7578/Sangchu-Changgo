@@ -6,7 +6,6 @@ import com.d108.project.domain.forum.post.entity.Post;
 import com.d108.project.domain.forum.post.repository.PostRepository;
 import com.d108.project.domain.forum.board.repository.BoardRepository;
 import com.d108.project.domain.member.entity.Member;
-import com.d108.project.domain.member.repository.MemberRepository;
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
@@ -25,7 +24,6 @@ public class PostServiceImpl implements PostService {
     private final RedisUtil redisUtil;
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
-    private final MemberRepository memberRepository;
     private static final String REDIS_PREFIX = "post:viewCount:";
 
     // 글 작성
