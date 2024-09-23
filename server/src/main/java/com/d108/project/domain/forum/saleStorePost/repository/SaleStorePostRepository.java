@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface SaleStorePostRepository extends JpaRepository<SaleStorePost, Long> {
 
-    @Query("SELECT p.id FROM SaleStorePost p")  // JPQL 쿼리 추가
+    @Query("SELECT salestorepost.id FROM SaleStorePost salestorepost")  // JPQL 쿼리 추가
     List<Long> findAllSaleStorePostIds();
 }

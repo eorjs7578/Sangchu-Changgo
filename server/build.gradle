@@ -2,10 +2,14 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.2'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'jacoco'
+	id "org.sonarqube" version "5.0.0.4638"
 }
 
 group = 'com.d108.'
 version = '0.0.1-SNAPSHOT'
+
+ext.jacocoDir = layout.buildDirectory.dir("customJacocoReportDir").get().asFile.toString() as String
 
 java {
 	toolchain {
@@ -89,7 +93,11 @@ task copyYML(type: Copy) {
 
 
 // 분리된 설정 파일 포함
-apply from: 'querydsl.gradle'
+apply {
+	from 'querydsl.gradle'
+	from 'sonarqube.gradle'
+	from 'jacoco.gradle'
+}
 
 // 스프링 부트 2.5 버전 이후, 프로젝트를 빌드할 때 .jar 파일이 두 개가 생성 -> 방지 -> 올바른 jar 파일 사용
 jar {
