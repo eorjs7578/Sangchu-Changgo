@@ -25,15 +25,15 @@ public class WhiteListConfiguration {
 
     private final String[] whiteListForSwagger = {
             // 스웨거 관련 엔드포인트
-            "/**",
+            "/api/v1/**",
             "/v1/swagger-ui/**",
             "/v1/swagger-ui/*",
             "/swagger-ui/**",
-            API_PREFIX+"/swagger-resources/**",
-            API_PREFIX+"/v1/swagger-ui/**",
-            API_PREFIX+"/v3/api-docs/**",
-            API_PREFIX+"/api-docs/**",
-            API_PREFIX+"/error",
+            "/swagger-resources/**",
+            "/v1/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/api-docs/**",
+            "/error",
     };
 
     private final String[] whiteListForGet = {
