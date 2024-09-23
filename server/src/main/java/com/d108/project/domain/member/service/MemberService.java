@@ -16,7 +16,13 @@ public interface MemberService {
 
     List<MemberResponseDto> getAllMember();
 
-    void logoutMember(String username);
+    void logoutMember(Member member);
 
     MemberResponseDto getMyInfo(Member member);
+
+    boolean isUsernameDuplicated(String username);
+
+    boolean isNicknameDuplicated(String nickname);
+
+    boolean isEmailDuplicated(String email);
 }

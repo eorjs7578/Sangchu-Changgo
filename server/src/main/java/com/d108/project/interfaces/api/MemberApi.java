@@ -41,4 +41,12 @@ public interface MemberApi {
 
     @GetMapping("/my-info")
     ResponseEntity<MemberResponseDto> getMyInfo(@AuthenticationPrincipal Member member);
+    
+    //닉네임, 아이디, 이메일 중복 검사
+    @GetMapping("/duplicate/email")
+    ResponseEntity<String> isEmailDuplicated(@RequestParam String email);
+    @GetMapping("/duplicate/username")
+    ResponseEntity<String> isUsernameDuplicated(@RequestParam String username);
+    @GetMapping("/duplicate/nickname")
+    ResponseEntity<String> isNicknameDuplicated(@RequestParam String nickname);
 }

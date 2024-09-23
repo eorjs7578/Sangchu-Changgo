@@ -91,4 +91,31 @@ public class MemberController implements MemberApi {
     public ResponseEntity<MemberResponseDto> getMyInfo(Member member) {
         return ResponseEntity.ok(memberService.getMyInfo(member));
     }
+
+    @Operation(summary = "이메일 중복 확인")
+    @Override
+    public ResponseEntity<String> isEmailDuplicated(String email) {
+        if (memberService.isEmailDuplicated(email)) {
+            return ResponseEntity.ok("사용할 수 있는 이메일 입니다.");
+        }
+        return ResponseEntity.badRequest().body("중복된 이메일 입니다.");
+    }
+    
+    @Operation(summary = "닉네임 중복 확인")
+    @Override
+    public ResponseEntity<String> isNicknameDuplicated(String nickname) {
+        if (memberService.isNicknameDuplicated(nickname)) {
+            return ResponseEntity.ok("사용할 수 있는 닉네임 입니다.");
+        }
+        return ResponseEntity.badRequest().body("중복된 닉네임 입니다.");
+    }
+
+    @Operation(summary = "아이디 중복 확인")
+    @Override
+    public ResponseEntity<String> isUsernameDuplicated(String username) {
+        if (memberService.isUsernameDuplicated("사용할 수 있는 아이디 입니다.")) {
+            return ResponseEntity.ok("사용할 수 있는 아이디 입니다.");
+        }
+        return ResponseEntity.badRequest().body("중복된 아이디입니다.");
+    }
 }
