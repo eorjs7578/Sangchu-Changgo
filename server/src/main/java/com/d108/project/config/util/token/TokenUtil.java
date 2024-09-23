@@ -38,7 +38,7 @@ public class TokenUtil {
     private final UserDetailsService userDetailsService;
     private final LoginCredentialRepository loginCredentialRepository;
     private static final Logger logger = LoggerFactory.getLogger(TokenUtil.class);
-    private static final String REDIS_ACCESS_TOKEN_PREFIX = "auth:accessToken:";
+    public static final String REDIS_ACCESS_TOKEN_PREFIX = "auth:accessToken:";
 
 
     // JWT 서명에 사용할 비밀키 (application.properties 또는 application.yml에서 주입됨)

@@ -13,12 +13,8 @@ import com.d108.project.domain.member.dto.MemberResponseDto;
 import com.d108.project.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -97,12 +93,19 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
-    // 로그아웃 시 레디스에서 삭제
+    @Transactional
     @Override
-    public void logoutMember(String username) {
-        if (redisUtil.getData(username) != null) {
-            redisUtil.deleteData(username);
+    public void logoutMember(Member member) {
+        // 레디스에서 엑세스 토큰 삭제
+        String redisKey = TokenUtil.REDIS_ACCESS_TOKEN_PREFIX + member.getUsername();
+        if (redisUtil.getData(redisKey) != null) {
+            redisUtil.deleteData(redisKey);
         }
+
+        // DB에서 리프레시 토큰 삭제
+        member.setRefreshToken(null);
+
+        // 트랜잭션이라 바로 저장됨
     }
 
     @Override
@@ -111,7 +114,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     // 유효성 검증 함수
-    private void isValidate(String email, String password, String nickname) {
+    private boolean isValidate(String email, String password, String nickname) {
         if (!Pattern.matches(EMAIL_PATTERN, email)) {
             throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다.");
         } else if (!Pattern.matches(NICKNAME_PATTERN, nickname)) {
@@ -119,24 +122,32 @@ public class MemberServiceImpl implements MemberService {
         } else if (!Pattern.matches(PASSWORD_PATTERN, password)) {
             throw new IllegalArgumentException("유효하지 않은 비밀번호 형식입니다.");
         }
+
+        return true;
     }
 
-    private void isEmailDuplicated(String email) {
+    public boolean isEmailDuplicated(String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
+
+        return true;
     }
 
-    private void isNicknameDuplicated(String nickname) {
+    public boolean isNicknameDuplicated(String nickname) {
         if (memberRepository.findByNickname(nickname).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
         }
+
+        return true;
     }
 
-    private void isUsernameDuplicated(String username) {
+    public boolean isUsernameDuplicated(String username) {
         if (loginCredentialRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
+
+        return true;
     }
     
 }
