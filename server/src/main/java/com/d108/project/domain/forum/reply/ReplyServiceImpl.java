@@ -9,7 +9,6 @@ import com.d108.project.domain.forum.reply.dto.ReplyCreateDto;
 import com.d108.project.domain.forum.reply.dto.ReplyUpdateDto;
 import com.d108.project.domain.forum.reply.repository.ReplyRepository;
 import com.d108.project.domain.member.entity.Member;
-import com.d108.project.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,10 @@ import java.util.stream.Collectors;
 public class ReplyServiceImpl implements ReplyService {
 
     private final ReplyRepository replyRepository;
-    private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
     @Override
-    public void createReply(Long postId, ReplyCreateDto replyCreateDto) {
-        Member member = memberRepository.findById(replyCreateDto.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 사용자 입니다."));
-
+    public void createReply(Member member, Long postId, ReplyCreateDto replyCreateDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
@@ -41,6 +36,7 @@ public class ReplyServiceImpl implements ReplyService {
 
         replyRepository.save(reply);
     }
+
     // 글 기준으로 전체 댓글 조회
     @Override
     public List<ReplyByPostIdResponseDto> getAllReplyByPostId(Long postId) {
@@ -63,12 +59,9 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void updateReply(Long replyId, Long memberId, ReplyUpdateDto replyUpdateDto) {
+    public void updateReply(Member member, Long replyId, ReplyUpdateDto replyUpdateDto) {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         if (!member.equals(reply.getMember())) {
             throw new AccessDeniedException("본인의 댓글만 수정할 수 있습니다.");
@@ -79,12 +72,9 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void deleteReply(Long replyId, Long memberId) {
+    public void deleteReply(Member member, Long replyId) {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         if (!member.equals(reply.getMember())) {
             throw new AccessDeniedException("본인의 댓글만 삭제할 수 있습니다.");
