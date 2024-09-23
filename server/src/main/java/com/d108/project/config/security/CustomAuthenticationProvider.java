@@ -1,6 +1,6 @@
 package com.d108.project.config.security;
 
-import com.d108.project.domain.security.dto.SecurityUserDetailsDto;
+import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -32,14 +32,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String userPassword = (String) token.getCredentials();
 
         // Spring security - UserDetailsService를 통해 DB에서 username으로 사용자 조회
-        SecurityUserDetailsDto securityUserDetailsDto = (SecurityUserDetailsDto) userDetailsService.loadUserByUsername(loginId);
 
-        // 대소문자를 구분하는 matches() 메서드를 통해 DB에서 username으로 사용자 조회
-        if (!bCryptPasswordEncoder().matches(userPassword, securityUserDetailsDto.getSecurityUserDto().getPassword())) {
-            throw new BadCredentialsException(securityUserDetailsDto.getUsername() + "Invalid password");
+        LoginCredential loginCredential = (LoginCredential) userDetailsService.loadUserByUsername(loginId);
+
+
+
+        // DB에서 username으로 사용자 조회
+        if (!bCryptPasswordEncoder().matches(userPassword, loginCredential.getPassword())) {
+            throw new BadCredentialsException(loginCredential.getUsername() + "Invalid password");
         }
         // 인증에 성공하면 인증된 사용자의 정보와 권한을 담은 새로운 UsernamePasswordAuthenticationToken 반환
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(securityUserDetailsDto, userPassword, securityUserDetailsDto.getAuthorities());
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginCredential, userPassword, loginCredential.getAuthorities());
         return authToken;
     }
 
