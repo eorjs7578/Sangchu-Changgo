@@ -12,6 +12,7 @@
 import {ref, onMounted} from 'vue'
 let map = null;
 let areas=null;
+let areas1=null;
 onMounted(() => {
  
   if (window.kakao && window.kakao.maps) {
@@ -37,6 +38,51 @@ const initMap = () => {
   };
   map = new kakao.maps.Map(container, options);
   
+  areas1=[
+    {
+        name : '중구',
+        path : [
+            new kakao.maps.LatLng(37.544062989758594, 127.00854659142894),
+            new kakao.maps.LatLng(37.54385947805103, 127.00727818360471),
+            new kakao.maps.LatLng(37.546169758665414, 127.00499711608721),
+            new kakao.maps.LatLng(37.54820235864802, 127.0061334023129),
+            new kakao.maps.LatLng(37.550159406110104, 127.00436818301327),
+            new kakao.maps.LatLng(37.549694559809545, 126.99832516302801),
+            new kakao.maps.LatLng(37.54722934282707, 126.995229135048),
+            new kakao.maps.LatLng(37.55368689494708, 126.98541456064552),
+            new kakao.maps.LatLng(37.55320655210504, 126.97874667968763),
+            new kakao.maps.LatLng(37.55522076659584, 126.97654602427454),
+            new kakao.maps.LatLng(37.55308718044556, 126.97642899633566),
+            new kakao.maps.LatLng(37.55487749311664, 126.97240854546743),
+            new kakao.maps.LatLng(37.5548766923893, 126.9691718124876),
+            new kakao.maps.LatLng(37.55566236579088, 126.9691850696746),
+            new kakao.maps.LatLng(37.55155543391863, 126.96233786542686),
+            new kakao.maps.LatLng(37.55498984534305, 126.96173858545431),
+            new kakao.maps.LatLng(37.55695455613004, 126.96343068837372),
+            new kakao.maps.LatLng(37.5590262922649, 126.9616731414449),
+            new kakao.maps.LatLng(37.56197662569172, 126.96946316364357),
+            new kakao.maps.LatLng(37.56582132960869, 126.96669525397355),
+            new kakao.maps.LatLng(37.56824746386509, 126.96909838710842),
+            new kakao.maps.LatLng(37.569485309984174, 126.97637402412326),
+            new kakao.maps.LatLng(37.56810323716611, 126.98905202099309),
+            new kakao.maps.LatLng(37.56961739576364, 127.00225936812329),
+            new kakao.maps.LatLng(37.56966688588187, 127.0152677241078),
+            new kakao.maps.LatLng(37.572022763755164, 127.0223363152772),
+            new kakao.maps.LatLng(37.57190723475508, 127.02337770475695),
+            new kakao.maps.LatLng(37.56973041414113, 127.0234585247501),
+            new kakao.maps.LatLng(37.565200182350495, 127.02358387477513),
+            new kakao.maps.LatLng(37.56505173515675, 127.02678930885806),
+            new kakao.maps.LatLng(37.563390358462826, 127.02652159646888),
+            new kakao.maps.LatLng(37.5607276739534, 127.02339232029838),
+            new kakao.maps.LatLng(37.55779412537163, 127.0228934248264),
+            new kakao.maps.LatLng(37.556850715898484, 127.01807638779917),
+            new kakao.maps.LatLng(37.55264513061776, 127.01620129137214),
+            new kakao.maps.LatLng(37.547466935106435, 127.00931996404753),
+            new kakao.maps.LatLng(37.54502351209897, 127.00815187343248),
+            new kakao.maps.LatLng(37.544062989758594, 127.00854659142894)
+        ]
+    }
+  ]
   areas = [
     {
         name : '용산구',
@@ -372,7 +418,18 @@ const initMap = () => {
   }
 };
 
-
+const setMap =()=>{
+    const container = document.getElementById("map");
+    const options = {
+            center: new kakao.maps.LatLng(37.5665, 127.0080),
+            level:5,
+        };
+    map = new kakao.maps.Map(container, options);
+      // 지도에 영역데이터를 폴리곤으로 표시합니다 
+    for (var i = 0, len = areas.length; i < len; i++) {
+        displayArea(areas1[i]);
+    }
+}
 
 // 다각형을 생상하고 이벤트를 등록하는 함수입니다
 function displayArea(area) {
@@ -409,8 +466,28 @@ function displayArea(area) {
     // 다각형에 click 이벤트를 등록하고 이벤트가 발생하면 다각형의 이름과 면적을 인포윈도우에 표시합니다 
     kakao.maps.event.addListener(polygon, 'click', function(mouseEvent) {
         console.log("click")
+        // 지도 확대, 폴리곤 다시 그리기 
+        const container = document.getElementById("map");
+        const options = {
+            center: new kakao.maps.LatLng(35.2499, 129.724),
+            level:7,
+        };
+        map = new kakao.maps.Map(container, options);
+        displayArea(areas1);
+        reloadMap();
     });
 }
+
+function reloadMap(){
+    const script = document.createElement("script");
+    /* global kakao */
+    script.onload = () => kakao.maps.load(setMap);
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${
+      import.meta.env.VITE_KAKAOMAP_KEY
+    }&libraries=services,clusterer`;
+    document.head.appendChild(script);
+}
+
 </script>
 
 <style scoped>
