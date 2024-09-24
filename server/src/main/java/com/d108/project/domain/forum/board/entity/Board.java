@@ -11,9 +11,7 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // FIXME: 상권 (하나의 상권에 해당하는 하나의 게시판이 생기는 거 아님?)
-    private Long businessAreaId;
-    // FIXME: 프랜차이즈 (이하 동일)
+    private Long areaId;
 
     private Long franchiseId;
 }

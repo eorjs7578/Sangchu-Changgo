@@ -30,7 +30,8 @@ import org.springframework.context.annotation.Configuration;
                 @Tag(name = "관심 상권"),
                 @Tag(name = "관심 프랜차이즈"),
                 @Tag(name = "댓글"),
-                @Tag(name = "회원 관리")
+                @Tag(name = "회원 관리"),
+                @Tag(name = "게시글"),
         }
 )
 public class SwaggerConfiguration {

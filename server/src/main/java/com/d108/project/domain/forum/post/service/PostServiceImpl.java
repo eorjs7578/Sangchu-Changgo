@@ -106,6 +106,36 @@ public class PostServiceImpl implements PostService {
         // DB에서도 삭제
         postRepository.deleteById(postId);
     }
+    
+    // 상권 ID 기반으로 게시글 반환
+    @Override
+    public List<PostResponseDto> getAllPostsByAreaId(Long areaId) {
+        List<Post> posts = postRepository.findAllByAreaId(areaId);
+
+        return posts.stream()
+                .map(post -> {
+                    PostResponseDto postResponseDto = PostResponseDto.from(post);
+                    postResponseDto.setView(getViewCountById(post.getId()));
+                    return postResponseDto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // 프랜차이즈 ID 기반으로 게시글 반환
+    @Override
+    public List<PostResponseDto> getAllPostsByFranchiseId(Long franchiseId) {
+        List<Post> posts = postRepository.findAllByFranchiseId(franchiseId);
+
+        return posts.stream()
+                .map(post -> {
+                    PostResponseDto postResponseDto = PostResponseDto.from(post);
+                    postResponseDto.setView(getViewCountById(post.getId()));
+                    return postResponseDto;
+                })
+                .collect(Collectors.toList());
+    }
+
+
 
     // 조회수 관련 메서드
 
@@ -134,6 +164,7 @@ public class PostServiceImpl implements PostService {
 
         return redisUtil.incrementView(redisKey, RedisUtil.REDIS_VIEW_EXPIRE);
     }
+
     // 조회수 조회
     private Long getViewCountById(Long postId) {
         String redisKey = REDIS_PREFIX + postId;
