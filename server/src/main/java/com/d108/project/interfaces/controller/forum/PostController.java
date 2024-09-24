@@ -29,6 +29,8 @@ public class PostController implements PostApi {
     )
     @Override
     public ResponseEntity<Void> createPost(Member member, PostCreateDto postCreateDto) {
+        System.out.println("ㅎㅇ");
+        System.out.println(member);
         Long postId = postService.createPost(member, postCreateDto);
 
         // createPost 에서 글 번호 받아서, 글 번호로 redirect URL 전달하기

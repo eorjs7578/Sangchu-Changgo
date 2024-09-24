@@ -101,15 +101,18 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void logoutMember(Member member) {
         // 레디스에서 엑세스 토큰 삭제
+        System.out.println(member);
+
         String redisKey = TokenUtil.REDIS_ACCESS_TOKEN_PREFIX + member.getUsername();
+        System.out.println(redisUtil.getData(redisKey));
         if (redisUtil.getData(redisKey) != null) {
             redisUtil.deleteData(redisKey);
         }
 
         // DB에서 리프레시 토큰 삭제
-        member.setRefreshToken(null);
-
         // 트랜잭션이라 바로 저장됨
+        member.setRefreshToken(null);
+        memberRepository.save(member);
     }
 
     @Override

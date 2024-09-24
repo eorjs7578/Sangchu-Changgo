@@ -66,6 +66,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         // 1. 토큰 추출
         String accessToken = tokenUtil.extractToken(request, "access_token");
         String refreshToken = tokenUtil.extractToken(request, "refresh_token");
+
         try {
             // 토큰이 제대로 추출된 경우
             if (accessToken != null && refreshToken != null) {
