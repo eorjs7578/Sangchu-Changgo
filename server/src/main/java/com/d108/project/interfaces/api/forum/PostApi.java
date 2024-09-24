@@ -14,15 +14,21 @@ public interface PostApi {
     @GetMapping
     ResponseEntity<List<PostResponseDto>> getAllPosts();
 
-    @GetMapping("/{postId}")
-    ResponseEntity<PostResponseDto> getPostById(@PathVariable("postId") Long postId);
-
     @PostMapping
     ResponseEntity<Void> createPost(@RequestBody PostCreateDto postCreateDto);
+
+    @GetMapping("/{postId}")
+    ResponseEntity<PostResponseDto> getPostById(@PathVariable("postId") Long postId);
 
     @PutMapping("/{postId}")
     ResponseEntity<Void> updatePost(@PathVariable("postId") Long postId, @RequestParam Long memberId, @RequestBody PostUpdateDto postUpdateDto);
 
     @DeleteMapping("/{postId}")
-    ResponseEntity<Void> deletePost(@PathVariable("postId") Long postId, @RequestParam Long memberId);
+    ResponseEntity<Void> deletePost(@PathVariable("postId") Long postId, @AuthenticationPrincipal Member member);
+
+    @GetMapping("/area/{areaId}")
+    ResponseEntity<List<PostResponseDto>> getAllPostsByAreaId(@PathVariable("areaId") Long areaId);
+
+    @GetMapping("/franchise/{franchiseId}")
+    ResponseEntity<List<PostResponseDto>> getAllPostsByFranchiseId(@PathVariable("franchiseId") Long franchiseId);
 }

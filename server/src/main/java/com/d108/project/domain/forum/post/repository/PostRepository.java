@@ -3,6 +3,7 @@ package com.d108.project.domain.forum.post.repository;
 import com.d108.project.domain.forum.post.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 
 import java.util.List;
 
@@ -10,4 +11,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT post.id FROM Post post")
     List<Long> findAllPostIds();
+
+    @Query("SELECT post FROM Post post " +
+            "WHERE post.board.franchiseId = :franchiseId")
+    List<Post> findAllByFranchiseId(Long franchiseId);
+
+    @Query("SELECT post FROM Post post " +
+            "WHERE post.board.areaId = :areaId")
+    List<Post> findAllByAreaId(Long areaId);
 }

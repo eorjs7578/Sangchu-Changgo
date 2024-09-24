@@ -11,11 +11,8 @@ import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;
 import com.d108.project.domain.member.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -47,7 +44,6 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void registerMember(MemberRegisterDto memberRegisterDto) {
         // 회원가입 로직
-        // 이거 프론트에서만 하면 안되나..
         String email = memberRegisterDto.getEmail();
         String password = memberRegisterDto.getPassword();
         String nickname = memberRegisterDto.getNickname();
@@ -97,15 +93,19 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
-    // 로그아웃 시 레디스에서 삭제
+    // 로그아웃도 시큐리티에 의해 대체되었습니다.
     @Override
     public void logoutMember(String username) {
         if (redisUtil.getData(username) != null) {
             redisUtil.deleteData(username);
         }
-    }
 
-    // 쿠키에서 내 정보를 뽑아와서 정보를 쿠키에 저장
+        // DB에서 리프레시 토큰 삭제
+        member.setRefreshToken(null);
+        memberRepository.save(member);
+        // 시큐리티 내부에서도 삭제
+        SecurityContextHolder.clearContext();}
+
     @Override
     public MemberResponseDto getMyInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

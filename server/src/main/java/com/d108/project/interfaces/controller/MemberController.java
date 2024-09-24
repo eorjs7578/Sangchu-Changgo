@@ -13,6 +13,7 @@ import com.d108.project.interfaces.api.MemberApi;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -60,12 +61,41 @@ public class MemberController implements MemberApi {
     }
 
     @Override
-    public ResponseEntity<List<ReplyByMemberIdResponseDto>> getMembersReplies(Long memberId) {
-        return ResponseEntity.ok(replyService.getAllReplyByMemberId(memberId));
+    public ResponseEntity<List<ReplyByMemberIdResponseDto>> getMembersReplies(Member member) {
+        return ResponseEntity.ok(replyService.getAllReplyByMemberId(member.getId()));
+    }
+    @Operation(summary = "내 정보 조회", description =
+                    "<p>시큐리티에서 인증 정보를 받아옴</p>" +
+                    "<p>로그인 한 유저인지 확인해야함</p>"
+    )
+    @Override
+    public ResponseEntity<MemberResponseDto> getMyInfo(Member member) {
+        return ResponseEntity.ok(memberService.getMyInfo(member));
     }
 
     @Override
-    public ResponseEntity<MemberResponseDto> getMyInfo() {
-        return ResponseEntity.ok(memberService.getMyInfo());
+    public ResponseEntity<String> isEmailDuplicated(String email) {
+        if (memberService.isEmailDuplicated(email)) {
+            return ResponseEntity.ok("사용할 수 있는 이메일 입니다.");
+        }
+        return ResponseEntity.badRequest().body("중복된 이메일 입니다.");
+    }
+    
+    @Operation(summary = "닉네임 중복 확인")
+    @Override
+    public ResponseEntity<String> isNicknameDuplicated(String nickname) {
+        if (memberService.isNicknameDuplicated(nickname)) {
+            return ResponseEntity.ok("사용할 수 있는 닉네임 입니다.");
+        }
+        return ResponseEntity.badRequest().body("중복된 닉네임 입니다.");
+    }
+
+    @Operation(summary = "아이디 중복 확인")
+    @Override
+    public ResponseEntity<String> isUsernameDuplicated(String username) {
+        if (memberService.isUsernameDuplicated("사용할 수 있는 아이디 입니다.")) {
+            return ResponseEntity.ok("사용할 수 있는 아이디 입니다.");
+        }
+        return ResponseEntity.badRequest().body("중복된 아이디입니다.");
     }
 }

@@ -21,4 +21,8 @@ public interface PostService {
     void syncCountToDatabase(Long postId);
 
     List<Long> getAllPostIds();
+
+    List<PostResponseDto> getAllPostsByAreaId(Long areaId);
+
+    List<PostResponseDto> getAllPostsByFranchiseId(Long franchiseId);
 }
