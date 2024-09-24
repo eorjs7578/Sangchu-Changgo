@@ -83,6 +83,8 @@ dependencies {
 
 	// JTS (Java Topology Suite)
 	implementation 'org.locationtech.jts:jts-core:1.18.2'
+
+	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 }
 
 tasks.named('test') {

@@ -7,8 +7,13 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.security.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 
 @Configuration
 @OpenAPIDefinition(
@@ -31,6 +36,78 @@ import org.springframework.context.annotation.Configuration;
         }
 )
 public class SwaggerConfiguration {
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
+    private String kakaoClientSecret;
+
+    @Value("${spring.security.oauth2.client.provider.kakao.authorization-uri}")
+    private String kakaoAuthorizationUri;
+
+    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
+    private String kakaoTokenUri;
+
+    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
+    private String naverClientId;
+
+    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
+    private String naverClientSecret;
+
+    @Value("${spring.security.oauth2.client.provider.naver.authorization-uri}")
+    private String naverAuthorizationUri;
+
+    @Value("${spring.security.oauth2.client.provider.naver.token-uri}")
+    private String naverTokenUri;
+
+
+//    private final Environment environment;
+//
+//    @Autowired
+//    public SwaggerConfiguration(Environment environment) {
+//        this.environment = environment;
+//    }
+//
+//    @Bean
+//    public ModelResolver modelResolver(ObjectMapper objectMapper) {
+//        return new ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE));
+//    }
+//
+//    @Bean
+//    public OpenAPI customOpenAPI() {
+//        return new OpenAPI()
+//                .components(new Components()
+//                        .addSecuritySchemes("kakao_oauth2", createOAuthSecurityScheme("kakao"))
+//                        .addSecuritySchemes("naver_oauth2", createOAuthSecurityScheme("naver"))
+//                );
+//    }
+//
+//    private SecurityScheme createOAuthSecurityScheme(String provider) {
+//        return new SecurityScheme()
+//                .type(SecurityScheme.Type.OAUTH2)
+//                .flows(new OAuthFlows()
+//                        .authorizationCode(new OAuthFlow()
+//                                .authorizationUrl(environment.getProperty("springdoc.oAuthFlow.authorizationUrl-" + provider))
+//                                .tokenUrl(environment.getProperty("springdoc.oAuthFlow.tokenUrl-" + provider))
+//                                .scopes(createScopes(provider))
+//                        )
+//                );
+//    }
+//
+//    private Scopes createScopes(String provider) {
+//        Scopes scopes = new Scopes();
+//        String scopesProperty = "springdoc.oAuthScopes." + provider;
+//        List<String> scopesList = environment.getProperty(scopesProperty, List.class);
+//        if (scopesList != null) {
+//            for (String scope : scopesList) {
+//                scopes.addString(scope, "Access to " + scope);
+//            }
+//        }
+//        return scopes;
+//    }
+
+    // 카카오만은 되던 코드
+
     /**
      * 이 코드는 ObjectMapper의 네이밍 전략을 snake_case로 설정한 후,
      * 해당 ObjectMapper를 사용하는 **ModelResolver**를 Spring 빈으로 등록합니다.
@@ -42,17 +119,107 @@ public class SwaggerConfiguration {
     public ModelResolver modelResolver(ObjectMapper objectMapper) {
         return new ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE));
     }
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .components(new Components()
+                        .addSecuritySchemes("kakao_oauth2", createOAuthSecurityScheme("kakao"))
+                        .addSecuritySchemes("naver_oauth2", createOAuthSecurityScheme("naver"))
+                );
+    }
 
+    private SecurityScheme createOAuthSecurityScheme(String provider) {
+        String authorizationUrl = provider.equals("kakao") ? kakaoAuthorizationUri : naverAuthorizationUri;
+        String tokenUrl = provider.equals("kakao") ? kakaoTokenUri : naverTokenUri;
+
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.OAUTH2)
+                .flows(new OAuthFlows()
+                        .authorizationCode(new OAuthFlow()
+                                .authorizationUrl(authorizationUrl)
+                                .tokenUrl(tokenUrl)
+                                .scopes(new Scopes()
+                                        .addString("profile_nickname", "Access to profile nickname")
+                                        .addString("account_email", "Access to account email")
+                                )
+                        )
+                );
+    }
+
+//    private SecurityScheme createOAuthSecurityScheme(String provider) {
+//        return new SecurityScheme()
+//                .type(SecurityScheme.Type.OAUTH2)
+//                .flows(new OAuthFlows()
+//                        .authorizationCode(new OAuthFlow()
+//                                .authorizationUrl(environment.getProperty("springdoc.oAuthFlow.authorizationUrl-" + provider))
+//                                .tokenUrl(environment.getProperty("springdoc.oAuthFlow.tokenUrl-" + provider))
+//                                .scopes(new Scopes()
+//                                        .addString("profile_nickname", "Access to profile nickname")
+//                                        .addString("account_email", "Access to account email")
+//                                )
+//                        )
+//                );
+//    }
+
+
+
+
+    // 예전에 jwt 되던 코드
 //    @Bean
-//    public OpenAPI openAPI() {
-//        //jwt 토큰 자동추가 설정
-//        SecurityScheme securityScheme = new SecurityScheme()
-//                .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
-//                .in(SecurityScheme.In.HEADER).name("Authorization");
-//        SecurityRequirement schemaRequirement = new SecurityRequirement().addList("bearerAuth");
+//    public OpenAPI customOpenAPI() {
+//        final String jwtSchemeName = "jwtAuth";
+//        final String naverSchemeName = "naver";
+//        final String kakaoSchemeName = "kakao";
+//
+//        // JWT 토큰을 위한 SecurityScheme 정의
+//        SecurityScheme jwtScheme = new SecurityScheme()
+//                .type(SecurityScheme.Type.HTTP)
+//                .scheme("bearer")
+//                .bearerFormat("JWT")
+//                .in(SecurityScheme.In.HEADER)
+//                .name("Authorization");
+//
+////         Naver 소셜 로그인을 위한 SecurityScheme 정의
+//        SecurityScheme naverScheme = new SecurityScheme()
+//                .type(SecurityScheme.Type.OAUTH2)
+//                .flows(new OAuthFlows()
+//                        .authorizationCode(new OAuthFlow()
+//                                .authorizationUrl(naverAuthorizationUri)
+//                                .tokenUrl("https://nid.naver.com/oauth2.0/token")
+//                                .scopes(new Scopes()
+//                                        .addString("name", "이름")
+//                                        .addString("email", "이메일")
+//                                        .addString("nickname", "닉네임")
+//                                )
+//                        )
+//                );
+//
+////         Kakao 소셜 로그인을 위한 SecurityScheme 정의
+//        SecurityScheme kakaoScheme = new SecurityScheme()
+//                .type(SecurityScheme.Type.OAUTH2)
+//                .flows(new OAuthFlows()
+//                        .authorizationCode(new OAuthFlow()
+//                                .authorizationUrl(kakaoAuthorizationUri)
+//                                .tokenUrl("https://kauth.kakao.com/oauth/token")
+//                                .scopes(new Scopes()
+//                                        .addString("profile_nickname", "닉네임")
+//                                        .addString("account_email", "이메일")
+//                                )
+//                        )
+//                );
+//
+////        SecurityRequirement 정의
+//        SecurityRequirement securityRequirement = new SecurityRequirement()
+//                .addList(jwtSchemeName)
+//                .addList(naverSchemeName)
+//                .addList(kakaoSchemeName);
 //
 //        return new OpenAPI()
-//                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
-//                .security(Arrays.asList(schemaRequirement));
+//                .components(new Components()
+//                        .addSecuritySchemes(jwtSchemeName, jwtScheme)
+//                        .addSecuritySchemes(naverSchemeName, naverScheme)
+//                        .addSecuritySchemes(kakaoSchemeName, kakaoScheme)
+//                )
+//                .security(Collections.singletonList(securityRequirement));
 //    }
 }
