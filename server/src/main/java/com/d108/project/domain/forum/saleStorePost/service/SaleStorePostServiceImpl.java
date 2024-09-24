@@ -28,7 +28,7 @@ public class SaleStorePostServiceImpl implements SaleStorePostService {
     private final MemberRepository memberRepository;
     private static final String REDIS_PREFIX = "salestorepost:viewCount:";
 
-    // 매물 게시글 생성
+    // 매출 게시글 생성
     @Override
     public Long createSaleStorePost(SaleStorePostCreateDto saleStorePostCreateDto) {
         Board board = boardRepository.findById(saleStorePostCreateDto.getBoardId())
