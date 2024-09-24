@@ -53,12 +53,12 @@ public class SaleStorePostResponseDto {
                 .rentalPrice(saleStorePost.getRentalPrice())
                 .size(saleStorePost.getSize())
 
-                // null 체크 추가: Enum이 null일 경우 빈 문자열 반환
-                .franchiseType(saleStorePost.getFranchiseType() != null ? saleStorePost.getFranchiseType().toString() : "")
-                .ageGroup(saleStorePost.getAgeGroup() != null ? saleStorePost.getAgeGroup().toString() : "")
-                .footTraffic(saleStorePost.getFootTraffic() != null ? saleStorePost.getFootTraffic().toString() : "")
-                .atmosphere(saleStorePost.getAtmosphere() != null ? saleStorePost.getAtmosphere().toString() : "")
-                .nearbyPrice(saleStorePost.getNearbyPrice() != null ? saleStorePost.getNearbyPrice().toString() : "")
+                // Enum 타입을 문자열로 변환
+                .franchiseType(saleStorePost.getFranchiseType().toString())
+                .ageGroup(saleStorePost.getAgeGroup().toString())
+                .footTraffic(saleStorePost.getFootTraffic().toString())
+                .atmosphere(saleStorePost.getAtmosphere().toString())
+                .nearbyPrice(saleStorePost.getNearbyPrice().toString())
 
                 .desiredSalePrice(saleStorePost.getDesiredSalePrice())
                 .createdAt(saleStorePost.getCreatedAt())
