@@ -86,6 +86,12 @@ public class OAuth2UserPrincipal implements UserDetails, OAuth2User {
     }
 
     public String getEmail() {
-        return userInfo.getEmail();
+        String email = userInfo.getEmail();
+
+        if (userInfo.getProvider().toString().equalsIgnoreCase("kakao")) {
+            email = "kakao";
+        }
+
+        return email;
     }
 }

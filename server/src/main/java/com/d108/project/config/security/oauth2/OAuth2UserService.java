@@ -42,10 +42,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 registeredId, accessToken, oAuth2User.getAttributes()
         );
 
-        if (!StringUtils.hasText(oAuth2UserInfo.getEmail())) {
-            throw new OAuth2AuthenticationException("provider에서 찾을 수 없는 경우");
-        }
-
         return new OAuth2UserPrincipal(oAuth2UserInfo);
     }
 }
