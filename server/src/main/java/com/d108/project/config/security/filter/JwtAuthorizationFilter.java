@@ -58,6 +58,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // OPTION으로 요청한 경우 무시
         if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+            response.setStatus(HttpServletResponse.SC_OK);
             filterChain.doFilter(request, response);
             return;
         }
@@ -65,7 +66,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         // 1. 토큰 추출
         String accessToken = tokenUtil.extractToken(request, "access_token");
         String refreshToken = tokenUtil.extractToken(request, "refresh_token");
-        // 2. 토큰의 유효성을 확인한다.
 
         try {
             // 토큰이 제대로 추출된 경우
