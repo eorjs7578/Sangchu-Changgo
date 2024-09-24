@@ -33,8 +33,6 @@ public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
             AuthenticationException exception
     ) throws IOException {
 
-        System.out.println("Failure: "+request.getRequestURI());
-
         // [STEP.1] 클라이언트로 전달할 응답값을 구성한다.
         String failMessage = "";
 

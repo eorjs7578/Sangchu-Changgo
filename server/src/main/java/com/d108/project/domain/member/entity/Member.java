@@ -18,10 +18,9 @@ import java.util.List;
 @ToString(exclude = {"favoriteAreas", "favoriteFranchises"})
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id") // 상속받은 엔티티의 기본 키를 지정
-public class Member extends LoginCredential {
+public class Member extends LoginCredential{
 
     private String nickname;
-
     private String email;
 
     // 관심 상권
@@ -31,25 +30,13 @@ public class Member extends LoginCredential {
     @OneToMany(mappedBy = "member")
     private List<FavoriteFranchise> favoriteFranchises = new ArrayList<>();
 
-    // 일반 유저 회원가입
     public static Member createMember(MemberRegisterDto memberRegisterDto, String passwordEncode) {
         Member member = new Member();
-        member.setUsername(memberRegisterDto.getUsername());
-        member.setPassword(passwordEncode);
         member.setNickname(memberRegisterDto.getNickname());
+        member.setUsername(memberRegisterDto.getUsername());
         member.setEmail(memberRegisterDto.getEmail());
-        member.setSocialUser(false);
-        return member;
-    }
+        member.setPassword(passwordEncode);
 
-    // 소셜 유저 회원가입
-    public static Member createMember(String username, String password, String nickname, String email) {
-        Member member = new Member();
-        member.setUsername(username);
-        member.setPassword(password);
-        member.setNickname(nickname);
-        member.setEmail(email);
-        member.setSocialUser(true);
         return member;
     }
 }

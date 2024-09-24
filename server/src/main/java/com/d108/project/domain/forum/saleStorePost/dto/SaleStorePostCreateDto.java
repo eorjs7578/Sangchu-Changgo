@@ -12,7 +12,7 @@ public class SaleStorePostCreateDto {
     private String title;  // 제목
     private String content;  // 내용
 
-    // 추가적으로 매물 게시글에 필요한 필드들
+    // 추가적으로 매출 게시글에 필요한 필드들
     private Long revenue;
     private Long startupPrice;
     private Long rentalPrice;
