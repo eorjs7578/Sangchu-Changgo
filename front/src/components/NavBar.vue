@@ -15,10 +15,10 @@
         
         <!-- 프랜차이즈 하위 메뉴 -->
         <ul v-show="isFranchiseOpen ">
-          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal">관심프차</li>
-          <FavoriteFranchise class="modal fade fullscreen-modal" id="exampleModal"></FavoriteFranchise>
-          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal">예상비용</li>
-          <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal"></FranchiseFee>
+          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal1">관심프차</li>
+          <FavoriteFranchise class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
+          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal2">예상비용</li>
+          <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
         </ul>
       </ul>
 

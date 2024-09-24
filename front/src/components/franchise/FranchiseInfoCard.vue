@@ -1,20 +1,27 @@
 <template>
   <div class="card-body">
-    <h6 class="card-title">{{ franchise.name }}</h6>
-    <p class="card-text">{{ franchise.cost.toLocaleString() }}원</p>
-    <table class="table table-sm table-borderless">
-      <tbody>
-        <tr v-for="(cost, costIndex) in franchise.costs" :key="costIndex">
-          <td>{{ cost.name }}</td>
-          <td class="text-end">{{ cost.amount.toLocaleString() }}원</td>
-        </tr>
-      </tbody>
-    </table>
+    <h6 class="card-subtitle mb-2 text-muted">{{ franchise.location }} {{ franchise.name }}</h6>
+      <h4 class="card-title">예상 창업 비용은 <p class="text-primary">{{ totalCost.toLocaleString() }}원</p> 입니다.</h4>
+        <table class="table table-borderless">
+          <tbody>
+            <tr v-for="(cost, index) in franchise.costs" :key="index">
+              <td>{{ cost.name }}</td>
+              <td class="text-end">{{ cost.amount.toLocaleString() }}원</td>
+              </tr>
+          </tbody>
+        </table>
     </div>
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import {ref,defineProps, computed} from 'vue'
+
+const props = defineProps(['franchise'])
+
+const franchise = props.franchise;
+const totalCost = computed(() => franchise.costs.reduce((sum, cost) => sum + cost.amount, 0))
+
+console.log(franchise.costs)
 
 </script>
 
