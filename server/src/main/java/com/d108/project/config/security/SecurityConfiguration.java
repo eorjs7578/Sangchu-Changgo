@@ -99,18 +99,18 @@ public class SecurityConfiguration {
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)
                         )
-//                .logout(logout -> logout
-//                        // 로그아웃 페이지에 대한 설정
-//                        .logoutUrl("/api/members/logout")
-//                        // 로그아웃 하면서 인증 정보를 삭제하고
-//                        .clearAuthentication(true)
-//                        // 쿠키를 삭제함
-//                        .deleteCookies("access_token", "refresh_token")
-//                        // 세션 무효화
-//                        .invalidateHttpSession(true)
-////                        // 로그아웃에 성공하면 여기로 보냄
-////                        .logoutSuccessUrl("/main")
-//                )
+                .logout(logout -> logout
+                        // 로그아웃 페이지에 대한 설정
+                        .logoutUrl("/api/members/logout")
+                        // 로그아웃 하면서 인증 정보를 삭제하고
+                        .clearAuthentication(true)
+                        // 쿠키를 삭제함
+                        .deleteCookies("access_token", "refresh_token", "JSESSIONID")
+                        // 세션 무효화
+                        .invalidateHttpSession(true)
+//                        // 로그아웃에 성공하면 여기로 보냄 (메인으로 리디렉션하는 코드 만들어도 될듯)
+//                        .logoutSuccessUrl("/")
+                )
                 .build();
     }
 

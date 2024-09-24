@@ -11,8 +11,8 @@ import com.d108.project.domain.member.dto.MemberLoginDto;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.member.dto.MemberResponseDto;
 import com.d108.project.domain.member.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void registerMember(MemberRegisterDto memberRegisterDto) {
         // 회원가입 로직
-        // 이거 프론트에서만 하면 안되나..
         String email = memberRegisterDto.getEmail();
         String password = memberRegisterDto.getPassword();
         String nickname = memberRegisterDto.getNickname();
@@ -58,12 +57,6 @@ public class MemberServiceImpl implements MemberService {
 
 
         String passwordEncode = passwordEncoder.encode(memberRegisterDto.getPassword());
-
-//        LoginCredential loginCredential = new LoginCredential();
-//        loginCredential.setUsername(username);
-//        loginCredential.setPassword(passwordEncode);
-//        loginCredential.setSocialUser(false);
-//        loginCredentialRepository.save(loginCredential);
 
         // Member 생성 로직
         Member member = Member.createMember(memberRegisterDto, passwordEncode);
@@ -97,23 +90,20 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    // 로그아웃도 시큐리티에 의해 대체되었습니다.
     @Override
     public void logoutMember(Member member) {
         // 레디스에서 엑세스 토큰 삭제
-        System.out.println(member);
-
         String redisKey = TokenUtil.REDIS_ACCESS_TOKEN_PREFIX + member.getUsername();
-        System.out.println(redisUtil.getData(redisKey));
         if (redisUtil.getData(redisKey) != null) {
             redisUtil.deleteData(redisKey);
         }
 
         // DB에서 리프레시 토큰 삭제
-        // 트랜잭션이라 바로 저장됨
         member.setRefreshToken(null);
         memberRepository.save(member);
-    }
+        // 시큐리티 내부에서도 삭제
+        SecurityContextHolder.clearContext();}
 
     @Override
     public MemberResponseDto getMyInfo(Member member) {
