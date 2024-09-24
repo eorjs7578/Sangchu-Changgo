@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/posts")
+@RequestMapping("/pi/postsa")
 public interface PostApi {
 
     @GetMapping

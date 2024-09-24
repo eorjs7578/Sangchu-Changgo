@@ -58,6 +58,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // OPTION으로 요청한 경우 무시
         if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+            response.setStatus(HttpServletResponse.SC_OK);
             filterChain.doFilter(request, response);
             return;
         }
