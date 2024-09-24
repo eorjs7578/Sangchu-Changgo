@@ -77,6 +77,8 @@ dependencies {
 	//jsonObject
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
 	implementation 'org.json:json:20211205'
+
+	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 }
 
 tasks.named('test') {

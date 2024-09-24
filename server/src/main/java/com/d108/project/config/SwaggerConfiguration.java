@@ -4,23 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import io.swagger.v3.core.jackson.ModelResolver;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.OAuthScope;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Configuration
 @OpenAPIDefinition(
@@ -70,64 +63,18 @@ public class SwaggerConfiguration {
     private String naverTokenUri;
 
 
-    private final Environment environment;
-
-    @Autowired
-    public SwaggerConfiguration(Environment environment) {
-        this.environment = environment;
-    }
-
-    @Bean
-    public ModelResolver modelResolver(ObjectMapper objectMapper) {
-        return new ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE));
-    }
-
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .components(new Components()
-                        .addSecuritySchemes("kakao_oauth2", createOAuthSecurityScheme("kakao"))
-                        .addSecuritySchemes("naver_oauth2", createOAuthSecurityScheme("naver"))
-                );
-    }
-
-    private SecurityScheme createOAuthSecurityScheme(String provider) {
-        return new SecurityScheme()
-                .type(SecurityScheme.Type.OAUTH2)
-                .flows(new OAuthFlows()
-                        .authorizationCode(new OAuthFlow()
-                                .authorizationUrl(environment.getProperty("springdoc.oAuthFlow.authorizationUrl-" + provider))
-                                .tokenUrl(environment.getProperty("springdoc.oAuthFlow.tokenUrl-" + provider))
-                                .scopes(createScopes(provider))
-                        )
-                );
-    }
-
-    private Scopes createScopes(String provider) {
-        Scopes scopes = new Scopes();
-        String scopesProperty = "springdoc.oAuthScopes." + provider;
-        List<String> scopesList = environment.getProperty(scopesProperty, List.class);
-        if (scopesList != null) {
-            for (String scope : scopesList) {
-                scopes.addString(scope, "Access to " + scope);
-            }
-        }
-        return scopes;
-    }
-
-    // 카카오만은 되던 코드
-
-//    /**
-//     * 이 코드는 ObjectMapper의 네이밍 전략을 snake_case로 설정한 후,
-//     * 해당 ObjectMapper를 사용하는 **ModelResolver**를 Spring 빈으로 등록합니다.
-//     * 이렇게 설정하면, Swagger나 다른 API 문서화 도구에서 snake_case를 사용하여 모델의 필드 이름을 처리하게 됩니다.
-//     * @param objectMapper
-//     * @return
-//     */
+//    private final Environment environment;
+//
+//    @Autowired
+//    public SwaggerConfiguration(Environment environment) {
+//        this.environment = environment;
+//    }
+//
 //    @Bean
 //    public ModelResolver modelResolver(ObjectMapper objectMapper) {
 //        return new ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE));
 //    }
+//
 //    @Bean
 //    public OpenAPI customOpenAPI() {
 //        return new OpenAPI()
@@ -138,23 +85,69 @@ public class SwaggerConfiguration {
 //    }
 //
 //    private SecurityScheme createOAuthSecurityScheme(String provider) {
-//        String authorizationUrl = provider.equals("kakao") ? kakaoAuthorizationUri : naverAuthorizationUri;
-//        String tokenUrl = provider.equals("kakao") ? kakaoTokenUri : naverTokenUri;
-//
 //        return new SecurityScheme()
 //                .type(SecurityScheme.Type.OAUTH2)
 //                .flows(new OAuthFlows()
 //                        .authorizationCode(new OAuthFlow()
-//                                .authorizationUrl(authorizationUrl)
-//                                .tokenUrl(tokenUrl)
-//                                .scopes(new Scopes()
-//                                        .addString("profile_nickname", "Access to profile nickname")
-//                                        .addString("account_email", "Access to account email")
-//                                )
+//                                .authorizationUrl(environment.getProperty("springdoc.oAuthFlow.authorizationUrl-" + provider))
+//                                .tokenUrl(environment.getProperty("springdoc.oAuthFlow.tokenUrl-" + provider))
+//                                .scopes(createScopes(provider))
 //                        )
 //                );
 //    }
 //
+//    private Scopes createScopes(String provider) {
+//        Scopes scopes = new Scopes();
+//        String scopesProperty = "springdoc.oAuthScopes." + provider;
+//        List<String> scopesList = environment.getProperty(scopesProperty, List.class);
+//        if (scopesList != null) {
+//            for (String scope : scopesList) {
+//                scopes.addString(scope, "Access to " + scope);
+//            }
+//        }
+//        return scopes;
+//    }
+
+    // 카카오만은 되던 코드
+
+    /**
+     * 이 코드는 ObjectMapper의 네이밍 전략을 snake_case로 설정한 후,
+     * 해당 ObjectMapper를 사용하는 **ModelResolver**를 Spring 빈으로 등록합니다.
+     * 이렇게 설정하면, Swagger나 다른 API 문서화 도구에서 snake_case를 사용하여 모델의 필드 이름을 처리하게 됩니다.
+     * @param objectMapper
+     * @return
+     */
+    @Bean
+    public ModelResolver modelResolver(ObjectMapper objectMapper) {
+        return new ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE));
+    }
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .components(new Components()
+                        .addSecuritySchemes("kakao_oauth2", createOAuthSecurityScheme("kakao"))
+                        .addSecuritySchemes("naver_oauth2", createOAuthSecurityScheme("naver"))
+                );
+    }
+
+    private SecurityScheme createOAuthSecurityScheme(String provider) {
+        String authorizationUrl = provider.equals("kakao") ? kakaoAuthorizationUri : naverAuthorizationUri;
+        String tokenUrl = provider.equals("kakao") ? kakaoTokenUri : naverTokenUri;
+
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.OAUTH2)
+                .flows(new OAuthFlows()
+                        .authorizationCode(new OAuthFlow()
+                                .authorizationUrl(authorizationUrl)
+                                .tokenUrl(tokenUrl)
+                                .scopes(new Scopes()
+                                        .addString("profile_nickname", "Access to profile nickname")
+                                        .addString("account_email", "Access to account email")
+                                )
+                        )
+                );
+    }
+
 //    private SecurityScheme createOAuthSecurityScheme(String provider) {
 //        return new SecurityScheme()
 //                .type(SecurityScheme.Type.OAUTH2)
