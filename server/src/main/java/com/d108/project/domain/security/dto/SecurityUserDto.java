@@ -1,4 +1,4 @@
-package com.d108.project.domain.loginCredential.dto;
+package com.d108.project.domain.security.dto;
 
 import com.d108.project.domain.member.entity.Member;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class LoginCredentialResponseDto {
+public class SecurityUserDto {
     private Long id;
     private String username;
     private String password;
@@ -16,8 +16,9 @@ public class LoginCredentialResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static LoginCredentialResponseDto from(Member member) {
-        return LoginCredentialResponseDto.builder()
+    public static SecurityUserDto from(Member member) {
+        return SecurityUserDto.builder()
+                .id(member.getId())
                 .username(member.getUsername())
                 .password(member.getPassword())
                 .email(member.getEmail())

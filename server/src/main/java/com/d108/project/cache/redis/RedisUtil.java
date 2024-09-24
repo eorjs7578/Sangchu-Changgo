@@ -28,7 +28,7 @@ public class RedisUtil {
         valueOperations.set(key,value);
     }
 
-    // 키(key)에 값을 저장하고, 지정된 시간(duration, 초) 후에 데이터가 만료되도록 설정
+    // 키(key)에 값을 저장하고, 지정된 시간(duration) 후에 데이터가 만료되도록 설정
     public void setDataExpire(String key, String value, long duration) {
         ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
         Duration expireDuration = Duration.ofSeconds(duration);

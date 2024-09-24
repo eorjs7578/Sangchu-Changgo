@@ -1,4 +1,4 @@
-package com.d108.project.config.util.token.dto;
+package com.d108.project.cache.redisToken.dto;
 
 import lombok.Builder;
 import lombok.Getter;

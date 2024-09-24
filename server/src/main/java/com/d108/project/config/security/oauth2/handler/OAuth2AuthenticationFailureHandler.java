@@ -1,7 +1,7 @@
 package com.d108.project.config.security.oauth2.handler;
 
 import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
-import com.d108.project.config.util.CookieUtil;
+import com.d108.project.config.security.oauth2.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,7 +24,6 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
-        System.out.println("소셜 인증 실패");
         String targetUrl = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue)
                 .orElse(("/"));

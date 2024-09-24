@@ -2,8 +2,8 @@ package com.d108.project.domain.member.service;
 
 
 import com.d108.project.cache.redis.RedisUtil;
-import com.d108.project.config.util.token.dto.TokenResponseDto;
-import com.d108.project.config.util.token.TokenUtil;
+import com.d108.project.cache.redisToken.dto.TokenResponseDto;
+import com.d108.project.config.security.util.JwtUtil;
 import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
 import com.d108.project.domain.member.entity.Member;
@@ -13,8 +13,12 @@ import com.d108.project.domain.member.dto.MemberResponseDto;
 import com.d108.project.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-    private final TokenUtil tokenUtil;
+    private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
     private final MemberRepository memberRepository;
     private final LoginCredentialRepository loginCredentialRepository;
@@ -40,6 +44,7 @@ public class MemberServiceImpl implements MemberService {
     private static final String NICKNAME_PATTERN = "^(?!.*[ㄱ-ㅎㅏ-ㅣ])[A-Za-z0-9가-힣]{1,10}$";
 
     @Override
+    @Transactional
     public void registerMember(MemberRegisterDto memberRegisterDto) {
         // 회원가입 로직
         // 이거 프론트에서만 하면 안되나..
@@ -59,14 +64,9 @@ public class MemberServiceImpl implements MemberService {
 
         String passwordEncode = passwordEncoder.encode(memberRegisterDto.getPassword());
 
-//        LoginCredential loginCredential = new LoginCredential();
-//        loginCredential.setUsername(username);
-//        loginCredential.setPassword(passwordEncode);
-//        loginCredential.setSocialUser(false);
-//        loginCredentialRepository.save(loginCredential);
-
         // Member 생성 로직
         Member member = Member.createMember(memberRegisterDto, passwordEncode);
+
         // 회원 정보 저장
         memberRepository.save(member);
     }
@@ -81,7 +81,7 @@ public class MemberServiceImpl implements MemberService {
         // 비밀번호 확인
         if (passwordEncoder.matches(memberLoginDto.getPassword(), loginCredential.getPassword())) {
             // 비밀번호 검증이 성공 했으면, 토큰을 발급하고 반환
-            return tokenUtil.getToken(memberLoginDto.getUsername());
+            return jwtUtil.getToken(memberLoginDto.getUsername());
         } else {
             throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
         }
@@ -97,28 +97,46 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    // 로그아웃 시 레디스에서 삭제
     @Override
-    public void logoutMember(Member member) {
-        // 레디스에서 엑세스 토큰 삭제
-        String redisKey = TokenUtil.REDIS_ACCESS_TOKEN_PREFIX + member.getUsername();
-        if (redisUtil.getData(redisKey) != null) {
-            redisUtil.deleteData(redisKey);
+    public void logoutMember(String username) {
+        if (redisUtil.getData(username) != null) {
+            redisUtil.deleteData(username);
         }
-
-        // DB에서 리프레시 토큰 삭제
-        member.setRefreshToken(null);
-
-        // 트랜잭션이라 바로 저장됨
     }
 
+    // 쿠키에서 내 정보를 뽑아와서 정보를 쿠키에 저장
     @Override
-    public MemberResponseDto getMyInfo(Member member) {
-        return MemberResponseDto.from(member);
+    public MemberResponseDto getMyInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            // 일반 로그인 유저의 경우 처리
+            if (principal instanceof UserDetails) {
+                String username = ((UserDetails) principal).getUsername();
+                Member member = memberRepository.findByUsername(username)
+                        .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
+                return MemberResponseDto.from(member);
+            }
+            // 소셜 로그인 유저의 경우 처리
+            else if (principal instanceof OAuth2User oAuth2User) {
+                String username = oAuth2User.getName();
+                String nickname = oAuth2User.getAttribute("nickname");
+                String email = oAuth2User.getAttribute("email");
+                // TODO: 여기 아직 pk 없음
+                return new MemberResponseDto(
+                        username,
+                        nickname,
+                        email
+                );
+            }
+        }
+        return null;
     }
 
     // 유효성 검증 함수
-    private boolean isValidate(String email, String password, String nickname) {
+    private void isValidate(String email, String password, String nickname) {
         if (!Pattern.matches(EMAIL_PATTERN, email)) {
             throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다.");
         } else if (!Pattern.matches(NICKNAME_PATTERN, nickname)) {
@@ -126,32 +144,24 @@ public class MemberServiceImpl implements MemberService {
         } else if (!Pattern.matches(PASSWORD_PATTERN, password)) {
             throw new IllegalArgumentException("유효하지 않은 비밀번호 형식입니다.");
         }
-
-        return true;
     }
 
-    public boolean isEmailDuplicated(String email) {
+    private void isEmailDuplicated(String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
-
-        return true;
     }
 
-    public boolean isNicknameDuplicated(String nickname) {
+    private void isNicknameDuplicated(String nickname) {
         if (memberRepository.findByNickname(nickname).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
         }
-
-        return true;
     }
 
-    public boolean isUsernameDuplicated(String username) {
+    private void isUsernameDuplicated(String username) {
         if (loginCredentialRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
-
-        return true;
     }
     
 }
