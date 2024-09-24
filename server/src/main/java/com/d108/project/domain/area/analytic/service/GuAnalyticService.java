@@ -1,6 +1,7 @@
 package com.d108.project.domain.area.analytic.service;
 
 import com.d108.project.interfaces.api.analytics.dto.*;
+import org.springframework.stereotype.Service;
 
 public interface GuAnalyticService {
 

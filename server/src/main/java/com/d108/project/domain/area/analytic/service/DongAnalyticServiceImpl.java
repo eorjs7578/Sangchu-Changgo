@@ -1,7 +1,7 @@
 package com.d108.project.domain.area.analytic.service;
 
 import com.d108.project.domain.area.analytic.repository.*;
-import com.d108.project.domain.area.repository.DongRepository;
+import com.d108.project.domain.map.respository.DongRepository;
 import com.d108.project.interfaces.api.analytics.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -64,7 +64,7 @@ public class DongAnalyticServiceImpl implements DongAnalyticService {
     @Override
     public SalesByQuarterlyDto getSaleByQuarterly(Long dongId) {
         // 분기별 매출 데이터를 조회하여 반환
-        return saleRepository.getSalesByQuarterly(dongId);
+        return salesHistoryRepository.getSalesHistoryByDongId(dongId);
     }
 
     @Override

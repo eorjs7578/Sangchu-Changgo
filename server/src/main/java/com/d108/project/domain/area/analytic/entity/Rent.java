@@ -1,5 +1,7 @@
 package com.d108.project.domain.area.analytic.entity;
 
+import com.d108.project.domain.map.entity.Dong;
+import com.d108.project.domain.map.entity.Gu;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AccessLevel;
@@ -14,7 +16,6 @@ public class Rent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "rent_id")
     private Long rentId;
 
     @ManyToOne

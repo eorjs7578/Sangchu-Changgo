@@ -17,6 +17,8 @@ public interface AreaAnalyticApi {
     ResponseEntity<FootTrafficByDayOfWeekDto> getFootTrafficByDayOfWeek(@RequestParam Long areaId);
     @GetMapping("/foot-traffics/hour")
     ResponseEntity<FootTrafficByHourDto> getFootTrafficByHour(@RequestParam Long areaId);
+    @GetMapping("/foot-traffics/month")
+    ResponseEntity<FootTrafficByMonthDto> getFootTrafficByMonth(@RequestParam Long areaId);
     @GetMapping("/foot-traffics/age")
     ResponseEntity<FootTrafficByAgeDto> getFootTrafficByAge(@RequestParam Long areaId);
     @GetMapping("/foot-traffics/gender")

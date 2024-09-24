@@ -1,10 +1,10 @@
 package com.d108.project.domain.map.dto;
 
 import com.d108.project.config.GeometrySerializer;
+import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.map.entity.Dong;
 import com.d108.project.domain.map.entity.Gu;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.persistence.Column;
 import lombok.Builder;
 import org.locationtech.jts.geom.Geometry;
 
@@ -13,7 +13,7 @@ public class PolygonDto {
 
     private String name;
 
-    private long code;
+    private Long code;
 
     private Float xPos;
 
@@ -32,9 +32,6 @@ public class PolygonDto {
         this.polygon = polygon;
     }
 
-
-
-
     public static PolygonDto toDTO(Gu gu){
         return PolygonDto.builder()
                 .id(gu.getId())
@@ -49,10 +46,21 @@ public class PolygonDto {
         return PolygonDto.builder()
                 .id(dong.getId())
                 .name(dong.getDongName())
-                .code(dong.getCode())
+                .code(dong.getCode().getId())
                 .yPos(dong.getYPos())
                 .xPos(dong.getXPos())
                 .polygon(dong.getPolygon())
+                .build();
+    }
+
+    public static PolygonDto toDTO(Area area){
+        return PolygonDto.builder()
+                .id(area.getId())
+                .name(area.getAreaName())
+                .code(area.getCode().getId())
+                .yPos(area.getYPos())
+                .xPos(area.getXPos())
+                .polygon(area.getPolygon())
                 .build();
     }
 }

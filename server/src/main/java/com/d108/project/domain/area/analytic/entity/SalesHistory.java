@@ -1,6 +1,8 @@
 package com.d108.project.domain.area.analytic.entity;
 
 import com.d108.project.domain.area.entity.Area;
+import com.d108.project.domain.map.entity.Dong;
+import com.d108.project.domain.map.entity.Gu;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AccessLevel;

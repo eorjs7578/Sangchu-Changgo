@@ -16,6 +16,8 @@ public interface DongAnalyticApi {
     ResponseEntity<FootTrafficByDayOfWeekDto> getFootTrafficByDayOfWeek(@RequestParam Long dongId);
     @GetMapping("/foot-traffics/hour")
     ResponseEntity<FootTrafficByHourDto> getFootTrafficByHour(@RequestParam Long dongId);
+    @GetMapping("/foot-traffics/month")
+    ResponseEntity<FootTrafficByMonthDto> getFootTrafficByMonth(@RequestParam Long dongId);
     @GetMapping("/foot-traffics/age")
     ResponseEntity<FootTrafficByAgeDto> getFootTrafficByAge(@RequestParam Long dongId);
     @GetMapping("/foot-traffics/gender")
