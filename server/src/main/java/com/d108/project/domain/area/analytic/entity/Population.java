@@ -1,6 +1,8 @@
 package com.d108.project.domain.area.analytic.entity;
 
 import com.d108.project.domain.area.entity.Area;
+import com.d108.project.domain.map.entity.Dong;
+import com.d108.project.domain.map.entity.Gu;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AccessLevel;
@@ -32,7 +34,7 @@ public class Population {
     @Column(name = "total_population")
     private Long totalPopulation;
 
-    @Column(name = "man_popultaion")
+    @Column(name = "man_population")
     private Long manPopulation;
 
     @Column(name = "woman_population")

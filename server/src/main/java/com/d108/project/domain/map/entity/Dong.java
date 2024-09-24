@@ -21,7 +21,7 @@ public class Dong {
 
     @ManyToOne
     @JoinColumn(name = "gu_code", referencedColumnName = "id")
-    private long code;
+    private Gu code;
 
     @Column(name = "x_pos")
     private Float xPos;

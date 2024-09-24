@@ -1,7 +1,8 @@
 package com.d108.project.interfaces.api.analytics.dto;
 
+import java.util.List;
+
 public class RentsByFloorDto {
-    private Long areaId;
-    private String floor;
-    private int numberOfRents;
+    private List<Long> data;
+    private List<String> labels;
 }

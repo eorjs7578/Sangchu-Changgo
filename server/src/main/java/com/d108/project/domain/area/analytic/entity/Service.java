@@ -1,5 +1,6 @@
 package com.d108.project.domain.area.analytic.entity;
 
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AccessLevel;

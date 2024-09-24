@@ -1,30 +1,38 @@
 package com.d108.project.domain.area.entity;
 
-import com.d108.project.domain.favorite.favoriteArea.entity.FavoriteArea;
+import com.d108.project.domain.map.entity.Dong;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import org.locationtech.jts.geom.Geometry;
 
 @Getter
 @Setter(value = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
-@Table(name = "area")
+@Table(name = "area") // 테이블 이름을 적절히 변경하세요
 public class Area {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
-    
-    // 이름
-    private String name;
-    
-    // 설명
-    private String description;
 
-    @OneToMany(mappedBy = "area")
-    private List<FavoriteArea> FavoriteAreas = new ArrayList<>();
+    @Column(name = "area_name", length = 255)
+    private String areaName;
+
+    @ManyToOne
+    @JoinColumn(name = "dong_code", referencedColumnName = "id")
+    private Dong code;
+
+    @Column(name = "x_pos")
+    private Float xPos;
+
+    @Column(name = "y_pos")
+    private Float yPos;
+
+    @Column(name = "polygon", columnDefinition = "geometry(Polygon, 4326)") // SRID는 적절히 설정
+    private Geometry polygon;
+
 }

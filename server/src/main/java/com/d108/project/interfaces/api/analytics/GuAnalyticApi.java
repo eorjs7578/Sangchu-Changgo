@@ -16,6 +16,8 @@ public interface GuAnalyticApi {
     ResponseEntity<FootTrafficByDayOfWeekDto> getFootTrafficByDayOfWeek(@RequestParam Long guId);
     @GetMapping("/foot-traffics/hour")
     ResponseEntity<FootTrafficByHourDto> getFootTrafficByHour(@RequestParam Long guId);
+    @GetMapping("/foot-traffics/month")
+    ResponseEntity<FootTrafficByMonthDto> getFootTrafficByMonth(@RequestParam Long guId);
     @GetMapping("/foot-traffics/age")
     ResponseEntity<FootTrafficByAgeDto> getFootTrafficByAge(@RequestParam Long guId);
     @GetMapping("/foot-traffics/gender")
