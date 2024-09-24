@@ -37,22 +37,23 @@ public class SaleStorePostServiceImpl implements SaleStorePostService {
         Member member = memberRepository.findById(saleStorePostCreateDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        SaleStorePost saleStorePost = SaleStorePost.builder()
-                .board(board)
-                .member(member)
-                .title(saleStorePostCreateDto.getTitle())
-                .content(saleStorePostCreateDto.getContent())
-                .revenue(saleStorePostCreateDto.getRevenue())
-                .startupPrice(saleStorePostCreateDto.getStartupPrice())
-                .rentalPrice(saleStorePostCreateDto.getRentalPrice())
-                .size(saleStorePostCreateDto.getSize())
-                .franchiseType(saleStorePostCreateDto.getFranchiseType())
-                .ageGroup(saleStorePostCreateDto.getAgeGroup())
-                .footTraffic(saleStorePostCreateDto.getFootTraffic())
-                .atmosphere(saleStorePostCreateDto.getAtmosphere())
-                .nearbyPrice(saleStorePostCreateDto.getNearbyPrice())
-                .desiredSalePrice(saleStorePostCreateDto.getDesiredSalePrice())
-                .build();
+        // 수동 생성자 사용하여 SaleStorePost 객체 생성
+        SaleStorePost saleStorePost = new SaleStorePost(
+                board,
+                member,
+                saleStorePostCreateDto.getTitle(),
+                saleStorePostCreateDto.getContent(),
+                saleStorePostCreateDto.getStartupPrice(),
+                saleStorePostCreateDto.getRentalPrice(),
+                saleStorePostCreateDto.getRevenue(),
+                saleStorePostCreateDto.getSize(),
+                saleStorePostCreateDto.getAgeGroup(),
+                saleStorePostCreateDto.getFootTraffic(),
+                saleStorePostCreateDto.getAtmosphere(),
+                saleStorePostCreateDto.getNearbyPrice(),
+                saleStorePostCreateDto.getFranchiseType(),
+                saleStorePostCreateDto.getDesiredSalePrice()
+        );
 
         saleStorePostRepository.save(saleStorePost);
 

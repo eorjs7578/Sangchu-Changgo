@@ -34,10 +34,14 @@ public class SaleStorePostResponseDto {
     // 댓글 정보
     private List<ReplyResponseDto> reply;
 
+    // 조회수 필드 추가
+    private Long view;
+
     // 생성일과 수정일 필드 추가
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // from 메서드에 조회수 추가
     public static SaleStorePostResponseDto from(SaleStorePost saleStorePost) {
         return SaleStorePostResponseDto.builder()
                 .id(saleStorePost.getId())
@@ -59,9 +63,14 @@ public class SaleStorePostResponseDto {
                 .desiredSalePrice(saleStorePost.getDesiredSalePrice())
                 .createdAt(saleStorePost.getCreatedAt())
                 .updatedAt(saleStorePost.getUpdatedAt())
+
+                // 댓글 목록 추가
                 .reply(saleStorePost.getReplies().stream()
                         .map(ReplyResponseDto::from)
                         .collect(Collectors.toList()))
+
+                // 조회수 추가
+                .view(saleStorePost.getView())
                 .build();
     }
 }

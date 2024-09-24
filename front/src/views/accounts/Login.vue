@@ -17,27 +17,19 @@
 
     <!-- 외부 로그인 버튼 -->
     <div class="external-login-buttons">
-      <button class="kakao-btn">Kakao Login</button>
-      <button class="naver-btn">Naver Login</button>
+      <button class="kakao-btn" @click="kakaoLogin()">Kakao Login</button>
+      <button class="naver-btn" @click="naverLogin()">Naver Login</button>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      email: '',
-      password: ''
-    };
-  },
-  methods: {
-    submitLogin() {
-      // 로그인 처리 로직
-      console.log('Logging in with', this.email, this.password);
-    }
+<script setup>
+  const kakaoLogin = () => {
+    window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:5173&mode=login";
   }
-};
+  const naverLogin = () => {
+    window.location.href = "http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:5173&mode=login";
+  }
 </script>
 
 <style scoped>

@@ -17,6 +17,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id") // 상속받은 엔티티의 기본 키를 지정
 public class SaleStorePost extends Post{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     // 창업 가격
     private Long startupPrice;
@@ -35,18 +38,22 @@ public class SaleStorePost extends Post{
     // TODO: 아래 String 이나 Enum 일지 추후 결정
     // 유동 인구
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private FootTraffic footTraffic;
 
     // 분위기 (여기 타입 뭐씀?)
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private Atmosphere atmosphere;
 
     // 주변 물가
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private NearbyPrice nearbyPrice;
 
     // 프랜차이즈 (여기 타입 뭐씀?)
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private FranchiseType franchiseType;
 
 
@@ -54,7 +61,6 @@ public class SaleStorePost extends Post{
     private Long desiredSalePrice;
 
     // 생성자
-    @Builder
     public SaleStorePost(Board board, Member member, String title, String content, Long startupPrice, Long rentalPrice,
                          Long revenue, Long size, AgeGroup ageGroup, FootTraffic footTraffic, Atmosphere atmosphere,
                          NearbyPrice nearbyPrice, FranchiseType franchiseType, Long desiredSalePrice) {

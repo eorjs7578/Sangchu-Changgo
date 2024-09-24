@@ -5,6 +5,10 @@ import com.d108.project.config.security.filter.CustomAuthenticationFilter;
 import com.d108.project.config.security.filter.JwtAuthorizationFilter;
 import com.d108.project.config.security.handler.CustomAuthFailureHandler;
 import com.d108.project.config.security.handler.CustomAuthSuccessHandler;
+import com.d108.project.config.security.oauth2.OAuth2UserService;
+import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
+import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
 import com.d108.project.config.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -39,6 +43,11 @@ import java.util.Collections;
         securedEnabled = true,
         jsr250Enabled = true)
 public class SecurityConfiguration {
+
+    private final OAuth2Repository oAuth2Repository;
+    private final OAuth2UserService oAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     // 정적 자원에 대한 보안 적용 해제
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -70,7 +79,11 @@ public class SecurityConfiguration {
             HttpSecurity http,
             CustomAuthenticationFilter customAuthenticationFilter,
             JwtAuthorizationFilter jwtAuthorizationFilter,
-            WhiteListConfiguration whiteListConfiguration
+            WhiteListConfiguration whiteListConfiguration,
+            OAuth2Repository oAuth2Repository,
+            OAuth2UserService oAuth2UserService,
+            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
+            OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler
     ) throws Exception {
         return http
                 // csrf 토큰 없이도 요청 처리할 수 있도록 설정
@@ -83,40 +96,49 @@ public class SecurityConfiguration {
                         .requestMatchers("/resources/**", "/static/**").permitAll()
                         // 화이트리스트에 대한 권한 허용
                         .requestMatchers(whiteListConfiguration.getWhiteList()).permitAll()
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
                 )
                 // 모든 요청에서 토큰을 검증하게 된다.
                 // 그렇기에 jwtauthenticationfilter 내부에서 한번더 화이트리스트에 대한 체크를 해줘야한다.
                 // 그렇기에 때문에 interceptor 로서 작동하는 것이고, 인증과 intercept를 동시에 담당하고 있다.
-                .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
+//                .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
                 // 화이트리스트에 설정하지 않은 경우 여기로 들어온다.
                 // 로그인 정보를 담아서 필터를 통과한다.
                 // 로그인이 아닌 애들은 JWT 필터에서 로그인 관련 정보를 저장해서 보내준다.
-                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+//                .oauth2Login(configure ->
+//                        configure.authorizationEndpoint(
+//                                config -> config.authorizationRequestRepository(oAuth2Repository))
+//                                .userInfoEndpoint(config -> config.userService(oAuth2UserService))
+//                                .successHandler(oAuth2AuthenticationSuccessHandler)
+//                                .failureHandler(oAuth2AuthenticationFailureHandler)
+//                        )
+
                 // 스프링 시큐리티가 세션을 생성하거나 사용하지 않도록 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 로그인에 대한 설정
-                .formLogin(login -> login
-                        // 로그인 페이지에 대한 설정
-                        .loginPage("/members/login")
-                        // 로그인에 성공하면 /main 페이지로 이동하도록 설정
-                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("/main"))
-                        // 로그인 페이지는 인증 없이 접근을 허용
-                        .permitAll()
-                )
-                // 로그아웃에 대한 설정
-                .logout(logout -> logout
-                        // 로그아웃 페이지에 대한 설정
-                        .logoutUrl("/members/logout")
-                        // 로그아웃 하면서 인증 정보를 삭제하고
-                        .clearAuthentication(true)
-                        // 쿠키를 삭제함
-                        .deleteCookies("access_token", "refresh_token")
-                        // 세션 무효화
-                        .invalidateHttpSession(true)
-                        // 로그아웃에 성공하면 여기로 보냄
-                        .logoutSuccessUrl("/main")
-                )
+
+//                .formLogin(login -> login
+//                        // 로그인 페이지에 대한 설정
+//                        .loginPage("/api/members/login")
+//                        // 로그인에 성공하면 /main 페이지로 이동하도록 설정
+//                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("/main"))
+//                        // 로그인 페이지는 인증 없이 접근을 허용
+//                        .permitAll()
+//                )
+//                // 로그아웃에 대한 설정
+//                .logout(logout -> logout
+//                        // 로그아웃 페이지에 대한 설정
+//                        .logoutUrl("/api/members/logout")
+//                        // 로그아웃 하면서 인증 정보를 삭제하고
+//                        .clearAuthentication(true)
+//                        // 쿠키를 삭제함
+//                        .deleteCookies("access_token", "refresh_token")
+//                        // 세션 무효화
+//                        .invalidateHttpSession(true)
+//                        // 로그아웃에 성공하면 여기로 보냄
+//                        .logoutSuccessUrl("/main")
+//                )
                 .build();
     }
 
@@ -134,7 +156,7 @@ public class SecurityConfiguration {
     ) {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
         // "/members/login" 엔드포인트로 들어오는 요청을 CustomAuthenticationFilter에서 처리하도록 지정한다.
-        customAuthenticationFilter.setFilterProcessesUrl("/members/login");
+        customAuthenticationFilter.setFilterProcessesUrl("/api/members/login");
         customAuthenticationFilter.setAuthenticationSuccessHandler(customAuthSuccessHandler);    // '인증' 성공 시 해당 핸들러로 처리를 전가한다.
         customAuthenticationFilter.setAuthenticationFailureHandler(customAuthFailureHandler);    // '인증' 실패 시 해당 핸들러로 처리를 전가한다.
         customAuthenticationFilter.afterPropertiesSet();

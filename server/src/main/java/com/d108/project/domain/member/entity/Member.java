@@ -21,7 +21,6 @@ import java.util.List;
 public class Member extends LoginCredential{
 
     private String nickname;
-
     private String email;
 
     // 관심 상권

@@ -18,12 +18,12 @@ public class BusinessAreaEvaluation {
     @JoinColumn(name = "member_id")
     private Member member;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_area_id")
     private BusinessArea businessArea;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private AgeGroup ageGroup;
 
     //TODO: 평가 점수 설정

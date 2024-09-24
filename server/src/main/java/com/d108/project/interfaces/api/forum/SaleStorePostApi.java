@@ -8,20 +8,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequestMapping("/api/sale-store-posts")
 public interface SaleStorePostApi {
 
-    @PostMapping("/sale-posts")
+    @PostMapping
     ResponseEntity<Void> createSalePost(@RequestBody SaleStorePostCreateDto saleStorePostCreateDto);
 
-    @PutMapping("/sale-posts/{postId}")
+    @PutMapping("/{postId}")
     ResponseEntity<Void> updateSalePost(@PathVariable Long postId, @RequestParam Long memberId, @RequestBody SaleStorePostUpdateDto saleStorePostUpdateDto);
 
-    @GetMapping("/sale-posts/{postId}")
+    @GetMapping("/{postId}")
     ResponseEntity<SaleStorePostResponseDto> getSalePostById(@PathVariable Long postId);
 
-    @GetMapping("/sale-posts")
+    @GetMapping
     ResponseEntity<List<SaleStorePostResponseDto>> getAllSalePosts();
 
-    @DeleteMapping("/sale-posts/{postId}")
+    @DeleteMapping("/{postId}")
     ResponseEntity<Void> deleteSalePost(@PathVariable Long postId, @RequestParam Long memberId);
 }
