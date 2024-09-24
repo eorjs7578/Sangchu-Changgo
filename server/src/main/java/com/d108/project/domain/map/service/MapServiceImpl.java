@@ -4,6 +4,8 @@ package com.d108.project.domain.map.service;
 import com.d108.project.cache.redis.RedisUtil;
 import com.d108.project.cache.redisToken.dto.TokenResponseDto;
 import com.d108.project.config.security.util.JwtUtil;
+import com.d108.project.domain.area.entity.Area;
+import com.d108.project.domain.area.repository.AreaRepository;
 import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
 import com.d108.project.domain.map.dto.PolygonDto;
@@ -37,7 +39,7 @@ import java.util.stream.Collectors;
 public class MapServiceImpl implements MapService {
     private final GuRepository guRepository;
     private final DongRepository dongRepository;
-
+    private final AreaRepository areaRepository;
 
     @Override
     public List<PolygonDto> getGuPolygon() {
@@ -52,19 +54,28 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public List<PolygonDto> getDongPolygon(Long code){
-        List<Dong> dong = dongRepository.findByCode(code);
+    public List<PolygonDto> getDongPolygon(Long guCode){
+        Gu gu = guRepository.getReferenceById(guCode);
+        List<Dong> dong = dongRepository.findByCode(gu);
 
         List<PolygonDto> dongDto= new ArrayList<>();
         for(Dong d :dong){
             dongDto.add(PolygonDto.toDTO(d));
         }
-
         return dongDto;
     }
 
     @Override
     public List<PolygonDto> getAreaPolygon(Long code) {
-        return List.of();
+        Dong dong = dongRepository.getReferenceById(code);
+        List<Area> area = areaRepository.findByCode(dong);
+
+        List<PolygonDto> areaDto= new ArrayList<>();
+        for(Area a :area){
+            areaDto.add(PolygonDto.toDTO(a));
+        }
+
+        return areaDto;
+
     }
 }

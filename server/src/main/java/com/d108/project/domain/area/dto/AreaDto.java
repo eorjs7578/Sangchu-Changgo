@@ -6,6 +6,6 @@ public record AreaDto(String name) {
 
 
     public static AreaDto to(Area area) {
-        return new AreaDto(area.getName());
+        return new AreaDto(area.getAreaName());
     }
 }
