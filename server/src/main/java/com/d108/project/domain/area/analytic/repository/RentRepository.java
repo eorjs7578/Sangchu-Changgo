@@ -8,9 +8,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface RentRepository extends JpaRepository<Rent, Long> {
 
-    @Query("SELECT AVG((r.firstFloorRent + r.otherFloorRent) / 2) FROM Rent r WHERE r.dong = :dongId")
+    @Query("SELECT AVG((r.firstFloorRent + r.otherFloorRent) / 2) FROM Rent r WHERE r.dong.id = :dongId")
     Long getAverageAnnualRentByDongId(@Param("dongId") Long dongId);
 
-    @Query("SELECT r.firstFloorRent, r.otherFloorRent FROM Rent r WHERE r.dong = :dongId")
+    @Query("SELECT r.firstFloorRent, r.otherFloorRent FROM Rent r WHERE r.dong.id = :dongId")
     RentsByFloorDto getRentsByFloor(@Param("dongId") Long dongId);
 }
