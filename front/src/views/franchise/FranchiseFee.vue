@@ -12,9 +12,19 @@
             <div v-if="currentStep === 1" key="step1" class="h-100 d-flex flex-column justify-content-between">
                 <div class="mb-4"> <!-- 간격 조정 -->
                   <label for="location" class="form-label">창업하시려는 위치를 입력해 주세요</label>
-                  <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control" id="location" v-model="location" placeholder="구 / 동 검색">
+                  <div class="row"> <!-- 간격 조정 -->
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" v-model="gu" placeholder="구">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" v-model="dong" placeholder="동">
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="mb-4"> <!-- 간격 조정 -->
@@ -91,34 +101,14 @@
             <!-- Step 3 -->
             <div v-else-if="currentStep === 3" key="step3">
               <div class="card mb-4">
-                <div class="card-body">
-                  <h6 class="card-subtitle mb-2 text-muted">{{ location }} {{ franchise }}</h6>
-                  <h4 class="card-title">예상 창업 비용은 <span class="text-primary">{{ totalCost.toLocaleString() }}원</span> 입니다.</h4>
-                  <table class="table table-borderless">
-                    <tbody>
-                      <tr v-for="(cost, index) in costs" :key="index">
-                        <td>{{ cost.name }}</td>
-                        <td class="text-end">{{ cost.amount.toLocaleString() }}원</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <FranchiseInfoCard :franchise="myFranchise"/>
               </div>
               <h6 class="mb-3">다른 프랜차이즈는 어때요?</h6>
               <div class="row g-3">
-                <div class="col-md-6" v-for="(franchise, index) in otherFranchises" :key="index">
-                  <div class="card">
-                    <div class="card-body">
-                      <h6 class="card-title">{{ franchise.name }}</h6>
-                      <p class="card-text">{{ franchise.cost.toLocaleString() }}원</p>
-                      <table class="table table-sm table-borderless">
-                        <tbody>
-                          <tr v-for="(cost, costIndex) in franchise.costs" :key="costIndex">
-                            <td>{{ cost.name }}</td>
-                            <td class="text-end">{{ cost.amount.toLocaleString() }}원</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                <div class="row overflow-x">
+                  <div class="col-auto" v-for="(franchise, index) in otherFranchises" :key="index">
+                    <div class="card" >
+                      <FranchiseInfoCard :franchise="franchise" />
                     </div>
                   </div>
                 </div>
@@ -133,7 +123,44 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getGu, getDong } from "@/api/region.js";
+import FranchiseInfoCard from '@/components/franchise/FranchiseInfoCard.vue';
+
+const gus = ref([])
+const dongs = ref([])
+
+const getGuInfos = () => {
+  getGu(
+    ({data}) => {
+      console.log(data)
+      gus.value = data
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
+const selectGu = (payload) => {
+  getDong(
+    payload.code,
+    ({data}) => {
+      console.log(data)
+      dongs.value = data
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
+onMounted(() => {
+  getGuInfos()
+  selectGu({
+    code : 11110
+  })
+})
 
 const currentStep = ref(1)
 const location = ref('')
@@ -142,20 +169,42 @@ const subCategory = ref('')
 const franchise = ref('')
 const storeSize = ref('')
 const selectedFloor = ref('')
+const gu = ref('')
+const dong = ref('')
 
-const costs = ref([
-  { name: '가맹비', amount: 10000000 },
-  { name: '보증금', amount: 10000000 },
-  { name: '교육비', amount: 5000000 },
-  { name: '인테리어 비용', amount: 15000000 },
-  { name: '기타비용', amount: 2110000 },
-])
-
-const totalCost = computed(() => costs.value.reduce((sum, cost) => sum + cost.amount, 0))
+const myFranchise = ref({
+    gu : gu,
+    dong : dong,
+    name: '12412415555524',
+    cost: 10000000,
+    costs: [
+      { name: '가맹비', amount: 15000000 },
+      { name: '보증금', amount: 10000000 },
+      { name: '교육비', amount: 5000000 },
+      { name: '인테리어 비용', amount: 18000000 },
+      { name: '기타비용', amount: 2000000 },
+    ]
+  },
+)
 
 const otherFranchises = ref([
   {
-    name: '5천만원',
+    gu : gu,
+    dong : dong,
+    name: '12412415555524',
+    cost: 10000000,
+    costs: [
+      { name: '가맹비', amount: 15000000 },
+      { name: '보증금', amount: 10000000 },
+      { name: '교육비', amount: 5000000 },
+      { name: '인테리어 비용', amount: 18000000 },
+      { name: '기타비용', amount: 2000000 },
+    ]
+  },
+  {
+    gu : gu,
+    dong : dong,
+    name : 'asdffsda',
     cost: 50000000,
     costs: [
       { name: '가맹비', amount: 15000000 },
@@ -166,6 +215,8 @@ const otherFranchises = ref([
     ]
   },
   {
+    gu : gu,
+    dong : dong,
     name: '5천만원',
     cost: 50000000,
     costs: [
@@ -214,6 +265,12 @@ const setParamsDefault = () => {
 </script>
 
 <style scoped>
+
+.overflow-auto {
+  overflow-x: auto; /* 가로 스크롤 허용 */
+  white-space: nowrap; /* 요소들이 한 줄에 나열되도록 */
+}
+
 .custom-modal-width {
   max-width: 70vw;
   width: 70%;
