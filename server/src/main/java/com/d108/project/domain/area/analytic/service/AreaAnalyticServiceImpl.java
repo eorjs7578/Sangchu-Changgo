@@ -34,13 +34,23 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
 
     private static int getMaxIndex(List<Long> footTrafficByHourByArea) {
         if (footTrafficByHourByArea == null || footTrafficByHourByArea.isEmpty()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("The list cannot be null or empty");
         }
 
         return IntStream.range(0, footTrafficByHourByArea.size())
-                .reduce((i, j) -> footTrafficByHourByArea.get(i) > footTrafficByHourByArea.get(j) ? i : j)
+                .reduce((i, j) -> {
+                    Long valueI = footTrafficByHourByArea.get(i);
+                    Long valueJ = footTrafficByHourByArea.get(j);
+
+                    // null 체크 후, null이면 기본값 0L로 처리
+                    if (valueI == null) valueI = 0L;
+                    if (valueJ == null) valueJ = 0L;
+
+                    return valueI > valueJ ? i : j;
+                })
                 .orElseThrow(IllegalArgumentException::new);
     }
+
 
     private static <T extends Number> List<T> getList(List<T[]> objects) {
         List<T> list = new ArrayList<>();
@@ -80,13 +90,23 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<Long> footTrafficByQuarterlyByArea = getList(populationHistoryRepository.getPopulationHistoryByAreaId(areaId));
         List<String> quarterList = List.of("2023/1", "2023/2", "2023/3", "2023/4", "2024/1");
 
+        String QOQ = compareLast(quarterList, footTrafficByQuarterlyByArea);
+
+        return new FootTrafficByMonthDto(footTrafficByQuarterlyByArea, quarterList, QOQ);
+    }
+
+    private static String compareLast(List<String> quarterList, List<Long> footTrafficByQuarterlyByArea) {
         String currentQuarter = getCurrentQuarter();
         String lastYear = String.valueOf(getLastYear());
+        String nowYear = String.valueOf(getLastYear()+1);
         String last = String.format("%s/1", lastYear);
-        String now = String.format("%s/1", lastYear+1);
+        String now = String.format("%s/1", nowYear);
 
+        System.out.println(last + " " + now);
         int nowIndex = quarterList.indexOf(now);
         int lastIndex = quarterList.indexOf(last);
+
+        System.out.println(nowIndex + " " + lastIndex);
 
         double percentageChange = calculatePercentageChange(footTrafficByQuarterlyByArea.get(lastIndex), footTrafficByQuarterlyByArea.get(nowIndex));
 
@@ -96,8 +116,7 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         } else if (percentageChange < 0) {
             QOQ = String.format("%.2f%% 하락", Math.abs(percentageChange));
         }
-
-        return new FootTrafficByMonthDto(footTrafficByQuarterlyByArea, quarterList, QOQ);
+        return QOQ;
     }
 
     @Override
@@ -147,22 +166,8 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<Long> saleByQuarterlyByArea = getList(salesHistoryRepository.getSalesHistoryByDongId(areaId, service));
         List<String> quarterList = List.of("2023/1", "2023/2", "2023/3", "2023/4", "2024/1");
 
-        String currentQuarter = getCurrentQuarter();
-        String lastYear = String.valueOf(getLastYear());
-        String last = String.format("%s/1", lastYear);
-        String now = String.format("%s/1", lastYear+1);
-
-        int nowIndex = quarterList.indexOf(now);
-        int lastIndex = quarterList.indexOf(last);
-
-        double percentageChange = calculatePercentageChange(saleByQuarterlyByArea.get(lastIndex), saleByQuarterlyByArea.get(nowIndex));
-
-        String QOQ = "유지";
-        if (percentageChange > 0) {
-            QOQ = String.format("%.2f%% 상승", percentageChange);
-        } else if (percentageChange < 0) {
-            QOQ = String.format("%.2f%% 하락", Math.abs(percentageChange));
-        }
+        System.out.println(saleByQuarterlyByArea);
+        String QOQ = compareLast(quarterList, saleByQuarterlyByArea);
 
         return new SalesByQuarterlyDto(saleByQuarterlyByArea, quarterList, QOQ);
 
