@@ -128,6 +128,7 @@ import { getGu, getDong } from "@/api/region.js";
 import FranchiseInfoCard from '@/components/franchise/FranchiseInfoCard.vue';
 
 const gus = ref([])
+const dongs = ref([])
 
 const getGuInfos = () => {
   getGu(
@@ -141,8 +142,24 @@ const getGuInfos = () => {
   )
 }
 
+const selectGu = (payload) => {
+  getDong(
+    payload.code,
+    ({data}) => {
+      console.log(data)
+      dongs.value = data
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
 onMounted(() => {
   getGuInfos()
+  selectGu({
+    code : 11110
+  })
 })
 
 const currentStep = ref(1)

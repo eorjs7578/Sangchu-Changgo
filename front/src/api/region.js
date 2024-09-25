@@ -7,7 +7,7 @@ function getGu(success,fail) {
 }
 
 function getDong(regCode,success,fail) {
-  local.get(`/api/map/info/dong/${regCode}`).then(success).catch(fail);
+  local.get(`/api/map/info/dong?code=${regCode}`).then(success).catch(fail);
 }
 
 
