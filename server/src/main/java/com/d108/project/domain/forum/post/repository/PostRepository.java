@@ -3,7 +3,6 @@ package com.d108.project.domain.forum.post.repository;
 import com.d108.project.domain.forum.post.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 
 import java.util.List;
 

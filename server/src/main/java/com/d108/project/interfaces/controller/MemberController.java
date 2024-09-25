@@ -3,7 +3,7 @@ package com.d108.project.interfaces.controller;
 import com.d108.project.cache.redisEmail.RedisEmailService;
 import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
 import com.d108.project.config.util.token.dto.TokenResponseDto;
-import com.d108.project.domain.forum.reply.ReplyService;
+import com.d108.project.domain.forum.reply.service.ReplyService;
 import com.d108.project.domain.forum.reply.dto.ReplyByMemberIdResponseDto;
 import com.d108.project.domain.member.entity.Member;
 import com.d108.project.domain.member.service.MemberService;
@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
