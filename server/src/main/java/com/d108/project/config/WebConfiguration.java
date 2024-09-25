@@ -3,6 +3,7 @@ package com.d108.project.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -10,23 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @RequiredArgsConstructor
 public class WebConfiguration implements WebMvcConfigurer {
-
-//    private final JwtTokenInterceptor jwtTokenInterceptor;
-
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        // 인터셉터를 설정해 토큰의 유효성을 검증
-//        registry.addInterceptor(jwtTokenInterceptor)
-//                .addPathPatterns("/**") // 모든 URL에 대해 JWT 토큰 검사를 적용
-//                // 예외 페이지 설정하기
-//                .excludePathPatterns(
-//                        "/main",
-//                        "/posts/*,","/posts",
-//                        "/members/login", "/members/signup", "/members/auth-email",
-//                        "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/error"
-//                );
-//    }
-
     // 백엔드 서버의 정적 리소스 위치 경로
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
             "classpath:/",
@@ -46,5 +30,17 @@ public class WebConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
                 .addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+//                .allowedOrigins("*")
+                .allowPrivateNetwork(true)
+                .allowedOriginPatterns("*")
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }

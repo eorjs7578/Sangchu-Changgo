@@ -1,7 +1,7 @@
-package com.d108.project.config.security.util;
+package com.d108.project.config.util.token;
 
 import com.d108.project.cache.redis.RedisUtil;
-import com.d108.project.cache.redisToken.dto.TokenResponseDto;
+import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
 import io.jsonwebtoken.*;
@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,18 +28,18 @@ import java.util.Date;
 
 @RequiredArgsConstructor
 @Component
-public class JwtUtil {
+public class TokenUtil {
 
     @Value("${spring.jwt.access-token.expire-time}")
     public Long ACCESS_TOKEN_EXPIRE;
     @Value("${spring.jwt.refresh-token.expire-time}")
     public Long REFRESH_TOKEN_EXPIRE;
-    
+
     private final RedisUtil redisUtil;
     private final UserDetailsService userDetailsService;
     private final LoginCredentialRepository loginCredentialRepository;
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
-    private static final String REDIS_ACCESS_TOKEN_PREFIX = "auth:accessToken:";
+    private static final Logger logger = LoggerFactory.getLogger(TokenUtil.class);
+    public static final String REDIS_ACCESS_TOKEN_PREFIX = "auth:accessToken:";
 
 
     // JWT 서명에 사용할 비밀키 (application.properties 또는 application.yml에서 주입됨)
@@ -59,7 +60,13 @@ public class JwtUtil {
 
     // 주어진 Member 객체를 기반으로 JWT 토큰을 생성하는 메서드
     // 토큰에는 사용자의 사용자 이름(subject), 발행 시간, 만료 시간이 포함됨
-    public String generateToken(String username, Long expireTime) {
+    public String generateToken(String username, String tokenType) {
+        Long expireTime = 0L;
+        if (tokenType.equals("accessToken")) {
+            expireTime = ACCESS_TOKEN_EXPIRE*1000;
+        } else if (tokenType.equals("refreshToken")) {
+            expireTime = REFRESH_TOKEN_EXPIRE*1000;
+        }
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
@@ -73,9 +80,9 @@ public class JwtUtil {
     public boolean isTokenValid(String token) {
         try {
             Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token);
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
@@ -118,9 +125,10 @@ public class JwtUtil {
         return null;
     }
 
-    public void deleteCookie(
+    public void deleteTokenOnCookie(
             @NonNull HttpServletResponse response
     ) {
+
         Cookie cookieRefresh = new Cookie("refresh_token", "");
         cookieRefresh.setMaxAge(0);
         cookieRefresh.setPath("/");
@@ -130,8 +138,12 @@ public class JwtUtil {
         cookieAccess.setMaxAge(0);
         cookieAccess.setPath("/");
         response.addCookie(cookieAccess);
+
+        response.setHeader("access_token", "access_token=; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=0");
+        response.setHeader("refresh_token", "refresh_token=; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=0");
     }
 
+    @Transactional
     public void tokenRefresh(
             @NonNull HttpServletResponse response,
             String refreshToken) throws RuntimeException {
@@ -141,7 +153,7 @@ public class JwtUtil {
 
         // 근데 토큰이 DB에 저장된 것과 다른 경우
         if (!refreshToken.equals(storedToken)) {
-            deleteCookie(response);
+            deleteTokenOnCookie(response);
             throw new RuntimeException("토큰이 유효하지 않습니다.");
         }
 
@@ -154,13 +166,14 @@ public class JwtUtil {
     @Transactional
     public TokenResponseDto getToken(String username) {
 
-        String accessToken = generateToken(username, 1000 * ACCESS_TOKEN_EXPIRE);
-        String refreshToken = generateToken(username, 1000 * REFRESH_TOKEN_EXPIRE);
+        String accessToken = generateToken(username, "accessToken");
+        String refreshToken = generateToken(username, "refreshToken");
 
         try {
             // accessToken은 레디스에
             redisUtil.setDataExpire(REDIS_ACCESS_TOKEN_PREFIX + username, accessToken, ACCESS_TOKEN_EXPIRE);
             // refreshToken 은 DB에 저장
+
             LoginCredential loginCredential = loginCredentialRepository.findByUsername(username)
                     .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 회원입니다."));
             loginCredential.setRefreshToken(refreshToken);
@@ -183,5 +196,42 @@ public class JwtUtil {
         } else {
             throw new RuntimeException("아이디가 존재하지 않습니다.");
         }
+    }
+
+    public void pushTokenOnResponse(HttpServletResponse response, String accessToken, String refreshToken) {
+        // 생성된 토큰을 쿠키로 만들어서
+        ResponseCookie accessTokenCookie = ResponseCookie.from("access_token", accessToken)
+                .httpOnly(true)
+                .path("/")
+//                .sameSite("None")
+                .maxAge(Math.toIntExact(ACCESS_TOKEN_EXPIRE))
+//                .secure(true)
+                .build();
+        response.addHeader("Set-Cookie", accessTokenCookie.toString());
+
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", refreshToken)
+                .httpOnly(true)
+                .path("/")
+//                .sameSite("None")
+                .maxAge(Math.toIntExact(REFRESH_TOKEN_EXPIRE))
+//                .secure(true)
+                .build();
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
+
+//        Cookie accessTokenCookie = new Cookie("access_token", accessToken);
+//        Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
+//        // 각각
+//        // accessTokenCookie.setSecure(true);
+//        accessTokenCookie.setHttpOnly(true);
+//        accessTokenCookie.setPath("/");
+//        accessTokenCookie.setMaxAge(Math.toIntExact(ACCESS_TOKEN_EXPIRE));
+//        response.addCookie(accessTokenCookie);
+//        // 셋팅해서 넘겨주기
+//        // refreshTokenCookie.setSecure(true);
+//        //
+//        refreshTokenCookie.setHttpOnly(true);
+//        refreshTokenCookie.setPath("/");
+//        refreshTokenCookie.setMaxAge(Math.toIntExact(REFRESH_TOKEN_EXPIRE));
+//        response.addCookie(refreshTokenCookie);
     }
 }

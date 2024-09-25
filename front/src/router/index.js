@@ -8,6 +8,7 @@ import InterestAreas from '@/views/InterestAreas.vue';
 import MarketAnalysis from '@/views/MarketAnalysis.vue';
 import AreaAnalytics from '@/views/areaAnalytics/AreaAnalytics.vue';
 import Chart from '@/views/areaAnalytics/Chart.vue';
+import Chart2 from '@/views/areaAnalytics/Chart2.vue';
 
 const routes = [
   {
@@ -55,6 +56,11 @@ const routes = [
     name: 'Chart',
     component: Chart
   },
+  {
+    path: '/chart/2',
+    name: 'chart2',
+    component: Chart2
+  }
 ];
 
 const router = createRouter({
