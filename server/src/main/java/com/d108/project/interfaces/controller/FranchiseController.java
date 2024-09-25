@@ -1,0 +1,41 @@
+package com.d108.project.interfaces.controller;
+
+import com.d108.project.domain.franchise.dto.FranchiseDto;
+import com.d108.project.domain.franchise.dto.FranchiseFeeDto;
+import com.d108.project.domain.franchise.dto.FranchiseTypeDto;
+import com.d108.project.domain.franchise.service.FranchiseService;
+import com.d108.project.interfaces.api.FranchiseApi;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@Tag(name="franchise")
+@RestController
+@RequiredArgsConstructor
+@Slf4j
+public class FranchiseController implements FranchiseApi {
+
+    private final FranchiseService franchiseService;
+
+    @Operation(summary = "프랜차이즈 분류 조회", description = "")
+    @Override
+    public ResponseEntity<List<FranchiseTypeDto>> getFranchiseType() {
+        return new ResponseEntity<>(franchiseService.getFranchiseTypes(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<FranchiseDto>> getFranchisesByType(String type) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<FranchiseFeeDto> getFranchiseFee(Long franchiseId) {
+        return null;
+    }
+}
