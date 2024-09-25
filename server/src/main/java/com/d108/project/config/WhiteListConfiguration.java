@@ -39,6 +39,11 @@ public class WhiteListConfiguration {
             API_PREFIX+"/posts/*",
             API_PREFIX+"/posts",
             API_PREFIX+"/posts/*/replies",
+
+            // 상권 분석 관련 앤드 포인트
+            API_PREFIX + "/areas/analytic/**",
+            API_PREFIX + "/dong/analytic/**",
+            API_PREFIX + "/gu/analytic/**"
+
     };
 }
-
