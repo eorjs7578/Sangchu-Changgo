@@ -5,9 +5,11 @@ import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "business_area_evaluations")
+@Setter
 @Getter
 public class AreaEvaluation {
     @Id
@@ -26,5 +28,9 @@ public class AreaEvaluation {
     @Column(columnDefinition = "varchar(255)")
     private AgeGroup ageGroup;
 
+
+    private String footTraffic;
+    private String nearbyPrices;
+    private String atmosphere;
     //TODO: 평가 점수 설정
 }
