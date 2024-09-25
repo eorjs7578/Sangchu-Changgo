@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
                 version = "v1"
         ),
         servers = {
-                @Server(url = "/api", description = "API 서버")
+                @Server(description = "API 서버")
         },
         tags = {
                 @Tag(name = "관심 상권"),

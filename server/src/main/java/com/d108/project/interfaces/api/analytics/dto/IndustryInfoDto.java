@@ -2,9 +2,12 @@ package com.d108.project.interfaces.api.analytics.dto;
 
 import java.util.List;
 
-public class IndustryInfoDto {
-    private List<Long> data;
-    private List<String> labels;
+public record IndustryInfoDto(List<Integer> industryInfo, List<String> info) {
+
+    public IndustryInfoDto(List<Integer> industryInfo, List<String> info) {
+        this.industryInfo = industryInfo;
+        this.info = info;
+    }
 }
 
 // 상권에 업종이 여러개 있어.

@@ -5,25 +5,48 @@ import org.springframework.stereotype.Service;
 
 public interface AreaAnalyticService {
 
-    Long getAverageFloatingPopulationPerMonth(Long areaId);
+    // 일별 유동 인구 수 조회
+    Long getFootTrafficByDaily(Long areaId);
 
+    // 요일별 유동 인구 수 조회
     FootTrafficByDayOfWeekDto getFootTrafficByDayOfWeek(Long areaId);
 
+    // 시간대별 유동 인구 수 조회
     FootTrafficByHourDto getFootTrafficByHour(Long areaId);
 
+    // 분기별 유동 인구 수 조회
+    FootTrafficByMonthDto getFootTrafficByQuarterly(Long areaId);
+
+    // 연령대별 유동 인구 수 조회
     FootTrafficByAgeDto getFootTrafficByAge(Long areaId);
 
+    // 성별 유동 인구 수 조회
     FootTrafficByGenderDto getFootTrafficByGender(Long areaId);
 
-    IndustryInfoDto getIndustry(Long areaId);
+    // 월별 매출 조회
+    Long getSaleByMonth(Long areaId, String service);
 
-    Long getAverageAnnualRent(Long areaId);
+    // 요일별 매출 조회
+    SalesByDayOfWeekDto getSaleByDayOfWeek(Long areaId, String service);
 
-    SalesByQuarterlyDto getSaleByQuarterly(Long areaId);
+    // 시간대별 매출 조회
+    SalesByHourDto getSaleByHour(Long areaId, String service);
 
-    WeekendAndWeekdaySalesDto getWeekendAndWeekdaySale(Long areaId);
+    // 분기별 매출 조회
+    SalesByQuarterlyDto getSaleByQuarterly(Long areaId, String service);
 
-    SalesByAgeDto getSaleByAge(Long areaId);
+    // 연령대별 매출 조회
+    SalesByAgeDto getSaleByAge(Long areaId, String service);
 
-    RentsByFloorDto getRentsByFloor(Long areaId);
+    // 성별 매출 조회
+    SalesByGenderDto getSaleByGender(Long areaId, String service);
+
+    // 주말과 평일별 매출 조회
+    WeekendAndWeekdaySalesDto getWeekendAndWeekdaySale(Long areaId, String service);
+
+    // 유사한 업종의 가게 수 조회
+    Integer getNumberOfSimilarStores(Long areaId, String service);
+
+    // 업종 정보 조회
+    IndustryInfoDto getIndustryInfo(Long areaId, String service);
 }

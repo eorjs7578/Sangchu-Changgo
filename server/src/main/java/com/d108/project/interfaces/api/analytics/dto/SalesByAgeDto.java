@@ -1,8 +1,7 @@
 package com.d108.project.interfaces.api.analytics.dto;
 
-public class SalesByAgeDto {
-    private Long areaId;
-    private String ageGroup;
-    private double sales;
+import java.util.List;
+
+public record SalesByAgeDto(List<Long> data, List<String> labels, String manySaleAge) {
 }
 

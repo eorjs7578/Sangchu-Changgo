@@ -1,7 +1,6 @@
 package com.d108.project.interfaces.api.analytics.dto;
 
-public class WeekendAndWeekdaySalesDto {
-    private Long areaId;
-    private double weekendSales;
-    private double weekdaySales;
+import java.util.List;
+
+public record WeekendAndWeekdaySalesDto(List<Long> data, List<String> labels) {
 }

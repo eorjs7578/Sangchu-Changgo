@@ -1,7 +1,6 @@
 package com.d108.project.interfaces.api.analytics.dto;
 
-public class SalesByQuarterlyDto {
-    private Long areaId;
-    private String quarter;
-    private double sales;
+import java.util.List;
+
+public record SalesByQuarterlyDto(List<Long> data, List<String> labels, String manySaleQuarterly) {
 }

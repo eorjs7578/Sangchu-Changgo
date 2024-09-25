@@ -20,6 +20,10 @@ public class Store {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "service_code")
+    private Service service;
+
+    @ManyToOne
     @JoinColumn(name = "area_id")
     private Area area;
 

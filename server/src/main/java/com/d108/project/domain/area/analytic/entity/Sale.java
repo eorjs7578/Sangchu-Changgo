@@ -1,5 +1,6 @@
 package com.d108.project.domain.area.analytic.entity;
 
+import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.map.entity.Dong;
 import com.d108.project.domain.map.entity.Gu;
 import lombok.Getter;
@@ -16,8 +17,7 @@ public class Sale {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "area_id")
-    private Long areaId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "gu_code")
@@ -28,7 +28,11 @@ public class Sale {
     private Dong dong;
 
     @ManyToOne
-    @JoinColumn(name = "service_code", nullable = false)
+    @JoinColumn(name = "area_id")
+    private Area area;
+
+    @ManyToOne
+    @JoinColumn(name = "service_code")
     private Service service;
 
     @Column(name = "year")

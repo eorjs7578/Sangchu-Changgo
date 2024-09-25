@@ -16,8 +16,8 @@ public class AreaAnalyticController implements AreaAnalyticApi {
     private final AreaAnalyticService areaAnalyticService;
 
     @Override
-    public ResponseEntity<Long> getAverageFloatingPopulationPerMonth(Long areaId) {
-        return ResponseEntity.ok(areaAnalyticService.getAverageFloatingPopulationPerMonth(areaId));
+    public ResponseEntity<Long> getFootTrafficByDaily(Long areaId) {
+        return ResponseEntity.ok(areaAnalyticService.getFootTrafficByDaily(areaId));
     }
 
     @Override
@@ -31,6 +31,11 @@ public class AreaAnalyticController implements AreaAnalyticApi {
     }
 
     @Override
+    public ResponseEntity<FootTrafficByMonthDto> getFootTrafficByQuarterly(Long areaId) {
+        return ResponseEntity.ok(areaAnalyticService.getFootTrafficByQuarterly(areaId));
+    }
+
+    @Override
     public ResponseEntity<FootTrafficByAgeDto> getFootTrafficByAge(Long areaId) {
         return ResponseEntity.ok(areaAnalyticService.getFootTrafficByAge(areaId));
     }
@@ -41,32 +46,47 @@ public class AreaAnalyticController implements AreaAnalyticApi {
     }
 
     @Override
-    public ResponseEntity<IndustryInfoDto> getIndustry(Long areaId) {
-        return ResponseEntity.ok(areaAnalyticService.getIndustry(areaId));
+    public ResponseEntity<Long> getSaleByMonth(Long areaId, String service) {
+        return ResponseEntity.ok(areaAnalyticService.getSaleByMonth(areaId, service));
     }
 
     @Override
-    public ResponseEntity<Long> getAverageAnnualRent(Long areaId) {
-        return ResponseEntity.ok(areaAnalyticService.getAverageAnnualRent(areaId));
+    public ResponseEntity<SalesByDayOfWeekDto> getSaleByDayOfWeek(Long areaId, String service) {
+        return ResponseEntity.ok(areaAnalyticService.getSaleByDayOfWeek(areaId, service));
     }
 
     @Override
-    public ResponseEntity<SalesByQuarterlyDto> getSaleByQuarterly(Long areaId) {
-        return ResponseEntity.ok(areaAnalyticService.getSaleByQuarterly(areaId));
+    public ResponseEntity<SalesByHourDto> getSaleByHour(Long areaId, String service) {
+        return ResponseEntity.ok(areaAnalyticService.getSaleByHour(areaId, service));
     }
 
     @Override
-    public ResponseEntity<WeekendAndWeekdaySalesDto> getWeekendAndWeekdaySale(Long areaId) {
-        return ResponseEntity.ok(areaAnalyticService.getWeekendAndWeekdaySale(areaId));
+    public ResponseEntity<SalesByQuarterlyDto> getSaleByQuarterly(Long areaId, String service) {
+        return ResponseEntity.ok(areaAnalyticService.getSaleByQuarterly(areaId, service));
     }
 
     @Override
-    public ResponseEntity<SalesByAgeDto> getSaleByAge(Long areaId) {
-        return ResponseEntity.ok(areaAnalyticService.getSaleByAge(areaId));
+    public ResponseEntity<SalesByAgeDto> getSaleByAge(Long areaId, String service) {
+        return ResponseEntity.ok(areaAnalyticService.getSaleByAge(areaId, service));
     }
 
     @Override
-    public ResponseEntity<RentsByFloorDto> getRentsByFloor(Long areaId) {
-        return ResponseEntity.ok(areaAnalyticService.getRentsByFloor(areaId));
+    public ResponseEntity<SalesByGenderDto> getSaleByGender(Long areaId, String service) {
+        return ResponseEntity.ok(areaAnalyticService.getSaleByGender(areaId, service));
+    }
+
+    @Override
+    public ResponseEntity<WeekendAndWeekdaySalesDto> getWeekendAndWeekdaySale(Long areaId, String service) {
+        return ResponseEntity.ok(areaAnalyticService.getWeekendAndWeekdaySale(areaId, service));
+    }
+
+    @Override
+    public ResponseEntity<Integer> getNumberOfSimilarStores(Long areaId, String service) {
+        return ResponseEntity.ok(areaAnalyticService.getNumberOfSimilarStores(areaId, service));
+    }
+
+    @Override
+    public ResponseEntity<IndustryInfoDto> getIndustryInfo(Long areaId, String service) {
+        return ResponseEntity.ok(areaAnalyticService.getIndustryInfo(areaId, service));
     }
 }

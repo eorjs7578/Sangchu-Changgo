@@ -31,8 +31,9 @@ public class SalesHistory {
     @JoinColumn(name = "gu_code")
     private Gu gu;
 
-    @Column(name = "service_code", nullable = false)
-    private String serviceCode;
+    @ManyToOne
+    @JoinColumn(name = "service_code")
+    private Service service;
 
     @Column(name = "sales_20231")
     private Long sales20231;
@@ -43,5 +44,8 @@ public class SalesHistory {
     @Column(name = "sales_20233")
     private Long sales20233;
 
-    // Other sales columns
-}
+    @Column(name = "sales_20234")
+    private Long sales20234;
+
+    @Column(name = "sales_20241")
+    private Long sales20241;}
