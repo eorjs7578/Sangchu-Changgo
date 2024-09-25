@@ -21,6 +21,7 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
     private final AreaRepository areaRepository;
     private final MemberRepository memberRepository;
 
+    // 평가 생성
     @Override
     public AreaEvaluationDto createEvaluation(AreaEvaluationDto dto) {
         Area area = areaRepository.findById(dto.getAreaId())
@@ -32,6 +33,7 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
         evaluation.setArea(area);  // 변경된 부분
         evaluation.setMember(member);
 
+        // enum 변환 .. ?
         evaluation.setAgeGroup(AgeGroup.valueOf(dto.getAgeGroup().toUpperCase()));
         evaluation.setFootTraffic(dto.getFootTraffic());
         evaluation.setAtmosphere(dto.getAtmosphere());
@@ -42,6 +44,7 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
         return dto;
     }
 
+    // 평가 수정
     @Override
     public AreaEvaluationDto updateEvaluation(Long id, AreaEvaluationDto dto) {
         AreaEvaluation evaluation = evaluationRepository.findById(id)
@@ -56,11 +59,13 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
         return dto;
     }
 
+    // 평가 삭제
     @Override
     public void deleteEvaluation(Long id) {
         evaluationRepository.deleteById(id);
     }
 
+    // 평가 조회
     @Override
     public List<AreaEvaluationDto> getEvaluationsByArea(Long areaId) {
         return evaluationRepository.findByAreaId(areaId).stream()
