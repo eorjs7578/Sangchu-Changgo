@@ -57,7 +57,7 @@ const routes = [
     component: Chart
   },
   {
-    path: '/chart/2',
+    path: '/chart/:id',
     name: 'chart2',
     component: Chart2
   }

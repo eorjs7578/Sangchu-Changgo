@@ -15,6 +15,7 @@ public class WhiteListConfiguration {
             API_PREFIX+"/members/signup",
             API_PREFIX+"/members/social-login",
             API_PREFIX+"/login/**",
+            API_PREFIX+"/members/duplicate/*",
             "/login/oauth2/code/kakao",
             "/login/oauth2/code/naver",
             "/oauth2/authorization/kakao",
