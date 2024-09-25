@@ -14,7 +14,6 @@ public interface ReplyService {
 
     List<ReplyByPostIdResponseDto> getAllReplyByPostId(Long postId);
 
-    // TODO: 얘는 어디로 붙이지 (MemberApi vs PostApi)
     List<ReplyByMemberIdResponseDto> getAllReplyByMemberId(Long memberId);
 
     void updateReply(Long replyId, Long memberId, ReplyUpdateDto replyUpdateDto);
