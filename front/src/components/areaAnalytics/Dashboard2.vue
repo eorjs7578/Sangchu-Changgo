@@ -21,7 +21,16 @@
       <a class="nav-item nav-link" href="#rent">임대료</a>
       <a class="nav-item nav-link" href="#review">리뷰</a>
     </nav>
-
+    <div class="card">
+      <div class="card-header">
+        Quote
+      </div>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          <p>A well-known quote, contained in a blockquote element.</p>
+        </blockquote>
+      </div>
+    </div>
     <!-- 각 섹션들 -->
     <div id="population" class="my-5">
       <h3>인구 정보</h3>
