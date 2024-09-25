@@ -3,10 +3,11 @@ package com.d108.project.domain.area.analytic.entity;
 import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.map.entity.Dong;
 import com.d108.project.domain.map.entity.Gu;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AccessLevel;
+
+import jakarta.persistence.*;
 
 @Getter
 @Setter(value = AccessLevel.PROTECTED)
@@ -84,4 +85,3 @@ public class PopulationHistory {
 
     // Additional population columns as needed
 }
-

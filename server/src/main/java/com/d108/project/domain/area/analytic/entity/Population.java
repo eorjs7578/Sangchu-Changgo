@@ -6,6 +6,7 @@ import com.d108.project.domain.map.entity.Gu;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AccessLevel;
+
 import jakarta.persistence.*;
 
 @Getter
@@ -34,7 +35,7 @@ public class Population {
     @Column(name = "total_population")
     private Long totalPopulation;
 
-    @Column(name = "man_population")
+    @Column(name = "man_popultaion")
     private Long manPopulation;
 
     @Column(name = "woman_population")

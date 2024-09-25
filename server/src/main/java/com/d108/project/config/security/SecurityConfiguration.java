@@ -9,12 +9,13 @@ import com.d108.project.config.security.oauth2.OAuth2UserService;
 import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
-import com.d108.project.config.security.util.JwtUtil;
+import com.d108.project.config.util.token.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -22,10 +23,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -44,10 +43,12 @@ import java.util.Collections;
         jsr250Enabled = true)
 public class SecurityConfiguration {
 
+    private final WhiteListConfiguration whiteListConfiguration;
     private final OAuth2Repository oAuth2Repository;
-    private final OAuth2UserService oAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final OAuth2UserService oAuth2UserService;
+
     // 정적 자원에 대한 보안 적용 해제
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -64,7 +65,6 @@ public class SecurityConfiguration {
      *     <li>나머지 요청은 인증된 사용자만 접근 허용</li>
      *     <li>헤더의 JWT 토큰을 추출하고 검증하는 `JwtAuthorizationFilter` 적용</li>
      *     <li>세션을 상태 없이 관리</li>
-     *     <li>로그인 페이지 설정 및 로그인 성공 시 리다이렉트 경로 설정</li>
      *     <li>사용자 이름과 비밀번호 인증을 위한 `CustomAuthenticationFilter` 적용</li>
      * </ul>
      *
@@ -78,67 +78,39 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(
             HttpSecurity http,
             CustomAuthenticationFilter customAuthenticationFilter,
-            JwtAuthorizationFilter jwtAuthorizationFilter,
-            WhiteListConfiguration whiteListConfiguration,
-            OAuth2Repository oAuth2Repository,
-            OAuth2UserService oAuth2UserService,
-            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
-            OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler
+            JwtAuthorizationFilter jwtAuthorizationFilter
     ) throws Exception {
         return http
-                // csrf 토큰 없이도 요청 처리할 수 있도록 설정
-                .csrf(AbstractHttpConfigurer::disable)
-                // corsConfig 구성 소스를 따로 빼서 설정
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                //
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        // 리소스 및 정적 파일에 대한 권한 허용
-                        .requestMatchers("/resources/**", "/static/**").permitAll()
                         // 화이트리스트에 대한 권한 허용
+                        .requestMatchers(HttpMethod.GET, whiteListConfiguration.getWhiteListForGet()).permitAll()
                         .requestMatchers(whiteListConfiguration.getWhiteList()).permitAll()
-//                        .anyRequest().authenticated()
+                        .requestMatchers(whiteListConfiguration.getWhiteListForSwagger()).permitAll()
+                        .anyRequest().authenticated()
                 )
-                // 모든 요청에서 토큰을 검증하게 된다.
-                // 그렇기에 jwtauthenticationfilter 내부에서 한번더 화이트리스트에 대한 체크를 해줘야한다.
-                // 그렇기에 때문에 interceptor 로서 작동하는 것이고, 인증과 intercept를 동시에 담당하고 있다.
-//                .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
-                // 화이트리스트에 설정하지 않은 경우 여기로 들어온다.
-                // 로그인 정보를 담아서 필터를 통과한다.
-                // 로그인이 아닌 애들은 JWT 필터에서 로그인 관련 정보를 저장해서 보내준다.
-//                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-//                .oauth2Login(configure ->
-//                        configure.authorizationEndpoint(
-//                                config -> config.authorizationRequestRepository(oAuth2Repository))
-//                                .userInfoEndpoint(config -> config.userService(oAuth2UserService))
-//                                .successHandler(oAuth2AuthenticationSuccessHandler)
-//                                .failureHandler(oAuth2AuthenticationFailureHandler)
-//                        )
-
-                // 스프링 시큐리티가 세션을 생성하거나 사용하지 않도록 설정
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // 로그인에 대한 설정
-
-//                .formLogin(login -> login
-//                        // 로그인 페이지에 대한 설정
-//                        .loginPage("/api/members/login")
-//                        // 로그인에 성공하면 /main 페이지로 이동하도록 설정
-//                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("/main"))
-//                        // 로그인 페이지는 인증 없이 접근을 허용
-//                        .permitAll()
-//                )
-//                // 로그아웃에 대한 설정
-//                .logout(logout -> logout
-//                        // 로그아웃 페이지에 대한 설정
-//                        .logoutUrl("/api/members/logout")
-//                        // 로그아웃 하면서 인증 정보를 삭제하고
-//                        .clearAuthentication(true)
-//                        // 쿠키를 삭제함
-//                        .deleteCookies("access_token", "refresh_token")
-//                        // 세션 무효화
-//                        .invalidateHttpSession(true)
-//                        // 로그아웃에 성공하면 여기로 보냄
-//                        .logoutSuccessUrl("/main")
-//                )
+                .addFilterBefore(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(configure ->
+                        configure.authorizationEndpoint(
+                                        config -> config.authorizationRequestRepository(oAuth2Repository))
+                                .userInfoEndpoint(config -> config.userService(oAuth2UserService))
+                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                                .failureHandler(oAuth2AuthenticationFailureHandler)
+                )
+                .logout(logout -> logout
+                                // 로그아웃 페이지에 대한 설정
+                                .logoutUrl("/api/members/logout")
+                                // 로그아웃 하면서 인증 정보를 삭제하고
+                                .clearAuthentication(true)
+                                // 쿠키를 삭제함
+                                .deleteCookies("access_token", "refresh_token", "JSESSIONID")
+                                // 세션 무효화
+                                .invalidateHttpSession(true)
+//                        // 로그아웃에 성공하면 여기로 보냄 (메인으로 리디렉션하는 코드 만들어도 될듯)
+//                        .logoutSuccessUrl("/")
+                )
                 .build();
     }
 
@@ -191,9 +163,9 @@ public class SecurityConfiguration {
      */
     @Bean
     public CustomAuthSuccessHandler customLoginSuccessHandler(
-            JwtUtil jwtUtil
+            TokenUtil tokenUtil
     ) {
-        return new CustomAuthSuccessHandler(jwtUtil);
+        return new CustomAuthSuccessHandler(tokenUtil);
     }
 
     /**
@@ -211,22 +183,22 @@ public class SecurityConfiguration {
      */
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter(
-            JwtUtil jwtUtil,
+            TokenUtil tokenUtil,
             WhiteListConfiguration whiteListConfiguration
     ) {
-        return new JwtAuthorizationFilter(jwtUtil, whiteListConfiguration);
+        return new JwtAuthorizationFilter(tokenUtil, whiteListConfiguration);
     }
 
-
-
-    // cors에 대한 설정
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Content-Type", "Authorization", "X-XSRF-token"));
-        configuration.setAllowCredentials(false);
+//        configuration.setAllowedOrigins(Collections.singletonList("*"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost"));
+        configuration.addAllowedOriginPattern("http://localhost:3000");
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -234,3 +206,4 @@ public class SecurityConfiguration {
         return source;
     }
 }
+
