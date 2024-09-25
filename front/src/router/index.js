@@ -8,6 +8,7 @@ import InterestAreas from '@/views/InterestAreas.vue';
 import MarketAnalysis from '@/views/MarketAnalysis.vue';
 import AreaAnalytics from '@/views/areaAnalytics/AreaAnalytics.vue';
 import Chart from '@/views/areaAnalytics/Chart.vue';
+import Mypage from '@/views/accounts/Mypage.vue';
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: '/signup',
     name: 'SignUp',
     component: SignUp
+  },
+  {
+    path: '/mypage',
+    name: 'Mypage',
+    component: Mypage
   },
   {
     path: '/passwordrecovery',

@@ -6,7 +6,6 @@ import com.d108.project.domain.forum.post.entity.Post;
 import com.d108.project.domain.forum.post.repository.PostRepository;
 import com.d108.project.domain.forum.board.repository.BoardRepository;
 import com.d108.project.domain.member.entity.Member;
-import com.d108.project.domain.member.repository.MemberRepository;
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
@@ -25,17 +24,13 @@ public class PostServiceImpl implements PostService {
     private final RedisUtil redisUtil;
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
-    private final MemberRepository memberRepository;
     private static final String REDIS_PREFIX = "post:viewCount:";
 
     // 글 작성
     @Override
-    public Long createPost(PostCreateDto postCreateDto) {
+    public Long createPost(Member member, PostCreateDto postCreateDto) {
         Board board = boardRepository.findById(postCreateDto.getBoardId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판입니다."));
-
-        Member member = memberRepository.findById(postCreateDto.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         Post post = Post.builder()
                 .board(board)
@@ -81,14 +76,11 @@ public class PostServiceImpl implements PostService {
 
     // 글 수정
     @Override
-    public void updatePostById(Long postId, Long memberId, PostUpdateDto postUpdateDto) {
+    public void updatePostById(Member member, Long postId, PostUpdateDto postUpdateDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 번호 입니다."));
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-
-        if (!member.equals(post.getMember())) {
+        if (!member.getId().equals(post.getMember().getId())) {
             throw new AccessDeniedException("본인의 글만 수정할 수 있습니다.");
         }
 
@@ -100,20 +92,51 @@ public class PostServiceImpl implements PostService {
 
     // 글 삭제
     @Override
-    public void deletePostById(Long postId, Long memberId) {
+    public void deletePostById(Member member, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        if (!member.equals(post.getMember())) {
+        if (!member.getId().equals(post.getMember().getId())) {
+
             throw new AccessDeniedException("본인의 글만 삭제하실 수 있습니다.");
         }
+
         // 레디스에 저장된 값 삭제하고
         redisUtil.deleteData(REDIS_PREFIX + postId);
+
         // DB에서도 삭제
         postRepository.deleteById(postId);
     }
+
+    // 상권 ID 기반으로 게시글 반환
+    @Override
+    public List<PostResponseDto> getAllPostsByAreaId(Long areaId) {
+        List<Post> posts = postRepository.findAllByAreaId(areaId);
+
+        return posts.stream()
+                .map(post -> {
+                    PostResponseDto postResponseDto = PostResponseDto.from(post);
+                    postResponseDto.setView(getViewCountById(post.getId()));
+                    return postResponseDto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // 프랜차이즈 ID 기반으로 게시글 반환
+    @Override
+    public List<PostResponseDto> getAllPostsByFranchiseId(Long franchiseId) {
+        List<Post> posts = postRepository.findAllByFranchiseId(franchiseId);
+
+        return posts.stream()
+                .map(post -> {
+                    PostResponseDto postResponseDto = PostResponseDto.from(post);
+                    postResponseDto.setView(getViewCountById(post.getId()));
+                    return postResponseDto;
+                })
+                .collect(Collectors.toList());
+    }
+
+
 
     // 조회수 관련 메서드
 
@@ -142,6 +165,7 @@ public class PostServiceImpl implements PostService {
 
         return redisUtil.incrementView(redisKey, RedisUtil.REDIS_VIEW_EXPIRE);
     }
+
     // 조회수 조회
     private Long getViewCountById(Long postId) {
         String redisKey = REDIS_PREFIX + postId;

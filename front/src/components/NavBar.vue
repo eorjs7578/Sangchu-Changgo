@@ -16,10 +16,10 @@
         
         <!-- 프랜차이즈 하위 메뉴 -->
         <ul v-show="isFranchiseOpen ">
-          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal">관심프차</li>
-          <FavoriteFranchise class="modal fade fullscreen-modal" id="exampleModal"></FavoriteFranchise>
-          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal">예상비용</li>
-          <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal"></FranchiseFee>
+          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal1">관심프차</li>
+          <FavoriteFranchise class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
+          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal2">예상비용</li>
+          <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
         </ul>
 
       </ul>
@@ -35,7 +35,7 @@
     <nav class="submenu" v-if="isCommunityOpen">
       <h1>커뮤니티</h1>
       <ul>
-        <li><router-link to="/community/marketboard">상권 게시판</router-link></li>
+        <li><router-link to="/community/marketBoard">상권 게시판</router-link></li>
         <li><router-link to="/community/franchiseboard">프랜차이즈 게시판</router-link></li>
         <li><router-link to="/community/propertyboard">상권 매물 게시판</router-link></li>
       </ul>
@@ -82,10 +82,12 @@ const toggleFranchiseSubmenu = () => {
 /* 네비게이션 바 설정 */
 .navbar {
   position: relative;
-  width: 200px; /* 사이드바 너비 */
+  width: 12vw;
   background-color: #f8f8f8;
-  padding: 2rem;
-  height: 100vh;
+  padding: 1rem;
+  height: 100vh; /* 네비게이션 바의 높이를 화면 전체로 설정 */
+  display: flex;
+  justify-content: center;
 }
 
 .navbar ul {
@@ -96,6 +98,7 @@ const toggleFranchiseSubmenu = () => {
 .navbar ul li {
   margin-bottom: 1.5rem;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 /* 커뮤니티 링크에 대한 hover 스타일 추가 */
@@ -123,14 +126,16 @@ const toggleFranchiseSubmenu = () => {
 
 /* 로그인/회원가입 링크를 네비게이션 바의 하단에 고정 */
 .auth-links {
-  position: absolute;
-  bottom: 2rem;
+  /* position: absolute; */
+  bottom: 0;
   left: 2rem;
+  margin: 0;
 }
 
 .auth-links li {
   margin-bottom: 1.5rem;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 /* 기본 링크 스타일 */

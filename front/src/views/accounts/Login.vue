@@ -2,9 +2,9 @@
   <div class="login-container">
     <h2>Log In</h2>
     <p>로그인 후 다양한 기능을 이용하세요.</p>
-    <form @submit.prevent="submitLogin">
-      <label for="email">Email</label>
-      <input type="email" id="email" placeholder="example@example.com" v-model="email" />
+    <form @submit.prevent="login">
+      <label for="username">아이디</label>
+      <input type="username" id="username" placeholder="아이디" v-model="username" />
 
       <label for="password">Password</label>
       <input type="password" id="password" placeholder="Your password" v-model="password" />
@@ -17,15 +17,15 @@
 
     <!-- 외부 로그인 버튼 -->
     <div class="external-login-buttons">
-      <img 
-        src="@/assets/img/카카오 로그인.png" 
-        alt="Kakao Login" 
+      <img
+        src="@/assets/img/카카오 로그인.png"
+        alt="Kakao Login"
         class="kakao-login-btn"
         @click="kakaoLogin"
       />
-      <img 
-        src="@/assets/img/btnG_축약형.png" 
-        alt="Naver Login" 
+      <img
+        src="@/assets/img/btnG_축약형.png"
+        alt="Naver Login"
         class="naver-login-btn"
         @click="naverLogin"
       />
@@ -34,35 +34,32 @@
 </template>
 
 <script setup>
-import axios from 'axios';
-import { ref } from 'vue';
+import { ref } from "vue";
+import { api } from "@/lib/api.js";
+import { useRouter } from "vue-router";
 
-const email = ref('');
-const password = ref('');
+  const router = useRouter();
+  const username = ref("");
+  const password = ref("");
 
-const submitLogin = async () => {
-  const loginData = {
-    email: email.value,
-    password: password.value,
-  };
-
-  try {
-    // 로그인 API 호출
-    const response = await axios.post('http://localhost:8080/api/members/login', loginData);
-    const token = response.data.token;
-    localStorage.setItem('jwtToken', token);  // 토큰 저장
-    alert('로그인에 성공했습니다.');
-  } catch (error) {
-    console.error(error);
-    alert('로그인에 실패했습니다.');
-  }
-};
   const kakaoLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:5173&mode=login";
   }
   const naverLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:5173&mode=login";
   }
+
+  function login() {
+    api.post("/api/members/login", {
+      username: username.value,
+      password: password.value,
+    })
+        .then(response => {
+          router.push("/")
+        })
+        .catch(err => console.log(err))
+  }
+
 </script>
 
 <style scoped>

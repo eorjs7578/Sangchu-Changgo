@@ -12,3 +12,4 @@ public interface LoginCredentialRepository extends JpaRepository<LoginCredential
     @Query("SELECT member.refreshToken FROM LoginCredential member WHERE member.username = :username")
     Optional<String> findRefreshTokenByUsername(String username);
 }
+

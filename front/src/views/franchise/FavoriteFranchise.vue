@@ -155,7 +155,7 @@ const totalCost = computed(() => costs.value.reduce((sum, cost) => sum + cost.am
 
 const otherFranchises = ref([
   {
-    name: '5천만원',
+    name: '125125',
     cost: 50000000,
     costs: [
       { name: '가맹비', amount: 15000000 },

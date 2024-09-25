@@ -1,7 +1,7 @@
 package com.d108.project.domain.favorite.favoriteFranchise.service;
 
-import com.d108.project.domain.businessArea.dto.BusinessAreaListDto;
-import com.d108.project.domain.businessArea.entity.BusinessArea;
+import com.d108.project.domain.area.dto.AreaListDto;
+import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.favorite.favoriteFranchise.dto.FavoriteFranchiseRequestDto;
 import com.d108.project.domain.favorite.favoriteFranchise.entity.FavoriteFranchise;
 import com.d108.project.domain.favorite.favoriteFranchise.repository.FavoriteFranchiseRepository;
