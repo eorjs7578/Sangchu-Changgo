@@ -14,4 +14,6 @@ public class Board {
     private Long areaId;
 
     private Long franchiseId;
+
+
 }
