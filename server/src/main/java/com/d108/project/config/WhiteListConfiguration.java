@@ -1,6 +1,7 @@
 package com.d108.project.config;
 
 import lombok.Getter;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 @Getter
@@ -51,7 +52,9 @@ public class WhiteListConfiguration {
             API_PREFIX+"/franchises/**",
 
             //맵 앤드 포인트
-            API_PREFIX+"/map/**"
+            API_PREFIX+"/map/**",
+            API_PREFIX+"/boards/**",
+            API_PREFIX+"/posts/**",
 
     };
 }

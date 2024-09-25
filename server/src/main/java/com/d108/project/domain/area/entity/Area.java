@@ -12,7 +12,7 @@ import org.locationtech.jts.geom.Geometry;
 @Setter(value = AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Entity
-@Table(name = "area") // 테이블 이름을 적절히 변경하세요
+@Table(name = "area")
 public class Area {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
