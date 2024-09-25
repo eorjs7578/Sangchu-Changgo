@@ -47,8 +47,8 @@ public class PostController implements PostApi {
                     "<p>로그인 한 유저인지 확인해야함</p>"
     )
     @Override
-    public ResponseEntity<Void> updatePost(Long postId, Member member, PostUpdateDto postUpdateDto) {
-        postService.updatePostById(postId, member, postUpdateDto);
+    public ResponseEntity<Void> updatePost( Member member, Long postId, PostUpdateDto postUpdateDto) {
+        postService.updatePostById(member, postId, postUpdateDto);
         return ResponseEntity.ok().build();
     }
 
@@ -69,8 +69,8 @@ public class PostController implements PostApi {
                     "<p>로그인 한 유저인지 확인해야함</p>"
     )
     @Override
-    public ResponseEntity<Void> deletePost(Long postId, Member member) {
-        postService.deletePostById(postId, member);
+    public ResponseEntity<Void> deletePost(Member member, Long postId) {
+        postService.deletePostById(member, postId);
         return ResponseEntity.noContent().build();
     }
 

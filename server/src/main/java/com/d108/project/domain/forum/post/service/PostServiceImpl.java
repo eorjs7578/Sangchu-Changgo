@@ -76,7 +76,7 @@ public class PostServiceImpl implements PostService {
 
     // 글 수정
     @Override
-    public void updatePostById(Long postId, Member member, PostUpdateDto postUpdateDto) {
+    public void updatePostById(Member member, Long postId, PostUpdateDto postUpdateDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 번호 입니다."));
 
@@ -92,7 +92,7 @@ public class PostServiceImpl implements PostService {
 
     // 글 삭제
     @Override
-    public void deletePostById(Long postId, Member member) {
+    public void deletePostById(Member member, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
 

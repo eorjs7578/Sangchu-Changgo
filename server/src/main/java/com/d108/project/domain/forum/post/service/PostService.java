@@ -15,9 +15,9 @@ public interface PostService {
 
     PostResponseDto getPostById(Long postId);
 
-    void updatePostById(Long postId, Member member, PostUpdateDto postUpdateDto);
+    void updatePostById(Member member, Long postId, PostUpdateDto postUpdateDto);
 
-    void deletePostById(Long postId, Member member);
+    void deletePostById(Member member, Long postId);
 
     void syncCountToDatabase(Long postId);
 

@@ -23,10 +23,10 @@ public interface PostApi {
     ResponseEntity<PostResponseDto> getPostById(@PathVariable("postId") Long postId);
 
     @PutMapping("/{postId}")
-    ResponseEntity<Void> updatePost(@PathVariable("postId") Long postId, @AuthenticationPrincipal Member member, @RequestBody PostUpdateDto postUpdateDto);
+    ResponseEntity<Void> updatePost(@AuthenticationPrincipal Member member, @PathVariable("postId") Long postId, @RequestBody PostUpdateDto postUpdateDto);
 
     @DeleteMapping("/{postId}")
-    ResponseEntity<Void> deletePost(@PathVariable("postId") Long postId, @AuthenticationPrincipal Member member);
+    ResponseEntity<Void> deletePost(@AuthenticationPrincipal Member member, @PathVariable("postId") Long postId);
 
     @GetMapping("/area/{areaId}")
     ResponseEntity<List<PostResponseDto>> getAllPostsByAreaId(@PathVariable("areaId") Long areaId);
