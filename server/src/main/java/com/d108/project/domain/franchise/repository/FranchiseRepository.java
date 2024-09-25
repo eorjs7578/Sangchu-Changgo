@@ -11,4 +11,7 @@ public interface FranchiseRepository extends JpaRepository<Franchise, Long> {
 
     @Query("SELECT DISTINCT f.type FROM Franchise f")
     List<String> findDistinctByType();
+    List<Franchise> findAll();
+    @Query("SELECT f FROM Franchise f WHERE f.name like %:name%")
+    List<Franchise>findAllByName(String name);
 }

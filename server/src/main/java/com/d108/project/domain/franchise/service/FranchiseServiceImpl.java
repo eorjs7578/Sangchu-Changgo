@@ -3,6 +3,7 @@ package com.d108.project.domain.franchise.service;
 import com.d108.project.domain.franchise.dto.FranchiseDto;
 import com.d108.project.domain.franchise.dto.FranchiseFeeDto;
 import com.d108.project.domain.franchise.dto.FranchiseTypeDto;
+import com.d108.project.domain.franchise.entity.Franchise;
 import com.d108.project.domain.franchise.repository.FranchiseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,30 @@ public class FranchiseServiceImpl implements FranchiseService {
     }
 
     @Override
-    public List<FranchiseDto> getAllFranchises() {
+    public List<FranchiseDto> getFranchisesByType(String type) {
         return List.of();
+    }
+
+    @Override
+    public List<FranchiseDto> getFranchisesByName(String name) {
+        List<Franchise> franchises = franchiseRepository.findAllByName(name);
+        List<FranchiseDto> franchiseDtos = new ArrayList<>();
+        for (Franchise franchise : franchises) {
+            FranchiseDto dto = FranchiseDto.to(franchise);
+            franchiseDtos.add(dto);
+        }
+        return franchiseDtos;
+    }
+
+    @Override
+    public List<FranchiseDto> getAllFranchises() {
+        List<Franchise> franchises = franchiseRepository.findAll();
+        List<FranchiseDto> franchiseDtos = new ArrayList<>();
+        for (Franchise franchise : franchises) {
+            FranchiseDto dto = FranchiseDto.to(franchise);
+            franchiseDtos.add(dto);
+        }
+        return franchiseDtos;
     }
 
     @Override

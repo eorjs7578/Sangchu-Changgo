@@ -29,6 +29,18 @@ public class FranchiseController implements FranchiseApi {
         return new ResponseEntity<>(franchiseService.getFranchiseTypes(), HttpStatus.OK);
     }
 
+    @Operation(summary = "프랜차이즈 조회", description = "")
+    @Override
+    public ResponseEntity<List<FranchiseDto>> getAllFranchises() {
+        return new ResponseEntity<>(franchiseService.getAllFranchises(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "프랜차이즈 이름 검색", description = "")
+    @Override
+    public ResponseEntity<List<FranchiseDto>> getAllFranchisesByName(String name) {
+        return new ResponseEntity<>(franchiseService.getFranchisesByName(name), HttpStatus.OK);
+    }
+
     @Override
     public ResponseEntity<List<FranchiseDto>> getFranchisesByType(String type) {
         return null;

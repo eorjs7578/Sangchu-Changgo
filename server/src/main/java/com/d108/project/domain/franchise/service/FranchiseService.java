@@ -10,6 +10,8 @@ import java.util.List;
 @Service
 public interface FranchiseService {
     List<FranchiseTypeDto> getFranchiseTypes();
+    List<FranchiseDto> getFranchisesByType(String type);
+    List<FranchiseDto> getFranchisesByName(String name);
     List<FranchiseDto> getAllFranchises();
     FranchiseFeeDto getFranchiseFee(Long id);
 }
