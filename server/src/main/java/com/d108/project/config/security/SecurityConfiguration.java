@@ -9,12 +9,13 @@ import com.d108.project.config.security.oauth2.OAuth2UserService;
 import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
-import com.d108.project.config.security.util.JwtUtil;
+import com.d108.project.config.util.token.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -84,6 +85,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         // 화이트리스트에 대한 권한 허용
+                        .requestMatchers(HttpMethod.GET, whiteListConfiguration.getWhiteListForGet()).permitAll()
                         .requestMatchers(whiteListConfiguration.getWhiteList()).permitAll()
                         .requestMatchers(whiteListConfiguration.getWhiteListForSwagger()).permitAll()
                         .anyRequest().authenticated()
@@ -92,20 +94,20 @@ public class SecurityConfiguration {
                 .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(configure ->
                         configure.authorizationEndpoint(
-                                config -> config.authorizationRequestRepository(oAuth2Repository))
+                                        config -> config.authorizationRequestRepository(oAuth2Repository))
                                 .userInfoEndpoint(config -> config.userService(oAuth2UserService))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)
-                        )
+                )
                 .logout(logout -> logout
-                        // 로그아웃 페이지에 대한 설정
-                        .logoutUrl("/api/members/logout")
-                        // 로그아웃 하면서 인증 정보를 삭제하고
-                        .clearAuthentication(true)
-                        // 쿠키를 삭제함
-                        .deleteCookies("access_token", "refresh_token", "JSESSIONID")
-                        // 세션 무효화
-                        .invalidateHttpSession(true)
+                                // 로그아웃 페이지에 대한 설정
+                                .logoutUrl("/api/members/logout")
+                                // 로그아웃 하면서 인증 정보를 삭제하고
+                                .clearAuthentication(true)
+                                // 쿠키를 삭제함
+                                .deleteCookies("access_token", "refresh_token", "JSESSIONID")
+                                // 세션 무효화
+                                .invalidateHttpSession(true)
 //                        // 로그아웃에 성공하면 여기로 보냄 (메인으로 리디렉션하는 코드 만들어도 될듯)
 //                        .logoutSuccessUrl("/")
                 )
@@ -161,9 +163,9 @@ public class SecurityConfiguration {
      */
     @Bean
     public CustomAuthSuccessHandler customLoginSuccessHandler(
-            JwtUtil jwtUtil
+            TokenUtil tokenUtil
     ) {
-        return new CustomAuthSuccessHandler(jwtUtil);
+        return new CustomAuthSuccessHandler(tokenUtil);
     }
 
     /**
@@ -181,10 +183,10 @@ public class SecurityConfiguration {
      */
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter(
-            JwtUtil jwtUtil,
+            TokenUtil tokenUtil,
             WhiteListConfiguration whiteListConfiguration
     ) {
-        return new JwtAuthorizationFilter(jwtUtil, whiteListConfiguration);
+        return new JwtAuthorizationFilter(tokenUtil, whiteListConfiguration);
     }
 
     @Bean
@@ -204,3 +206,4 @@ public class SecurityConfiguration {
         return source;
     }
 }
+
