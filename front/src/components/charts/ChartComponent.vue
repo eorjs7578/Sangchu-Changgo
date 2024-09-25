@@ -24,7 +24,6 @@ import {
 ChartJS.register(Title, Tooltip, Legend, RadialLinearScale, PointElement, LineElement, BarElement, ArcElement);
 
 const props = defineProps({
-  props: {
     chartType: {
       type: String,
       required: true, // 'bar', 'line', 'pie', 'radar', 'linechart' 중 하나
@@ -36,8 +35,7 @@ const props = defineProps({
     chartOptions: {
       type: Object,
       default: () => ({}), // 기본 옵션을 빈 객체로 설정
-    },
-  },
+    }
 });
 </script>
 

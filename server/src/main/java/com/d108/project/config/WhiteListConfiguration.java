@@ -15,6 +15,7 @@ public class WhiteListConfiguration {
             API_PREFIX+"/members/signup",
             API_PREFIX+"/members/social-login",
             API_PREFIX+"/login/**",
+            API_PREFIX+"/members/duplicate/*",
             "/login/oauth2/code/kakao",
             "/login/oauth2/code/naver",
             "/oauth2/authorization/kakao",
@@ -39,6 +40,7 @@ public class WhiteListConfiguration {
             API_PREFIX+"/posts/*",
             API_PREFIX+"/posts",
             API_PREFIX+"/posts/*/replies",
+            API_PREFIX+"/map/**",
 
             // 상권 분석 관련 앤드 포인트
             API_PREFIX + "/areas/analytic/**",
@@ -53,3 +55,4 @@ public class WhiteListConfiguration {
 
     };
 }
+

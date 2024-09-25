@@ -197,6 +197,7 @@ public class SecurityConfiguration {
         configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost"));
         configuration.addAllowedOriginPattern("http://localhost:5173");
         configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin("http://localhost:5173");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);

@@ -35,7 +35,7 @@ public class Population {
     @Column(name = "total_population")
     private Long totalPopulation;
 
-    @Column(name = "man_popultaion")
+    @Column(name = "man_population")
     private Long manPopulation;
 
     @Column(name = "woman_population")

@@ -18,14 +18,14 @@ public interface AreaAnalyticApi {
     @GetMapping("/foot-traffics/hour/{areaId}")
     ResponseEntity<FootTrafficByHourDto> getFootTrafficByHour(@PathVariable Long areaId);
 
-    @GetMapping("/foot-traffics/quarterly/{areaId}")
-    ResponseEntity<FootTrafficByMonthDto> getFootTrafficByQuarterly(@PathVariable Long areaId);
-
     @GetMapping("/foot-traffics/age/{areaId}")
     ResponseEntity<FootTrafficByAgeDto> getFootTrafficByAge(@PathVariable Long areaId);
 
     @GetMapping("/foot-traffics/gender/{areaId}")
     ResponseEntity<FootTrafficByGenderDto> getFootTrafficByGender(@PathVariable Long areaId);
+
+    @GetMapping("/foot-traffics/quarterly/{areaId}")
+    ResponseEntity<FootTrafficByMonthDto> getFootTrafficByQuarterly(@PathVariable Long areaId);
 
     // Sales 관련 경로
     @GetMapping("/sales/month/{areaId}/{service}")
@@ -37,9 +37,6 @@ public interface AreaAnalyticApi {
     @GetMapping("/sales/hour/{areaId}/{service}")
     ResponseEntity<SalesByHourDto> getSaleByHour(@PathVariable Long areaId, @PathVariable String service);
 
-    @GetMapping("/sales/quarterly/{areaId}/{service}")
-    ResponseEntity<SalesByQuarterlyDto> getSaleByQuarterly(@PathVariable Long areaId, @PathVariable String service);
-
     @GetMapping("/sales/age/{areaId}/{service}")
     ResponseEntity<SalesByAgeDto> getSaleByAge(@PathVariable Long areaId, @PathVariable String service);
 
@@ -49,6 +46,9 @@ public interface AreaAnalyticApi {
     @GetMapping("/sales/weekend-weekday/{areaId}/{service}")
     ResponseEntity<WeekendAndWeekdaySalesDto> getWeekendAndWeekdaySale(@PathVariable Long areaId, @PathVariable String service);
 
+
+    @GetMapping("/sales/quarterly/{areaId}/{service}")
+    ResponseEntity<SalesByQuarterlyDto> getSaleByQuarterly(@PathVariable Long areaId, @PathVariable String service);
     // Similar Industry 관련 경로
     @GetMapping("/similar-industry/number/{areaId}/{service}")
     ResponseEntity<Integer> getNumberOfSimilarStores(@PathVariable Long areaId, @PathVariable String service);

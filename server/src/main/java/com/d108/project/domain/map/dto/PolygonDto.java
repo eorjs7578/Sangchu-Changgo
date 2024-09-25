@@ -6,8 +6,12 @@ import com.d108.project.domain.map.entity.Dong;
 import com.d108.project.domain.map.entity.Gu;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.locationtech.jts.geom.Geometry;
 
+@Getter
+@Setter
 public class PolygonDto {
     private Long id;
 
@@ -19,17 +23,20 @@ public class PolygonDto {
 
     private Float yPos;
 
+    private int size;
+
     @JsonSerialize(using = GeometrySerializer.class)
     private Geometry polygon;
 
     @Builder
-    public PolygonDto(Long id, String name, long code, Float xPos, Float yPos, Geometry polygon) {
+    public PolygonDto(Long id, String name, long code, Float xPos, Float yPos, Geometry polygon, int size) {
         this.id = id;
         this.name = name;
         this.code = code;
         this.xPos = xPos;
         this.yPos = yPos;
         this.polygon = polygon;
+        this.size = size;
     }
 
     public static PolygonDto toDTO(Gu gu){
@@ -39,6 +46,7 @@ public class PolygonDto {
                 .yPos(gu.getYPos())
                 .xPos(gu.getXPos())
                 .polygon(gu.getPolygon())
+                .size(0)
                 .build();
     }
 
@@ -50,6 +58,7 @@ public class PolygonDto {
                 .yPos(dong.getYPos())
                 .xPos(dong.getXPos())
                 .polygon(dong.getPolygon())
+                .size(1)
                 .build();
     }
 
@@ -61,6 +70,7 @@ public class PolygonDto {
                 .yPos(area.getYPos())
                 .xPos(area.getXPos())
                 .polygon(area.getPolygon())
+                .size(2)
                 .build();
     }
 }
