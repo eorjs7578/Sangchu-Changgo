@@ -10,13 +10,18 @@ import java.util.List;
 public interface BoardAPI {
 
     @GetMapping("/all")
-    List<BoardResponseDto> getAllBoards();
+    List<BoardResponseDto> getAllBoards(int page, int size);
     @GetMapping("/all/franchise")
-    List<BoardResponseDto> getAllFranchiseBoards();
+    List<BoardResponseDto> getAllFranchiseBoards(int page, int size);
     @GetMapping("/all/area")
-    List<BoardResponseDto> getAllAreaBoards();
+    List<BoardResponseDto> getAllAreaBoards(int page, int size);
     @GetMapping("/sale")
     BoardResponseDto getSaleBoard();
     @GetMapping("/search")
-    BoardResponseDto searchBoard(BoardRequestSearchDto boardRequestSearchDto);
+    List<BoardResponseDto> searchBoard(BoardRequestSearchDto boardRequestSearchDto);
+    @GetMapping("/search/area")
+    List<BoardResponseDto> searchAreaBoard(BoardRequestSearchDto boardRequestSearchDto);
+    @GetMapping("/search/franchise")
+    List<BoardResponseDto> searchFranchiseBoard(BoardRequestSearchDto boardRequestSearchDto);
+
 }
