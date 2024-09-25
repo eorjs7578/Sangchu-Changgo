@@ -12,9 +12,19 @@
             <div v-if="currentStep === 1" key="step1" class="h-100 d-flex flex-column justify-content-between">
                 <div class="mb-4"> <!-- 간격 조정 -->
                   <label for="location" class="form-label">창업하시려는 위치를 입력해 주세요</label>
-                  <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control" id="location" v-model="location" placeholder="구 / 동 검색">
+                  <div class="row"> <!-- 간격 조정 -->
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" v-model="gu" placeholder="구">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" v-model="dong" placeholder="동">
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="mb-4"> <!-- 간격 조정 -->
@@ -117,15 +127,18 @@ import { ref } from 'vue'
 import FranchiseInfoCard from '@/components/franchise/FranchiseInfoCard.vue';
 
 const currentStep = ref(1)
-const location = ref('aaa')
+const location = ref('')
 const mainCategory = ref('')
 const subCategory = ref('')
 const franchise = ref('')
 const storeSize = ref('')
 const selectedFloor = ref('')
+const gu = ref('')
+const dong = ref('')
 
 const myFranchise = ref({
-    location : location.value,
+    gu : gu,
+    dong : dong,
     name: '12412415555524',
     cost: 10000000,
     costs: [
@@ -140,7 +153,8 @@ const myFranchise = ref({
 
 const otherFranchises = ref([
   {
-    location : location.value,
+    gu : gu,
+    dong : dong,
     name: '12412415555524',
     cost: 10000000,
     costs: [
@@ -152,7 +166,9 @@ const otherFranchises = ref([
     ]
   },
   {
-    name: '5천만원',
+    gu : gu,
+    dong : dong,
+    name : 'asdffsda',
     cost: 50000000,
     costs: [
       { name: '가맹비', amount: 15000000 },
@@ -163,6 +179,8 @@ const otherFranchises = ref([
     ]
   },
   {
+    gu : gu,
+    dong : dong,
     name: '5천만원',
     cost: 50000000,
     costs: [

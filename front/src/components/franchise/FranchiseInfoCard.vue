@@ -1,6 +1,6 @@
 <template>
   <div class="card-body">
-    <h6 class="card-subtitle mb-2 text-muted">{{ franchise.location }} {{ franchise.name }}</h6>
+    <h6 class="card-subtitle mb-2 text-muted">{{ franchise.gu }} {{ franchise.dong }} {{ franchise.name }}</h6>
       <h4 class="card-title">예상 창업 비용은 <p class="text-primary">{{ totalCost.toLocaleString() }}원</p> 입니다.</h4>
         <table class="table table-borderless">
           <tbody>
@@ -18,10 +18,11 @@ import {ref,defineProps, computed} from 'vue'
 
 const props = defineProps(['franchise'])
 
-const franchise = props.franchise;
 const totalCost = computed(() => franchise.costs.reduce((sum, cost) => sum + cost.amount, 0))
 
-console.log(franchise.costs)
+const franchise = props.franchise
+
+console.log(franchise)
 
 </script>
 
