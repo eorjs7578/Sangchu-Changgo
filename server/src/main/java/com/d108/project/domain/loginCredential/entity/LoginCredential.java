@@ -76,4 +76,3 @@ public class LoginCredential extends BaseTimeEntity implements UserDetails {
         return true;
     }
 }
-
