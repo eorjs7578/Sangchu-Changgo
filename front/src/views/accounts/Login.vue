@@ -6,8 +6,8 @@
       <label for="username">아이디</label>
       <input type="username" id="username" placeholder="아이디" v-model="username" />
 
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Your password" v-model="password" />
+      <label for="password">비밀번호</label>
+      <input type="password" id="password" placeholder="비밀번호" v-model="password" />
 
       <p><router-link to="/passwordrecovery">비밀번호가 생각나지 않으신가요?</router-link></p>
       <button type="submit">Log In</button>

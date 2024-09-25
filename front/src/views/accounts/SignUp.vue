@@ -4,39 +4,39 @@
       <div class="signup-container">
         <h2>Sign Up</h2>
         <p>회원가입 후 다양한 기능을 이용하세요.</p>
-        <form @submit.prevent="submitSignup">
+        <form @submit.prevent="signUp">
           <!-- 이름 필드 -->
-          <label for="name">Name</label>
-          <input type="text" id="name" placeholder="Your name" v-model="name" />
+          <label for="username">아이디</label>
+          <input type="text" id="username" placeholder="아이디" v-model="username" />
 
           <!-- 닉네임 필드 -->
-          <label for="nickname">Nickname</label>
-          <input type="text" id="nickname" placeholder="Your nickname" v-model="nickname" />
+          <label for="nickname">닉네임</label>
+          <input type="text" id="nickname" placeholder="닉네임" v-model="nickname" />
           <span v-if="nicknameExists" class="error-text">사용 중인 닉네임 입니다</span>
 
           <!-- 이메일, 인증 -->
-          <label for="email">Email</label>
+          <label for="email">이메일</label>
           <div class="email-verification">
             <input type="email" id="email" placeholder="example@example.com" v-model="email" />
-            <button type="button" @click="sendEmailVerification">인증번호 전송</button>
+            <button type="button" @click="getAuthCode">인증번호 전송</button>
           </div>
 
           <!-- 인증번호 확인 -->
           <div class="verification-code">
-            <input type="text" placeholder="000000" v-model="verificationCode" />
+            <input type="text" placeholder="인증번호" v-model="verificationCode" />
             <div class="verification-wrapper">
-              <button type="button" @click="verifyCode">인증번호 확인</button>
+              <button type="button" @click="verifyAuthCode">인증번호 확인</button>
               <span class="timer">3:31</span>
             </div>
           </div>
 
           <!-- 비밀번호 -->
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Your password" v-model="password" />
+          <label for="password">비밀번호</label>
+          <input type="password" id="password" placeholder="비밀번호" v-model="password" />
 
           <!-- 비밀번호 확인 -->
-          <label for="repeatPassword">Repeat password</label>
-          <input type="password" id="repeatPassword" placeholder="Repeat" v-model="repeatPassword" />
+          <label for="passwordConfirm">비밀번호 확인</label>
+          <input type="password" id="passwordConfirm" placeholder="비밀번호 확인" v-model="passwordConfirm" />
 
           <!-- 확인버튼 -->
           <button type="submit">Sign Up</button>
@@ -99,7 +99,7 @@
 
   function verifyAuthCode() {
     api.post("/api/members/auth-email", {
-      email,
+      email: email.value,
       auth_code: authCode.value
     })
         .then(response => {
@@ -110,7 +110,7 @@
 
   function getAuthCode() {
     api.get("/api/members/auth-email", {params: {
-        email
+        email: email.value
       }})
         .then(response => {
           alert("인증번호가 이메일로 발송되었습니다.")
