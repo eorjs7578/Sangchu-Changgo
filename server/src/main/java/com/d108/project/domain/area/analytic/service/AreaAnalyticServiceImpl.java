@@ -9,6 +9,8 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -65,8 +67,9 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
     @Override
     public FootTrafficByHourDto getFootTrafficByHour(Long areaId) {
         List<Long> footTrafficByHourByArea = getList(populationRepository.getFootTrafficByHourByAreaId(areaId));
-        List<String> hourList = List.of("0시~06시", "06시~12시", "12시~18시", "18시~24시");
+        List<String> hourList = List.of("0시~06시", "06시~11시", "11시~14시", "14시~17시", "17시~21시", "21시~24시");
 
+        System.out.println(footTrafficByHourByArea);
         int maxIndex = getMaxIndex(footTrafficByHourByArea);
 
         return new FootTrafficByHourDto(footTrafficByHourByArea, hourList, hourList.get(maxIndex));
@@ -77,8 +80,24 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<Long> footTrafficByQuarterlyByArea = getList(populationHistoryRepository.getPopulationHistoryByAreaId(areaId));
         List<String> quarterList = List.of("2023/1", "2023/2", "2023/3", "2023/4", "2024/1");
 
-        int maxIndex = getMaxIndex(footTrafficByQuarterlyByArea);
-        return new FootTrafficByMonthDto(footTrafficByQuarterlyByArea, quarterList, quarterList.get(maxIndex));
+        String currentQuarter = getCurrentQuarter();
+        String lastYear = String.valueOf(getLastYear());
+        String last = String.format("%s/1", lastYear);
+        String now = String.format("%s/1", lastYear+1);
+
+        int nowIndex = quarterList.indexOf(now);
+        int lastIndex = quarterList.indexOf(last);
+
+        double percentageChange = calculatePercentageChange(footTrafficByQuarterlyByArea.get(lastIndex), footTrafficByQuarterlyByArea.get(nowIndex));
+
+        String QOQ = "유지";
+        if (percentageChange > 0) {
+            QOQ = String.format("%.2f%% 상승", percentageChange);
+        } else if (percentageChange < 0) {
+            QOQ = String.format("%.2f%% 하락", Math.abs(percentageChange));
+        }
+
+        return new FootTrafficByMonthDto(footTrafficByQuarterlyByArea, quarterList, QOQ);
     }
 
     @Override
@@ -117,7 +136,7 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
     @Override
     public SalesByHourDto getSaleByHour(Long areaId, String service) {
         List<Long> saleByHourByArea = getList(saleRepository.getSaleByHour(areaId, service));
-        List<String> hourList = List.of("0시~06시", "06시~12시", "12시~18시", "18시~24시");
+        List<String> hourList = List.of("0시~06시", "06시~11시", "11시~14시", "14시~17시", "17시~21시", "21시~24시");
 
         int maxIndex = getMaxIndex(saleByHourByArea);
         return new SalesByHourDto(saleByHourByArea, hourList, hourList.get(maxIndex));
@@ -128,8 +147,24 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<Long> saleByQuarterlyByArea = getList(salesHistoryRepository.getSalesHistoryByDongId(areaId, service));
         List<String> quarterList = List.of("2023/1", "2023/2", "2023/3", "2023/4", "2024/1");
 
-        int maxIndex = getMaxIndex(saleByQuarterlyByArea);
-        return new SalesByQuarterlyDto(saleByQuarterlyByArea, quarterList, quarterList.get(maxIndex));
+        String currentQuarter = getCurrentQuarter();
+        String lastYear = String.valueOf(getLastYear());
+        String last = String.format("%s/1", lastYear);
+        String now = String.format("%s/1", lastYear+1);
+
+        int nowIndex = quarterList.indexOf(now);
+        int lastIndex = quarterList.indexOf(last);
+
+        double percentageChange = calculatePercentageChange(saleByQuarterlyByArea.get(lastIndex), saleByQuarterlyByArea.get(nowIndex));
+
+        String QOQ = "유지";
+        if (percentageChange > 0) {
+            QOQ = String.format("%.2f%% 상승", percentageChange);
+        } else if (percentageChange < 0) {
+            QOQ = String.format("%.2f%% 하락", Math.abs(percentageChange));
+        }
+
+        return new SalesByQuarterlyDto(saleByQuarterlyByArea, quarterList, QOQ);
 
     }
 
@@ -173,5 +208,37 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<String> info = List.of("점포수","개업률","폐업률");
 
         return new IndustryInfoDto(industryInfo, info);
+    }
+    public static String getCurrentQuarter() {
+        // 서울 타임존 기준으로 현재 시간을 구함
+        ZonedDateTime seoulTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+
+        int month = seoulTime.getMonthValue();
+
+        if (month >= 1 && month <= 3) {
+            return "1";
+        } else if (month >= 4 && month <= 6) {
+            return "2";
+        } else if (month >= 7 && month <= 9) {
+            return "3";
+        } else {
+            return "4";
+        }
+    }
+
+    // 작년의 연도를 구하는 메서드
+    private static int getLastYear() {
+        // 서울 타임존 기준으로 현재 시간을 구함
+        ZonedDateTime seoulTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        // 작년의 연도를 반환
+        return seoulTime.getYear() - 1;
+    }
+
+    public static double calculatePercentageChange(Long lastSale, Long nowSale) {
+        if (lastSale == 0) {
+            throw new IllegalArgumentException("Last year's sale cannot be zero.");
+        }
+        // 퍼센트 변화 계산 공식: ((현재 매출 - 전년도 매출) / 전년도 매출) * 100
+        return ((double)(nowSale - lastSale) / lastSale) * 100;
     }
 }
