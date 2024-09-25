@@ -39,6 +39,7 @@ public class WhiteListConfiguration {
             API_PREFIX+"/posts/*",
             API_PREFIX+"/posts",
             API_PREFIX+"/posts/*/replies",
+            API_PREFIX+"/map/**"
     };
 }
 
