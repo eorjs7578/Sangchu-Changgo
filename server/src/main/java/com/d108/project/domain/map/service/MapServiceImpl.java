@@ -4,6 +4,7 @@ package com.d108.project.domain.map.service;
 import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.area.repository.AreaRepository;
 import com.d108.project.domain.map.dto.PolygonDto;
+import com.d108.project.domain.map.dto.RegionInfoDto;
 import com.d108.project.domain.map.entity.Dong;
 import com.d108.project.domain.map.entity.Gu;
 import com.d108.project.domain.map.respository.DongRepository;
@@ -23,7 +24,7 @@ public class MapServiceImpl implements MapService {
 
     @Override
     public List<PolygonDto> getGuPolygon() {
-        List<Gu> gu = guRepository.findAll();
+        List<Gu> gu = getGuInfos();
 
         List<PolygonDto> guDto= new ArrayList<>();
         for(Gu g :gu){
@@ -33,16 +34,24 @@ public class MapServiceImpl implements MapService {
         return guDto;
     }
 
+    private List<Gu> getGuInfos() {
+        return guRepository.findAll();
+    }
+
     @Override
     public List<PolygonDto> getDongPolygon(Long guCode){
-        Gu gu = guRepository.getReferenceById(guCode);
-        List<Dong> dong = dongRepository.findByCode(gu);
+        List<Dong> dong = getDongInfos(guCode);
 
         List<PolygonDto> dongDto= new ArrayList<>();
         for(Dong d :dong){
             dongDto.add(PolygonDto.toDTO(d));
         }
         return dongDto;
+    }
+
+    private List<Dong> getDongInfos(Long guCode) {
+        Gu gu = guRepository.getReferenceById(guCode);
+        return dongRepository.findByCode(gu);
     }
 
     @Override
@@ -57,5 +66,28 @@ public class MapServiceImpl implements MapService {
 
         return areaDto;
 
+    }
+
+    @Override
+    public List<RegionInfoDto> getGuInfo() {
+        List<Gu> gu = getGuInfos();
+
+        List<RegionInfoDto> guInfos= new ArrayList<>();
+        for(Gu g :gu){
+            guInfos.add(RegionInfoDto.to(g));
+        }
+
+        return guInfos;
+    }
+
+    @Override
+    public List<RegionInfoDto> getDongInfo(Long code) {
+        List<Dong> dong = getDongInfos(code);
+
+        List<RegionInfoDto> dongInfos= new ArrayList<>();
+        for(Dong d :dong){
+            dongInfos.add(RegionInfoDto.to(d));
+        }
+        return dongInfos;
     }
 }

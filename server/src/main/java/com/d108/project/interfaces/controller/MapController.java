@@ -1,6 +1,7 @@
 package com.d108.project.interfaces.controller;
 
 import com.d108.project.domain.map.dto.PolygonDto;
+import com.d108.project.domain.map.dto.RegionInfoDto;
 import com.d108.project.domain.map.service.MapService;
 import com.d108.project.interfaces.api.MapApi;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +29,15 @@ public class MapController implements MapApi {
     @Override
     public ResponseEntity<List<PolygonDto>> getAreaPolygon(Long code) {
         return ResponseEntity.ok(mapService.getAreaPolygon(code));
+    }
+
+    @Override
+    public ResponseEntity<List<RegionInfoDto>> getDong(Long code) {
+        return ResponseEntity.ok(mapService.getDongInfo(code));
+    }
+
+    @Override
+    public ResponseEntity<List<RegionInfoDto>> getGu() {
+        return ResponseEntity.ok(mapService.getGuInfo());
     }
 }

@@ -1,16 +1,12 @@
 package com.d108.project.interfaces.api;
 
 
-import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
-import com.d108.project.cache.redisToken.dto.TokenResponseDto;
-import com.d108.project.domain.forum.reply.dto.ReplyByMemberIdResponseDto;
 import com.d108.project.domain.map.dto.PolygonDto;
-import com.d108.project.domain.member.dto.MemberLoginDto;
-import com.d108.project.domain.member.dto.MemberRegisterDto;
-import com.d108.project.domain.member.dto.MemberResponseDto;
-import jakarta.mail.MessagingException;
+import com.d108.project.domain.map.dto.RegionInfoDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -24,4 +20,10 @@ public interface MapApi {
 
     @GetMapping("/area")
     ResponseEntity<List<PolygonDto>> getAreaPolygon(@RequestParam Long code);
+
+    @GetMapping("/info/dong")
+    ResponseEntity<List<RegionInfoDto>> getDong(@RequestParam Long code);
+
+    @GetMapping("/info/gu")
+    ResponseEntity<List<RegionInfoDto>> getGu();
 }

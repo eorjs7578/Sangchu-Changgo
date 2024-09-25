@@ -2,9 +2,9 @@
   <div class="login-container">
     <h2>Log In</h2>
     <p>로그인 후 다양한 기능을 이용하세요.</p>
-    <form @submit.prevent="submitLogin">
-      <label for="email">Email</label>
-      <input type="email" id="email" placeholder="example@example.com" v-model="email" />
+    <form @submit.prevent="login">
+      <label for="username">아이디</label>
+      <input type="username" id="username" placeholder="아이디" v-model="username" />
 
       <label for="password">Password</label>
       <input type="password" id="password" placeholder="Your password" v-model="password" />
@@ -24,12 +24,32 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { api } from "@/lib/api.js";
+import { useRouter } from "vue-router";
+
+  const router = useRouter();
+  const username = ref("");
+  const password = ref("");
+
   const kakaoLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:5173&mode=login";
   }
   const naverLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:5173&mode=login";
   }
+
+  function login() {
+    api.post("/api/members/login", {
+      username: username.value,
+      password: password.value,
+    })
+        .then(response => {
+          router.push("/")
+        })
+        .catch(err => console.log(err))
+  }
+
 </script>
 
 <style scoped>
