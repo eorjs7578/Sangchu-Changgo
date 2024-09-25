@@ -47,4 +47,4 @@ application*.yml
 application*.properties
 
 ### log ###
-server/logs/status-controller/*.log
+logs/**
