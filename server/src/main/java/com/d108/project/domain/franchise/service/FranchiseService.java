@@ -1,11 +1,17 @@
 package com.d108.project.domain.franchise.service;
 
-import com.d108.project.domain.franchise.dto.FranchiseListDto;
+import com.d108.project.domain.franchise.dto.FranchiseDto;
+import com.d108.project.domain.franchise.dto.FranchiseFeeDto;
+import com.d108.project.domain.franchise.dto.FranchiseTypeDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public interface FranchiseService {
-    FranchiseListDto getFranchiseList(List<Long> FranchiseIds);
+    List<FranchiseTypeDto> getFranchiseTypes();
+    List<FranchiseDto> getFranchisesByType(String type);
+    List<FranchiseDto> getFranchisesByName(String name);
+    List<FranchiseDto> getAllFranchises();
+    FranchiseFeeDto getFranchiseFee(Long id);
 }

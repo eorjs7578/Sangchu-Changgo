@@ -1,7 +1,7 @@
 <template>
   <div>
     <Dashboard2
-        :place="place"
+        :place
     />
   </div>
 </template>
@@ -11,7 +11,7 @@ import { ref } from "vue";
 import { useRoute } from "vue-router";
 import Dashboard2 from "@/components/areaAnalytics/Dashboard2.vue";
 
-const route = useRoute();
+const route = useRoute()
 const place = ref(route.params.id);
 
 </script>

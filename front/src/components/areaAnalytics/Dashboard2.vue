@@ -21,55 +21,18 @@
       <a class="nav-item nav-link" href="#rent">임대료</a>
       <a class="nav-item nav-link" href="#review">리뷰</a>
     </nav>
-    <div class="card">
-      <div class="card-header">
-        Quote
-      </div>
-      <div class="card-body">
-        <blockquote class="blockquote mb-0">
-          <p>A well-known quote, contained in a blockquote element.</p>
-        </blockquote>
-      </div>
-    </div>
-    <!-- 각 섹션들 -->
-    <div id="population" class="my-5">
-      <h3>인구 정보</h3>
-      <!-- 인구 정보 차트 -->
-      <ChartComponent  chartType="bar" chartData chartOptions />
-    </div>
-
-    <div id="store-count" class="my-5">
-      <h3>점포수</h3>
-      <!-- 점포수 정보 차트 -->
-      <ChartComponent chartType="bar" chartData chartOptions />
-    </div>
-
-    <div id="analysis" class="my-5">
-      <h3>매출분석</h3>
-      <!-- 매출분석 정보 차트 -->
-      <ChartComponent chartType="line" chartData chartOptions />
-    </div>
-
-    <div id="rent" class="my-5">
-      <h3>임대료</h3>
-      <!-- 임대료 정보 차트 -->
-      <ChartComponent
-          chartType="line" chartData chartOptions />
-    </div>
-
-    <div id="review" class="my-5">
-      <h3>리뷰</h3>
-      <!-- 리뷰 정보 -->
-      <p>리뷰 내용</p>
-    </div>
+    <!--  인구 분석  -->
+    <PopulationAnalysis />
+    <!--  상권 분석  -->
+    <StoreAnalytics />
 
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { api } from "@/lib/api";
-import ChartComponent from "@/components/charts/ChartComponent.vue";
+import PopulationAnalysis from "@/components/areaAnalytics/PopulationAnalysis.vue";
+import StoreAnalytics from "@/components/areaAnalytics/StoreAnalytics.vue";
 
 const props = defineProps({
   place: String

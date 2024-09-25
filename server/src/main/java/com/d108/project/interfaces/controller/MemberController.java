@@ -89,7 +89,6 @@ public class MemberController implements MemberApi {
     )
     @Override
     public ResponseEntity<MemberResponseDto> getMyInfo(Member member) {
-        System.out.println(member);
         return ResponseEntity.ok(memberService.getMyInfo(member));
     }
 

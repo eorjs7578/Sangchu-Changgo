@@ -63,7 +63,7 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
 
-        if (!member.equals(reply.getMember())) {
+        if (!member.getId().equals(reply.getMember().getId())) {
             throw new AccessDeniedException("본인의 댓글만 수정할 수 있습니다.");
         }
 
@@ -76,7 +76,7 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
 
-        if (!member.equals(reply.getMember())) {
+        if (!member.getId().equals(reply.getMember().getId())) {
             throw new AccessDeniedException("본인의 댓글만 삭제할 수 있습니다.");
         }
 
