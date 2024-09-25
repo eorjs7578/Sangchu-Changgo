@@ -43,7 +43,10 @@ public class WhiteListConfiguration {
             // 상권 분석 관련 앤드 포인트
             API_PREFIX + "/areas/analytic/**",
             API_PREFIX + "/dong/analytic/**",
-            API_PREFIX + "/gu/analytic/**"
+            API_PREFIX + "/gu/analytic/**",
+
+            //프랜차이즈 앤드 포인트
+            API_PREFIX+"/franchises/**"
 
     };
 }
