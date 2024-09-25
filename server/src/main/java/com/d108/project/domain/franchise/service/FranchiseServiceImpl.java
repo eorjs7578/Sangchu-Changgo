@@ -33,7 +33,13 @@ public class FranchiseServiceImpl implements FranchiseService {
 
     @Override
     public List<FranchiseDto> getFranchisesByType(String type) {
-        return List.of();
+        List<Franchise> franchises = franchiseRepository.findAllByType(type);
+        List<FranchiseDto> franchiseDtos = new ArrayList<>();
+        for (Franchise franchise : franchises) {
+            FranchiseDto dto = FranchiseDto.to(franchise);
+            franchiseDtos.add(dto);
+        }
+        return franchiseDtos;
     }
 
     @Override
@@ -60,6 +66,8 @@ public class FranchiseServiceImpl implements FranchiseService {
 
     @Override
     public FranchiseFeeDto getFranchiseFee(Long id) {
-        return null;
+        Franchise franchise = franchiseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 프랜차이즈입니다."));
+        return FranchiseFeeDto.to(franchise);
     }
 }

@@ -23,7 +23,7 @@ public interface FranchiseApi {
     @GetMapping("/name")
     ResponseEntity<List<FranchiseDto>> getAllFranchisesByName(@RequestParam String name);
 
-    @GetMapping("/{type}")
+    @GetMapping("/type/{type}")
     ResponseEntity<List<FranchiseDto>> getFranchisesByType(@PathVariable String type);
 
     @GetMapping("/fee/{franchiseId}")
