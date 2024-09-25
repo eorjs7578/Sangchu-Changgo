@@ -123,8 +123,27 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getGu, getDong } from "@/api/region.js";
 import FranchiseInfoCard from '@/components/franchise/FranchiseInfoCard.vue';
+
+const gus = ref([])
+
+const getGuInfos = () => {
+  getGu(
+    ({data}) => {
+      console.log(data)
+      gus.value = data
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
+onMounted(() => {
+  getGuInfos()
+})
 
 const currentStep = ref(1)
 const location = ref('')
