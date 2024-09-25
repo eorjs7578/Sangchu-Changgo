@@ -41,9 +41,7 @@ import java.util.Collections;
 @EnableMethodSecurity(
         securedEnabled = true,
         jsr250Enabled = true)
-public class
-
-SecurityConfiguration {
+public class SecurityConfiguration {
 
     private final WhiteListConfiguration whiteListConfiguration;
     private final OAuth2Repository oAuth2Repository;
