@@ -1,14 +1,27 @@
 <template>
+  <div class="container">
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
-      <h2>상추창고</h2>
+      <h5>상추창고</h5>
       <ul>
         <li @click="closeCommunitySubmenu"><router-link to="/marketanalysis">상권분석</router-link></li>
         <li @click="closeCommunitySubmenu"><router-link to="/interestareas">관심상권</router-link></li>
-        <li @click="toggleCommunitySubmenu" class="community-link">
+        <li @click="toggleCommunitySubmenu" class="link">
           커뮤니티
         </li>
-        <li @click="closeCommunitySubmenu"><router-link to="/franchise">프랜차이즈</router-link></li>
+         <!-- 프랜차이즈 메뉴 -->
+         <li @click="toggleFranchiseSubmenu" class="link">
+          프랜차이즈
+        </li>
+        
+        <!-- 프랜차이즈 하위 메뉴 -->
+        <ul v-show="isFranchiseOpen ">
+          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal1">관심프차</li>
+          <FavoriteFranchise class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
+          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal2">예상비용</li>
+          <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
+        </ul>
+
       </ul>
 
       <!-- 로그인/회원가입 링크 -->
@@ -28,16 +41,21 @@
       </ul>
     </nav>
 
-    <!-- 메인 콘텐츠 영역
+    <!-- 메인 콘텐츠 영역 -->
     <div class="content">
-    </div> -->
-</template>
 
+    </div>
+  </div>
+</template>
 
 <script setup>
 import {ref} from 'vue'
+import FranchiseFee from '@/views/franchise/FranchiseFee.vue'
+import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue'
+
 
 const isCommunityOpen = ref(false)
+const isFranchiseOpen = ref(false)
 
 const toggleCommunitySubmenu = () => {
   isCommunityOpen.value = !isCommunityOpen.value;
@@ -46,13 +64,22 @@ const toggleCommunitySubmenu = () => {
 const closeCommunitySubmenu = () => {
   isCommunityOpen.value = false
 }
+
+const toggleFranchiseSubmenu = () => {
+  isCommunityOpen.value = false
+  isFranchiseOpen.value = !isFranchiseOpen.value
+}
 </script>
 
 <style scoped>
+/* 컨테이너 설정 */
 .container {
   display: flex;
+  height: 100vh;
+  width: 100vw;
 }
 
+/* 네비게이션 바 설정 */
 .navbar {
   position: relative;
   width: 12vw;
@@ -75,7 +102,7 @@ const closeCommunitySubmenu = () => {
 }
 
 /* 커뮤니티 링크에 대한 hover 스타일 추가 */
-.community-link:hover {
+.link:hover {
   color: blue; /* 마우스를 올렸을 때 파란색으로 변경 */
   cursor: pointer; /* 커서를 포인터로 변경 */
 }
@@ -83,26 +110,18 @@ const closeCommunitySubmenu = () => {
 /* 두 번째 서브메뉴 */
 .submenu {
   width: 300px;
-  background-color: #e6f0ff; /* 하늘색 배경 */
+  background-color: #e6f0ff;
   padding: 2rem;
   height: 100vh;
-  text-align: center;
+  transition: transform 0.3s ease-in-out;
 }
 
-.submenu ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.submenu ul li{
-  margin-bottom: 1.5rem;
-  font-size: 1.2rem;
-}
-
-.submenu ul li a {
-  text-decoration: none;
-  color: inherit; /* 기본 상태에서는 부모 요소의 색상 유지 */
+/* 메인 콘텐츠 영역 */
+.content {
+  flex-grow: 1; /* 메인 콘텐츠가 사이드바를 제외한 나머지 공간을 채움 */
+  padding: 2rem;
+  background-color: #f3f4f6;
+  overflow-y: auto;
 }
 
 /* 로그인/회원가입 링크를 네비게이션 바의 하단에 고정 */
@@ -120,18 +139,16 @@ const closeCommunitySubmenu = () => {
 }
 
 /* 기본 링크 스타일 */
-.auth-links a, .navbar ul li a {
+.auth-links a,
+.navbar ul li a {
   text-decoration: none;
-  color: inherit; /* 기본 상태에서는 부모 요소의 색상 유지 */
-}
-
-/* 현재 페이지에 해당하는 링크를 파란색으로 유지 */
-.active-link {
-  color: blue;
+  color: inherit;
 }
 
 /* 마우스를 올렸을 때 파란색으로 변경 */
-.auth-links a:hover, .navbar ul li a:hover, .submenu ul li a:hover {
+.auth-links a:hover,
+.navbar ul li a:hover,
+.submenu ul li a:hover {
   color: blue;
 }
 </style>
