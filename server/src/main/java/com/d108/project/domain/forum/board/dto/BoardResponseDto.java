@@ -1,6 +1,9 @@
 package com.d108.project.domain.forum.board.dto;
 
-public class BoardResponseDto {
-    private Long boardId;
-    private String boardName;
+import com.d108.project.domain.area.entity.Area;
+import com.d108.project.domain.forum.board.entity.Board;
+import com.d108.project.domain.franchise.entity.Franchise;
+
+public record BoardResponseDto(Long id, String name) {
+
 }
