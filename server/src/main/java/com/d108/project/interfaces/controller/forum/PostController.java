@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@Tag(name = "게시글")
 @RestController
 @RequiredArgsConstructor
 public class PostController implements PostApi {
@@ -20,8 +21,8 @@ public class PostController implements PostApi {
     private final PostService postService;
 
     @Override
-    public ResponseEntity<Void> createPost(PostCreateDto postCreateDto) {
-        Long postId = postService.createPost(postCreateDto);
+    public ResponseEntity<Void> createPost(Member member, PostCreateDto postCreateDto) {
+        Long postId = postService.createPost(member, postCreateDto);
 
         // createPost 에서 글 번호 받아서, 글 번호로 redirect URL 전달하기
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -54,4 +55,19 @@ public class PostController implements PostApi {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "상권 게시판 조회", description =
+                    "<p>상권 id로 만들어진 게시글을 조회</p>"
+    )
+    @Override
+    public ResponseEntity<List<PostResponseDto>> getAllPostsByAreaId(Long areaId) {
+        return ResponseEntity.ok(postService.getAllPostsByAreaId(areaId));
+    }
+
+    @Operation(summary = "프랜차이즈 게시판 조회", description =
+            "<p>프랜차이즈 id로 만들어진 게시글을 조회</p>"
+    )
+    @Override
+    public ResponseEntity<List<PostResponseDto>> getAllPostsByFranchiseId(Long franchiseId) {
+        return ResponseEntity.ok(postService.getAllPostsByFranchiseId(franchiseId));
+    }
 }

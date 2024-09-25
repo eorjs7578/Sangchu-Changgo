@@ -22,7 +22,7 @@
     <nav class="submenu" v-if="isCommunityOpen">
       <h1>커뮤니티</h1>
       <ul>
-        <li><router-link to="/community/marketboard">상권 게시판</router-link></li>
+        <li><router-link to="/community/marketBoard">상권 게시판</router-link></li>
         <li><router-link to="/community/franchiseboard">프랜차이즈 게시판</router-link></li>
         <li><router-link to="/community/propertyboard">상권 매물 게시판</router-link></li>
       </ul>
