@@ -80,7 +80,7 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 번호 입니다."));
 
-        if (!member.equals(post.getMember())) {
+        if (!member.getId().equals(post.getMember().getId())) {
             throw new AccessDeniedException("본인의 글만 수정할 수 있습니다.");
         }
 
@@ -96,7 +96,8 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
 
-        if (!member.equals(post.getMember())) {
+        if (!member.getId().equals(post.getMember().getId())) {
+
             throw new AccessDeniedException("본인의 글만 삭제하실 수 있습니다.");
         }
 
