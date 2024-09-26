@@ -10,6 +10,8 @@ import AreaAnalytics from '@/views/areaAnalytics/AreaAnalytics.vue';
 import Chart from '@/views/areaAnalytics/Chart.vue';
 import Mypage from '@/views/accounts/Mypage.vue';
 import Chart2 from "@/views/areaAnalytics/Chart2.vue";
+import CreatePost from "@/views/forum/CreatePost.vue";
+import BoardList from "@/views/forum/BoardList.vue";
 
 
 // 1. /members/** : 회원 관련 활동 (로그인, 회원가입, 비밀번호 변경 등)
@@ -72,6 +74,16 @@ const routes = [
     path: '/chart/:id',
     name: 'Chart',
     component: Chart2
+  },
+  {
+    path: '/CreatePost',
+    name: 'CreatePost',
+    component: CreatePost
+  },
+  {
+    path: '/BoardList',
+    name: 'BoardList',
+    component: BoardList
   },
 ];
 
