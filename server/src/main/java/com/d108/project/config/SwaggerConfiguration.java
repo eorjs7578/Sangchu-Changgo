@@ -73,26 +73,6 @@ public class SwaggerConfiguration {
     private String naverTokenUri;
 
 
-//    private final Environment environment;
-//
-//    @Autowired
-//    public SwaggerConfiguration(Environment environment) {
-//        this.environment = environment;
-//    }
-//
-//    @Bean
-//    public ModelResolver modelResolver(ObjectMapper objectMapper) {
-//        return new ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE));
-//    }
-//
-//    @Bean
-//    public OpenAPI customOpenAPI() {
-//        return new OpenAPI()
-//                .components(new Components()
-//                        .addSecuritySchemes("kakao_oauth2", createOAuthSecurityScheme("kakao"))
-//                        .addSecuritySchemes("naver_oauth2", createOAuthSecurityScheme("naver"))
-//                );
-//    }
 //
 //    private SecurityScheme createOAuthSecurityScheme(String provider) {
 //        return new SecurityScheme()
@@ -131,31 +111,24 @@ public class SwaggerConfiguration {
     public ModelResolver modelResolver(ObjectMapper objectMapper) {
         return new ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE));
     }
-//    @Bean
-//    public OpenAPI customOpenAPI() {
-//        return new OpenAPI()
-//                .components(new Components()
-//                        .addSecuritySchemes("kakao_oauth2", createOAuthSecurityScheme("kakao"))
-//                        .addSecuritySchemes("naver_oauth2", createOAuthSecurityScheme("naver"))
+
+
+//    private SecurityScheme createOAuthSecurityScheme(String provider) {
+//        String authorizationUrl = provider.equals("kakao") ? kakaoAuthorizationUri : naverAuthorizationUri;
+//        String tokenUrl = provider.equals("kakao") ? kakaoTokenUri : naverTokenUri;
+//
+//        return new SecurityScheme()
+//                .type(SecurityScheme.Type.OAUTH2)
+//                .flows(new OAuthFlows()
+//                        .authorizationCode(new OAuthFlow()
+//                                .authorizationUrl(authorizationUrl)
+//                                .tokenUrl(tokenUrl)
+//                                .scopes(new Scopes()
+//                                        .addString("profile_nickname", "Access to profile nickname")
+//                                )
+//                        )
 //                );
 //    }
-
-    private SecurityScheme createOAuthSecurityScheme(String provider) {
-        String authorizationUrl = provider.equals("kakao") ? kakaoAuthorizationUri : naverAuthorizationUri;
-        String tokenUrl = provider.equals("kakao") ? kakaoTokenUri : naverTokenUri;
-
-        return new SecurityScheme()
-                .type(SecurityScheme.Type.OAUTH2)
-                .flows(new OAuthFlows()
-                        .authorizationCode(new OAuthFlow()
-                                .authorizationUrl(authorizationUrl)
-                                .tokenUrl(tokenUrl)
-                                .scopes(new Scopes()
-                                        .addString("profile_nickname", "Access to profile nickname")
-                                )
-                        )
-                );
-    }
 
 //    private SecurityScheme createOAuthSecurityScheme(String provider) {
 //        return new SecurityScheme()
@@ -179,7 +152,6 @@ public class SwaggerConfiguration {
     @Bean
     public OpenAPI customOpenAPI() {
         final String jwtSchemeName = "jwtAuth";
-        final String naverSchemeName = "naver";
         final String kakaoSchemeName = "kakao";
 
         // JWT 토큰을 위한 SecurityScheme 정의
@@ -190,45 +162,16 @@ public class SwaggerConfiguration {
                 .in(SecurityScheme.In.HEADER)
                 .name("Authorization");
 
-//         Naver 소셜 로그인을 위한 SecurityScheme 정의
-        SecurityScheme naverScheme = new SecurityScheme()
-                .type(SecurityScheme.Type.OAUTH2)
-                .flows(new OAuthFlows()
-                        .authorizationCode(new OAuthFlow()
-                                .authorizationUrl(naverAuthorizationUri)
-                                .tokenUrl("https://nid.naver.com/oauth2.0/token")
-                                .scopes(new Scopes()
-                                        .addString("name", "이름")
-                                        .addString("email", "이메일")
-                                        .addString("nickname", "닉네임")
-                                )
-                        )
-                );
-
-//         Kakao 소셜 로그인을 위한 SecurityScheme 정의
-        SecurityScheme kakaoScheme = new SecurityScheme()
-                .type(SecurityScheme.Type.OAUTH2)
-                .flows(new OAuthFlows()
-                        .authorizationCode(new OAuthFlow()
-                                .authorizationUrl(kakaoAuthorizationUri)
-                                .tokenUrl("https://kauth.kakao.com/oauth/token")
-                                .scopes(new Scopes()
-                                        .addString("profile_nickname", "닉네임")
-                                )
-                        )
-                );
-
 //        SecurityRequirement 정의
         SecurityRequirement securityRequirement = new SecurityRequirement()
                 .addList(jwtSchemeName)
-                .addList(naverSchemeName)
                 .addList(kakaoSchemeName);
 
         return new OpenAPI()
                 .components(new Components()
-                        .addSecuritySchemes(kakaoSchemeName, kakaoScheme)
-                        .addSecuritySchemes(naverSchemeName, naverScheme)
                         .addSecuritySchemes(jwtSchemeName, jwtScheme)
+//                        .addSecuritySchemes(kakaoSchemeName, createOAuthSecurityScheme("kakao"))
+
                 )
                 .security(Collections.singletonList(securityRequirement));
     }
