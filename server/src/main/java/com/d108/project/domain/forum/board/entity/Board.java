@@ -1,5 +1,7 @@
 package com.d108.project.domain.forum.board.entity;
 
+import com.d108.project.domain.area.entity.Area;
+import com.d108.project.domain.franchise.entity.Franchise;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -11,7 +13,13 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long areaId;
+    @ManyToOne
+    @JoinColumn(name = "area_id")
+    private Area area;
 
-    private Long franchiseId;
+
+    @ManyToOne
+    @JoinColumn(name = "franchise_id")
+    private Franchise franchise;
+
 }

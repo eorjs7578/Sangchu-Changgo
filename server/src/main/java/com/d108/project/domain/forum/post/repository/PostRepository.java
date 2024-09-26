@@ -12,10 +12,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Long> findAllPostIds();
 
     @Query("SELECT post FROM Post post " +
-            "WHERE post.board.franchiseId = :franchiseId")
+            "WHERE post.board.franchise.id = :franchiseId")
     List<Post> findAllByFranchiseId(Long franchiseId);
 
     @Query("SELECT post FROM Post post " +
-            "WHERE post.board.areaId = :areaId")
+            "WHERE post.board.area.id = :areaId")
     List<Post> findAllByAreaId(Long areaId);
 }
