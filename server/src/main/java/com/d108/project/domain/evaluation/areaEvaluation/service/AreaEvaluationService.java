@@ -13,8 +13,6 @@ public interface AreaEvaluationService {
     AreaEvaluationDto updateEvaluation(Member member,Long evaluation, AreaEvaluationUpdateDto dto);
     void deleteEvaluation(Member member, Long evaluation);
     AreaEvaluationDto getEvaluationsByAreaAndMember(Member member, Long areaId);
-
     AreaTypeListDto getEvaluationsByAreaTypeList();
-
     AreaEvaluationDto getAreaEvaluationStatistics(Long areaId);
 }
