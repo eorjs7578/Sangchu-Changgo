@@ -1,68 +1,68 @@
-<configuration>
+<!--<configuration>-->
 
-    <!-- 콘솔 출력용 루트 로거 설정 -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+<!--    &lt;!&ndash; 콘솔 출력용 루트 로거 설정 &ndash;&gt;-->
+<!--    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--        <encoder>-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
-    <!-- ServerStatusController 클래스 전용 파일 로그 설정 -->
-    <!--    로그 파일 logs/status-controller-YYYY-MM-DD.log 내부에 기록되는 로그 메시지는 <pattern>에 정의된 형식에 따라 텍스트로 기록됩니다.  -->
-    <!--    2024-09-02 15:45:30 INFO  com.twentyone.steachserver.interfaces.status.ServerStatusController - Server is running.-->
-    <!--    2024-09-02 15:45:31 ERROR com.twentyone.steachserver.interfaces.status.ServerStatusController - this is error-->
-    <appender name="STATUS_CONTROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!--        프로젝트의 최상위 디렉토리에서 logs라는 폴더가 생성되고, 그 안에 로그 파일이 기록됩니다.-->
-        <file>logs/status-controller/status-controller.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--        로그 파일은 매일 자정 새로운 파일로 롤링됩니다.-->
-            <fileNamePattern>logs/status-controller/status-controller-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- 최대 보관 일수 설정 (1일 X 30 // 30개까지 보관) -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <!--            이렇게 형식화된 로그는 시간, 로그 레벨, 클래스 이름, 메시지를 포함하여 가독성과 분석에 용이하게 만듭니다.-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+<!--    &lt;!&ndash; ServerStatusController 클래스 전용 파일 로그 설정 &ndash;&gt;-->
+<!--    &lt;!&ndash;    로그 파일 logs/status-controller-YYYY-MM-DD.log 내부에 기록되는 로그 메시지는 <pattern>에 정의된 형식에 따라 텍스트로 기록됩니다.  &ndash;&gt;-->
+<!--    &lt;!&ndash;    2024-09-02 15:45:30 INFO  com.twentyone.steachserver.interfaces.status.ServerStatusController - Server is running.&ndash;&gt;-->
+<!--    &lt;!&ndash;    2024-09-02 15:45:31 ERROR com.twentyone.steachserver.interfaces.status.ServerStatusController - this is error&ndash;&gt;-->
+<!--    <appender name="STATUS_CONTROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        &lt;!&ndash;        프로젝트의 최상위 디렉토리에서 logs라는 폴더가 생성되고, 그 안에 로그 파일이 기록됩니다.&ndash;&gt;-->
+<!--        <file>logs/status-controller/status-controller.log</file>-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            &lt;!&ndash;        로그 파일은 매일 자정 새로운 파일로 롤링됩니다.&ndash;&gt;-->
+<!--            <fileNamePattern>logs/status-controller/status-controller-%d{yyyy-MM-dd}.log</fileNamePattern>-->
+<!--            &lt;!&ndash; 최대 보관 일수 설정 (1일 X 30 // 30개까지 보관) &ndash;&gt;-->
+<!--            <maxHistory>30</maxHistory>-->
+<!--        </rollingPolicy>-->
+<!--        <encoder>-->
+<!--            &lt;!&ndash;            이렇게 형식화된 로그는 시간, 로그 레벨, 클래스 이름, 메시지를 포함하여 가독성과 분석에 용이하게 만듭니다.&ndash;&gt;-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
-    <!-- 다른 특정 클래스 전용 파일 로그 설정 (예: AnotherController 클래스) -->
-    <!--    <appender name="ANOTHER_CONTROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-    <!--        <file>logs/another-controller.log</file>-->
-    <!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
-    <!--            <fileNamePattern>logs/another-controller-%d{yyyy-MM-dd}.log</fileNamePattern>-->
-    <!--            <maxHistory>30</maxHistory>-->
-    <!--        </rollingPolicy>-->
-    <!--        <encoder>-->
-    <!--            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>-->
-    <!--        </encoder>-->
-    <!--    </appender>-->
+<!--    &lt;!&ndash; 다른 특정 클래스 전용 파일 로그 설정 (예: AnotherController 클래스) &ndash;&gt;-->
+<!--    &lt;!&ndash;    <appender name="ANOTHER_CONTROLLER" class="ch.qos.logback.core.rolling.RollingFileAppender">&ndash;&gt;-->
+<!--    &lt;!&ndash;        <file>logs/another-controller.log</file>&ndash;&gt;-->
+<!--    &lt;!&ndash;        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">&ndash;&gt;-->
+<!--    &lt;!&ndash;            <fileNamePattern>logs/another-controller-%d{yyyy-MM-dd}.log</fileNamePattern>&ndash;&gt;-->
+<!--    &lt;!&ndash;            <maxHistory>30</maxHistory>&ndash;&gt;-->
+<!--    &lt;!&ndash;        </rollingPolicy>&ndash;&gt;-->
+<!--    &lt;!&ndash;        <encoder>&ndash;&gt;-->
+<!--    &lt;!&ndash;            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>&ndash;&gt;-->
+<!--    &lt;!&ndash;        </encoder>&ndash;&gt;-->
+<!--    &lt;!&ndash;    </appender>&ndash;&gt;-->
 
-    <!-- ServerStatusController 클래스의 로거 설정 -->
-    <logger name="com.twentyone.steachserver.interfaces.status.ServerStatusController" level="INFO" additivity="false">
-        <appender-ref ref="STATUS_CONTROLLER"/>
-        <appender-ref ref="CONSOLE"/> <!-- 콘솔에도 출력하도록 추가 -->
-    </logger>
+<!--    &lt;!&ndash; ServerStatusController 클래스의 로거 설정 &ndash;&gt;-->
+<!--    <logger name="com.twentyone.steachserver.interfaces.status.ServerStatusController" level="INFO" additivity="false">-->
+<!--        <appender-ref ref="STATUS_CONTROLLER"/>-->
+<!--        <appender-ref ref="CONSOLE"/> &lt;!&ndash; 콘솔에도 출력하도록 추가 &ndash;&gt;-->
+<!--    </logger>-->
 
-    <!-- AnotherController 클래스의 로거 설정 -->
-    <!--    <logger name="com.twentyone.steachserver.interfaces.another.AnotherController" level="INFO" additivity="false">-->
-    <!--        <appender-ref ref="ANOTHER_CONTROLLER"/>-->
-    <!--    </logger>-->
+<!--    &lt;!&ndash; AnotherController 클래스의 로거 설정 &ndash;&gt;-->
+<!--    &lt;!&ndash;    <logger name="com.twentyone.steachserver.interfaces.another.AnotherController" level="INFO" additivity="false">&ndash;&gt;-->
+<!--    &lt;!&ndash;        <appender-ref ref="ANOTHER_CONTROLLER"/>&ndash;&gt;-->
+<!--    &lt;!&ndash;    </logger>&ndash;&gt;-->
 
-    <!-- 루트 로거 설정 (모든 로그를 콘솔에 출력) -->
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-    </root>
+<!--    &lt;!&ndash; 루트 로거 설정 (모든 로그를 콘솔에 출력) &ndash;&gt;-->
+<!--    <root level="INFO">-->
+<!--        <appender-ref ref="CONSOLE"/>-->
+<!--    </root>-->
 
-</configuration>
+<!--</configuration>-->
 
-        <!--Appender 설정: 각 클래스 전용으로 RollingFileAppender를 설정하여 로그 파일을 생성합니다.
-        예를 들어, STATUS_CONTROLLER라는 이름의 Appender는 logs/status-controller.log 파일에 로그를 기록합니다.
-        TimeBasedRollingPolicy를 사용하여 매일 로그를 회전(롤링)하며, 최대 30일간 로그를 보관합니다.-->
+<!--        &lt;!&ndash;Appender 설정: 각 클래스 전용으로 RollingFileAppender를 설정하여 로그 파일을 생성합니다.-->
+<!--        예를 들어, STATUS_CONTROLLER라는 이름의 Appender는 logs/status-controller.log 파일에 로그를 기록합니다.-->
+<!--        TimeBasedRollingPolicy를 사용하여 매일 로그를 회전(롤링)하며, 최대 30일간 로그를 보관합니다.&ndash;&gt;-->
 
-        <!--Logger 설정: logger 태그에서 특정 클래스의 로거를 정의합니다.
-        예를 들어, com.twentyone.steachserver.interfaces.status.ServerStatusController 클래스의 로그는 STATUS_CONTROLLER라는 Appender를 사용하여 기록됩니다.
-         additivity="false"로 설정하면 이 로거는 상위 로거로 로그를 전달하지 않습니다(즉, 루트 로거에도 기록되지 않음).-->
+<!--        &lt;!&ndash;Logger 설정: logger 태그에서 특정 클래스의 로거를 정의합니다.-->
+<!--        예를 들어, com.twentyone.steachserver.interfaces.status.ServerStatusController 클래스의 로그는 STATUS_CONTROLLER라는 Appender를 사용하여 기록됩니다.-->
+<!--         additivity="false"로 설정하면 이 로거는 상위 로거로 로그를 전달하지 않습니다(즉, 루트 로거에도 기록되지 않음).&ndash;&gt;-->
 
-        <!--루트 로거: 콘솔 출력을 위한 기본 Appender를 설정합니다.
-        이 설정은 특정 logger에 지정된 Appender가 없을 때 사용됩니다.-->
+<!--        &lt;!&ndash;루트 로거: 콘솔 출력을 위한 기본 Appender를 설정합니다.-->
+<!--        이 설정은 특정 logger에 지정된 Appender가 없을 때 사용됩니다.&ndash;&gt;-->
