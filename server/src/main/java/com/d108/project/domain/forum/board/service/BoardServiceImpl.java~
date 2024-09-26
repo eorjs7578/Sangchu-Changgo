@@ -29,7 +29,6 @@ public class BoardServiceImpl implements BoardService {
     private final AreaRepository areaRepository;
     private final FranchiseRepository franchiseRepository;
 
-    // TODO: 게시판 검색이 아니라 상권이나 프랜차이즈로 검색을 해주고 게시판 클릭시 없으면 만들어주는 것으로 구현하는게 좋을듯  
     @Override
     public List<BoardResponseDto> getAllBoards(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
