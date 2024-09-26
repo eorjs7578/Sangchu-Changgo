@@ -19,7 +19,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findByAreaIdIsNotNull(Pageable pageable);
 
     // 특정 판매 관련 게시판 조회
-    @Query("SELECT b FROM Board b WHERE b.franchise.id IS NOT NULL and b.area.id IS NULL") // 판매 게시판 조회 로직은 수정 필요
+    @Query("SELECT b FROM Board b WHERE b.franchise IS NULL and b.area IS NULL") // 판매 게시판 조회 로직은 수정 필요
     Optional<Board> findSaleBoard();
 
 //    // 검색 조건에 맞는 게시판 조회
