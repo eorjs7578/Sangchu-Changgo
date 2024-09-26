@@ -88,13 +88,15 @@
             <!-- Step 2 -->
             <div v-else-if="currentStep === 2" key="step2" class="h-100 d-flex flex-column justify-content-between">
               <div>
-                <h6 class="mb-4">매장크기를 선택해 주세요.</h6>
+                <h3 class="mb-4"><span class="text-primary">매장 크기</span>를 선택해 주세요.</h3>
               <div class="row mb-4">
                 <div class="col-6">
                   <div class="card" :class="{ 'border-primary': storeSize === 'small' }" @click="storeSize = 'small'">
                     <div class="card-body text-center">
-                      <i class="bi bi-shop fs-1"></i>
-                      <p class="mt-2">1평 이하</p>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16">
+                        <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
+                      </svg>
+                      <p class="mt-2">10평 이하</p>
                       <h6>소형</h6>
                     </div>
                   </div>
@@ -102,8 +104,11 @@
                 <div class="col-6">
                   <div class="card" :class="{ 'border-primary': storeSize === 'large' }" @click="storeSize = 'large'">
                     <div class="card-body text-center">
-                      <i class="bi bi-building fs-1"></i>
-                      <p class="mt-2">1평 이상</p>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
+                        <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
+                        <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3z"/>
+                      </svg>
+                      <p class="mt-2">11평 이상</p>
                       <h6>중대형</h6>
                     </div>
                   </div>
@@ -112,16 +117,23 @@
               </div>
               
               <div>
-                <h6 class="mb-4">층수를 선택해 주세요.</h6>
-                  <div class="row mb-4">
-                    <div class="col-4" v-for="floor in ['지하', '1층', '1층 이상']" :key="floor">
-                      <div class="card" :class="{ 'border-primary': selectedFloor === floor }" @click="selectedFloor = floor">
-                        <div class="card-body text-center">
-                          <h6>{{ floor }}</h6>
-                        </div>
-                      </div>
+                <h3 class="mb-4"><span class="text-primary">층수</span>를 선택해 주세요.</h3>
+                <div class="row mb-4">
+                <div class="col-6">
+                  <div class="card" :class="{ 'border-primary': selectedFloor === '1' }" @click="selectedFloor = '1'">
+                    <div class="card-body text-center">
+                      <h6>1층</h6>
                     </div>
                   </div>
+                </div>
+                <div class="col-6">
+                  <div class="card" :class="{ 'border-primary': selectedFloor === 'other' }" @click="selectedFloor = 'other'">
+                    <div class="card-body text-center">
+                      <h6>1층 외</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
               </div>
               
               <div class="d-flex justify-content-between">
