@@ -29,31 +29,19 @@ public class MemberServiceImpl implements MemberService {
     private final RedisUtil redisUtil;
     private final MemberRepository memberRepository;
     private final LoginCredentialRepository loginCredentialRepository;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-
-    // 이메일 정규표현식(aaa@a~)
-    private static final String EMAIL_PATTERN = "^[A-Za-z0-9]+@(.+)$";
-    // 비밀번호 정규표현식(8자 이상, 숫자 1, 특수문자 1 포함)
-    private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,}$";
-    // 닉네임 정규표현식
-    private static final String NICKNAME_PATTERN = "^(?!.*[ㄱ-ㅎㅏ-ㅣ])[A-Za-z0-9가-힣]{1,10}$";
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void registerMember(MemberRegisterDto memberRegisterDto) {
-        // 회원가입 로직
+
+        // 1. 중복 검증
         String email = memberRegisterDto.getEmail();
-        String password = memberRegisterDto.getPassword();
         String nickname = memberRegisterDto.getNickname();
         String username = memberRegisterDto.getUsername();
 
-        // 1. 정규 표현식을 통한 유효성 검증
-        isValidate(email, password, nickname);
-        // 2. 중복 검증
         isNicknameDuplicated(nickname);
         isEmailDuplicated(email);
         isUsernameDuplicated(username);
-        // 3. 이메일 중복 검사는 따로 하고 프론트에서 고정 시키면 될듯
 
 
         String passwordEncode = passwordEncoder.encode(memberRegisterDto.getPassword());
