@@ -25,17 +25,14 @@ let y = null;
 
 
 onMounted(() => {
-
-    mapLevel = 9;
-    x = 37.5665;
-    y = 126.9780
-
     // 구 정보 불러오기 
     getGuData();
 });
 
 async function getGuData(){
-
+    mapLevel = 9;
+    x = 37.5665;
+    y = 126.9780
     await getGu()
     .then(data=>{
         areas = data;
@@ -47,7 +44,7 @@ async function getGuData(){
 }
 
 async function getDongData(code){
-
+    mapLevel=6;
     await getDong(code)
     .then(data=>{
         areas = data;
@@ -59,7 +56,7 @@ async function getDongData(code){
 }
 
 async function getAreaData(code){
-
+    mapLevel=4;
     await getArea(code)
     .then(data=>{
         areas = data;
@@ -85,6 +82,7 @@ const initMap = (x,y) => {
   const options = {
     center: new kakao.maps.LatLng(x, y),
     level:mapLevel,
+    disableDoubleClickZoom: true,
   };
   map = new kakao.maps.Map(container, options);
 
@@ -156,14 +154,12 @@ function createPolygon(area) {
         y = area.xpos;
         // 지도 확대, 폴리곤 다시 그리기
         if(area.size==0){ // 구 
-            mapLevel=6;
             getDongData(area.id);
         }
         else if (area.size ==1){
-            mapLevel=4;
             getAreaData(area.id);
         }else{
-
+            getGuData();
         }
     });
 
