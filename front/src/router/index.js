@@ -69,7 +69,7 @@ const routes = [
     component: AreaAnalytics
   },
   {
-    path: '/chart',
+    path: '/chart/:id',
     name: 'Chart',
     component: Chart2
   },
