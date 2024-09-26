@@ -11,42 +11,74 @@
             <!-- Step 1 -->
             <div v-if="currentStep === 1" key="step1" class="h-100 d-flex flex-column justify-content-between">
                 <div class="mb-4"> <!-- 간격 조정 -->
-                  <label for="location" class="form-label">창업하시려는 위치를 입력해 주세요</label>
+                  <h3 class="mb-4">
+                    창업하시려는 <span class="text-primary">위치</span>를 입력해 주세요
+                  </h3>
                   <div class="row"> <!-- 간격 조정 -->
-                    <div class="col-md-6">
+                    <div class="col-md-6 dropdown-container">
                       <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" v-model="gu" placeholder="구">
+                        <span class="input-group-text">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                          </svg>
+                        </span>
+                        <input type="text" class="form-control" v-model="gu" placeholder="구" @focus="showGuDropdown = true" @blur="hideGuDropdown">
+                      </div>
+                      <div v-if="showGuDropdown" class="dropdown-menu show custom-dropdown">
+                        <a v-for="guItem in gus" :key="guItem.code" class="dropdown-item" @click="selectGu(guItem)">
+                          {{ guItem.name }}
+                        </a>
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 dropdown-container">
                       <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" v-model="dong" placeholder="동">
+                        <span class="input-group-text">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                          </svg>
+                        </span>
+                        <input type="text" class="form-control" v-model="dong" placeholder="동" @focus="showDongDropdown = true" @blur="hideDongDropdown">
+                      </div>
+                      <div v-if="showDongDropdown" class="dropdown-menu show custom-dropdown">
+                        <a v-for="dongItem in dongs" :key="dongItem.code" class="dropdown-item"  @mousedown="selectDong(dongItem)">
+                          {{ dongItem.name }}
+                        </a>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="mb-4"> <!-- 간격 조정 -->
-                  <label class="form-label">원하는 프랜차이즈를 선택해주세요</label>
+                  <h3>원하는 <span class="text-primary">프랜차이즈</span>를 선택해주세요</h3>
                   <div class="row"> <!-- 간격 조정 -->
-                    <div class="col-md-6">
+                    <div class="col-md-6 dropdown-container">
                       <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" v-model="mainCategory" placeholder="대분류">
+                        <span class="input-group-text">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                          </svg>
+                        </span>
+                        <input type="text" class="form-control" v-model="category" placeholder="분류" @focus="showCategoryDropdown = true" @blur="hideCategoryDropdown">
+                      </div>
+                      <div v-if="showCategoryDropdown" class="dropdown-menu show custom-dropdown">
+                        <a v-for="category in categories" class="dropdown-item" @click="selectCategory(category)">
+                          {{ category.type }}
+                        </a>
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 dropdown-container">
                       <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" v-model="subCategory" placeholder="중분류">
+                        <span class="input-group-text">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                          </svg>
+                        </span>
+                        <input type="text" class="form-control" v-model="franchise.name" placeholder="프랜차이즈 선택" @focus="showFranchiseDropdown = true" @blur="hideFranchiseDropdown">
                       </div>
-                    </div>
-                  </div>
-                  <div class="mt-4">
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="bi bi-search"></i></span>
-                      <input type="text" class="form-control" v-model="franchise" placeholder="프랜차이즈 선택">
+                      <div v-if="showFranchiseDropdown" class="dropdown-menu show custom-dropdown">
+                        <a v-for="franchise in franchises" class="dropdown-item" @click="selectFranchise(franchise)">
+                          {{ franchise.name }}
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -125,16 +157,24 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getGu, getDong } from "@/api/region.js";
+import { getType, getFranchisesByType} from '@/api/franchise.js'
 import FranchiseInfoCard from '@/components/franchise/FranchiseInfoCard.vue';
 
 const gus = ref([])
 const dongs = ref([])
+const categories = ref([])
+const franchises = ref([])
+const showGuDropdown = ref(false)
+const showDongDropdown = ref(false)
+const showCategoryDropdown = ref(false)
+const showFranchiseDropdown = ref(false)
 
 const getGuInfos = () => {
   getGu(
     ({data}) => {
       console.log(data)
       gus.value = data
+      
     },
     (error) => {
       console.log(error)
@@ -142,12 +182,46 @@ const getGuInfos = () => {
   )
 }
 
+const getTypes = () => {
+  getType(
+    ({data}) => {
+      console.log(data)
+      categories.value = data
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
+const selectCategory = (payload) => {
+  category.value = payload.type
+  getFranchisesByType(
+    payload.type,
+    ({data}) => {
+      console.log(data)
+      franchises.value = data
+      showCategoryDropdown.value = false
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
+const selectFranchise = (payload) => {
+  franchise.value = payload
+  showFranchiseDropdown.value = false
+}
+
 const selectGu = (payload) => {
+  gu.value = payload.name
   getDong(
     payload.code,
     ({data}) => {
       console.log(data)
       dongs.value = data
+      showGuDropdown.value = false
     },
     (error) => {
       console.log(error)
@@ -155,17 +229,43 @@ const selectGu = (payload) => {
   )
 }
 
+const selectDong = (dongItem) => {
+  dong.value = dongItem.name
+  showDongDropdown.value = false
+}
+
+const hideGuDropdown = () => {
+  setTimeout(() => {
+    showGuDropdown.value = false
+  }, 200)
+}
+
+const hideDongDropdown = () => {
+  setTimeout(() => {
+    showDongDropdown.value = false
+  }, 200)
+}
+
+const hideCategoryDropdown = () => {
+  setTimeout(() => {
+    showCategoryDropdown.value = false
+  }, 200)
+}
+
+const hideFranchiseDropdown = () => {
+  setTimeout(() => {
+    showFranchiseDropdown.value = false
+  }, 200)
+}
+
 onMounted(() => {
-  getGuInfos()
-  selectGu({
-    code : 11110
-  })
+  getGuInfos(),
+  getTypes()
 })
 
 const currentStep = ref(1)
 const location = ref('')
-const mainCategory = ref('')
-const subCategory = ref('')
+const category = ref('')
 const franchise = ref('')
 const storeSize = ref('')
 const selectedFloor = ref('')
@@ -256,11 +356,12 @@ const submitForm = () => {
 const setParamsDefault = () => {
   currentStep.value = 1
   location.value = ''
-  mainCategory.value = ''
-  subCategory.value = ''
+  category.value = ''
   franchise.value = ''
   storeSize.value = ''
   selectedFloor.value = ''
+  gu.value = ''
+  dong.value = ''
 }
 </script>
 
@@ -329,5 +430,49 @@ const setParamsDefault = () => {
 .border-primary {
   border-color: #28a745 !important;
   box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.dropdown-container {
+  position: relative;
+}
+
+.custom-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  margin-top: 0;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  background-color: #fff;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+}
+
+.custom-dropdown .dropdown-item {
+  padding: 0.5rem 1rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+
+.custom-dropdown .dropdown-item:hover,
+.custom-dropdown .dropdown-item:focus {
+  color: #16181b;
+  text-decoration: none;
+  background-color: #f8f9fa;
+}
+
+.input-group {
+  position: relative;
+  z-index: 1;
 }
 </style>
