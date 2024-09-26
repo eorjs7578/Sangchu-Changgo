@@ -1,6 +1,7 @@
 package com.d108.project.domain.favorite.favoriteArea.entity;
 
 import com.d108.project.domain.area.entity.Area;
+import com.d108.project.domain.global.BaseTimeEntity;
 import com.d108.project.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Setter(value = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "favorite_business_areas")
-public class FavoriteArea {
+public class FavoriteArea extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
