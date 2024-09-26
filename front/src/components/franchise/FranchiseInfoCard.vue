@@ -4,7 +4,7 @@
       <i :class="['bi', isFavorite ? 'bi-star-fill text-warning' : 'bi-star']"></i>
     </div>
     <h6 class="card-subtitle mb-2 text-muted">{{ franchise.gu.name }} {{ franchise.dong.name }} {{ franchise.name }}</h6>
-    <h4 class="card-title">예상 창업 비용은 <p class="text-primary">{{ formatCurrency(totalCost) }}</p> 입니다.</h4>
+    <h4 class="card-title">예상 창업 비용은 <p></p> <span class="text-primary">{{ formatCurrency(totalCost) }}</span> 입니다.</h4>
     <table class="table table-borderless">
       <tbody>
         <tr v-for="(cost, index) in franchise.costs" :key="index">
@@ -31,9 +31,14 @@ const isFavorite = ref(false)
 // 숫자를 '억', '만원' 형식으로 변환하는 함수
 function formatCurrency(value) {
   if (value >= 10000) {
+    let result = '';
     const billions = Math.floor(value / 10000);
+    result += billions.toString() + '억 '
     const remainder = value % 10000;
-    return `${billions}억 ${remainder.toLocaleString()}만원`;
+    if(remainder > 0) {
+      result += remainder.toLocaleString() + '만원'
+    }
+    return result;
   } else {
     return `${(value).toLocaleString()}만원`;
   }
