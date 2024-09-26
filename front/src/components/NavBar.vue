@@ -3,19 +3,20 @@
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
       <h5>상추창고</h5>
-      <ul>
-        <li @click="closeCommunitySubmenu"><router-link to="/marketanalysis">상권분석</router-link></li>
-        <li @click="closeCommunitySubmenu"><router-link to="/interestareas">관심상권</router-link></li>
-        <li @click="toggleCommunitySubmenu" class="link">
-          커뮤니티
+      <ul class="nav-links">
+        <li @click="closeCommunitySubmenu">
+          <router-link to="/marketanalysis">상권분석</router-link>
         </li>
-         <!-- 프랜차이즈 메뉴 -->
-         <li @click="toggleFranchiseSubmenu" class="link">
-          프랜차이즈
+        <li @click="closeCommunitySubmenu">
+          <router-link to="/interestareas">관심상권</router-link>
         </li>
-        
+        <li @click="toggleCommunitySubmenu" class="link">커뮤니티</li>
+
+        <!-- 프랜차이즈 메뉴 -->
+        <li @click="toggleFranchiseSubmenu" class="link">프랜차이즈</li>
+
         <!-- 프랜차이즈 하위 메뉴 -->
-        <ul v-show="isFranchiseOpen ">
+        <ul v-show="isFranchiseOpen">
           <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal1">관심프차</li>
           <FavoriteFranchise class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
           <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal2">예상비용</li>
@@ -24,11 +25,24 @@
 
       </ul>
 
-      <!-- 로그인/회원가입 링크 -->
-      <ul class="auth-links">
-        <li @click="closeCommunitySubmenu"><router-link to="/login">로그인</router-link></li>
-        <li @click="closeCommunitySubmenu"><router-link to="/signup">회원가입</router-link></li>
-      </ul>
+      <!-- 로그인/회원가입 또는 아바타 이미지 -->
+      <div class="bottom-container">
+        <ul class="auth-links">
+          <li v-if="!isLoggedIn" @click="closeCommunitySubmenu">
+            <router-link to="/login">로그인</router-link>
+          </li>
+          <li v-if="!isLoggedIn" @click="closeCommunitySubmenu">
+            <router-link to="/signup">회원가입</router-link>
+          </li>
+          <li v-else class="avatar-container">
+            <img src="@/assets/img/account.png" alt="User Avatar" class="avatar-image" @click="toggleAvatarMenu" />
+            <div v-show="isAvatarMenuOpen" class="avatar-dropdown">
+              <router-link to="/mypage">마이페이지</router-link>
+              <button @click="logout" class="logout-btn">로그아웃</button>
+            </div>
+          </li>
+        </ul>
+      </div>
     </nav>
 
     <!-- 두 번째 서브메뉴 (커뮤니티를 클릭할 때 표시) -->
@@ -48,26 +62,52 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import FranchiseFee from '@/views/franchise/FranchiseFee.vue'
-import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue'
+import { ref, onMounted } from 'vue';
+import FranchiseFee from '@/views/franchise/FranchiseFee.vue';
+import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue';
 
+const isCommunityOpen = ref(false);
+const isFranchiseOpen = ref(false);
+const isAvatarMenuOpen = ref(false);
 
-const isCommunityOpen = ref(false)
-const isFranchiseOpen = ref(false)
+// 로그인 상태 변수 (localStorage에서 로그인 상태 확인)
+const isLoggedIn = ref(localStorage.getItem('isLoggedIn') === 'true');
 
 const toggleCommunitySubmenu = () => {
   isCommunityOpen.value = !isCommunityOpen.value;
-}
+};
 
 const closeCommunitySubmenu = () => {
-  isCommunityOpen.value = false
-}
+  isCommunityOpen.value = false;
+};
 
 const toggleFranchiseSubmenu = () => {
-  isCommunityOpen.value = false
-  isFranchiseOpen.value = !isFranchiseOpen.value
-}
+  isCommunityOpen.value = false;
+  isFranchiseOpen.value = !isFranchiseOpen.value;
+};
+
+// 아바타 메뉴 토글 함수
+const toggleAvatarMenu = () => {
+  isAvatarMenuOpen.value = !isAvatarMenuOpen.value;
+};
+
+// 로그아웃 함수
+const logout = () => {
+  isLoggedIn.value = false;
+  localStorage.removeItem('isLoggedIn'); // 로그인 상태 제거
+  isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
+
+  router.push("/").then(() => {
+    window.location.reload();
+  }).catch(err => {
+    console.error('Navigation error:', err);
+  });
+};
+
+// 페이지가 로드될 때 로그인 상태 확인 (onMounted 사용)
+onMounted(() => {
+  isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';
+});
 </script>
 
 <style scoped>
@@ -86,7 +126,17 @@ const toggleFranchiseSubmenu = () => {
   padding: 1rem;
   height: 100vh; /* 네비게이션 바의 높이를 화면 전체로 설정 */
   display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 요소들을 위아래로 균일하게 배치 */
+}
+
+/* 네비게이션 아이템 중앙 정렬 */
+.nav-links {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 2rem; /* 항목 사이 간격 추가 */
 }
 
 .navbar ul {
@@ -131,10 +181,65 @@ const toggleFranchiseSubmenu = () => {
   margin: 0;
 }
 
-.auth-links li {
-  margin-bottom: 1.5rem;
-  font-size: 1.2rem;
+/* 아바타 컨테이너를 하단으로 고정 */
+.bottom-container {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* 아바타 이미지 스타일 */
+.avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.avatar-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+/* 아바타 드롭다운을 오른쪽으로 배치 */
+.avatar-dropdown {
+  position: absolute;
+  left: 80px; /* 아바타 오른쪽으로 드롭다운 메뉴 배치 */
+  top: -100px;
+  background-color: #f3e8fc;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 150px;
+  padding: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.avatar-dropdown a,
+.avatar-dropdown button {
+  display: block;
+  padding: 8px 12px;
+  color: #333;
   text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.avatar-dropdown button {
+  background: none;
+  border: none;
+  color: #dc3545;
+}
+
+.avatar-dropdown button:hover {
+  background-color: #f7d7d7;
+}
+
+.avatar-dropdown a:hover {
+  background-color: #eee;
 }
 
 /* 기본 링크 스타일 */
