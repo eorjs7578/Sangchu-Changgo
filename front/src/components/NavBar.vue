@@ -26,8 +26,8 @@
 
       <!-- 로그인/회원가입 링크 -->
       <ul class="auth-links">
-        <li @click="closeCommunitySubmenu"><router-link to="/login">로그인</router-link></li>
-        <li @click="closeCommunitySubmenu"><router-link to="/signup">회원가입</router-link></li>
+        <li @click="closeCommunitySubmenu"><router-link to="/members/login">로그인</router-link></li>
+        <li @click="closeCommunitySubmenu"><router-link to="/members/signup">회원가입</router-link></li>
       </ul>
     </nav>
 

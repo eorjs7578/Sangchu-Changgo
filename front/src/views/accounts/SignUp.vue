@@ -4,29 +4,46 @@
       <div class="signup-container">
         <h2>Sign Up</h2>
         <p>회원가입 후 다양한 기능을 이용하세요.</p>
-        <form @submit.prevent="signUp">
+        <form @submit.prevent="handleSignUp">
           <!-- 이름 필드 -->
           <label for="username">아이디</label>
           <input type="text" id="username" placeholder="아이디" v-model="username" />
 
           <!-- 닉네임 필드 -->
           <label for="nickname">닉네임</label>
-          <input type="text" id="nickname" placeholder="닉네임" v-model="nickname" />
-          <span v-if="nicknameExists" class="error-text">사용 중인 닉네임 입니다</span>
-
+          <div class="d-flex justify-content-between mb-1">
+            <input
+                type="text"
+                id="nickname"
+                placeholder="닉네임"
+                v-model="nickname"
+                :disabled="isNicknameChecked"
+            />
+            <button
+                type="button"
+                @click="handleNickname(nickname)"
+                :disabled="isNicknameChecked"
+                :class="{ 'btn btn-secondary': isNicknameChecked, 'btn btn-primary': !isNicknameChecked }"
+            >
+              닉네임 중복 확인
+            </button>
+          </div>
+            <span v-if="isNicknameError" class="error-text">{{nicknameMessage}}</span>
           <!-- 이메일, 인증 -->
           <label for="email">이메일</label>
           <div class="email-verification">
             <input type="email" id="email" placeholder="example@example.com" v-model="email" />
-            <button type="button" @click="getAuthCode">인증번호 전송</button>
+            <button type="button" @click="handleGetAuthCode">인증번호 전송</button>
           </div>
 
           <!-- 인증번호 확인 -->
           <div class="verification-code">
-            <input type="text" placeholder="인증번호" v-model="verificationCode" />
+            <div class="input-wrapper">
+              <input type="text" placeholder="인증번호" v-model="authCode" />
+              <span class="timer">{{ formatTime(validationTime) }}</span>
+            </div>
             <div class="verification-wrapper">
-              <button type="button" @click="verifyAuthCode">인증번호 확인</button>
-              <span class="timer">3:31</span>
+              <button type="button" @click="handleCheckAuthCode">인증번호 확인</button>
             </div>
           </div>
 
@@ -42,80 +59,160 @@
           <button type="submit">Sign Up</button>
         </form>
 
-        <p>이미 계정이 있으신가요? <router-link to="/login">Log In</router-link></p>
+        <p>이미 계정이 있으신가요? <router-link to="/members/login">Log In</router-link></p>
       </div>
     </div>
   </div>
 </template>
   
 <script setup>
-  import { ref } from "vue";
-  import { api } from "@/lib/api.js";
+  import { ref, watch } from "vue";
   import { useRouter } from "vue-router";
+  import { formatTime } from "@/util/Util.js";
+  import {
+    isUsernameValidated,
+    isEmailValidated,
+    isNicknameValidated,
+    isPasswordValidated,
+    isNicknameDuplicated,
+    checkAuthCode,
+    getAuthCode,
+    signUp, login
+  } from "@/util/AuthenticationUtil.js";
+
 
   const router = useRouter();
-
+  const nicknameMessage = ref("");
   const username = ref("");
   const password = ref("");
   const email = ref("");
   const passwordConfirm = ref("");
   const nickname = ref("");
   const authCode = ref("");
+  const validationTime = ref(300);
+  const isEmailSend = ref(false);
   const isEmailChecked = ref(false);
-  const isNicknameExists = ref(false);
+  const isNicknameError = ref(false);
+  const isNicknameChecked = ref(false);
 
-  // 이메일 정규 표현식
-  function validateEmail(email) {
-    return /^[A-Za-z0-9]+@(.+)$/i.test(email.value);
-  }
 
-  // 닉네임 정규 표현식 (10글자 이하, 한글 자모 단독 불가)
-  function validateNickname(nickname) {
-    return /^(?!.*[ㄱ-ㅎㅏ-ㅣ])[A-Za-z0-9가-힣]{1,10}$/.test(nickname.value);
-  }
-
-  // 8자 이상, 숫자1, 특문1 포함
-  function validatePassword(password) {
-    return /^(?=.*[0-9])(?=.*[a-z])(?=.*[^a-zA-Z0-9])(?=\S+$).{8,}$/.test(password.value);
-  }
-
-  function signUp() {
-    if (!validateEmail(email) || !validateNickname(nickname) || !validatePassword(password.value) || !(password.value == passwordConfirm.value)) {
-      return alert("예외 처리 중")
+  function handleSignUp() {
+    let err = ""
+    switch (true) {
+      case !isUsernameValidated(username.value):
+        err = "아이디는 영어와 숫자를 포함하여 20자 이내로 설정해야 합니다."
+        break;
+      case !isNicknameChecked.value:
+        err = "닉네임 중복 확인을 해주세요."
+        break;
+      case !isEmailChecked.value:
+        err = "이메일 인증을 해주세요."
+        break;
+      case !isPasswordValidated(password.value):
+        err = "비밀번호는 특수문자와 숫자를 포함한 8자 이상 이어야 합니다."
+        break;
+      case !password.value:
+        err = "비밀번호를 입력해주세요."
+        break;
+      case password.value !== passwordConfirm.value:
+        err = "비밀번호 확인과 일치하지 않습니다."
+        break;
+      default:
+        break;
     }
 
-    else {
-      api.post("/api/members/signup", {
-        nickname: nickname.value,
-        username: username.value,
-        password: password.value,
-        email: email.value,
-      })
-          // 완성되면 메인 페이지로
-          .then(() => router.push("/"))
-          // 오류 시 에러 메시지 출력
-          .catch(err => console.log(err))
-    }}
+    if (err) {
+      alert(err)
+      return;
+    }
 
-  function verifyAuthCode() {
-    api.post("/api/members/auth-email", {
-      email: email.value,
-      auth_code: authCode.value
-    })
+    signUp(username.value, nickname.value, email.value, password.value)
         .then(response => {
-          alert("인증되었습니다.")
-          isEmailChecked.value = true
+          // 여기 위치에서 로그인
+          if (response) {
+            login(username.value, password.value)
+                .then(() => router.push("/"))
+          }
+        })
+        .catch((error) => {
+          alert("회원가입에 실패했습니다.")
+          console.error(error)
+        })
+    }
+
+  // 닉네임 유효성 및 중복 확인
+  function handleNickname(nickname) {
+    if (!isNicknameValidated(nickname)) {
+      nicknameMessage.value = "유효하지 않은 닉네임 입니다.";
+      isNicknameError.value = true;
+      return;
+    }
+
+    isNicknameDuplicated(nickname).then(isDuplicated => {
+      if (isDuplicated) {
+        nicknameMessage.value = "사용할 수 있는 닉네임 입니다.";
+        isNicknameError.value = false;
+        isNicknameChecked.value = true;
+      } else {
+        nicknameMessage.value = "이미 존재하는 닉네임 입니다.";
+        isNicknameError.value = true;
+      }
+    }).catch(error => {
+      console.error(error);
+      nicknameMessage.value = "닉네임 확인 중 오류가 발생했습니다.";
+      isNicknameError.value = true;
+    });
+  }
+
+  // 이메일 인증번호 발송
+  function handleGetAuthCode() {
+    if (isEmailValidated(email.value)) {
+      alert("인증번호가 이메일로 발송되었습니다. \n네트워크 환경에 따라 발송에 시간이 걸릴 수 있습니다.")
+      isEmailSend.value = true;
+      validationTime.value = 300;
+      getAuthCode(email.value)
+    } else {
+      alert("유효하지 않은 이메일 입니다. \n이메일을 다시 확인해주세요.")
+    }
+  }
+
+  // 이메일 인증번호 확인
+  function handleCheckAuthCode() {
+
+    if (!isEmailSend.value) {
+      alert("인증 코드를 먼저 받아주세요.")
+      return;
+    }
+
+    checkAuthCode(email.value, authCode.value)
+        .then(isVerified => {
+          if (isVerified) {
+            alert("인증되었습니다.")
+            isEmailChecked.value = true;
+          }
+          else {
+            alert("인증 번호를 다시 한 번 확인해주세요.")
+          }
         })
   }
 
-  function getAuthCode() {
-    api.get("/api/members/auth-email", {params: {
-        email: email.value
-      }})
-        .then(response => {
-          alert("인증번호가 이메일로 발송되었습니다.")
-        })
-  }
+
+  // 이메일 시간 제한 타이머
+  let timer = null;
+  watch([isEmailSend, validationTime], ([newIsEmailSend, newValidationTime]) => {
+    if (timer) {
+      clearInterval(timer);
+    }
+    if (newIsEmailSend && newValidationTime > 0) {
+      timer = setInterval(() => {
+        validationTime.value -= 1;
+      }, 1000)}
+    else if (newValidationTime === 0) {
+      isEmailSend.value = false;
+      clearInterval(timer);
+      timer = null;
+    }
+  })
 </script>
 
 <style scoped>
@@ -233,4 +330,5 @@
     margin-top: -0.5rem;
     margin-bottom: 0.5rem;
   }
+
 </style>

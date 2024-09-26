@@ -2,18 +2,18 @@
   <div class="login-container">
     <h2>Log In</h2>
     <p>로그인 후 다양한 기능을 이용하세요.</p>
-    <form @submit.prevent="login">
+    <form @submit.prevent="handleLogin">
       <label for="username">아이디</label>
       <input type="username" id="username" placeholder="아이디" v-model="username" />
 
       <label for="password">비밀번호</label>
       <input type="password" id="password" placeholder="비밀번호" v-model="password" />
 
-      <p><router-link to="/passwordrecovery">비밀번호가 생각나지 않으신가요?</router-link></p>
+      <p><router-link to="/members/password">비밀번호가 생각나지 않으신가요?</router-link></p>
       <button type="submit">Log In</button>
     </form>
 
-    <p>아직 회원이 아니신가요? <router-link to="/signup">Sign up</router-link></p>
+    <p>아직 회원이 아니신가요? <router-link to="/members/signup">Sign up</router-link></p>
 
     <!-- 외부 로그인 버튼 -->
     <div class="external-login-buttons">
@@ -34,31 +34,20 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { api } from "@/lib/api.js";
-import { useRouter } from "vue-router";
+  import { ref } from "vue";
+  import { useRouter } from "vue-router";
+  import { login, kakaoLogin, naverLogin } from "@/util/AuthenticationUtil.js";
 
   const router = useRouter();
   const username = ref("");
   const password = ref("");
 
-  const kakaoLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:5173&mode=login";
-  }
-  const naverLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:5173&mode=login";
+  function handleLogin() {
+    login(username.value, password.value)
+        .then(() => router.push("/"))
+        .catch((err) => console.log(err));
   }
 
-  function login() {
-    api.post("/api/members/login", {
-      username: username.value,
-      password: password.value,
-    })
-        .then(response => {
-          router.push("/")
-        })
-        .catch(err => console.log(err))
-  }
 
 </script>
 

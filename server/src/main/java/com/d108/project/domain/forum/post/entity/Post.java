@@ -5,6 +5,7 @@ import com.d108.project.domain.forum.reply.entity.Reply;
 import com.d108.project.domain.global.BaseTimeEntity;
 import com.d108.project.domain.member.entity.Member;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,8 +37,11 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies;
 
+    @NotNull
     private String title;
+    @NotNull
     private String content;
+
     private Long view;
 
     @Builder

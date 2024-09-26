@@ -71,8 +71,11 @@ public class MemberController implements MemberApi {
     @Operation(summary = "인증 번호 확인", description = "레디스에서 인증번호 비교")
     @Override
     public ResponseEntity<Void> checkAuthCode(EmailAuthCheckDto emailAuthCheckDto) {
-        redisEmailService.checkAuthCode(emailAuthCheckDto);
-        return ResponseEntity.ok().build();
+        if (redisEmailService.checkAuthCode(emailAuthCheckDto)) {
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 
     @Operation(summary = "유저의 댓글 전체 조회", description =

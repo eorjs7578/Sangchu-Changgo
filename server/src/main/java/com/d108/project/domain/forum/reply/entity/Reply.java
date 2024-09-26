@@ -4,6 +4,7 @@ import com.d108.project.domain.global.BaseTimeEntity;
 import com.d108.project.domain.forum.post.entity.Post;
 import com.d108.project.domain.member.entity.Member;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class Reply extends BaseTimeEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @NotNull
     private String content;
 
     @Builder
