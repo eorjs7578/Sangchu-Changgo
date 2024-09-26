@@ -1,6 +1,7 @@
 package com.d108.project.domain.forum.saleStorePost.service;
 
 import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostCreateDto;
+import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostTypeListDto;
 import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostUpdateDto;
 import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostResponseDto;
 
@@ -28,4 +29,6 @@ public interface SaleStorePostService {
 
     // 모든 매물 게시글 ID 조회
     List<Long> getAllSaleStorePostIds();
+
+    SaleStorePostTypeListDto getSaleStorePostTypeList();
 }
