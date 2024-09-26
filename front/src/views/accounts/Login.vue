@@ -49,16 +49,26 @@ import { useRouter } from "vue-router";
     window.location.href = "http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:5173&mode=login";
   }
 
-  function login() {
-    api.post("/api/members/login", {
-      username: username.value,
-      password: password.value,
+  // 로그인 함수
+function login() {
+  api.post("/api/members/login", {
+    username: username.value,
+    password: password.value,
+  })
+    .then(response => {
+      // 로그인 성공시 localStorage에 저장
+      localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
+
+      // 메인 페이지로 리다이렉트
+      router.push("/").then(() => {
+        window.location.reload();
+      });
     })
-        .then(response => {
-          router.push("/")
-        })
-        .catch(err => console.log(err))
-  }
+    .catch(err => {
+      console.log(err);
+      alert("로그인에 실패했습니다.");
+    });
+}
 
 </script>
 

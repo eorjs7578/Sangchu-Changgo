@@ -9,13 +9,24 @@ import MarketAnalysis from '@/views/MarketAnalysis.vue';
 import AreaAnalytics from '@/views/areaAnalytics/AreaAnalytics.vue';
 import Chart from '@/views/areaAnalytics/Chart.vue';
 import Mypage from '@/views/accounts/Mypage.vue';
-
+import SurveyForm from '@/components/areaAnalytics/SurveyForm.vue';
+import SurveyResult from '@/components/areaAnalytics/SurveyResult.vue';
 
 const routes = [
   {
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/surveyForm',
+    name: 'SurveyForm',
+    component: SurveyForm
+  },
+  {
+    path: '/surveyResult',
+    name: 'SurveyResult',
+    component: SurveyResult
   },
   {
     path: '/signup',
