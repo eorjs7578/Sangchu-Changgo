@@ -20,11 +20,15 @@ let areas=ref([]);
 let polygons = ref([]);
 let script=null;
 let mapLevel=null;
+let x = null;
+let y = null;
 
 
 onMounted(() => {
 
     mapLevel = 9;
+    x = 37.5665;
+    y = 126.9780
 
     // 구 정보 불러오기 
     getGuData();
@@ -32,47 +36,38 @@ onMounted(() => {
 
 async function getGuData(){
 
-    await getGu({
-        'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MSIsImlhdCI6MTcyNzIzNjY1MywiZXhwIjoxNzI3MjQwMjUzfQ.QoTNj3VWdI_-AyELrdCN50PMw4G_DF3CGCsHFlexIbeEJOL3GnO5UEuZiHdBcbMBdyy16gDb2HOUAsrDBqEmiA'
-    })
+    await getGu()
     .then(data=>{
         areas = data;
-        console.log(areas);
     })
     .catch(error=>{
         console.error("Error:", error);
     })
-    loadMap(37.5665, 126.9780);
+    loadMap(x, y);
 }
 
 async function getDongData(code){
 
-    await getDong(code,{
-        'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MSIsImlhdCI6MTcyNzIzNjY1MywiZXhwIjoxNzI3MjQwMjUzfQ.QoTNj3VWdI_-AyELrdCN50PMw4G_DF3CGCsHFlexIbeEJOL3GnO5UEuZiHdBcbMBdyy16gDb2HOUAsrDBqEmiA'
-    })
+    await getDong(code)
     .then(data=>{
         areas = data;
-        console.log(areas);
     })
     .catch(error=>{
         console.error("Error:", error);
     })
-    loadMap(37.5665, 126.9780);
+    loadMap(x, y);
 }
 
 async function getAreaData(code){
 
-    await getArea(code,{
-        'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MSIsImlhdCI6MTcyNzIzNjY1MywiZXhwIjoxNzI3MjQwMjUzfQ.QoTNj3VWdI_-AyELrdCN50PMw4G_DF3CGCsHFlexIbeEJOL3GnO5UEuZiHdBcbMBdyy16gDb2HOUAsrDBqEmiA'
-    })
+    await getArea(code)
     .then(data=>{
         areas = data;
-        console.log(areas);
     })
     .catch(error=>{
         console.error("Error:", error);
     })
-    loadMap(37.5665, 126.9780);
+    loadMap(x, y);
 }
 
 function loadMap(x,y){
@@ -94,7 +89,6 @@ const initMap = (x,y) => {
   map = new kakao.maps.Map(container, options);
 
   drawPolygons();
-  console.log(areas.value)
 };
 
 function drawPolygons(){
@@ -105,7 +99,6 @@ function drawPolygons(){
     polygons.value=[];
 
     if (areas && areas.length > 0) {
-        console.log("hi")
         for (let i = 0; i < areas.length; i++) {
             const polygon = createPolygon(areas[i]);
             polygons.value.push(polygon);  // 생성한 폴리곤을 배열에 저장
@@ -131,7 +124,6 @@ function parsePolygon(polygonStr) {
 
 // 다각형을 생상하고 이벤트를 등록하는 함수입니다
 function createPolygon(area) {
-    console.log("area");
  // polygon 문자열을 처리하여 경로(path)를 생성
     const path = parsePolygon(area.polygon);
     // 다각형을 생성합니다 
@@ -160,17 +152,29 @@ function createPolygon(area) {
 
     // 다각형에 click 이벤트를 등록하고 이벤트가 발생하면 다각형의 이름과 면적을 인포윈도우에 표시합니다 
     kakao.maps.event.addListener(polygon, 'click', function(mouseEvent) {
-        console.log("click")
+        x = area.ypos;
+        y = area.xpos;
         // 지도 확대, 폴리곤 다시 그리기
-        loadMap(area.ypos, area.xpos);
+        if(area.size==0){ // 구 
+            mapLevel=6;
+            getDongData(area.id);
+        }
+        else if (area.size ==1){
+            mapLevel=4;
+            getAreaData(area.id);
+        }else{
+
+        }
     });
 
     return polygon; 
 }
 
-watch(areas, () => {
-    drawPolygons();  // areas 값이 변경되면 폴리곤을 다시 그림
-});
+// watch(areas, () => {
+//     loadMap(x, y);  // areas 값이 변경되면 폴리곤을 다시 그림
+// },
+// { deep: true }
+// );
 
 </script>
 
