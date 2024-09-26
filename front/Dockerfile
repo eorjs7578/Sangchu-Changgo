@@ -18,7 +18,7 @@ RUN ls -a /home
 RUN ls 
 
 # NGINX 설정 파일 복사
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 # 빌드된 파일을 Nginx의 HTML 경로로 복사
 COPY --from=build-stage /app/dist /usr/share/nginx/html
