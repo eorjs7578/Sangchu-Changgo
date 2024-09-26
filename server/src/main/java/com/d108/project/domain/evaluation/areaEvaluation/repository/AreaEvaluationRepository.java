@@ -6,9 +6,10 @@ import com.d108.project.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AreaEvaluationRepository extends JpaRepository<AreaEvaluation, Long> {
     List<AreaEvaluation> findAllByArea(Area area);
-    List<AreaEvaluation> findAllByAreaAndMember(Area area, Member member);
+    Optional<AreaEvaluation> findByAreaAndMember(Area area, Member member);
 
 }

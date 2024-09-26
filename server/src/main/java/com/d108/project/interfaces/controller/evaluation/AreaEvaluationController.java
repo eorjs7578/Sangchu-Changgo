@@ -47,9 +47,9 @@ public class AreaEvaluationController implements AreaEvaluationAPI {
 
     // 특정 상권의 평가 조회 (GET)
     @Operation(summary = "[Member] 자신이 평가한 특정 상권의 평가 조회", description = "")
-    public ResponseEntity<List<AreaEvaluationDto>> getEvaluationsByArea(Member member, Long areaId) {
-        List<AreaEvaluationDto> evaluations = areaEvaluationService.getAllEvaluationsByAreaAndMember(member, areaId);
-        return ResponseEntity.ok(evaluations);
+    public ResponseEntity<AreaEvaluationDto> getEvaluationsByArea(Member member, Long areaId) {
+        AreaEvaluationDto evaluation = areaEvaluationService.getEvaluationsByAreaAndMember(member, areaId);
+        return ResponseEntity.ok(evaluation);
     }
 
     @Operation(summary = "[ALL] 특정 상권의 평가들의 통계 조회", description = "")
