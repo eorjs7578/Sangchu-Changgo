@@ -31,7 +31,7 @@
         <div class="mb-3">
           <h3 class="card-subtitle text-muted">일일 평균 유동인구</h3>
           <p class="display-4 font-weight-bold text-primary">
-            4,110,178<span class="h6">명 입니다.</span>
+            <span class="h6"> {{DailyPopulation}}명 입니다.</span>
           </p>
         </div>
       </div>
@@ -47,20 +47,72 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue'; // Composition API에서 필요한 함수들 임포트
+import { getDailyPopulation,  getWeeklyPopulation ,getHourlyPopulation} from "@/api/analytic.js"; // API 함수 가져오기
+
 export default {
   name: "Dashboard",
-  data() {
+  setup() {
+    const favorite = ref(false); // 좋아요 여부를 나타내는 데이터
+    const DailyPopulation = ref(null); // 유동인구 데이터
+    const WeeklyPopulation = ref(null); // 유동인구 데이터
+    const HourlyPopulation = ref(null); // 유동인구 데이터
+    const daysOfWeek = [
+      ref(null), // Monday
+      ref(null), // Tuesday
+      ref(null), // Wednesday
+      ref(null), // Thursday
+      ref(null), // Friday
+      ref(null), // Saturday
+      ref(null)  // Sunday
+    ];
+    const loading = ref(true); // 데이터 로딩 상태
+
+    const toggleFavorite = () => {
+      favorite.value = !favorite.value; // 버튼을 클릭하면 좋아요 상태 변경
+    };  
+
+    onMounted(() => {
+      // 컴포넌트가 마운트되면 데이터 호출
+      getDailyPopulation('3110321', (data) => {
+        DailyPopulation.value = data.data; // 성공 시 데이터 설정
+        loading.value = false; // 로딩 상태 변경
+
+      }, (error) => {
+        console.error("일평균 데이터 호출 오류:", error); // 실패 시 오류 출력
+        loading.value = false; // 로딩 상태 변경
+      });
+
+      getWeeklyPopulation('3110321', (data) => {
+        WeeklyPopulation.value = data.data;
+        loading.value = false; // 로딩 상태 변경
+      }, (error) => {
+        console.error("요일 데이터 호출 오류:", error); // 실패 시 오류 출력
+        loading.value = false; // 로딩 상태 변경
+      });
+
+      getHourlyPopulation('3110321', (data) => {
+        HourlyPopulation.value = data.data;
+        loading.value = false; // 로딩 상태 변경
+      }, (error) => {
+        console.error("요일 데이터 호출 오류:", error); // 실패 시 오류 출력
+        loading.value = false; // 로딩 상태 변경
+      });
+    });
+
     return {
-      favorite: false, // 좋아요 여부를 나타내는 데이터
+      favorite,
+      DailyPopulation,
+      WeeklyPopulation,
+      HourlyPopulation,
+      loading,
+      toggleFavorite,
     };
-  },
-  methods: {
-    toggleFavorite() {
-      this.favorite = !this.favorite; // 버튼을 클릭하면 좋아요 상태 변경
-    },
   },
 };
 </script>
+
+
 
 <style scoped>
 .nav-link.active {

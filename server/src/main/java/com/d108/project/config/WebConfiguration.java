@@ -8,8 +8,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.HashMap;
-
 @Configuration
 @RequiredArgsConstructor
 public class WebConfiguration implements WebMvcConfigurer {
@@ -44,9 +42,4 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .allowCredentials(true)
                 .maxAge(3600);
     }
-HashMap<Integer,Integer> hm = new HashMap<>();
-    int[] f = new int[1];
-
-
 }
-

@@ -35,16 +35,15 @@
     <nav class="submenu" v-if="isCommunityOpen">
       <h1>커뮤니티</h1>
       <ul>
-        <li><router-link to="/community/marketBoard">상권 게시판</router-link></li>
-        <li><router-link to="/community/franchiseboard">프랜차이즈 게시판</router-link></li>
-        <li><router-link to="/community/propertyboard">상권 매물 게시판</router-link></li>
+        <li><router-link to="/CreatePost">게시글 작성</router-link></li>
+        <li><router-link to="/BoardList">게시글 목록</router-link></li>
+        <!-- <li><router-link to="/CreatePost">상권 매물 게시판</router-link></li> -->
       </ul>
     </nav>
 
     <!-- 메인 콘텐츠 영역 -->
-    <div class="content">
-
-    </div>
+    <!-- <div class="content">
+    </div> -->
   </div>
 </template>
 
@@ -77,7 +76,6 @@ const toggleFranchiseSubmenu = () => {
   display: flex;
   height: 100vh;
   width: 100vw;
-  padding:0;
 }
 
 /* 네비게이션 바 설정 */
@@ -119,7 +117,8 @@ const toggleFranchiseSubmenu = () => {
 
 /* 메인 콘텐츠 영역 */
 .content {
-  flex-grow: 1; 
+  flex-grow: 1; /* 메인 콘텐츠가 사이드바를 제외한 나머지 공간을 채움 */
+  padding: 2rem;
   background-color: #f3f4f6;
   overflow-y: auto;
 }

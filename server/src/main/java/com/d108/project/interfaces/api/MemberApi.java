@@ -34,7 +34,7 @@ public interface MemberApi {
     ResponseEntity<Void> sendAuthEmail(@RequestParam String email) throws MessagingException;
 
     @PostMapping("/auth-email")
-    ResponseEntity<Void> checkAuthCode(EmailAuthCheckDto emailAuthCheckDto);
+    ResponseEntity<Void> checkAuthCode(@RequestBody EmailAuthCheckDto emailAuthCheckDto);
 
     @GetMapping("/replies")
     ResponseEntity<List<ReplyByMemberIdResponseDto>> getMembersReplies(@AuthenticationPrincipal Member member);
