@@ -30,6 +30,7 @@ const routes = [
     name: "signUp",
     component: SignUp,
   },
+  {
     path: '/surveyForm',
     name: 'SurveyForm',
     component: SurveyForm
