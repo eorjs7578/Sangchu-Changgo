@@ -10,8 +10,12 @@ function getFranchisesByType(type,success,fail) {
   local.get(`/api/franchises/type/${type}`).then(success).catch(fail);
 }
 
+function getFranchisesFee(id,success,fail) {
+  local.get(`/api/franchises/fee/${id}`).then(success).catch(fail);
+}
 
 export {
   getType,
-  getFranchisesByType
+  getFranchisesByType,
+  getFranchisesFee
 }

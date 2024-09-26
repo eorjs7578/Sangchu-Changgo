@@ -22,7 +22,7 @@
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
                         </span>
-                        <input type="text" class="form-control" v-model="gu" placeholder="구" @focus="showGuDropdown = true" @blur="hideGuDropdown">
+                        <input type="text" class="form-control" v-model="gu.name" placeholder="구" @focus="showGuDropdown = true" @blur="hideGuDropdown">
                       </div>
                       <div v-if="showGuDropdown" class="dropdown-menu show custom-dropdown">
                         <a v-for="guItem in gus" :key="guItem.code" class="dropdown-item" @click="selectGu(guItem)">
@@ -37,7 +37,7 @@
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
                         </span>
-                        <input type="text" class="form-control" v-model="dong" placeholder="동" @focus="showDongDropdown = true" @blur="hideDongDropdown">
+                        <input type="text" class="form-control" v-model="dong.name" placeholder="동" @focus="showDongDropdown = true" @blur="hideDongDropdown">
                       </div>
                       <div v-if="showDongDropdown" class="dropdown-menu show custom-dropdown">
                         <a v-for="dongItem in dongs" :key="dongItem.code" class="dropdown-item"  @mousedown="selectDong(dongItem)">
@@ -147,7 +147,7 @@
               <div class="card mb-4">
                 <FranchiseInfoCard :franchise="myFranchise"/>
               </div>
-              <h6 class="mb-3">다른 프랜차이즈는 어때요?</h6>
+              <!-- <h6 class="mb-3">다른 프랜차이즈는 어때요?</h6>
               <div class="row g-3">
                 <div class="row overflow-x">
                   <div class="col-auto" v-for="(franchise, index) in otherFranchises" :key="index">
@@ -156,7 +156,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <button @click="prevStep" class="btn btn-secondary w-100 mt-4">이전</button>
             </div>
           </transition>
@@ -168,8 +168,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getGu, getDong } from "@/api/region.js";
-import { getType, getFranchisesByType} from '@/api/franchise.js'
+import { getGu, getDong, getDongRentFee } from "@/api/region.js";
+import { getType, getFranchisesByType, getFranchisesFee} from '@/api/franchise.js'
 import FranchiseInfoCard from '@/components/franchise/FranchiseInfoCard.vue';
 
 const gus = ref([])
@@ -180,6 +180,15 @@ const showGuDropdown = ref(false)
 const showDongDropdown = ref(false)
 const showCategoryDropdown = ref(false)
 const showFranchiseDropdown = ref(false)
+const currentStep = ref(1)
+const location = ref('')
+const category = ref('')
+const franchise = ref('')
+const storeSize = ref('')
+const selectedFloor = ref('')
+const gu = ref('')
+const dong = ref('')
+
 
 const getGuInfos = () => {
   getGu(
@@ -227,7 +236,7 @@ const selectFranchise = (payload) => {
 }
 
 const selectGu = (payload) => {
-  gu.value = payload.name
+  gu.value = payload
   getDong(
     payload.code,
     ({data}) => {
@@ -242,7 +251,7 @@ const selectGu = (payload) => {
 }
 
 const selectDong = (dongItem) => {
-  dong.value = dongItem.name
+  dong.value = dongItem
   showDongDropdown.value = false
 }
 
@@ -270,32 +279,98 @@ const hideFranchiseDropdown = () => {
   }, 200)
 }
 
+const nextStep = () => {
+  currentStep.value++
+}
+
+const prevStep = () => {
+  currentStep.value--
+}
+
+const showCostBreakdown = () => {
+  getFranchisesFee(
+    franchise.value.id,
+    ({data}) => {
+      console.log(data)
+      myFranchise.value.name = data.name;
+      myFranchise.value.costs = [
+          { name: '가맹비', amount: data.franchise_fee },
+          { name: '보증금', amount: data.deposit },
+          { name: '교육비', amount: data.education_fee },
+          { name: '인테리어 비용', amount: data.interior },
+          { name: '기타비용', amount: data.other_fee },
+      ]
+      myFranchise.value.link = data.link
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+  getDongRentFee(
+    dong.value.code,
+    ({data}) => {
+      console.log(data)
+      let size = 20;
+      if(storeSize.value == 'small') {
+        size = 10;
+      }
+      let fee = data.first_floor;
+      if(selectedFloor.value == 'other') {
+        fee = data.other_floor
+      }
+      let rentFee = {name:'임대료', amount:Math.floor(size * fee / 1000)}
+      myFranchise.value.costs.push(rentFee)
+      currentStep.value = 3
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
+const submitForm = () => {
+  console.log('Form submitted', {
+    location: location.value,
+    mainCategory: mainCategory.value,
+    subCategory: subCategory.value,
+    franchise: franchise.value,
+    storeSize: storeSize.value,
+    selectedFloor: selectedFloor.value
+  })
+}
+
+const setParamsDefault = () => {
+  currentStep.value = 1
+  location.value = ''
+  category.value = ''
+  franchise.value = ''
+  storeSize.value = ''
+  selectedFloor.value = ''
+  gu.value = ''
+  dong.value = ''
+}
+
 onMounted(() => {
   getGuInfos(),
   getTypes()
 })
 
-const currentStep = ref(1)
-const location = ref('')
-const category = ref('')
-const franchise = ref('')
-const storeSize = ref('')
-const selectedFloor = ref('')
-const gu = ref('')
-const dong = ref('')
-
 const myFranchise = ref({
     gu : gu,
     dong : dong,
-    name: '12412415555524',
-    cost: 10000000,
+    name: '',
+    storeSize : storeSize,
+    floor : selectedFloor,
+    cost: 0,
     costs: [
-      { name: '가맹비', amount: 15000000 },
-      { name: '보증금', amount: 10000000 },
-      { name: '교육비', amount: 5000000 },
-      { name: '인테리어 비용', amount: 18000000 },
-      { name: '기타비용', amount: 2000000 },
-    ]
+      { name: '임대료', amount: 0 },
+      { name: '가맹비', amount: 0 },
+      { name: '보증금', amount: 0 },
+      { name: '교육비', amount: 0 },
+      { name: '인테리어 비용', amount:  0},
+      { name: '기타비용', amount: 0 },
+    ],
+    link: ''
   },
 )
 
@@ -340,41 +415,6 @@ const otherFranchises = ref([
     ]
   }
 ])
-
-
-const nextStep = () => {
-  currentStep.value++
-}
-
-const prevStep = () => {
-  currentStep.value--
-}
-
-const showCostBreakdown = () => {
-  currentStep.value = 3
-}
-
-const submitForm = () => {
-  console.log('Form submitted', {
-    location: location.value,
-    mainCategory: mainCategory.value,
-    subCategory: subCategory.value,
-    franchise: franchise.value,
-    storeSize: storeSize.value,
-    selectedFloor: selectedFloor.value
-  })
-}
-
-const setParamsDefault = () => {
-  currentStep.value = 1
-  location.value = ''
-  category.value = ''
-  franchise.value = ''
-  storeSize.value = ''
-  selectedFloor.value = ''
-  gu.value = ''
-  dong.value = ''
-}
 </script>
 
 <style scoped>
