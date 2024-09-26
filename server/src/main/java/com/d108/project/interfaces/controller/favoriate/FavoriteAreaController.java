@@ -3,7 +3,7 @@ package com.d108.project.interfaces.controller.favoriate;
 import com.d108.project.domain.area.dto.AreaListDto;
 import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaRequestDto;
 import com.d108.project.domain.favorite.favoriteArea.service.FavoriteAreaService;
-import com.d108.project.interfaces.api.favorate.FavoriteAreaApi;
+import com.d108.project.interfaces.api.favorite.FavoriteAreaApi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

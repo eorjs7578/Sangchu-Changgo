@@ -1,11 +1,9 @@
-package com.d108.project.interfaces.api.favorate;
+package com.d108.project.interfaces.api.favorite;
 
 import com.d108.project.domain.favorite.favoriteFranchise.dto.FavoriteFranchiseRequestDto;
 import com.d108.project.domain.franchise.dto.FranchiseListDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequestMapping("/api/favorite/franchises")
 public interface FavoriteFranchiseApi {

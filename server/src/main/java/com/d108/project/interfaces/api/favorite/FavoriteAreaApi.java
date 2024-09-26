@@ -1,4 +1,4 @@
-package com.d108.project.interfaces.api.favorate;
+package com.d108.project.interfaces.api.favorite;
 
 import com.d108.project.domain.area.dto.AreaListDto;
 import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaRequestDto;

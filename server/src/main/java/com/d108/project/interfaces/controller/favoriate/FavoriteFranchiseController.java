@@ -3,7 +3,7 @@ package com.d108.project.interfaces.controller.favoriate;
 import com.d108.project.domain.favorite.favoriteFranchise.dto.FavoriteFranchiseRequestDto;
 import com.d108.project.domain.favorite.favoriteFranchise.service.FavoriteFranchiseService;
 import com.d108.project.domain.franchise.dto.FranchiseListDto;
-import com.d108.project.interfaces.api.favorate.FavoriteFranchiseApi;
+import com.d108.project.interfaces.api.favorite.FavoriteFranchiseApi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
