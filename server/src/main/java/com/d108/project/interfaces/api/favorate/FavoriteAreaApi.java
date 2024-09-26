@@ -2,19 +2,21 @@ package com.d108.project.interfaces.api.favorate;
 
 import com.d108.project.domain.area.dto.AreaListDto;
 import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaRequestDto;
+import com.d108.project.domain.member.entity.Member;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/favorite/areas")
 public interface FavoriteAreaApi {
 
     @GetMapping("/list")
-    ResponseEntity<AreaListDto> getFavoriteAreasByMember(@RequestParam Long memberId);
+    ResponseEntity<AreaListDto> getFavoriteAreasByMember(@AuthenticationPrincipal Member member);
 
     @DeleteMapping("{favoriteAreaId}")
-    ResponseEntity<Object> deleteFavoriteArea(@RequestParam Long memberId, @PathVariable Long favoriteAreaId);
+    ResponseEntity<Object> deleteFavoriteArea(@AuthenticationPrincipal Member member, @PathVariable Long favoriteAreaId);
 
     @PostMapping
-    ResponseEntity<Object> createFavoriteArea(@RequestParam Long memberId, @RequestBody FavoriteAreaRequestDto favoriteAreaRequestDto);
+    ResponseEntity<Object> createFavoriteArea(@AuthenticationPrincipal Member member, @RequestBody FavoriteAreaRequestDto favoriteAreaRequestDto);
 
 }
