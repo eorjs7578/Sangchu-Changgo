@@ -13,6 +13,7 @@ import com.d108.project.domain.franchise.entity.Franchise;
 import com.d108.project.domain.franchise.repository.FranchiseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class BoardServiceImpl implements BoardService {
 
     // TODO: 게시판 검색이 아니라 상권이나 프랜차이즈로 검색을 해주고 게시판 클릭시 없으면 만들어주는 것으로 구현하는게 좋을듯  
     @Override
-    public List<BoardResponseDto> getAllBoards(int page, int size) {
+    public Page<BoardResponseDto> getAllBoards(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Page<Board> allBoards = boardRepository.findAll(pageable);
@@ -43,7 +44,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardResponseDto> getAllFranchiseBoards(int page, int size) {
+    public Page<BoardResponseDto> getAllFranchiseBoards(int page, int size) {
         // 페이지 요청 객체 생성
         Pageable pageable = PageRequest.of(page, size);
 
@@ -55,7 +56,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardResponseDto> getAllAreaBoards(int page, int size) {
+    public Page<BoardResponseDto> getAllAreaBoards(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Page<Board> areaBoards = boardRepository.findByAreaIdIsNotNull(pageable); // 지역 게시판 조회
@@ -78,22 +79,38 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardResponseDto> searchBoard(BoardRequestSearchDto boardRequestSearchDto) {
+    public Page<BoardResponseDto> searchBoard(BoardRequestSearchDto boardRequestSearchDto, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
         // 검색 조건에 맞는 게시판 조회 로직
         String keyword = boardRequestSearchDto.keyword();
-        List<Board> searchResults = boardSearchRepository.searchBoardsByKeyword(keyword);
+        Page<Board> searchResults = boardSearchRepository.searchBoardsByKeyword(keyword, pageable);
 
         return getBoardResponseDtos(searchResults);
     }
 
     @Override
-    public List<BoardResponseDto> searchFranchiseBoard(BoardRequestSearchDto boardRequestSearchDto) {
+    public Page<BoardResponseDto> searchFranchiseBoard(BoardRequestSearchDto boardRequestSearchDto, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
         // 검색 조건에 맞는 게시판 조회 로직
         String keyword = boardRequestSearchDto.keyword();
-        List<Board> searchResults = boardSearchRepository.searchFranchiseBoardsByKeyword(keyword);
+        Page<Board> searchResults = boardSearchRepository.searchFranchiseBoardsByKeyword(keyword, pageable);
 
         return getBoardResponseDtos(searchResults);
     }
+
+    @Override
+    public Page<BoardResponseDto> searchAreaBoard(BoardRequestSearchDto boardRequestSearchDto, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 검색 조건에 맞는 게시판 조회 로직
+        String keyword = boardRequestSearchDto.keyword();
+        Page<Board> searchResults = boardSearchRepository.searchAreaBoardsByKeyword(keyword, pageable);
+
+        return getBoardResponseDtos(searchResults);
+    }
+
 
     @Override
     public List<BoardResponseDto> getPopularAreaBoard() {
@@ -109,16 +126,6 @@ public class BoardServiceImpl implements BoardService {
         return getBoardResponseDtos(popularFranchiseBoards);
     }
 
-
-    @Override
-    public List<BoardResponseDto> searchAreaBoard(BoardRequestSearchDto boardRequestSearchDto) {
-        // 검색 조건에 맞는 게시판 조회 로직
-        String keyword = boardRequestSearchDto.keyword();
-        List<Board> searchResults = boardSearchRepository.searchAreaBoardsByKeyword(keyword);
-
-        return getBoardResponseDtos(searchResults);
-
-    }
 
     // Board -> BoardResponseDto로 변환하는 메서드
     private BoardResponseDto toDto(Board board, Optional<Post> latestPost, Long postCount) {
@@ -160,10 +167,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     // Page<Board>를 처리하는 메서드 (Collection<Board>로 변환 후 처리)
-    private List<BoardResponseDto> getBoardResponseDtos(Page<Board> boards) {
-        return getBoardResponseDtos(boards.getContent()); // Page에서 리스트로 변환
-    }
+    private Page<BoardResponseDto> getBoardResponseDtos(Page<Board> boards) {
+        List<BoardResponseDto> boardResponseDtoList = getBoardResponseDtos(boards.getContent()); // Page에서 리스트로 변환
 
+        // Page<BoardResponseDto>로 변환
+        return new PageImpl<>(boardResponseDtoList, boards.getPageable(), boards.getTotalElements());
+    }
     // 단일 Board를 처리하는 메서드 (편의 메서드)
     private BoardResponseDto getBoardResponseDto(Board board) {
         // 단일 Board를 처리하려면, 그 Board를 리스트로 감싸서 메서드에 전달할 수 있습니다.
