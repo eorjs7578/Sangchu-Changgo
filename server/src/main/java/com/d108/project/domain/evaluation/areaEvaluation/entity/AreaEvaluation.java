@@ -22,7 +22,7 @@ public class AreaEvaluation extends BaseTimeEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_area_id")
+    @JoinColumn(name = "area_id")
     private Area area;
 
     @Enumerated(EnumType.STRING)
@@ -44,4 +44,6 @@ public class AreaEvaluation extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(255)")
     private Score score;
+
+
 }

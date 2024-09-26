@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService {
         String username = memberRegisterDto.getUsername();
 
         // 1. 정규 표현식을 통한 유효성 검증
-        isValidate(email, password, nickname);
+//        isValidate(email, password, nickname);
         // 2. 중복 검증
         isNicknameDuplicated(nickname);
         isEmailDuplicated(email);
@@ -111,17 +111,17 @@ public class MemberServiceImpl implements MemberService {
     }
 
     // 유효성 검증 함수
-    private boolean isValidate(String email, String password, String nickname) {
-        if (!Pattern.matches(EMAIL_PATTERN, email)) {
-            throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다.");
-        } else if (!Pattern.matches(NICKNAME_PATTERN, nickname)) {
-            throw new IllegalArgumentException("유효하지 않은 닉네임 형식입니다.");
-        } else if (!Pattern.matches(PASSWORD_PATTERN, password)) {
-            throw new IllegalArgumentException("유효하지 않은 비밀번호 형식입니다.");
-        }
-
-        return true;
-    }
+//    private boolean isValidate(String email, String password, String nickname) {
+//        if (!Pattern.matches(EMAIL_PATTERN, email)) {
+//            throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다.");
+//        } else if (!Pattern.matches(NICKNAME_PATTERN, nickname)) {
+//            throw new IllegalArgumentException("유효하지 않은 닉네임 형식입니다.");
+//        } else if (!Pattern.matches(PASSWORD_PATTERN, password)) {
+//            throw new IllegalArgumentException("유효하지 않은 비밀번호 형식입니다.");
+//        }
+//
+//        return true;
+//    }
 
     public boolean isEmailDuplicated(String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
