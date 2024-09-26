@@ -3,7 +3,7 @@ package com.d108.project.domain.evaluation.areaEvaluation.service;
 import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.area.repository.AreaRepository;
 import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationDto;
-import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationTypeListDto;
+import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaTypeListDto;
 import com.d108.project.domain.evaluation.areaEvaluation.entity.AreaEvaluation;
 import com.d108.project.domain.evaluation.areaEvaluation.repository.AreaEvaluationRepository;
 import com.d108.project.domain.global.enums.AgeGroup;
@@ -83,7 +83,7 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
     }
 
     @Override
-    public AreaEvaluationTypeListDto getEvaluationsByAreaTypeList() {
-        return new AreaEvaluationTypeListDto(Atmosphere.getAllDescriptions(), FootTraffic.getAllDescriptions(), NearbyPrice.getAllDescriptions(), AgeGroup.getAllDescriptions());
+    public AreaTypeListDto getEvaluationsByAreaTypeList() {
+        return new AreaTypeListDto(Atmosphere.getAllDescriptions(), FootTraffic.getAllDescriptions(), NearbyPrice.getAllDescriptions(), AgeGroup.getAllDescriptions());
     }
 }

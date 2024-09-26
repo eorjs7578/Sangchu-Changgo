@@ -1,7 +1,7 @@
 package com.d108.project.interfaces.controller.evaluation;
 
 import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationDto;
-import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationTypeListDto;
+import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaTypeListDto;
 import com.d108.project.domain.evaluation.areaEvaluation.service.AreaEvaluationService;
 import com.d108.project.interfaces.api.evaluation.AreaEvaluationAPI;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,8 +56,8 @@ public class AreaEvaluationController implements AreaEvaluationAPI {
 
     @Operation(summary = "[ALL] 상권 평가 타입 리스트 조회", description = "분위기, 유동인구 연령대, 유동인구 복잡 정도, 주변 물가 반환 ")
     @Override
-    public ResponseEntity<AreaEvaluationTypeListDto> getEvaluationsByAreaTypeList() {
-        AreaEvaluationTypeListDto evaluationTypes = areaEvaluationService.getEvaluationsByAreaTypeList();
+    public ResponseEntity<AreaTypeListDto> getEvaluationsByAreaTypeList() {
+        AreaTypeListDto evaluationTypes = areaEvaluationService.getEvaluationsByAreaTypeList();
         return ResponseEntity.ok(evaluationTypes);
     }
 }

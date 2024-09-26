@@ -1,7 +1,7 @@
 package com.d108.project.domain.evaluation.areaEvaluation.service;
 
 import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationDto;
-import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationTypeListDto;
+import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaTypeListDto;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ public interface AreaEvaluationService {
     void deleteEvaluation(Long id);
     List<AreaEvaluationDto> getEvaluationsByArea(Long areaId);
 
-    AreaEvaluationTypeListDto getEvaluationsByAreaTypeList();
+    AreaTypeListDto getEvaluationsByAreaTypeList();
 }
