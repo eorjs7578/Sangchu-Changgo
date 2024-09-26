@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,26 +33,31 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
         Area area = areaRepository.findById(areaId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid area ID"));
 
-        AreaEvaluation evaluation = new AreaEvaluation();
-        evaluation.setArea(area);  // 변경된 부분
-        evaluation.setMember(member);
+
+        Optional<AreaEvaluation> evaluation = evaluationRepository.findByAreaAndMember(area, member);
+        if (evaluation.isPresent()) {
+            throw new IllegalArgumentException("자신의 평가가 있습니다. 기존 평가를 수정해주세요.");
+        }
+        AreaEvaluation newEvaluation = new AreaEvaluation();
+        newEvaluation.setArea(area);  // 변경된 부분
+        newEvaluation.setMember(member);
 
         // enum 변환
-        evaluation.setAgeGroup(AgeGroup.fromDescription(dto.ageGroup().toUpperCase()));
-        evaluation.setFootTraffic(FootTraffic.fromDescription(dto.footTraffic().toUpperCase()));
-        evaluation.setAtmosphere(Atmosphere.fromDescription(dto.atmosphere().toUpperCase()));
-        evaluation.setNearbyPrices(NearbyPrice.fromDescription(dto.nearbyPrices().toUpperCase()));
+        newEvaluation.setAgeGroup(AgeGroup.fromDescription(dto.ageGroup().toUpperCase()));
+        newEvaluation.setFootTraffic(FootTraffic.fromDescription(dto.footTraffic().toUpperCase()));
+        newEvaluation.setAtmosphere(Atmosphere.fromDescription(dto.atmosphere().toUpperCase()));
+        newEvaluation.setNearbyPrices(NearbyPrice.fromDescription(dto.nearbyPrices().toUpperCase()));
 
-        evaluationRepository.save(evaluation);
+        evaluationRepository.save(newEvaluation);
 
         // DTO로 변환하여 반환
         return new AreaEvaluationDto(
-                evaluation.getId(),  // 평가 ID
+                newEvaluation.getId(),  // 평가 ID
                 area.getAreaName(),  // 지역 이름
-                evaluation.getAgeGroup().getDescription(),  // 나이 그룹 설명
-                evaluation.getFootTraffic().getDescription(),  // 유동 인구 설명
-                evaluation.getAtmosphere().getDescription(),  // 분위기 설명
-                evaluation.getNearbyPrices().getDescription()  // 근처 가격 설명
+                newEvaluation.getAgeGroup().getDescription(),  // 나이 그룹 설명
+                newEvaluation.getFootTraffic().getDescription(),  // 유동 인구 설명
+                newEvaluation.getAtmosphere().getDescription(),  // 분위기 설명
+                newEvaluation.getNearbyPrices().getDescription()  // 근처 가격 설명
         );
     }
 
@@ -63,7 +69,7 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
         System.out.println(evaluation.getMember());
         System.out.println(member);
 
-        if (!member.getId().equals(evaluation.getMember().getId())){
+        if (!member.getId().equals(evaluation.getMember().getId())) {
             throw new IllegalArgumentException("자신의 것만 수정할 수 있습니다.");
         }
 
@@ -88,7 +94,7 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
         AreaEvaluation evaluation = evaluationRepository.findById(evaluationId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid evaluation ID"));
 
-        if (!member.getId().equals(evaluation.getMember().getId())){
+        if (!member.getId().equals(evaluation.getMember().getId())) {
             throw new IllegalArgumentException("자신의 것만 삭제할 수 있습니다.");
         }
 
@@ -97,19 +103,22 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
 
     // 평가 조회
     @Override
-    public List<AreaEvaluationDto> getAllEvaluationsByAreaAndMember(Member member, Long areaId) {
+    public AreaEvaluationDto getEvaluationsByAreaAndMember(Member member, Long areaId) {
         Area area = areaRepository.findById(areaId)
                 .orElseThrow(() -> new IllegalArgumentException("상권이 존재하지 않습니다."));
 
-        return evaluationRepository.findAllByAreaAndMember(area, member).stream()
-                .map(evaluation -> new AreaEvaluationDto(
-                        area.getId(),
-                        area.getAreaName(),
-                        evaluation.getAgeGroup().getDescription(),
-                        evaluation.getFootTraffic().getDescription(),
-                        evaluation.getAtmosphere().getDescription(),
-                        evaluation.getNearbyPrices().getDescription()
-                )).collect(Collectors.toList());
+        AreaEvaluation evaluation = evaluationRepository.findByAreaAndMember(area, member)
+                .orElseThrow(() -> new IllegalArgumentException("평가가 존재하지 않습니다."));
+
+        // 평가 데이터를 DTO로 변환하여 반환
+        return new AreaEvaluationDto(
+                area.getId(),
+                area.getAreaName(),
+                evaluation.getAgeGroup().getDescription(),
+                evaluation.getFootTraffic().getDescription(),
+                evaluation.getAtmosphere().getDescription(),
+                evaluation.getNearbyPrices().getDescription()
+        );
     }
 
     @Override
@@ -125,13 +134,13 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
 
         return calculateAreaEvaluationStatistics(area, allByArea);
     }
-    
+
     @Override
     public AreaTypeListDto getEvaluationsByAreaTypeList() {
         return new AreaTypeListDto(Atmosphere.getAllDescriptions(), FootTraffic.getAllDescriptions(), NearbyPrice.getAllDescriptions(), AgeGroup.getAllDescriptions());
     }
 
-    private AreaEvaluationDto calculateAreaEvaluationStatistics(Area area, List<AreaEvaluation> areaEvaluations){
+    private AreaEvaluationDto calculateAreaEvaluationStatistics(Area area, List<AreaEvaluation> areaEvaluations) {
         List<AgeGroup> ageGroups = areaEvaluations.stream().map(AreaEvaluation::getAgeGroup).collect(Collectors.toList());
         List<FootTraffic> footTraffics = areaEvaluations.stream().map(AreaEvaluation::getFootTraffic).collect(Collectors.toList());
         List<Atmosphere> atmospheres = areaEvaluations.stream().map(AreaEvaluation::getAtmosphere).collect(Collectors.toList());

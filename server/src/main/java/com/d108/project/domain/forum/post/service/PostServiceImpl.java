@@ -1,6 +1,7 @@
 package com.d108.project.domain.forum.post.service;
 
 import com.d108.project.cache.redis.RedisUtil;
+import com.d108.project.domain.forum.board.dto.BoardResponseDto;
 import com.d108.project.domain.forum.board.entity.Board;
 import com.d108.project.domain.forum.post.entity.Post;
 import com.d108.project.domain.forum.post.repository.PostRepository;
@@ -11,6 +12,9 @@ import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -136,6 +140,20 @@ public class PostServiceImpl implements PostService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<PostResponseDto> getPostsByBoardId(Long boardId, int page, int size) {
+        Board board = boardRepository.getReferenceById(boardId);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> posts = postRepository.findByBoard(pageable, board);
+
+        return posts.stream()
+                .map(post -> {
+                    PostResponseDto postResponseDto = PostResponseDto.from(post);
+                    postResponseDto.setView(getViewCountById(post.getId()));
+                    return postResponseDto;
+                })
+                .collect(Collectors.toList());
+    }
 
 
     // 조회수 관련 메서드
@@ -154,11 +172,13 @@ public class PostServiceImpl implements PostService {
 
         redisUtil.deleteData(redisKey);
     }
+
     // 전체 글 Id 저장
     @Override
     public List<Long> getAllPostIds() {
         return postRepository.findAllPostIds();
     }
+
     // 조회수 증가
     private Long incrementViewCountById(Long postId) {
         String redisKey = REDIS_PREFIX + postId;
@@ -179,6 +199,6 @@ public class PostServiceImpl implements PostService {
             redisUtil.setDataExpire(redisKey, viewCountStr, RedisUtil.REDIS_VIEW_EXPIRE);
         }
         // DB에도 없는 경우.. 가 있는지는 모르겠는데 그 경우 0으로
-        return (viewCountStr==null) ? 0:Long.parseLong(viewCountStr);
+        return (viewCountStr == null) ? 0 : Long.parseLong(viewCountStr);
     }
 }

@@ -39,7 +39,14 @@ public interface BoardService {
 
     List<BoardResponseDto> searchAreaBoard(BoardRequestSearchDto boardRequestSearchDto);
 
-
     List<BoardResponseDto> searchFranchiseBoard(BoardRequestSearchDto boardRequestSearchDto);
 
+    List<BoardResponseDto> getPopularAreaBoard();
+
+    List<BoardResponseDto> getPopularFranchiseBoard();
+
 }
+// A상권 검색하면 ->  -> 상권 like 상권 게시판 쭉 주는 건
+// 상권 번호 1번
+// 어느 게시판인진 모름.
+

@@ -1,0 +1,4 @@
+package com.d108.project.interfaces.controller.evaluation;
+
+public class AreaEvaluationCreateDto {
+}
