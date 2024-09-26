@@ -18,7 +18,11 @@ cd ..
 # 서브모듈 초기화
 git submodule init
 # 서브모듈 데이터 가져오기 
-git submodule update
+git submodule update\
+```
+
+
 # 서브 모듈 최신 업데이트
+```bash
 git submodule update --remote
 ```

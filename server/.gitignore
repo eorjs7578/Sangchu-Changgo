@@ -37,7 +37,7 @@ out/
 .vscode/
 
 ### querydsl ###
-**/src/main/generated/
+src/main/generated/**
 
 ### build ###
 !gradle/wrapper/gradle-wrapper.properties
@@ -45,3 +45,6 @@ out/
 ### etc ###
 application*.yml
 application*.properties
+
+### log ###
+logs/**
