@@ -5,6 +5,7 @@ import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostResponseDto;
 import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostUpdateDto;
 import com.d108.project.domain.forum.saleStorePost.service.SaleStorePostService;
 import com.d108.project.interfaces.api.forum.SaleStorePostApi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@Tag(name = "상권 매물 게시글")
 @RestController
 @RequiredArgsConstructor
 public class SalePostController implements SaleStorePostApi {

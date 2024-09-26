@@ -34,11 +34,17 @@ import java.util.Collections;
                 @Server(url = "/", description = "API 서버")
         },
         tags = {
-                @Tag(name = "관심 상권"),
-                @Tag(name = "관심 프랜차이즈"),
-                @Tag(name = "댓글"),
                 @Tag(name = "회원 관리"),
+                @Tag(name = "지도"),
+                @Tag(name = "상권 분석"),
+                @Tag(name = "franchise"),
+                @Tag(name = "게시판"),
                 @Tag(name = "게시글"),
+                @Tag(name = "상권 매물 게시글"),
+                @Tag(name = "댓글"),
+                @Tag(name = "상권 평가"),
+                @Tag(name = "관심 상권"),
+                @Tag(name = "관심 프랜차이즈")
         }
 )
 public class SwaggerConfiguration {

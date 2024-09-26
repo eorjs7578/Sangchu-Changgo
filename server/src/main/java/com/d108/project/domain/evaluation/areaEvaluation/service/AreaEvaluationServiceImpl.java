@@ -3,9 +3,13 @@ package com.d108.project.domain.evaluation.areaEvaluation.service;
 import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.area.repository.AreaRepository;
 import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationDto;
+import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationTypeListDto;
 import com.d108.project.domain.evaluation.areaEvaluation.entity.AreaEvaluation;
 import com.d108.project.domain.evaluation.areaEvaluation.repository.AreaEvaluationRepository;
 import com.d108.project.domain.global.enums.AgeGroup;
+import com.d108.project.domain.global.enums.Atmosphere;
+import com.d108.project.domain.global.enums.FootTraffic;
+import com.d108.project.domain.global.enums.NearbyPrice;
 import com.d108.project.domain.member.entity.Member;
 import com.d108.project.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,33 +37,32 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
         evaluation.setArea(area);  // 변경된 부분
         evaluation.setMember(member);
 
-        // enum 변환 .. ?
-        evaluation.setAgeGroup(AgeGroup.valueOf(dto.getAgeGroup().toUpperCase()));
-        evaluation.setFootTraffic(dto.getFootTraffic());
-        evaluation.setAtmosphere(dto.getAtmosphere());
-        evaluation.setNearbyPrices(dto.getNearbyPrices());
+        // enum 변환
+        evaluation.setAgeGroup(AgeGroup.fromDescription(dto.getAgeGroup().toUpperCase()));
+        evaluation.setFootTraffic(FootTraffic.fromDescription(dto.getFootTraffic().toUpperCase()));
+        evaluation.setAtmosphere(Atmosphere.fromDescription(dto.getAtmosphere().toUpperCase()));
+        evaluation.setNearbyPrices(NearbyPrice.fromDescription(dto.getNearbyPrices().toUpperCase()));
 
         evaluationRepository.save(evaluation);
 
         return dto;
     }
 
-    // 평가 수정
+    // TODO: 자기 자신것만 수정할 수 있게 수정해 주세요.
     @Override
     public AreaEvaluationDto updateEvaluation(Long id, AreaEvaluationDto dto) {
         AreaEvaluation evaluation = evaluationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid evaluation ID"));
 
-        evaluation.setFootTraffic(dto.getFootTraffic());
-        evaluation.setAtmosphere(dto.getAtmosphere());
-        evaluation.setNearbyPrices(dto.getNearbyPrices());
-
-        evaluationRepository.save(evaluation);
+        evaluation.setAgeGroup(AgeGroup.fromDescription(dto.getAgeGroup().toUpperCase().toUpperCase()));
+        evaluation.setFootTraffic(FootTraffic.fromDescription(dto.getFootTraffic().toUpperCase()));
+        evaluation.setAtmosphere(Atmosphere.fromDescription(dto.getAtmosphere().toUpperCase()));
+        evaluation.setNearbyPrices(NearbyPrice.fromDescription(dto.getNearbyPrices().toUpperCase()));
 
         return dto;
     }
 
-    // 평가 삭제
+    // TODO: 자기 자신것만 삭제할 수 있게 수정해 주세요.
     @Override
     public void deleteEvaluation(Long id) {
         evaluationRepository.deleteById(id);
@@ -72,10 +75,15 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
                 .map(evaluation -> new AreaEvaluationDto(
                         evaluation.getArea().getId(),  // 변경된 부분
                         evaluation.getMember().getId(),
-                        evaluation.getAgeGroup().name(),
-                        evaluation.getFootTraffic(),
-                        evaluation.getAtmosphere(),
-                        evaluation.getNearbyPrices()
+                        evaluation.getAgeGroup().getDescription(),
+                        evaluation.getFootTraffic().getDescription(),
+                        evaluation.getAtmosphere().getDescription(),
+                        evaluation.getNearbyPrices().getDescription()
                 )).collect(Collectors.toList());
+    }
+
+    @Override
+    public AreaEvaluationTypeListDto getEvaluationsByAreaTypeList() {
+        return new AreaEvaluationTypeListDto(Atmosphere.getAllDescriptions(), FootTraffic.getAllDescriptions(), NearbyPrice.getAllDescriptions(), AgeGroup.getAllDescriptions());
     }
 }

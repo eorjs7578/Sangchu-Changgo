@@ -1,6 +1,7 @@
 package com.d108.project.domain.evaluation.areaEvaluation.entity;
 
-import com.d108.project.domain.global.enums.AgeGroup;
+import com.d108.project.domain.global.BaseTimeEntity;
+import com.d108.project.domain.global.enums.*;
 import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.member.entity.Member;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Table(name = "business_area_evaluations")
 @Setter
 @Getter
-public class AreaEvaluation {
+public class AreaEvaluation extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,9 +29,19 @@ public class AreaEvaluation {
     @Column(columnDefinition = "varchar(255)")
     private AgeGroup ageGroup;
 
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
+    private FootTraffic footTraffic;
 
-    private String footTraffic;
-    private String nearbyPrices;
-    private String atmosphere;
-    //TODO: 평가 점수 설정
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
+    private NearbyPrice nearbyPrices;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
+    private Atmosphere atmosphere;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
+    private Score score;
 }
