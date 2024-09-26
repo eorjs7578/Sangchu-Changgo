@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableJpaAuditing
 @EnableScheduling
 @SpringBootApplication
-
 public class ProjectApplication {
 
 	public static void main(String[] args) {

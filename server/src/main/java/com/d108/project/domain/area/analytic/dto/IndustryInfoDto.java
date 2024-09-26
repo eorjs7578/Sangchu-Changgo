@@ -1,4 +1,4 @@
-package com.d108.project.interfaces.api.analytics.dto;
+package com.d108.project.domain.area.analytic.dto;
 
 import java.util.List;
 

@@ -1,18 +1,14 @@
 package com.d108.project.domain.area.analytic.service;
 
+import com.d108.project.domain.area.analytic.dto.*;
 import com.d108.project.domain.area.analytic.repository.*;
-import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.area.repository.AreaRepository;
-import com.d108.project.interfaces.api.analytics.dto.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
