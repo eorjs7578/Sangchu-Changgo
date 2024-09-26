@@ -74,7 +74,7 @@ public class MapServiceImpl implements MapService {
 
         List<RegionInfoDto> guInfos= new ArrayList<>();
         for(Gu g :gu){
-            guInfos.add(RegionInfoDto.to(g));
+            guInfos.add(RegionInfoDto.from(g));
         }
 
         return guInfos;
@@ -86,7 +86,7 @@ public class MapServiceImpl implements MapService {
 
         List<RegionInfoDto> dongInfos= new ArrayList<>();
         for(Dong d :dong){
-            dongInfos.add(RegionInfoDto.to(d));
+            dongInfos.add(RegionInfoDto.from(d));
         }
         return dongInfos;
     }

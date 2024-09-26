@@ -1,14 +1,12 @@
 package com.d108.project.domain.favorite.favoriteFranchise.entity;
 
+import com.d108.project.domain.favorite.favoriteFranchise.dto.FavoriteFranchiseRequestDto;
 import com.d108.project.domain.franchise.entity.Franchise;
 import com.d108.project.domain.map.entity.Dong;
 import com.d108.project.domain.map.entity.Gu;
 import com.d108.project.domain.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -44,24 +42,42 @@ public class FavoriteFranchise {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gu_code")
-    private Gu guCode;
+    private Gu gu;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dong_code")
-    private Dong dongCode;
+    private Dong dong;
 
     @Column(name = "size")
-    private Integer size;
+    private Long size;
 
     @Column(name = "floor")
     private Boolean floor;
 
+    @Builder
+    public FavoriteFranchise(Member member, Franchise franchise, LocalDateTime createdAt,
+                             LocalDateTime updatedAt, Gu gu, Dong dong, Long size, Boolean floor) {
+        this.member = member;
+        this.franchise = franchise;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.gu = gu;
+        this.dong = dong;
+        this.size = size;
+        this.floor = floor;
+    }
 
-    public static FavoriteFranchise toFavoriteFranchise(Member member, Franchise franchise) {
-        FavoriteFranchise favoriteFranchise = new FavoriteFranchise();
-        favoriteFranchise.setMember(member);
-        favoriteFranchise.setFranchise(franchise);
-        return favoriteFranchise;
+    public static FavoriteFranchise toFavoriteFranchise(Member member, FavoriteFranchiseRequestDto favoriteFranchiseRequestDto,
+                                                        Franchise franchise, Dong dong, Gu gu) {
+
+        return FavoriteFranchise.builder()
+                .member(member)
+                .franchise(franchise)
+                .dong(dong)
+                .gu(gu)
+                .size(favoriteFranchiseRequestDto.storeSize())
+                .floor(favoriteFranchiseRequestDto.floor())
+                .build();
     }
 
 }

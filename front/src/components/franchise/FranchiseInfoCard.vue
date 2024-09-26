@@ -19,6 +19,7 @@
 
 <script setup>
 import { ref, defineProps, computed } from 'vue'
+import { deleteFavoriteFranchise, addFavoriteFranchise} from '@/api/franchise.js'
 
 const props = defineProps(['franchise'])
 
@@ -26,7 +27,14 @@ const totalCost = computed(() => props.franchise.costs.reduce((sum, cost) => sum
 
 const franchise = props.franchise
 
-const isFavorite = ref(false)
+const isFavorite = ref(franchise.likeId > 0);
+
+const myFranchise = ref({
+      dong_code : franchise.dong.code,
+      franchise_id: franchise.id,
+      store_size : franchise.storeSize == 'small' ? 10 : 20,
+      floor : franchise.floor == 1 ? true : false
+})
 
 // 숫자를 '억', '만원' 형식으로 변환하는 함수
 function formatCurrency(value) {
@@ -44,8 +52,36 @@ function formatCurrency(value) {
   }
 }
 
-function toggleFavorite() {
-  isFavorite.value = !isFavorite.value
+const toggleFavorite = () => {
+  console.log(isFavorite.value)
+  if(isFavorite.value) {
+    deleteFavoriteFranchise(
+    franchise.likeId,
+    ({data}) => {
+      isFavorite.value = !isFavorite.value
+      console.log(isFavorite)
+    },
+    (error) => {
+      console.log(error)
+      
+    }
+  )
+  } else {
+    addFavoriteFranchise(
+    myFranchise.value,
+    ({data}) => {
+      console.log(data)
+      isFavorite.value = !isFavorite.value
+      franchise.likeId = data
+    },
+    (error) => {
+      console.log(error)
+      
+    }
+  )
+  }
+  
+  
   // Here you can add logic to save the favorite status, e.g., emit an event or call an API
   console.log(`Franchise ${franchise.name} favorite status: ${isFavorite.value}`)
 }

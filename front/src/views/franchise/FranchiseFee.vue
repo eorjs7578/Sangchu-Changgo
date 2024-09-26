@@ -288,10 +288,17 @@ const prevStep = () => {
 }
 
 const showCostBreakdown = () => {
+  let size = storeSize.value == 'small' ? 10 : 20;
+  let fee = selectedFloor.value == 'other' ? false : true;
+
   getFranchisesFee(
     franchise.value.id,
+    dong.value.code,
+    size,
+    fee,
     ({data}) => {
       console.log(data)
+      myFranchise.value.id = data.id
       myFranchise.value.name = data.name;
       myFranchise.value.costs = [
           { name: '가맹비', amount: data.franchise_fee },
@@ -299,27 +306,10 @@ const showCostBreakdown = () => {
           { name: '교육비', amount: data.education_fee },
           { name: '인테리어 비용', amount: data.interior },
           { name: '기타비용', amount: data.other_fee },
+          { name:'임대료', amount:Math.floor(size * data.rent_fee / 1000)}
       ]
       myFranchise.value.link = data.link
-    },
-    (error) => {
-      console.log(error)
-    }
-  )
-  getDongRentFee(
-    dong.value.code,
-    ({data}) => {
-      console.log(data)
-      let size = 20;
-      if(storeSize.value == 'small') {
-        size = 10;
-      }
-      let fee = data.first_floor;
-      if(selectedFloor.value == 'other') {
-        fee = data.other_floor
-      }
-      let rentFee = {name:'임대료', amount:Math.floor(size * fee / 1000)}
-      myFranchise.value.costs.push(rentFee)
+      myFranchise.value.likeId = data.like_id
       currentStep.value = 3
     },
     (error) => {
@@ -351,11 +341,25 @@ const setParamsDefault = () => {
 }
 
 onMounted(() => {
+  const modalElement = document.getElementById('exampleModal2');
+  
+  modalElement.addEventListener('hide.bs.modal', () => {
+    currentStep.value = 1
+    location.value = ''
+    category.value = ''
+    franchise.value = ''
+    storeSize.value = ''
+    selectedFloor.value = ''
+    gu.value = ''
+    dong.value = ''
+  });
+
   getGuInfos(),
   getTypes()
 })
 
 const myFranchise = ref({
+    id : '',
     gu : gu,
     dong : dong,
     name: '',
@@ -370,51 +374,10 @@ const myFranchise = ref({
       { name: '인테리어 비용', amount:  0},
       { name: '기타비용', amount: 0 },
     ],
-    link: ''
+    link: '',
+    likeId: -1
   },
 )
-
-const otherFranchises = ref([
-  {
-    gu : gu,
-    dong : dong,
-    name: '12412415555524',
-    cost: 10000000,
-    costs: [
-      { name: '가맹비', amount: 15000000 },
-      { name: '보증금', amount: 10000000 },
-      { name: '교육비', amount: 5000000 },
-      { name: '인테리어 비용', amount: 18000000 },
-      { name: '기타비용', amount: 2000000 },
-    ]
-  },
-  {
-    gu : gu,
-    dong : dong,
-    name : 'asdffsda',
-    cost: 50000000,
-    costs: [
-      { name: '가맹비', amount: 15000000 },
-      { name: '보증금', amount: 10000000 },
-      { name: '교육비', amount: 5000000 },
-      { name: '인테리어 비용', amount: 18000000 },
-      { name: '기타비용', amount: 2000000 },
-    ]
-  },
-  {
-    gu : gu,
-    dong : dong,
-    name: '5천만원',
-    cost: 50000000,
-    costs: [
-      { name: '가맹비', amount: 15000000 },
-      { name: '보증금', amount: 10000000 },
-      { name: '교육비', amount: 5000000 },
-      { name: '인테리어 비용', amount: 18000000 },
-      { name: '기타비용', amount: 2000000 },
-    ]
-  }
-])
 </script>
 
 <style scoped>

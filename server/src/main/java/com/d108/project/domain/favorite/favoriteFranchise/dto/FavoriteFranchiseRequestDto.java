@@ -1,4 +1,10 @@
 package com.d108.project.domain.favorite.favoriteFranchise.dto;
 
-public record FavoriteFranchiseRequestDto(Long franchiseId) {
+import lombok.Builder;
+
+@Builder
+public record FavoriteFranchiseRequestDto(Long franchiseId,
+                                          Long dongCode,
+                                          Long storeSize,
+                                          Boolean floor) {
 }

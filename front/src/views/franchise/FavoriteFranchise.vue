@@ -10,7 +10,7 @@
           <transition name="fade" mode="out-in">
             <!-- Step 1 -->
             <div v-if="currentStep === 1 || currentStep===2" key="step1" class="h-100 d-flex flex-column justify-content-between ">
-                <div class="mb-4 overflow-auto"> <!-- 간격 조정 -->
+                <div class="mb-4 overflow-auto custom-scroll"> <!-- 간격 조정 -->
                   <div class="row"> <!-- 간격 조정 -->
                     <div class="col-md-6" v-for="(franchise, index) in franchises" :key="index">
                       <div class="card mb-4" :class="{ 'border-success': isSelected(franchise) }" @click="selectFranchise(franchise)">
@@ -19,7 +19,7 @@
                     </div>
                   </div>
                 </div>
-                  <button @click="compareFranchises" class="btn btn-success flex-grow-1 ms-2">비교하기 ({{selectedFranchises.length}}/2)</button>
+                  <button @click="compareFranchises" class="btn btn-success w-100">비교하기 ({{selectedFranchises.length}}/2)</button>
             </div>
 
             <!-- Step 3 -->
@@ -41,11 +41,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineProps, watch } from 'vue'
+import { getFavoriteFranchises, deleteFavoriteFranchise, addFavoriteFranchise} from '@/api/franchise.js'
 import FranchiseInfoCard from '@/components/franchise/FranchiseInfoCard.vue';
 
+const props = defineProps(['franchise'])
 const currentStep = ref(1)
 const selectedFranchises = ref([])
+const franchises = ref([])
+
+watch(
+  () => props.franchise,  // 감시할 데이터
+  (newFranchise) => {
+    franchises.value = newFranchise;  // 데이터가 업데이트되면 반영
+    console.log('Updated franchise list:', franchises.value);
+  },
+  { immediate: true }  // 컴포넌트가 로드되자마자 감시 시작
+);
 
 const selectFranchise = (franchise) => {
   const index = selectedFranchises.value.findIndex(f => f === franchise)
@@ -61,89 +73,9 @@ const isSelected = (franchise) => {
 }
 
 const compareFranchises = () => {
-    currentStep.value = 3
+  console.log(franchises)
+  currentStep.value = 3
 }
-
-const franchises = ref([
-  {
-    gu: '00구',
-    dong: '00동',
-    name: '(0평, 0층) 00 치킨',
-    totalCost: 50000000,
-    costs: [
-      { name: '가맹비', amount: 15000000 },
-      { name: '보증금', amount: 10000000 },
-      { name: '교육비', amount: 5000000 },
-      { name: '인테리어 비용', amount: 18000000 },
-      { name: '기타비용', amount: 2000000 },
-    ]
-  },
-  {
-    gu: '00구',
-    dong: '00동',
-    name: '(0평, 0층) 00 치킨',
-    totalCost: 126162,
-    costs: [
-      { name: '가맹비', amount: 126612 },
-      { name: '보증금', amount: 10000000 },
-      { name: '교육비', amount: 5000000 },
-      { name: '인테리어 비용', amount: 18000000 },
-      { name: '기타비용', amount: 2000000 },
-    ]
-  },
-  {
-    gu: '00구',
-    dong: '00동',
-    name: '(0평, 0층) 00 치킨',
-    totalCost: 50000000,
-    costs: [
-      { name: '가맹비', amount: 15000000 },
-      { name: '보증금', amount: 10000000 },
-      { name: '교육비', amount: 5000000 },
-      { name: '인테리어 비용', amount: 18000000 },
-      { name: '기타비용', amount: 2000000 },
-    ]
-  },
-  {
-    gu: '00구',
-    dong: '00동',
-    name: '(0평, 0층) 00 치킨',
-    totalCost: 50000000,
-    costs: [
-      { name: '가맹비', amount: 15000000 },
-      { name: '보증금', amount: 10000000 },
-      { name: '교육비', amount: 5000000 },
-      { name: '인테리어 비용', amount: 18000000 },
-      { name: '기타비용', amount: 2000000 },
-    ]
-  },
-  {
-    gu: '00구',
-    dong: '00동',
-    name: '(0평, 0층) 00 치킨',
-    totalCost: 50000000,
-    costs: [
-      { name: '가맹비', amount: 15000000 },
-      { name: '보증금', amount: 10000000 },
-      { name: '교육비', amount: 5000000 },
-      { name: '인테리어 비용', amount: 18000000 },
-      { name: '기타비용', amount: 2000000 },
-    ]
-  },
-  {
-    gu: '00구',
-    dong: '00동',
-    name: '(0평, 0층) 00 치킨',
-    totalCost: 50000000,
-    costs: [
-      { name: '가맹비', amount: 15000000 },
-      { name: '보증금', amount: 10000000 },
-      { name: '교육비', amount: 5000000 },
-      { name: '인테리어 비용', amount: 18000000 },
-      { name: '기타비용', amount: 2000000 },
-    ]
-  }
-])
 
 const nextStep = () => {
   currentStep.value++
@@ -154,22 +86,42 @@ const prevStep = () => {
 }
 
 const showCostBreakdown = () => {
-  
+
   currentStep.value = 3
 }
 
 
 const setParamsDefault = () => {
   currentStep.value = 1
+  selectedFranchises.value = []
 }
 
-onMounted(() => {
 
+
+onMounted(() => {
+  const modalElement = document.getElementById('exampleModal1');
+  
+  modalElement.addEventListener('hide.bs.modal', () => {
+    selectedFranchises.value = [];  // 모달이 닫힐 때 selectedFranchises 배열을 초기화
+  });
 })
 
 </script>
 
 <style scoped>
+.custom-scroll {
+  overflow-y: auto; /* 세로 스크롤 */
+}
+
+/* 스크롤바를 감추는 CSS */
+.custom-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-scroll {
+  -ms-overflow-style: none;  /* IE, Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 
 .overflow-auto {
   overflow-x: auto; /* 가로 스크롤 허용 */

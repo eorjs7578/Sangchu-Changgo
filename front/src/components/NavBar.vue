@@ -16,8 +16,8 @@
         
         <!-- 프랜차이즈 하위 메뉴 -->
         <ul v-show="isFranchiseOpen ">
-          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal1">관심프차</li>
-          <FavoriteFranchise class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
+          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click="toggleFavorite">관심프차</li>
+          <FavoriteFranchise :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
           <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal2">예상비용</li>
           <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
         </ul>
@@ -52,10 +52,44 @@
 import {ref} from 'vue'
 import FranchiseFee from '@/views/franchise/FranchiseFee.vue'
 import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue'
-
+import { getFavoriteFranchises} from '@/api/franchise.js'
 
 const isCommunityOpen = ref(false)
 const isFranchiseOpen = ref(false)
+const favoriteFranchises = ref([])
+
+const toggleFavorite = () => {
+  getFavoriteFranchises(
+    ({data}) => {
+      console.log(data)
+      favoriteFranchises.value = transformData(data)
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
+const transformData = (data) => {
+  return data.map((item) => ({
+    id: item.franchise_fee_dto.id,
+    gu: item.gu,  // 실제 구 데이터로 채워야 함
+    dong: item.dong,  // 실제 동 데이터로 채워야 함
+    name: item.franchise_fee_dto.name,
+    storeSize: item.size,  // storeSize 값을 적절히 입력해야 함
+    floor: item.floor,  // floor 값을 적절히 입력해야 함
+    costs: [
+      { name: '임대료', amount: item.franchise_fee_dto.rent_fee },
+      { name: '가맹비', amount: item.franchise_fee_dto.franchise_fee },
+      { name: '보증금', amount: item.franchise_fee_dto.deposit },
+      { name: '교육비', amount: item.franchise_fee_dto.education_fee },
+      { name: '인테리어 비용', amount: item.franchise_fee_dto.interior },
+      { name: '기타비용', amount: item.franchise_fee_dto.other_fee }
+    ],
+    link: item.franchise_fee_dto.link,
+    likeId: item.franchise_fee_dto.like_id
+  }));
+};
 
 const toggleCommunitySubmenu = () => {
   isCommunityOpen.value = !isCommunityOpen.value;
@@ -69,6 +103,7 @@ const toggleFranchiseSubmenu = () => {
   isCommunityOpen.value = false
   isFranchiseOpen.value = !isFranchiseOpen.value
 }
+
 </script>
 
 <style scoped>
