@@ -10,6 +10,7 @@ import AreaAnalytics from '@/views/areaAnalytics/AreaAnalytics.vue';
 import Chart from '@/views/areaAnalytics/Chart.vue';
 import Mypage from '@/views/accounts/Mypage.vue';
 
+
 const routes = [
   {
     path: '/login',

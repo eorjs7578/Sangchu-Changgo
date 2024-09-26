@@ -77,6 +77,7 @@ const toggleFranchiseSubmenu = () => {
   display: flex;
   height: 100vh;
   width: 100vw;
+  padding:0;
 }
 
 /* 네비게이션 바 설정 */
@@ -118,8 +119,7 @@ const toggleFranchiseSubmenu = () => {
 
 /* 메인 콘텐츠 영역 */
 .content {
-  flex-grow: 1; /* 메인 콘텐츠가 사이드바를 제외한 나머지 공간을 채움 */
-  padding: 2rem;
+  flex-grow: 1; 
   background-color: #f3f4f6;
   overflow-y: auto;
 }

@@ -32,4 +32,9 @@ export default {
   box-sizing: border-box;
 }
 
+.container {
+  margin:0;
+  padding:0;
+}
+
 </style>
