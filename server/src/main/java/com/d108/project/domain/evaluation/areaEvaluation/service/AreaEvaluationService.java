@@ -1,15 +1,20 @@
 package com.d108.project.domain.evaluation.areaEvaluation.service;
 
+import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationCreateDto;
 import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationDto;
+import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationUpdateDto;
 import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaTypeListDto;
+import com.d108.project.domain.member.entity.Member;
 
 import java.util.List;
 
 public interface AreaEvaluationService {
-    AreaEvaluationDto createEvaluation(AreaEvaluationDto dto);
-    AreaEvaluationDto updateEvaluation(Long id, AreaEvaluationDto dto);
-    void deleteEvaluation(Long id);
-    List<AreaEvaluationDto> getEvaluationsByArea(Long areaId);
+    AreaEvaluationDto createEvaluation(Member member, Long areaId, AreaEvaluationCreateDto dto);
+    AreaEvaluationDto updateEvaluation(Member member,Long evaluation, AreaEvaluationUpdateDto dto);
+    void deleteEvaluation(Member member, Long evaluation);
+    List<AreaEvaluationDto> getAllEvaluationsByAreaAndMember(Member member, Long areaId);
 
     AreaTypeListDto getEvaluationsByAreaTypeList();
+
+    AreaEvaluationDto getAreaEvaluationStatistics(Long areaId);
 }

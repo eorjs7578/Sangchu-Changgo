@@ -1,7 +1,6 @@
 package com.d108.project.config;
 
 import lombok.Getter;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 @Getter
@@ -56,10 +55,8 @@ public class WhiteListConfiguration {
             API_PREFIX+"/boards/**",
             API_PREFIX+"/posts/**",
             API_PREFIX+"/posts",
-            API_PREFIX+"/area-evaluation/**",
-
-
-            API_PREFIX+"/favorite/areas/test"
+            API_PREFIX+"/area-evaluation/type",
+            API_PREFIX+"/area-evaluation/statistics/*",
     };
 }
 
