@@ -1,9 +1,11 @@
 <template>
   <div class="map-container">
     <div id="map">
-    
     </div>
-  </div>
+    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+        <button @click="closeModal">Close</button>
+    </div>
+</div>
 </template>
 
 <script setup>
@@ -23,6 +25,8 @@ let mapLevel=null;
 let x = null;
 let y = null;
 
+const selectedArea = ref({ name: '', size: 0 }); // 선택된 영역 정보를 저장하는 ref
+const showModal = ref(false); // 모달 표시 여부를 저장하는 ref
 
 onMounted(() => {
     // 구 정보 불러오기 
@@ -104,9 +108,21 @@ function drawPolygons(){
     }
 }
 
-
-// polygon 문자열을 처리하여 LatLng 배열로 변환하는 함수
 function parsePolygon(polygonStr) {
+    if (polygonStr.startsWith("POLYGON")) {
+        // POLYGON 처리
+        return parseSinglePolygon(polygonStr);
+    } else if (polygonStr.startsWith("MULTIPOLYGON")) {
+        // MULTIPOLYGON 처리
+        return parseMultiPolygon(polygonStr);
+    } else {
+        console.error("Unknown polygon format: ", polygonStr);
+        return [];
+    }
+}
+
+// 단일 POLYGON 문자열을 처리하여 LatLng 배열로 변환하는 함수
+function parseSinglePolygon(polygonStr) {
     const coordinates = polygonStr
         .replace("POLYGON ((", "")  // POLYGON (( 제거
         .replace("))", "")  // )) 제거
@@ -117,7 +133,27 @@ function parsePolygon(polygonStr) {
         return new kakao.maps.LatLng(lat, lng);  // LatLng 객체로 변환
     });
 
-    return path;
+    return [path]; // 단일 POLYGON이므로 하나의 배열을 반환
+}
+
+// MULTIPOLYGON 문자열을 처리하여 LatLng 배열로 변환하는 함수
+function parseMultiPolygon(multiPolygonStr) {
+    // MULTIPOLYGON (((...),(...)),((...),(...))) 형식에서 POLYGON들 추출
+    const polygonGroups = multiPolygonStr
+        .replace("MULTIPOLYGON (((", "") // MULTIPOLYGON ((( 제거
+        .replace(")))", "") // ))) 제거
+        .split(")), (("); // 각 POLYGON 그룹을 나눔
+
+    const paths = polygonGroups.map(polygonStr => {
+        // POLYGON 그룹 내의 각 경로를 처리
+        const coordinates = polygonStr.split(", ");
+        return coordinates.map(coord => {
+            const [lng, lat] = coord.split(" ").map(Number);
+            return new kakao.maps.LatLng(lat, lng);  // LatLng 객체로 변환
+        });
+    });
+
+    return paths; // MULTIPOLYGON이므로 배열들의 배열을 반환
 }
 
 // 다각형을 생상하고 이벤트를 등록하는 함수입니다
@@ -152,7 +188,23 @@ function createPolygon(area) {
     kakao.maps.event.addListener(polygon, 'click', function(mouseEvent) {
         x = area.ypos;
         y = area.xpos;
-        // 지도 확대, 폴리곤 다시 그리기
+        
+           // 선택된 지역 정보를 저장하여 모달에 표시
+        selectedArea.value = {
+            name: area.name,
+            size: area.size,
+        };
+
+
+    // 선택된 지역 정보를 저장하여 모달에 표시
+    selectedArea.value = {
+      name: area.name,
+      size: area.size,
+    };
+
+    // 모달을 보이도록 설정
+    showModal.value = true;
+
         if(area.size==0){ // 구 
             getDongData(area.id);
         }
@@ -165,7 +217,9 @@ function createPolygon(area) {
 
     return polygon; 
 }
-
+function closeModal() {
+  showModal.value = false;
+}
 // watch(areas, () => {
 //     loadMap(x, y);  // areas 값이 변경되면 폴리곤을 다시 그림
 // },
@@ -184,4 +238,18 @@ function createPolygon(area) {
   height: 100%;
   overflow: hidden;
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 12vw;
+    width: 25vw;
+    height: 100%;
+    background: rgb(255, 250, 250);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
 </style>
