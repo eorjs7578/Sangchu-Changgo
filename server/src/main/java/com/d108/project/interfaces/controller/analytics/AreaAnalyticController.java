@@ -1,8 +1,8 @@
 package com.d108.project.interfaces.controller.analytics;
 
+import com.d108.project.domain.area.analytic.dto.*;
 import com.d108.project.domain.area.analytic.service.AreaAnalyticService;
 import com.d108.project.interfaces.api.analytics.*;
-import com.d108.project.interfaces.api.analytics.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

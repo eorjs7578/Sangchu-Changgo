@@ -1,11 +1,10 @@
 package com.d108.project.interfaces.api.analytics;
 
-import com.d108.project.interfaces.api.analytics.dto.*;
+import com.d108.project.domain.area.analytic.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/api/gu/analytic")
 public interface GuAnalyticApi {
