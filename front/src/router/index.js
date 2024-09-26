@@ -73,6 +73,11 @@ const routes = [
     name: 'Chart',
     component: Chart2
   },
+  {
+    path: '/charts',
+    name: 'Charts',
+    component: Chart
+  }
 ];
 
 const router = createRouter({

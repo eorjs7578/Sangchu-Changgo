@@ -133,7 +133,6 @@ const dongs = ref([])
 const getGuInfos = () => {
   getGu(
     ({data}) => {
-      console.log(data)
       gus.value = data
     },
     (error) => {
@@ -146,7 +145,6 @@ const selectGu = (payload) => {
   getDong(
     payload.code,
     ({data}) => {
-      console.log(data)
       dongs.value = data
     },
     (error) => {
