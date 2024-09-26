@@ -6,31 +6,30 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public enum AgeGroup {
-    TEENAGER("10대"),
-    TWENTIES("20대"),
-    THIRTIES("30대"),
-    FORTIES("40대"),
-    FIFTIES("50대"),
-    SIXTIES("60대");
+public enum Score {
+    EXCELLENT("매우 우수"),
+    GOOD("우수"),
+    AVERAGE("보통"),
+    BELOW_AVERAGE("미흡"),
+    POOR("부족");
 
     private final String description;
 
-    AgeGroup(String description) {
+    Score(String description) {
         this.description = description;
     }
 
     public static List<String> getAllDescriptions() {
-        return Arrays.stream(AgeGroup.values())
-                .map(AgeGroup::getDescription)
+        return Arrays.stream(Score.values())
+                .map(Score::getDescription)
                 .toList();
     }
-
-    public static AgeGroup fromDescription(String description) {
-        return Arrays.stream(AgeGroup.values())
+    
+    public static Score fromDescription(String description) {
+        return Arrays.stream(Score.values())
                 .filter(atmosphere -> atmosphere.getDescription().equals(description))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Invalid description: " + description));
     }
-}
 
+}
