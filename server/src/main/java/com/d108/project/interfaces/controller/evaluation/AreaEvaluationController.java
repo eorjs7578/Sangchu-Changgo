@@ -54,7 +54,7 @@ public class AreaEvaluationController implements AreaEvaluationAPI {
     }
 
 
-    @Operation(summary = "[ALL] 상권 평가 타입 리스트 조회", description = "분위기, 유동인구 연령대, 유동인구 복잡 정도, 주변 물가 반환 ")
+    @Operation(summary = "[ALL] 상권 타입 리스트 조회", description = "분위기, 유동인구 연령대, 유동인구 복잡 정도, 주변 물가 반환 ")
     @Override
     public ResponseEntity<AreaTypeListDto> getEvaluationsByAreaTypeList() {
         AreaTypeListDto evaluationTypes = areaEvaluationService.getEvaluationsByAreaTypeList();
