@@ -30,7 +30,7 @@ public interface AreaEvaluationAPI {
     ResponseEntity<AreaTypeListDto> getEvaluationsByAreaTypeList();
 
     @GetMapping("/{areaId}")
-    ResponseEntity<List<AreaEvaluationDto>> getEvaluationsByArea(@AuthenticationPrincipal Member member, @PathVariable Long areaId);
+    ResponseEntity<AreaEvaluationDto> getEvaluationsByArea(@AuthenticationPrincipal Member member, @PathVariable Long areaId);
 
 }
 

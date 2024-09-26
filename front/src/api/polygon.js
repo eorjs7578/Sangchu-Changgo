@@ -2,8 +2,8 @@ import { localAxios } from "@/util/http-commons";
 
 const local = localAxios();
 
-async function getRequest(url) {
-    return await local.get(url)
+async function getRequest(url, headers = {}) {
+    return await local.get(url, { headers })
       .then(response => response.data)
       .catch(error => {
         console.error(`Error fetching ${url}:`, error);
@@ -12,8 +12,8 @@ async function getRequest(url) {
   }
 
 
-async function getGu() {
-    return await getRequest(`/api/map/gu`);
+async function getGu(headers) {
+    return await getRequest(`/api/map/gu`, headers);
   }
   
   /**
@@ -22,8 +22,8 @@ async function getGu() {
    * @param {object} headers - 추가할 헤더 정보 (선택 사항)
    * @returns {Promise} - 동 데이터를 가져오는 Promise
    */
-  async  function getDong(code) {
-    return await getRequest(`/api/map/dong/${code}`);
+  async  function getDong(code, headers) {
+    return await getRequest(`/api/map/dong/${code}`, headers);
   }
   
   /**
@@ -32,8 +32,8 @@ async function getGu() {
    * @param {object} headers - 추가할 헤더 정보 (선택 사항)
    * @returns {Promise} - 지역 데이터를 가져오는 Promise
    */
-  async  function getArea(code) {
-    return await getRequest(`/api/map/area/${code}`);
+  async  function getArea(code, headers) {
+    return await getRequest(`/api/map/area/${code}`, headers);
   }
 
 export {

@@ -12,9 +12,7 @@ public interface AreaEvaluationService {
     AreaEvaluationDto createEvaluation(Member member, Long areaId, AreaEvaluationCreateDto dto);
     AreaEvaluationDto updateEvaluation(Member member,Long evaluation, AreaEvaluationUpdateDto dto);
     void deleteEvaluation(Member member, Long evaluation);
-    List<AreaEvaluationDto> getAllEvaluationsByAreaAndMember(Member member, Long areaId);
-
+    AreaEvaluationDto getEvaluationsByAreaAndMember(Member member, Long areaId);
     AreaTypeListDto getEvaluationsByAreaTypeList();
-
     AreaEvaluationDto getAreaEvaluationStatistics(Long areaId);
 }

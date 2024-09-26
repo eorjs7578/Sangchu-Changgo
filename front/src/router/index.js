@@ -9,16 +9,27 @@ import MarketAnalysis from '@/views/MarketAnalysis.vue';
 import AreaAnalytics from '@/views/areaAnalytics/AreaAnalytics.vue';
 import Chart from '@/views/areaAnalytics/Chart.vue';
 import Mypage from '@/views/accounts/Mypage.vue';
+import Chart2 from "@/views/areaAnalytics/Chart2.vue";
+import CreatePost from "@/views/forum/CreatePost.vue";
+import BoardList from "@/views/forum/BoardList.vue";
+
 import SurveyForm from '@/components/areaAnalytics/SurveyForm.vue';
 import SurveyResult from '@/components/areaAnalytics/SurveyResult.vue';
 
+// 1. /members/** : 회원 관련 활동 (로그인, 회원가입, 비밀번호 변경 등)
+// 2. /community/** : 커뮤니티 관련 활동 (커뮤니티 CRUD)
+// 3. /analytics/** : 상권 및 프랜차이즈 분석 관련 활동
 const routes = [
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: "/members/login",
+    name: "login",
+    component: Login,
   },
   {
+    path: "/members/signup",
+    name: "signUp",
+    component: SignUp,
+  },
     path: '/surveyForm',
     name: 'SurveyForm',
     component: SurveyForm
@@ -34,12 +45,12 @@ const routes = [
     component: SignUp
   },
   {
-    path: '/mypage',
+    path: '/members/mypage',
     name: 'Mypage',
     component: Mypage
   },
   {
-    path: '/passwordrecovery',
+    path: '/members/password',
     name: 'PasswordRecovery',
     component: PasswordRecovery
   },
@@ -47,6 +58,13 @@ const routes = [
     path: '/community',
     name: 'Community',
     component: Community
+  },
+  // const router = useRouter()
+  // const boardId = router.params.boardId 로 접근
+  {
+    path: "/community/:boardId",
+    name: "Community",
+    component: Community,
   },
   {
     path: '/franchise',
@@ -69,9 +87,19 @@ const routes = [
     component: AreaAnalytics
   },
   {
-    path: '/chart',
+    path: '/chart/:id',
     name: 'Chart',
-    component: Chart
+    component: Chart2
+  },
+  {
+    path: '/CreatePost',
+    name: 'CreatePost',
+    component: CreatePost
+  },
+  {
+    path: '/BoardList',
+    name: 'BoardList',
+    component: BoardList
   },
 ];
 

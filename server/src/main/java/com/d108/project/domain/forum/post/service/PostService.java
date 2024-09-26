@@ -26,4 +26,7 @@ public interface PostService {
     List<PostResponseDto> getAllPostsByAreaId(Long areaId);
 
     List<PostResponseDto> getAllPostsByFranchiseId(Long franchiseId);
+
+    List<PostResponseDto> getPostsByBoardId(Long boardId, int page, int size);
+
 }

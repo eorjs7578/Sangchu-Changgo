@@ -5,6 +5,7 @@ import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import com.d108.project.domain.member.dto.MemberRegisterDto;
 import com.d108.project.domain.favorite.favoriteArea.entity.FavoriteArea;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 @PrimaryKeyJoinColumn(name = "id") // 상속받은 엔티티의 기본 키를 지정
 public class Member extends LoginCredential {
 
+    @NotNull
     private String nickname;
 
     private String email;
