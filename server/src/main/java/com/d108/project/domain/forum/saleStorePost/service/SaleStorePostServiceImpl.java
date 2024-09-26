@@ -1,13 +1,16 @@
 package com.d108.project.domain.forum.saleStorePost.service;
 
 import com.d108.project.cache.redis.RedisUtil;
+import com.d108.project.domain.evaluation.areaEvaluation.service.AreaEvaluationService;
 import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostCreateDto;
 import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostResponseDto;
+import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostTypeListDto;
 import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostUpdateDto;
 import com.d108.project.domain.forum.saleStorePost.entity.SaleStorePost;
 import com.d108.project.domain.forum.saleStorePost.repository.SaleStorePostRepository;
 import com.d108.project.domain.forum.board.entity.Board;
 import com.d108.project.domain.forum.board.repository.BoardRepository;
+import com.d108.project.domain.global.enums.*;
 import com.d108.project.domain.member.entity.Member;
 import com.d108.project.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -26,6 +29,8 @@ public class SaleStorePostServiceImpl implements SaleStorePostService {
     private final SaleStorePostRepository saleStorePostRepository;
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+
+    private final AreaEvaluationService areaEvaluationService;
     private static final String REDIS_PREFIX = "salestorepost:viewCount:";
 
     // 매출 게시글 생성
@@ -47,11 +52,11 @@ public class SaleStorePostServiceImpl implements SaleStorePostService {
                 saleStorePostCreateDto.getRentalPrice(),
                 saleStorePostCreateDto.getRevenue(),
                 saleStorePostCreateDto.getSize(),
-                saleStorePostCreateDto.getAgeGroup(),
-                saleStorePostCreateDto.getFootTraffic(),
-                saleStorePostCreateDto.getAtmosphere(),
-                saleStorePostCreateDto.getNearbyPrice(),
-                saleStorePostCreateDto.getFranchiseType(),
+                AgeGroup.fromDescription(saleStorePostCreateDto.getAgeGroup()),
+                FootTraffic.fromDescription(saleStorePostCreateDto.getFootTraffic()),
+                Atmosphere.fromDescription(saleStorePostCreateDto.getAtmosphere()),
+                NearbyPrice.fromDescription(saleStorePostCreateDto.getNearbyPrice()),
+                FranchiseType.fromDescription(saleStorePostCreateDto.getFranchiseType()),
                 saleStorePostCreateDto.getDesiredSalePrice()
         );
 
@@ -107,11 +112,11 @@ public class SaleStorePostServiceImpl implements SaleStorePostService {
         saleStorePost.setStartupPrice(saleStorePostUpdateDto.getStartupPrice());
         saleStorePost.setRentalPrice(saleStorePostUpdateDto.getRentalPrice());
         saleStorePost.setSize(saleStorePostUpdateDto.getSize());
-        saleStorePost.setFranchiseType(saleStorePostUpdateDto.getFranchiseType());
-        saleStorePost.setAgeGroup(saleStorePostUpdateDto.getAgeGroup());
-        saleStorePost.setFootTraffic(saleStorePostUpdateDto.getFootTraffic());
-        saleStorePost.setAtmosphere(saleStorePostUpdateDto.getAtmosphere());
-        saleStorePost.setNearbyPrice(saleStorePostUpdateDto.getNearbyPrice());
+        saleStorePost.setFranchiseType(FranchiseType.fromDescription(saleStorePostUpdateDto.getFranchiseType()));
+        saleStorePost.setAgeGroup(AgeGroup.fromDescription(saleStorePostUpdateDto.getAgeGroup()));
+        saleStorePost.setFootTraffic(FootTraffic.fromDescription(saleStorePostUpdateDto.getFootTraffic()));
+        saleStorePost.setAtmosphere(Atmosphere.fromDescription(saleStorePostUpdateDto.getAtmosphere()));
+        saleStorePost.setNearbyPrice(NearbyPrice.fromDescription(saleStorePostUpdateDto.getNearbyPrice()));
         saleStorePost.setDesiredSalePrice(saleStorePostUpdateDto.getDesiredSalePrice());
 
         saleStorePostRepository.save(saleStorePost);
@@ -174,5 +179,10 @@ public class SaleStorePostServiceImpl implements SaleStorePostService {
     @Override
     public List<Long> getAllSaleStorePostIds() {
         return saleStorePostRepository.findAllSaleStorePostIds();
+    }
+
+    @Override
+    public SaleStorePostTypeListDto getSaleStorePostTypeList() {
+        return new SaleStorePostTypeListDto(areaEvaluationService.getEvaluationsByAreaTypeList(), FranchiseType.getAllDescriptions());
     }
 }

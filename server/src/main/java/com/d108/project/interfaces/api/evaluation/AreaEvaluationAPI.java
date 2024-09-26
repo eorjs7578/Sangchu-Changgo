@@ -1,7 +1,7 @@
 package com.d108.project.interfaces.api.evaluation;
 
 import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationDto;
-import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaEvaluationTypeListDto;
+import com.d108.project.domain.evaluation.areaEvaluation.dto.AreaTypeListDto;
 import com.d108.project.domain.evaluation.areaEvaluation.service.AreaEvaluationService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,6 @@ import java.util.List;
 public interface AreaEvaluationAPI {
 
     @GetMapping("/type")
-    ResponseEntity<AreaEvaluationTypeListDto> getEvaluationsByAreaTypeList();
+    ResponseEntity<AreaTypeListDto> getEvaluationsByAreaTypeList();
 }
 

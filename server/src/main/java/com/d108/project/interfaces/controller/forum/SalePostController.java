@@ -2,9 +2,11 @@ package com.d108.project.interfaces.controller.forum;
 
 import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostCreateDto;
 import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostResponseDto;
+import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostTypeListDto;
 import com.d108.project.domain.forum.saleStorePost.dto.SaleStorePostUpdateDto;
 import com.d108.project.domain.forum.saleStorePost.service.SaleStorePostService;
 import com.d108.project.interfaces.api.forum.SaleStorePostApi;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -54,5 +56,11 @@ public class SalePostController implements SaleStorePostApi {
     public ResponseEntity<Void> deleteSalePost(Long postId, Long memberId) {
         saleStorePostService.deleteSaleStorePostById(postId, memberId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "[ALL] 상권 매물 게시판 타입리스트 조회", description ="")
+    @Override
+    public ResponseEntity<SaleStorePostTypeListDto> getSaleStorePostTypeList() {
+        return ResponseEntity.ok(saleStorePostService.getSaleStorePostTypeList());
     }
 }
