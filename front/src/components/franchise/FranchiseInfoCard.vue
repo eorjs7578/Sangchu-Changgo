@@ -1,26 +1,32 @@
 <template>
-  <div class="card-body">
-    <h6 class="card-subtitle mb-2 text-muted">{{ franchise.gu.name }} {{ franchise.dong.name }} {{ franchise.name }}</h6>
-      <h4 class="card-title">예상 창업 비용은 <p class="text-primary">{{ formatCurrency(totalCost) }}</p> 입니다.</h4>
-        <table class="table table-borderless">
-          <tbody>
-            <tr v-for="(cost, index) in franchise.costs" :key="index">
-              <td>{{ cost.name }}</td>
-              <td class="text-end">{{ formatCurrency(cost.amount) }}</td>
-              </tr>
-          </tbody>
-        </table>
-        <a v-bind:href="franchise.link" target="_blank">상세정보보기</a>
+  <div class="card-body position-relative">
+    <div class="favorite-icon" @click.stop="toggleFavorite">
+      <i :class="['bi', isFavorite ? 'bi-star-fill text-warning' : 'bi-star']"></i>
     </div>
+    <h6 class="card-subtitle mb-2 text-muted">{{ franchise.gu.name }} {{ franchise.dong.name }} {{ franchise.name }}</h6>
+    <h4 class="card-title">예상 창업 비용은 <p class="text-primary">{{ formatCurrency(totalCost) }}</p> 입니다.</h4>
+    <table class="table table-borderless">
+      <tbody>
+        <tr v-for="(cost, index) in franchise.costs" :key="index">
+          <td>{{ cost.name }}</td>
+          <td class="text-end">{{ formatCurrency(cost.amount) }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <a v-bind:href="franchise.link" target="_blank">상세정보보기</a>
+  </div>
 </template>
+
 <script setup>
-import {ref,defineProps, computed} from 'vue'
+import { ref, defineProps, computed } from 'vue'
 
 const props = defineProps(['franchise'])
 
-const totalCost = computed(() => franchise.costs.reduce((sum, cost) => sum + cost.amount, 0))
+const totalCost = computed(() => props.franchise.costs.reduce((sum, cost) => sum + cost.amount, 0))
 
 const franchise = props.franchise
+
+const isFavorite = ref(false)
 
 // 숫자를 '억', '만원' 형식으로 변환하는 함수
 function formatCurrency(value) {
@@ -31,6 +37,12 @@ function formatCurrency(value) {
   } else {
     return `${(value).toLocaleString()}만원`;
   }
+}
+
+function toggleFavorite() {
+  isFavorite.value = !isFavorite.value
+  // Here you can add logic to save the favorite status, e.g., emit an event or call an API
+  console.log(`Franchise ${franchise.name} favorite status: ${isFavorite.value}`)
 }
 
 console.log(franchise)
@@ -46,13 +58,28 @@ console.log(franchise)
 .card:hover {
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
+
 a:link {
-  color : pink;
+  color: pink;
 }
+
 a:visited {
-  color : black;
+  color: black;
 }
+
 a:hover {
-  color : red;
+  color: red;
+}
+
+.favorite-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.favorite-icon:hover {
+  transform: scale(1.1);
 }
 </style>

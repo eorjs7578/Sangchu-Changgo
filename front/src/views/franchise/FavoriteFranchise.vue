@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered custom-modal-width custom-modal-height">
       <div class="modal-content">
         <div class="modal-header bg-success text-white">
-          <h5 class="modal-title" id="koreanModalLabel">창업 예상 비용 확인</h5>
+          <h5 class="modal-title" id="koreanModalLabel">내 관심 프차</h5>
           <button @click="setParamsDefault" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
