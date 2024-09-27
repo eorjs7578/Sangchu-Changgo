@@ -66,6 +66,23 @@ watch(
   { immediate: true }
 );
 
+watch(
+  () => selectedServiceType.value,
+  (newSelected) => {
+    getSimilarServiceCount(
+    place.value,
+    newSelected.service_code,
+    ({ data }) => {
+      console.log(data)
+      storeCount.value = data
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+  }
+)
+
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value
   if (isDropdownOpen.value) {
