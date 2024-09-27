@@ -60,8 +60,15 @@
           :place
       />
 
-      <!--점포 정보-->
-      <StoreAnalytics />
+      <!--점포 분석-->
+      <StoreAnalysis
+        :place
+      />
+      
+      <!--매출 분석-->
+      <SalesAnalysis
+        :place
+      />
 
       <!---->
 
@@ -72,7 +79,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import PopulationAnalysis from "@/components/areaAnalytics/PopulationAnalysis.vue";
-import StoreAnalytics from "@/components/areaAnalytics/StoreAnalytics.vue";
+import SalesAnalysis from "@/components/areaAnalytics/SalesAnalysis.vue";
+import StoreAnalysis from "@/components/areaAnalytics/StoreAnalysis.vue";
 import { useRouter } from "vue-router";
 
 defineProps({
