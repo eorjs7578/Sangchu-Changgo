@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="contatiner">
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
       <h5>상추창고</h5>

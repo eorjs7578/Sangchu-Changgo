@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class ReplyByPostIdResponseDto {
+    private Long replyId;
     private Long memberId;
     private String content;
     private LocalDateTime createdAt;
@@ -16,6 +17,7 @@ public class ReplyByPostIdResponseDto {
 
     public static ReplyByPostIdResponseDto from(Reply reply) {
         return ReplyByPostIdResponseDto.builder()
+                .replyId(reply.getId())
                 .memberId(reply.getMember().getId())
                 .content(reply.getContent())
                 .createdAt(reply.getCreatedAt())
