@@ -14,28 +14,28 @@ async function getRequest(url) {
 
 
 
-async  function getAll(str) {
-    return await getRequest(`/api/board/search?keyword=${str}`);
+async  function getAll(page,size,str) {
+    return await getRequest(`/api/boards/search/${page}/${size}?keyword=${str}`);
 }
-async  function getFranchise(str) {
-    return await getRequest(`/api/board/search/franchise?keyword=${str}`);
+async  function getFranchise(page,size,str) {
+    return await getRequest(`/api/boards/search/franchise/${page}/${size}?keyword=${str}`);
 }
-async  function getArea(str) {
-    return await getRequest(`/api/board/search/area?keyword=${str}`);
+async  function getArea(page,size,str) {
+    return await getRequest(`/api/boards/search/area/${page}/${size}?keyword=${str}`);
 }
 
-async  function getHotArea(str) {
-    return await getRequest(`/api/board/popular/area?keyword=${str}`);
+async  function getHotArea() {
+    return await getRequest(`/api/boards/popular/area`);
 }
-async  function getHotFranchise(str) {
-    return await getRequest(`/api/board/popular/franchise?keyword=${str}`);
+async  function getHotFranchise() {
+    return await getRequest(`/api/boards/popular/franchise`);
 }
 
 async  function getALLArea(page,size) {
-    return await getRequest(`/api/board/all/area/${page}/${size}`);
+    return await getRequest(`/api/boards/all/area/${page}/${size}`);
 }
 async  function getALLFranchise(page,size) {
-    return await getRequest(`/api/board/all/franchise/${page}/${size}`);
+    return await getRequest(`/api/boards/all/franchise/${page}/${size}`);
 }
 
 export {

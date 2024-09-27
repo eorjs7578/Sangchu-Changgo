@@ -22,7 +22,7 @@
           class="custom-input" 
           placeholder="검색어를 입력하세요"
         />
-        <button class="search-button" @click="handleSearch">
+        <button class="search-button" @click="search">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -38,10 +38,9 @@
           <ul>
             <li v-for="item in category.items" :key="item.title">
               <a href="#">
-                {{ item.title }}
-                <span v-if="item.count" class="count">{{ item.count }}</span>
+                {{ item.name }}
               </a>
-              <span class="views">| 새글 {{ item.views }}</span>
+              <span v-if="item.count" >| 게시물 수 {{ item.post_count }}</span>
             </li>
           </ul>
           <div class="pagination">
@@ -56,10 +55,9 @@
                 <ul>
                   <li v-for="item in board.items" :key="item.title">
                     <a href="#">
-                      {{ item.title }}
-                      <span v-if="item.count" class="count">{{ item.count }}</span>
+                      {{ item.name }}
                     </a>
-                    <span class="views">| 새글 {{ item.views }}</span>
+                    <span v-if="item.post_count" class="count">| 게시물 수 : {{ item.post_count }}</span>
                   </li>
                 </ul>
               </div>
@@ -69,60 +67,95 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import { ref ,onMounted} from 'vue'
+  import {
+    getAll,
+    getFranchise,
+    getArea,
+    getHotArea,
+    getHotFranchise,
+    getALLArea,
+    getALLFranchise
+} from "@/api/communitySearch.js";
+
   
-  let categories = ref([
-    { name: '상권', items: [
-      { title: '정글소설', count: 16, views: '3,677/9,333,012' },
-      { title: '여장', count: 50, views: '1,448/3,508,182' },
-      { title: '먹장', views: '566/1,059,175' },
-      { title: '장사의 신 (드라마)', views: '360/265,288' },
-      { title: '식이장애', count: 300, views: '212/336,653' },
-      { title: '아이돌 인건극장', views: '167/123,147' },
-      { title: '번개장터', views: '96/40,845' },
-      { title: '활수 화장품', views: '88/1,473,038' },
-    ]},
-    { name: '프랜차이즈', items: [
-      { title: '정글소설', count: 16, views: '3,677/9,333,012' },
-      { title: '여장', count: 50, views: '1,448/3,508,182' },
-      { title: '먹장', views: '566/1,059,175' },
-      { title: '장사의 신 (드라마)', views: '360/265,288' },
-      { title: '식이장애', count: 300, views: '212/336,653' },
-      { title: '아이돌 인건극장', views: '167/123,147' },
-      { title: '번개장터', views: '96/40,845' },
-      { title: '활수 화장품', views: '88/1,473,038' },
-    ]}
-  ])
+  let categories = ref([])
   
-  let hotBoard = ref([  
-    { name: '인기 상권', items: [
-      { title: '정글소설', count: 16, views: '3,677/9,333,012' },
-      { title: '여장', count: 50, views: '1,448/3,508,182' },
-      { title: '먹장', views: '566/1,059,175' },
-      { title: '장사의 신 (드라마)', views: '360/265,288' },
-      { title: '식이장애', count: 300, views: '212/336,653' },
-      { title: '아이돌 인건극장', views: '167/123,147' },
-      { title: '번개장터', views: '96/40,845' },
-      { title: '활수 화장품', views: '88/1,473,038' },
-    ]},
-    { name: '인기 프랜차이즈', items: [
-      { title: '정글소설', count: 16, views: '3,677/9,333,012' },
-      { title: '여장', count: 50, views: '1,448/3,508,182' },
-      { title: '먹장', views: '566/1,059,175' },
-      { title: '장사의 신 (드라마)', views: '360/265,288' },
-      { title: '식이장애', count: 300, views: '212/336,653' },
-      { title: '아이돌 인건극장', views: '167/123,147' },
-      { title: '번개장터', views: '96/40,845' },
-      { title: '활수 화장품', views: '88/1,473,038' },
-    ]}
-  ]);
+  let hotBoard = ref([]);
   
   const searchQuery = ref('')
   
   const options = ['전체', '상권', '프랜차이즈']
   const selectedOption = ref('전체')
   const isOpen = ref(false)
-  
+  const inputValue = ref("");
+
+  let page;
+  let size;
+  let pageArea;
+  let sizeArea;
+  let pageFranchise;
+  let sizeFranchise;
+
+  onMounted(() => {
+
+    page =0;
+    size =10;
+    pageArea = 0;
+    sizeArea = 10;
+    pageFranchise = 0;
+    sizeFranchise = 10;
+
+    // 구 정보 불러오기 
+    getHotArea()
+    .then(data=>{
+      console.log(data)
+      hotBoard.value.push({name : "인기 상권",
+      items : data
+      });
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+
+    getHotFranchise()
+    .then(data=>{
+      hotBoard.value.push({name : "인기 프랜차이즈",
+      items : data
+      });
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+
+    getAllAreaData();
+    getALLFranchiseData();
+});
+
+async function getAllAreaData(){
+  await getALLArea(pageArea,sizeArea)
+    .then(data=>{
+      categories.value.push({name : "상권 게시판",
+      items : data.content
+      });
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+}
+
+async function getALLFranchiseData(){
+  await getALLFranchise(pageFranchise,sizeFranchise)
+    .then(data=>{
+      categories.value.push({name : "프랜차이즈 게시판",
+      items : data.content
+      });
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+}
+
   const toggleDropdown = () => {
     isOpen.value = !isOpen.value
   }
@@ -133,8 +166,40 @@
   }
   
   const search = async () => {
-  
-  
+    categories.value =[];
+    if(selectedOption.value=='전체'){
+      searchArea();
+      searchFranchise();
+    }
+    else if(selectedOption.value=='상권'){
+      searchArea();
+    }else{
+      searchFranchise();
+    }
+  }
+
+  async function searchArea(){
+    await getArea(pageFranchise,sizeFranchise,inputValue.value)
+    .then(data=>{
+      categories.value.push({name : "상권 게시판",
+      items : data.content
+      });
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+  }
+
+  async function searchFranchise(){
+    await getFranchise(pageFranchise,sizeFranchise,inputValue.value)
+    .then(data=>{
+      categories.value.push({name : "프랜차이즈 게시판",
+      items : data.content
+      });
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
   }
   
   </script>
