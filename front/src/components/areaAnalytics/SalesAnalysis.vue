@@ -56,11 +56,15 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
     const WeekendSales = ref("");
     const QuarterlySales=ref("");
     
+    const props = defineProps({
+    place: String,
+  })
+
     const loading = ref(true); // 데이터 로딩 상태
 
     onMounted(() => {
       // 컴포넌트가 마운트되면 데이터 호출
-      getSalesByWeek('3110718', 'CS100002', (data) => {
+      getSalesByWeek(props.place, 'CS100002', (data) => {
         WeeklySales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
         console.log(data)
@@ -70,7 +74,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
         loading.value = false; // 로딩 상태 변경
       });
       
-      getSalesByAge('3110718', 'CS100002', (data) => {
+      getSalesByAge(props.place, 'CS100002', (data) => {
         AgeSales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
         console.log(data)
@@ -80,7 +84,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
         loading.value = false; // 로딩 상태 변경
       });
 
-      getSalesByGender('3110718', 'CS100002', (data) => {
+      getSalesByGender(props.place, 'CS100002', (data) => {
         GenderSales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
         console.log(data)
@@ -90,7 +94,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
         loading.value = false; // 로딩 상태 변경
       });
 
-      getSalesByWeekend('3110718', 'CS100002', (data) => {
+      getSalesByWeekend(props.place, 'CS100002', (data) => {
         WeekendSales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
         console.log(data)
@@ -100,7 +104,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
         loading.value = false; // 로딩 상태 변경
       });
 
-      getSalesByQuarterly('3110718', 'CS100002', (data) => {
+      getSalesByQuarterly(props.place, 'CS100002', (data) => {
         QuarterlySales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
         console.log(data)

@@ -15,13 +15,16 @@ import { getNumberOfSimilarStores} from "@/api/analytic.js"; // API 함수 가�
 
 export default {
   name: "Dashboard",
-  setup() {
+  setup(props) {
     const SimilarStores = ref(null);
     const loading = ref(true); // 데이터 로딩 상태
-
+    
+    // const props = defineProps({
+    //     place: String,
+    //   })
     onMounted(() => {
       // 컴포넌트가 마운트되면 데이터 호출
-      getNumberOfSimilarStores('3110718', 'CS100002', (data) => {
+      getNumberOfSimilarStores(props.place, 'CS100002', (data) => {
         SimilarStores.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경  
 
