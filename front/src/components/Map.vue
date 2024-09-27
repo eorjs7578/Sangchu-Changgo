@@ -2,9 +2,15 @@
   <div class="map-container">
     <div id="map">
     </div>
-    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
-        <button @click="closeModal">Close</button>
-    </div>
+    <Chart2
+     v-if="showModal" 
+     class="modal-overlay"
+     @click.self="closeModal"
+     
+     >
+        <button @click="closeModal">Close</button>        
+    </Chart2>
+
 </div>
 </template>
 
@@ -17,6 +23,7 @@ import {
 
 
 import {ref, onMounted, watch} from 'vue'
+import Chart2 from "@/views/areaAnalytics/Chart2.vue";
 let map = null;
 let areas=ref([]);
 let polygons = ref([]);

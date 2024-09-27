@@ -60,6 +60,7 @@ public class WhiteListConfiguration {
 
 //            API_PREFIX+"/franchises/**",
             API_PREFIX+"/area-evaluation/type",
+            API_PREFIX+"/area-info"
     };
 }
 
