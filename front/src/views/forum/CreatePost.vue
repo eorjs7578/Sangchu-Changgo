@@ -2,15 +2,6 @@
   <div class="community-interface">
     <h1 class="title">{{ isEdit ? "게시글 수정" : "새 게시글 작성" }}</h1>
 
-    <!-- 게시판 선택 -->
-    <!-- <div v-if="!isEdit" class="mb-4">
-      <label for="board" class="block text-sm font-medium text-gray-700 mb-2">게시판 선택</label>
-      <select v-model="boardId" class="search-input">
-        <option disabled value="">게시판을 선택하세요</option>
-        <option v-for="board in boardList" :key="board.id" :value="board.id">{{ board.name }}</option>
-      </select>
-    </div> -->
-
     <!-- 제목 입력 -->
     <div class="mb-4">
       <label for="title" class="block text-sm font-medium text-gray-700 mb-2">제목</label>
@@ -53,7 +44,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { createPost, getPostDetail, updatePost } from '@/api/forum'; // API 함수 가져오기
+import { createPost, getPostDetail, updatePost } from '@/api/forum';  // API 함수 가져오기
 
 export default {
   setup() {
@@ -66,9 +57,7 @@ export default {
     const content = ref('');
     const boardId = ref('');  // 선택한 게시판 ID
     const boardList = ref([   // 게시판 목록 (예시)
-      { id: 1, name: '상권 게시판' },
-      { id: 2, name: '프랜차이즈 게시판' },
-      { id: 3, name: '상권 매물 게시판' },
+
     ]);
 
     // 게시글 수정 시 기존 데이터 가져오기
@@ -78,7 +67,7 @@ export default {
           (response) => {
             title.value = response.data.title;
             content.value = response.data.content;
-            boardId.value = 80;  // 수정 시 기존 게시판 ID 불러오기 (필요 시)
+            boardId.value = response.data.board_id;  // 기존 게시판 ID 불러오기
           },
           (error) => {
             console.error('게시글을 불러오는 중 에러 발생:', error);
@@ -91,17 +80,13 @@ export default {
 
     const submitPost = () => {
       const payload = {
-        board_id: 80,  // 게시판 ID
+        // TODO:
+        board_id: 80,  // 게시판 ID 
         title: title.value,       // 제목
         content: content.value    // 내용
       };
 
       console.log('보내는 데이터:', payload);  // 확인을 위한 로그
-
-      // if (!payload.board_id) {
-      //   alert('게시판을 선택하세요.');
-      //   return;
-      // }
 
       if (isEdit) {
         // 게시글 수정 처리

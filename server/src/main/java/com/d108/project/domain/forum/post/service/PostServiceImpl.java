@@ -3,6 +3,7 @@ package com.d108.project.domain.forum.post.service;
 import com.d108.project.cache.redis.RedisUtil;
 import com.d108.project.domain.forum.board.dto.BoardResponseDto;
 import com.d108.project.domain.forum.board.entity.Board;
+import com.d108.project.domain.forum.post.dto.PostPageResponseDto;
 import com.d108.project.domain.forum.post.entity.Post;
 import com.d108.project.domain.forum.post.repository.PostRepository;
 import com.d108.project.domain.forum.board.repository.BoardRepository;
@@ -141,19 +142,32 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> getPostsByBoardId(Long boardId, int page, int size) {
+    public PostPageResponseDto getPostsByBoardId(Long boardId, int page, int size) {
         Board board = boardRepository.getReferenceById(boardId);
         Pageable pageable = PageRequest.of(page, size);
         Page<Post> posts = postRepository.findByBoard(pageable, board);
 
-        return posts.stream()
-                .map(post -> {
-                    PostResponseDto postResponseDto = PostResponseDto.from(post);
-                    postResponseDto.setView(getViewCountById(post.getId()));
-                    return postResponseDto;
-                })
-                .collect(Collectors.toList());
-    }
+        List<PostResponseDto> postDtos = posts.stream()
+            .map(post -> {
+                PostResponseDto postResponseDto = PostResponseDto.from(post);
+                postResponseDto.setView(getViewCountById(post.getId()));
+                return postResponseDto;
+            })
+            .collect(Collectors.toList());
+
+        // builder 패턴을 사용하여 PostPageResponseDto 생성
+        return PostPageResponseDto.builder()
+            .posts(postDtos)
+             .totalElements(posts.getTotalElements()) // 전체 데이터 수
+            .totalPages(posts.getTotalPages()) // 전체 페이지 수
+            .currentPage(posts.getNumber()) // 현재 페이지
+            .pageSize(posts.getSize()) // 페이지 당 데이터 수
+            .isFirstPage(posts.isFirst()) // 첫 번째 페이지 여부
+            .isLastPage(posts.isLast()) // 마지막 페이지 여부
+            .build();
+}
+
+
 
 
     // 조회수 관련 메서드
