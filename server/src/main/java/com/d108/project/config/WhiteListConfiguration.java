@@ -2,6 +2,7 @@ package com.d108.project.config;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Getter
 @Component
@@ -56,6 +57,9 @@ public class WhiteListConfiguration {
             API_PREFIX+"/posts",
             API_PREFIX+"/area-evaluation/",
             API_PREFIX+"/area-evaluation/statistics/*",
+
+            API_PREFIX+"/franchises/**",
+            API_PREFIX+"/area-evaluation/type",
     };
 }
 
