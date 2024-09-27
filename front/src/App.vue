@@ -2,7 +2,6 @@
   <div class="App_container">
     <NavBar />
     <router-view />
-    <div>{{store.userInfo}}</div>
   </div>
 </template>
 
@@ -12,7 +11,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { useAccountStore } from "@/stores/useAccountStore.js"
 
 const store = useAccountStore();
-
+console.log(store.userInfo);
 </script>
 
 <style scoped>
