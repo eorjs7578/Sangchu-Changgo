@@ -3,6 +3,7 @@ package com.d108.project.config.security.handler;
 import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.config.util.token.TokenUtil;
 import com.d108.project.domain.loginCredential.entity.LoginCredential;
+import com.d108.project.domain.member.entity.Member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +38,10 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
 
         System.out.println("SuccessHandler: " + authentication.getPrincipal());
         // 사용자와 관련된 정보를 모두 조회한다.
-        String username = ((LoginCredential) authentication.getPrincipal()).getUsername();
+        Member member = (Member) authentication.getPrincipal();
+        String username = member.getUsername();
+
+//        String username = ((LoginCredential) authentication.getPrincipal()).getUsername();
 
         // 토큰 생성
         TokenResponseDto tokenResponseDto = tokenUtil.getToken(username);
@@ -57,9 +61,12 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         HashMap<String, Object> responseMap = new HashMap<>();
-        responseMap.put("resultCode", 200);
-        responseMap.put("failMessage", null);
+        responseMap.put("id", member.getId());
+        responseMap.put("username", member.getUsername());
+        responseMap.put("nickname", member.getNickname());
+        responseMap.put("email", member.getEmail());
         jsonObject = new JSONObject(responseMap);
+
         jsonObject.put("access_token", accessToken);
         jsonObject.put("refresh_token", refreshToken);
 

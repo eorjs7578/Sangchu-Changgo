@@ -1,5 +1,6 @@
 package com.d108.project.interfaces.controller.forum;
 
+import com.d108.project.domain.forum.post.dto.PostPageResponseDto;
 import com.d108.project.domain.forum.post.service.PostService;
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
@@ -103,7 +104,19 @@ public class PostController implements PostApi {
 
     @Operation(summary = "[ALL] 모든 페이징 게시판 조회", description ="page는 0부터 시작")
     @Override
-    public ResponseEntity<List<PostResponseDto>> getAllPostsByBoardId(Long boardId, int page, int size) {
+    public ResponseEntity<?> getPostsByBoardId(
+        Long boardId,
+        Integer page,  // Integer로 수정
+        Integer size) {
+
+        // 파라미터가 null일 경우 기본값 설정R
+        if (page == null) {
+            page = 0; // 기본 페이지 번호
+        }
+        if (size == null) {
+            size = 10; // 기본 페이지 크기
+        }
+        System.out.println("응답 : " + boardId + " " + page + " " + size);
         return ResponseEntity.ok(postService.getPostsByBoardId(boardId, page, size));
     }
 }

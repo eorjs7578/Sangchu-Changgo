@@ -15,10 +15,9 @@
           <p>{{ reply.content }}</p>
           <p><strong>작성일:</strong> {{ formatDate(reply.created_at) }}</p>
           <!-- 댓글 수정/삭제 버튼 -->
-          <!-- <div v-if="reply.member_id === currentUserId"> -->
           <div>
-            <button @click="editReply(reply.reply_id, reply.content)">수정</button>
-            <button @click="deleteReply(reply.reply_id)">삭제</button>
+            <button @click="handleEditReply(reply.reply_id, reply.content)">수정</button>
+            <button @click="handleDeleteReply(reply.reply_id)">삭제</button>
           </div>
         </li>
       </ul>
@@ -27,19 +26,18 @@
     <!-- 댓글 작성 -->
     <div class="reply-form">
       <textarea v-model="newReply" placeholder="댓글을 입력하세요"></textarea>
-      <button @click="submitReply">댓글 등록하기</button>
+      <button @click="handleSubmitReply">댓글 등록하기</button>
     </div>
 
     <!-- 게시글 수정/삭제 버튼 -->
-    <!-- <div v-if="post.member_id === currentUserId"> -->
-    <div>
-      <button @click="editPost">수정</button>
-      <button @click="deletePost">삭제</button>
+    <div v-if="post.member_id === currentUserId">
+      <button @click="handleEditPost">수정</button>
+      <button @click="handleDeletePost">삭제</button>
     </div>
 
     <!-- 목록으로 돌아가기 버튼 -->
     <div class="common-buttons">
-      <button @click="fnBackToList">목록으로 돌아가기</button>
+      <button @click="navigateBackToList">목록으로 돌아가기</button>
     </div>
   </div>
 </template>
@@ -47,12 +45,12 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { 
-  getPostDetail, 
-  submitReplyAPI, 
-  deleteReplyAPI, 
-  updateReplyAPI, 
-  deletePostAPI 
+import {
+  getPostDetail,
+  createReply,
+  deleteReply,
+  updateReply,
+  deletePost,
 } from '@/api/forum';
 
 export default {
@@ -60,16 +58,16 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const post = ref({});
-    const currentUserId = 1;  // 로그인된 사용자의 ID (임시 값)
+    const currentUserId = 1; // 로그인된 사용자의 ID (임시 값)
     const newReply = ref(''); // 새 댓글 내용
 
     // 게시글 상세 정보 가져오기
-    const fetchPost = (postId) => {
+    const fetchPostDetail = (postId) => {
       getPostDetail(postId, 
         (response) => {
           post.value = response.data;
-          console.log('게시글 상세 정보:', post.value); // 전체 응답 출력
-          console.log('댓글 목록:', post.value.reply);  // 댓글 배열 출력
+          console.log('게시글 상세 정보:', post.value);
+          console.log('댓글 목록:', post.value.reply);
         },
         (error) => {
           console.error('게시글 상세 정보를 가져오는 중 에러 발생:', error);
@@ -82,20 +80,20 @@ export default {
 
     onMounted(() => {
       if (postId) {
-        fetchPost(postId);
+        fetchPostDetail(postId);
       } else {
         console.error('postId가 정의되지 않았습니다.');
       }
     });
 
     // 게시글 수정 함수
-    const editPost = () => {
+    const handleEditPost = () => {
       router.push(`/CreatePost/${post.value.id}`);
     };
 
     // 게시글 삭제 함수
-    const deletePost = () => {
-      deletePostAPI(postId, 
+    const handleDeletePost = () => {
+      deletePost(postId,
         (response) => {
           console.log('게시글 삭제 성공');
           router.push('/PostList');
@@ -107,13 +105,13 @@ export default {
     };
 
     // 댓글 등록 함수
-    const submitReply = () => {
+    const handleSubmitReply = () => {
       if (!newReply.value) {
         alert("댓글 내용을 입력하세요.");
         return;
       }
       const payload = { content: newReply.value };
-      submitReplyAPI(postId, payload, 
+      createReply(postId, payload, 
         (response) => {
           console.log('댓글 등록 성공:', response);
           post.value.reply.push({
@@ -131,17 +129,16 @@ export default {
     };
 
     // 댓글 삭제 함수
-    const deleteReply = (replyId) => {
+    const handleDeleteReply = (replyId) => {
       console.log('삭제할 댓글 ID:', replyId); // 댓글 ID 확인
       if (!replyId) {
         console.error('삭제할 댓글의 ID가 정의되지 않았습니다.');
         return;
       }
 
-      deleteReplyAPI(postId, replyId, 
+      deleteReply(postId, replyId,
         (response) => {
           console.log('댓글 삭제 성공:', response);
-          // 댓글 목록에서 삭제된 댓글 제거
           post.value.reply = post.value.reply.filter(reply => reply.reply_id !== replyId);
         },
         (error) => {
@@ -151,11 +148,11 @@ export default {
     };
 
     // 댓글 수정 함수
-    const editReply = (replyId, currentContent) => {
+    const handleEditReply = (replyId, currentContent) => {
       const newContent = prompt('댓글 내용을 수정하세요:', currentContent);
       if (newContent && newContent !== currentContent) {
         const payload = { content: newContent };
-        updateReplyAPI(postId, replyId, payload, 
+        updateReply(postId, replyId, payload,
           (response) => {
             console.log('댓글 수정 성공:', response);
             const reply = post.value.reply.find(reply => reply.reply_id === replyId);
@@ -171,7 +168,7 @@ export default {
     };
 
     // 목록으로 돌아가기 함수
-    const fnBackToList = () => {
+    const navigateBackToList = () => {
       router.push('/PostList');
     };
 
@@ -184,12 +181,12 @@ export default {
       post,
       currentUserId,
       newReply,
-      editPost,
-      deletePost,
-      submitReply,
-      deleteReply,
-      editReply,
-      fnBackToList,
+      handleEditPost,
+      handleDeletePost,
+      handleSubmitReply,
+      handleDeleteReply,
+      handleEditReply,
+      navigateBackToList,
       formatDate,
     };
   },
