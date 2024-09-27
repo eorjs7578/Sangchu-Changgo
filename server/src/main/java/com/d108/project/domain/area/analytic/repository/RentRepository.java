@@ -13,4 +13,7 @@ public interface RentRepository extends JpaRepository<Rent, Long> {
 
     @Query("SELECT r.firstFloorRent, r.otherFloorRent FROM Rent r WHERE r.dong.id = :dongId")
     RentsByFloorDto getRentsByFloor(@Param("dongId") Long dongId);
+
+    Rent findByGuIdAndDongId(Long guId, Long dongId);
+    Rent findByDongId(Long id);
 }

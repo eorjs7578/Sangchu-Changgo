@@ -10,8 +10,18 @@ function getDong(regCode,success,fail) {
   local.get(`/api/map/info/dong?code=${regCode}`).then(success).catch(fail);
 }
 
+function getGuRentFee(regCode,success,fail){
+  local.get(`/api/rent/gu/${regCode}`).then(success).catch(fail);
+}
+
+function getDongRentFee(regCode,success,fail){
+  local.get(`/api/rent/dong/${regCode}`).then(success).catch(fail);
+}
+
 
 export {
   getGu,
-  getDong
+  getDong,
+  getGuRentFee,
+  getDongRentFee
 }

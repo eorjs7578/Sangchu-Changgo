@@ -7,13 +7,13 @@ import lombok.Builder;
 
 @Builder
 public record RegionInfoDto(Long code, String name) {
-    public static RegionInfoDto to(Dong dong) {
+    public static RegionInfoDto from(Dong dong) {
         return RegionInfoDto.builder()
                 .code(dong.getId())
                 .name(dong.getDongName())
                 .build();
     }
-    public static RegionInfoDto to(Gu gu) {
+    public static RegionInfoDto from(Gu gu) {
         return RegionInfoDto.builder()
                 .code(gu.getId())
                 .name(gu.getGuName())

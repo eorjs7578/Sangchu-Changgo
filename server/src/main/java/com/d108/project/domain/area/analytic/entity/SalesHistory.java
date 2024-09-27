@@ -33,7 +33,7 @@ public class SalesHistory {
 
     @ManyToOne
     @JoinColumn(name = "service_code")
-    private Service service;
+    private ServiceType serviceType;
 
     @Column(name = "sales_20231")
     private Long sales20231;

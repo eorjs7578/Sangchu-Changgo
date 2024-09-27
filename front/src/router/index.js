@@ -63,11 +63,11 @@ const routes = [
   },
   // const router = useRouter()
   // const boardId = router.params.boardId 로 접근
-  {
-    path: "/community/:boardId",
-    name: "Community",
-    component: Community,
-  },
+  // {
+  //   path: "/community/:boardId",
+  //   name: "Community",
+  //   component: Community,
+  // },
   {
     path: '/franchise',
     name: 'Franchise',

@@ -1,7 +1,7 @@
-package com.d108.project.interfaces.api.favorate;
+package com.d108.project.interfaces.api.favorite;
 
 import com.d108.project.domain.favorite.favoriteFranchise.dto.FavoriteFranchiseRequestDto;
-import com.d108.project.domain.franchise.dto.FranchiseListDto;
+import com.d108.project.domain.favorite.favoriteFranchise.dto.FavoriteFranchiseResponseDto;
 import com.d108.project.domain.member.entity.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,11 +13,11 @@ import java.util.List;
 public interface FavoriteFranchiseApi {
 
     @GetMapping("/list")
-    ResponseEntity<FranchiseListDto> getFavoriteFranchisesByMember(@AuthenticationPrincipal Member member);
+    ResponseEntity<List<FavoriteFranchiseResponseDto>> getFavoriteFranchisesByMember(@AuthenticationPrincipal Member member);
 
-    @DeleteMapping("{favoriteFranchiseId}")
+    @DeleteMapping("/{favoriteFranchiseId}")
     ResponseEntity<Object> deleteFavoriteFranchise(@AuthenticationPrincipal Member member, @PathVariable Long favoriteFranchiseId);
 
     @PostMapping
-    ResponseEntity<Object> createFavoriteFranchise(@AuthenticationPrincipal Member member, @RequestBody FavoriteFranchiseRequestDto favoriteFranchiseRequestDto);
+    ResponseEntity<Object> createFavoriteFranchise(@AuthenticationPrincipal Member member, @RequestBody FavoriteFranchiseRequestDto favoriteFranchiseDto);
 }
