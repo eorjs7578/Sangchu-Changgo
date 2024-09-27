@@ -93,6 +93,12 @@ function getIndustryInfo(areaId, service, success, fail)  {
     .then(success) // 성공 시 콜백 함수 호출
     .catch(fail); // 실패 시 콜백 함수 호출
 } 
+
+function getSimilarServiceCount(areaId, service, success, fail)  {
+  local.get(`api/areas/analytic/similar-industry/number/${areaId}/${service}`) // areaId를 URL에 동적으로 삽입
+    .then(success) // 성공 시 콜백 함수 호출
+    .catch(fail); // 실패 시 콜백 함수 호출
+} 
 export {
     getDailyPopulation,
     getWeeklyPopulation,
@@ -108,5 +114,6 @@ export {
     getSalesByWeekend,
     getSalesByQuarterly,
     getNumberOfSimilarStores,
-    getIndustryInfo
+    getIndustryInfo,
+    getSimilarServiceCount
 }

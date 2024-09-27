@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid h-100">
     <div class="row bg-success text-white p-3 align-items-center">
       <div class="col-10">
         <h2 class="font-weight-bold">{{ area }}</h2>
@@ -51,8 +51,7 @@
 
     <div
         ref="scrollContainer"
-        class="overflow-auto custom-scroll"
-        style="max-height: 400px;"
+        class="overflow-auto custom-scroll h-75"
     >
 
       <!--인구 정보-->
