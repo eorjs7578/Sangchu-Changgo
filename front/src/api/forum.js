@@ -2,31 +2,22 @@ import { localAxios } from "@/util/http-commons";
 
 const local = localAxios();
 
+// 게시글 생성 API
 function createPost(payload, success, fail) {
   local.post(`/api/posts`, payload)
     .then(success)
     .catch(fail);
 }
 
-// function createPost(payload, success, fail) {
-//   local.post(`/api/posts`, payload)
-//     .then((response) => {
-//       // 성공 시 응답에서 postId 받아오기
-//       const postId = response.data.postId; // 응답에서 postId 추출
-//       console.log("게시글 생성 성공, Post ID:", postId);  // postId 출력
-//       success(postId);  // postId를 성공 콜백으로 전달
-//     })
-//     .catch(fail);  // 실패 시 실패 콜백 처리
-// }
-
+// 게시글 목록 조회 API
 function listPost(areaId, success, fail) {
-  // GET 요청에서 경로 변수와 쿼리 파라미터를 함께 사용하는 방법
-  console.log("API 요청을 보낼 areaId:", areaId); // areaId가 제대로 전달되고 있는지 확인
+  console.log("API 요청을 보낼 areaId:", areaId); // areaId 확인
   local.get(`/api/posts/area/${areaId}`)
   .then(success)
   .catch(fail);
 }
 
+// 게시글 상세 조회 API
 function getPostDetail(postId, success, fail) {
   local.get(`/api/posts/${postId}`)
     .then((response) => {
@@ -39,14 +30,56 @@ function getPostDetail(postId, success, fail) {
     });
 }
 
-function deletePost(postId, success, fail) {
+// 게시글 삭제 API
+function deletePostAPI(postId, success, fail) {
   local.delete(`/api/posts/${postId}`)
     .then(success)
     .catch(fail);
 }
 
+// 댓글 목록 조회 API
+function getRepliesAPI(postId, success, fail) {
+  local.get(`/api/posts/${postId}/replies`)
+    .then(success)
+    .catch(fail);
+}
+
+// 댓글 등록 API
+function submitReplyAPI(postId, payload, success, fail) {
+  local.post(`/api/posts/${postId}/replies`, payload)
+    .then(success)
+    .catch(fail);
+}
+
+// 댓글 삭제 API
+function deleteReplyAPI(postId, replyId, success, fail) {
+  console.log('삭제할 댓글 API 호출 - Post ID:', postId, 'Reply ID:', replyId); // 확인용 로그
+  local.delete(`/api/posts/${postId}/replies/${replyId}`)
+    .then(success)
+    .catch(fail);
+}
+// 댓글 수정 API
+function updateReplyAPI(postId, replyId, payload, success, fail) {
+  local.put(`/api/posts/${postId}/replies/${replyId}`, payload)
+    .then(success)
+    .catch(fail);
+}
+
+function updatePost(postId, payload, success, fail) {
+  local.put(`/api/posts/${postId}`, payload)
+    .then(success)
+    .catch(fail);
+}
+
+
 export {
   createPost,
   listPost,
-  getPostDetail
-}
+  getPostDetail,
+  getRepliesAPI,
+  submitReplyAPI,
+  deleteReplyAPI,
+  updateReplyAPI,
+  deletePostAPI,
+  updatePost
+};

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="contatiner">
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
       <h5>상추창고</h5>
@@ -10,7 +10,9 @@
         <li @click="closeCommunitySubmenu">
           <router-link to="/interestareas">관심상권</router-link>
         </li>
-        <li @click="toggleCommunitySubmenu" class="link">커뮤니티</li>
+        <li @click="toggleCommunitySubmenu" >
+          <router-link to="/community">커뮤니티</router-link>
+        </li>
 
         <!-- 프랜차이즈 메뉴 -->
         <li @click="toggleFranchiseSubmenu" class="link">프랜차이즈</li>
