@@ -33,5 +33,9 @@ public interface PostApi {
 
     @GetMapping("/franchise/{franchiseId}")
     ResponseEntity<List<PostResponseDto>> getAllPostsByFranchiseId(@PathVariable("franchiseId") Long franchiseId);
+
+    @GetMapping("/{boardId}/{page}/{size}")
+    ResponseEntity<List<PostResponseDto>> getAllPostsByBoardId(@PathVariable Long boardId, @PathVariable int page, @PathVariable int size);
 }
+
 

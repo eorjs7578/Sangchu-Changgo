@@ -22,7 +22,4 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("SELECT b FROM Board b WHERE b.franchise IS NULL and b.area IS NULL") // 판매 게시판 조회 로직은 수정 필요
     Optional<Board> findSaleBoard();
 
-//    // 검색 조건에 맞는 게시판 조회
-//    @Query("SELECT b FROM Board b WHERE b.areaId = :#{#request.areaId} OR b.franchiseId = :#{#request.franchiseId}")
-//    List<Board> searchBoard(BoardRequestSearchDto request);
 }

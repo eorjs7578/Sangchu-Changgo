@@ -87,5 +87,12 @@ public class PostController implements PostApi {
     public ResponseEntity<List<PostResponseDto>> getAllPostsByFranchiseId(Long franchiseId) {
         return ResponseEntity.ok(postService.getAllPostsByFranchiseId(franchiseId));
     }
+
+
+    @Operation(summary = "[ALL] 모든 페이징 게시판 조회", description ="page는 0부터 시작")
+    @Override
+    public ResponseEntity<List<PostResponseDto>> getAllPostsByBoardId(Long boardId, int page, int size) {
+        return ResponseEntity.ok(postService.getPostsByBoardId(boardId, page, size));
+    }
 }
 
