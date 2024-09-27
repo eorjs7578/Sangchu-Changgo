@@ -195,7 +195,8 @@ const fetchMyEvaluation = async () => {
       const data = response.data;
       console.log('내 평가 데이터:', data);
 
-      evaluationId.value = data.evaluationId
+      evaluationId.value = data.evaluation_id
+      console.log('evaluationId:', evaluationId.value);
 
       // 서버에서 받은 데이터를 selectedOptions에 반영
       selectedOptions.value.ageGroup = data.age_group;
