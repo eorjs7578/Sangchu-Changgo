@@ -35,6 +35,7 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
             Authentication authentication
     ) throws IOException {
 
+        System.out.println("SuccessHandler: " + authentication.getPrincipal());
         // 사용자와 관련된 정보를 모두 조회한다.
         String username = ((LoginCredential) authentication.getPrincipal()).getUsername();
 
