@@ -52,8 +52,9 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
 
         // DTO로 변환하여 반환
         return new AreaEvaluationDto(
-                newEvaluation.getId(),  // 평가 ID
+                area.getId(),  // 상권 ID
                 area.getAreaName(),  // 지역 이름
+                newEvaluation.getId(), // 평가 ID
                 newEvaluation.getAgeGroup().getDescription(),  // 나이 그룹 설명
                 newEvaluation.getFootTraffic().getDescription(),  // 유동 인구 설명
                 newEvaluation.getAtmosphere().getDescription(),  // 분위기 설명
@@ -84,6 +85,7 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
         return new AreaEvaluationDto(
                 evaluation.getArea().getId(),  // 평가 ID
                 evaluation.getArea().getAreaName(),  // 평가 ID
+                evaluation.getId(),
                 evaluation.getAgeGroup().getDescription(),  // 나이 그룹 설명
                 evaluation.getFootTraffic().getDescription(),  // 유동 인구 설명
                 evaluation.getAtmosphere().getDescription(),  // 분위기 설명
@@ -116,6 +118,7 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
         return new AreaEvaluationDto(
                 area.getId(),
                 area.getAreaName(),
+                evaluation.getId(),
                 evaluation.getAgeGroup().getDescription(),
                 evaluation.getFootTraffic().getDescription(),
                 evaluation.getAtmosphere().getDescription(),

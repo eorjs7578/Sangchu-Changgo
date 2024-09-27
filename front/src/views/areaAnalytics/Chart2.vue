@@ -14,6 +14,7 @@ import Dashboard2 from "@/components/areaAnalytics/Dashboard2.vue";
 const route = useRoute()
 const place = ref(route.params.id);
 
+
 </script>
 
 <style scoped>
