@@ -18,7 +18,7 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
     private final AreaRepository areaRepository;
     private final StoreRepository storeRepository;
     private final SaleRepository saleRepository;
-    private final ServiceRepository serviceRepository;
+    private final ServiceTypeRepository serviceTypeRepository;
     private final SalesHistoryRepository salesHistoryRepository;
     private final PopulationHistoryRepository populationHistoryRepository;
     private final PopulationRepository populationRepository;

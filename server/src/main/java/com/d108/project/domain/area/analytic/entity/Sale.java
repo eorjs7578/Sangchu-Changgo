@@ -33,7 +33,7 @@ public class Sale {
 
     @ManyToOne
     @JoinColumn(name = "service_code")
-    private Service service;
+    private ServiceType serviceType;
 
     @Column(name = "year")
     private Integer year;
