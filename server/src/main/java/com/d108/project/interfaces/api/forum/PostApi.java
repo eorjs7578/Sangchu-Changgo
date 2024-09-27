@@ -4,6 +4,7 @@ import com.d108.project.domain.forum.post.dto.PostCreateDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
 import com.d108.project.domain.member.entity.Member;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public interface PostApi {
 
     @PostMapping
     ResponseEntity<Void> createPost(@AuthenticationPrincipal Member member, @RequestBody PostCreateDto postCreateDto);
+//    ResponseEntity<Map<String, Long>> createPost(Member member, PostCreateDto postCreateDto);
 
     @GetMapping("/{postId}")
     ResponseEntity<PostResponseDto> getPostById(@PathVariable("postId") Long postId);

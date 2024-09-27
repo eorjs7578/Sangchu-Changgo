@@ -1,39 +1,40 @@
 <script setup>
 import { ref } from 'vue'
 import { createPost } from '@/api/forum'  // 게시글 생성 API 호출 함수
+import { useRouter } from 'vue-router'    // Vue Router에서 router 사용
 
 // 제목과 내용에 대한 ref 생성
 const subject = ref('')
 const content = ref('')
 
-// URL에서 boardId 추출
-// const route = useRoute();
-// const boardId = route.params.boardId;  // URL에서 boardId 추출
-
+// router 인스턴스 생성
+const router = useRouter()
 
 // 폼 제출 함수
 const submitForm = () => {
 
   // 요청 본문 데이터 생성
-  const postData = {
-    // board_id: selectedBoard.value,  // 게시판 ID
-    board_id: 3001492,  // 게시판 ID
+  const payload = {
+    board_id: 8,  // 게시판 ID
     title: subject.value,  // 제목
     content: content.value  // 내용
   };
 
   // 게시글 작성 요청 보내기
-  createPost(postData,
+  createPost(payload,
     (response) => {
       console.log('게시글 작성 성공:', response);    
       
-    // Location 헤더에서 새 게시글의 URL 확인
-    const location = response.headers['location'] || response.headers['Location'];
-    console.log('새로 생성된 게시글 URL:', response.headers);
+      // Location 헤더에서 새 게시글의 URL 확인 (필요 시 사용)
+      const location = response.headers['location'] || response.headers['Location'];
+      console.log('새로 생성된 게시글 URL:', response.headers);
 
       // 폼 초기화
       subject.value = '';
       content.value = '';
+
+      // 게시글 작성 후 목록 페이지로 이동
+      router.push('/PostList');  // 게시글 목록 경로로 이동
     },
     (error) => {
       console.error('게시글 작성 중 에러 발생:', error);

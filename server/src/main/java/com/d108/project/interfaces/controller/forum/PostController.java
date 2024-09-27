@@ -8,6 +8,8 @@ import com.d108.project.domain.member.entity.Member;
 import com.d108.project.interfaces.api.forum.PostApi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +41,16 @@ public class PostController implements PostApi {
 
         return ResponseEntity.created(location).build();
     }
+//    @Override
+//    public ResponseEntity<Map<String, Long>> createPost(Member member, PostCreateDto postCreateDto) {
+//        Long postId = postService.createPost(member, postCreateDto);
+//
+//        // postId를 JSON 형태로 응답
+//        Map<String, Long> responseBody = new HashMap<>();
+//        responseBody.put("postId", postId);
+//
+//        return ResponseEntity.ok(responseBody);
+//    }
 
     @Operation(summary = "글 수정", description =
             "<p>시큐리티에서 인증 정보를 받아옴</p>" +

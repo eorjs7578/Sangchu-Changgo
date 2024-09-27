@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
       <h5>상추창고</h5>
@@ -26,8 +26,8 @@
 
       <!-- 로그인/회원가입 링크 -->
       <ul class="auth-links">
-        <li @click="closeCommunitySubmenu"><router-link to="/login">로그인</router-link></li>
-        <li @click="closeCommunitySubmenu"><router-link to="/signup">회원가입</router-link></li>
+        <li @click="closeCommunitySubmenu"><router-link to="/members/login">로그인</router-link></li>
+        <li @click="closeCommunitySubmenu"><router-link to="/members/signup">회원가입</router-link></li>
       </ul>
     </nav>
 
@@ -35,15 +35,16 @@
     <nav class="submenu" v-if="isCommunityOpen">
       <h1>커뮤니티</h1>
       <ul>
-        <li><router-link to="/CreatePost">게시글 작성</router-link></li>
-        <li><router-link to="/BoardList">게시글 목록</router-link></li>
-        <!-- <li><router-link to="/CreatePost">상권 매물 게시판</router-link></li> -->
+        <li><router-link to="/CreatePost">상권 게시판</router-link></li>
+        <li><router-link to="/PostList">프랜차이즈 게시판</router-link></li>
+        <li><router-link to="/community/propertyboard">상권 매물 게시판</router-link></li>
       </ul>
     </nav>
 
     <!-- 메인 콘텐츠 영역 -->
-    <!-- <div class="content">
-    </div> -->
+    <div class="content">
+
+    </div>
   </div>
 </template>
 
