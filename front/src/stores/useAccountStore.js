@@ -24,6 +24,7 @@ export const useAccountStore = defineStore("accounts", () => {
 
  return {
     isAuthenticated,
-    checkAuthStatus
+    checkAuthStatus,
+    userInfo
  }
 })

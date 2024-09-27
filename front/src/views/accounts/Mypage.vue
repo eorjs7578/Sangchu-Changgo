@@ -1,9 +1,9 @@
 <template>
     <div class="container">
       <div class="user-info">
-        <h2>{{ user.name }}</h2>
+        <h2>{{ store.userInfo.nickname }}</h2>
         <div class="email-container">
-          <span>{{ user.email }}</span>
+          <span>{{ store.userInfo.email }}</span>
           <button @click="toggleEditForm" class="edit-button">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -71,11 +71,14 @@
   
   <script setup>
   import { ref } from 'vue'
+  import { useAccountStore } from "@/stores/useAccountStore.js"
+
+  const store = useAccountStore();
   
   const user = ref({
-    name: 'OOO 님',
-    email: 'OOO@gmail.com',
-  })
+  name: store.userInfo.nickname || 'OOO 님',
+  email: store.userInfo.email || 'OOO@gmail.com',
+});
   
   const tabs = [
     { id: 'posts', name: '내가 쓴 글' },
