@@ -4,6 +4,7 @@ import com.d108.project.domain.franchise.dto.FranchiseDto;
 import com.d108.project.domain.franchise.dto.FranchiseFeeDto;
 import com.d108.project.domain.franchise.dto.FranchiseTypeDto;
 import com.d108.project.domain.franchise.service.FranchiseService;
+import com.d108.project.domain.member.entity.Member;
 import com.d108.project.interfaces.api.FranchiseApi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,7 +49,9 @@ public class FranchiseController implements FranchiseApi {
     }
 
     @Override
-    public ResponseEntity<FranchiseFeeDto> getFranchiseFee(Long franchiseId) {
-        return new ResponseEntity<>(franchiseService.getFranchiseFee(franchiseId), HttpStatus.OK);
+    public ResponseEntity<FranchiseFeeDto> getFranchiseFee(Member member, Long franchiseId, Long dongCode, Long size, Boolean floor) {
+        return new ResponseEntity<>(franchiseService.getFranchiseFee(member,franchiseId,dongCode,size,floor), HttpStatus.OK);
     }
+
+
 }

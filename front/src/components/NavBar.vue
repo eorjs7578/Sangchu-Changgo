@@ -16,9 +16,9 @@
         <li @click="toggleFranchiseSubmenu" class="link">프랜차이즈</li>
 
         <!-- 프랜차이즈 하위 메뉴 -->
-        <ul v-show="isFranchiseOpen">
-          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal1">관심프차</li>
-          <FavoriteFranchise class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
+        <ul v-show="isFranchiseOpen ">
+          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click="toggleFavorite">관심프차</li>
+          <FavoriteFranchise :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
           <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal2">예상비용</li>
           <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
         </ul>
@@ -29,15 +29,15 @@
       <div class="bottom-container">
         <ul class="auth-links">
           <li v-if="!isLoggedIn" @click="closeCommunitySubmenu">
-            <router-link to="/login">로그인</router-link>
+            <router-link to="/members/login">로그인</router-link>
           </li>
           <li v-if="!isLoggedIn" @click="closeCommunitySubmenu">
-            <router-link to="/signup">회원가입</router-link>
+            <router-link to="/members/signup">회원가입</router-link>
           </li>
           <li v-else class="avatar-container">
             <img src="@/assets/img/account.png" alt="User Avatar" class="avatar-image" @click="toggleAvatarMenu" />
             <div v-show="isAvatarMenuOpen" class="avatar-dropdown">
-              <router-link to="/mypage">마이페이지</router-link>
+              <router-link to="/members/mypage">마이페이지</router-link>
               <button @click="logout" class="logout-btn">로그아웃</button>
             </div>
           </li>
@@ -66,13 +66,47 @@
 import { ref, onMounted } from 'vue';
 import FranchiseFee from '@/views/franchise/FranchiseFee.vue';
 import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue';
+import { getFavoriteFranchises} from '@/api/franchise.js'
 
-const isCommunityOpen = ref(false);
-const isFranchiseOpen = ref(false);
-const isAvatarMenuOpen = ref(false);
+const isCommunityOpen = ref(false)
+const isFranchiseOpen = ref(false)
+const favoriteFranchises = ref([])
 
-// 로그인 상태 변수 (localStorage에서 로그인 상태 확인)
-const isLoggedIn = ref(localStorage.getItem('isLoggedIn') === 'true');
+const isLoggedIn = ref(false)
+const isAvatarMenuOpen = ref(false)
+
+const toggleFavorite = () => {
+  getFavoriteFranchises(
+    ({data}) => {
+      console.log(data)
+      favoriteFranchises.value = transformData(data)
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
+const transformData = (data) => {
+  return data.map((item) => ({
+    id: item.franchise_fee_dto.id,
+    gu: item.gu,  // 실제 구 데이터로 채워야 함
+    dong: item.dong,  // 실제 동 데이터로 채워야 함
+    name: item.franchise_fee_dto.name,
+    storeSize: item.size,  // storeSize 값을 적절히 입력해야 함
+    floor: item.floor,  // floor 값을 적절히 입력해야 함
+    costs: [
+      { name: '임대료', amount: item.franchise_fee_dto.rent_fee },
+      { name: '가맹비', amount: item.franchise_fee_dto.franchise_fee },
+      { name: '보증금', amount: item.franchise_fee_dto.deposit },
+      { name: '교육비', amount: item.franchise_fee_dto.education_fee },
+      { name: '인테리어 비용', amount: item.franchise_fee_dto.interior },
+      { name: '기타비용', amount: item.franchise_fee_dto.other_fee }
+    ],
+    link: item.franchise_fee_dto.link,
+    likeId: item.franchise_fee_dto.like_id
+  }));
+};
 
 const toggleCommunitySubmenu = () => {
   isCommunityOpen.value = !isCommunityOpen.value;
@@ -108,7 +142,10 @@ const logout = () => {
 // 페이지가 로드될 때 로그인 상태 확인 (onMounted 사용)
 onMounted(() => {
   isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';
+  isCommunityOpen.value = false
+  isFranchiseOpen.value = !isFranchiseOpen.value
 });
+
 </script>
 
 <style scoped>
