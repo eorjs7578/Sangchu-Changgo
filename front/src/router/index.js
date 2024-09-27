@@ -124,5 +124,11 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 });
-
+router.beforeEach((to, from, next) => {
+  if (to.path === "/") {
+    next("/marketanalysis");
+  } else {
+    next();
+  }
+})
 export default router;
