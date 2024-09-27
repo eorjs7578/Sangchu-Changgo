@@ -10,6 +10,7 @@ import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationFailu
 import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
 import com.d108.project.config.util.token.TokenUtil;
+import com.d108.project.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

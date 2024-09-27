@@ -12,7 +12,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps } from "vue";
 import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -24,71 +25,75 @@ import {
   LinearScale,
 } from "chart.js";
 
+// Chart.js 모듈 등록
 ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale
 );
 
-export default {
-  name: "WeeklyVisitorChart",
-  components: { Bar },
-  data() {
-    return {
-      chartData: {
-        labels: ["월", "화", "수", "목", "금", "토", "일"],
-        datasets: [
-          {
-            label: "유동인구",
-            backgroundColor: "#3B82F6",
-            data: [
-              3000000, 3500000, 3200000, 3800000, 4500000, 4000000, 3700000,
-            ],
-          },
-        ],
-      },
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false, // 비율을 유지하지 않음
-        plugins: {
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            callbacks: {
-              label: function (context) {
-                let label = context.dataset.label || "";
-                if (label) {
-                  label += ": ";
-                }
-                if (context.parsed.y !== null) {
-                  label +=
-                    new Intl.NumberFormat("ko-KR").format(context.parsed.y) +
-                    "명";
-                }
-                return label;
-              },
-            },
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: function (value) {
-                return new Intl.NumberFormat("ko-KR", {
-                  notation: "compact",
-                  compactDisplay: "short",
-                }).format(value);
-              },
-            },
-          },
+// props 정의
+const props = defineProps({
+  labels: {
+    type: Array,
+    required: true,
+  },
+  data: {
+    type: Array,
+    required: true,
+  },
+});
+
+// 차트 데이터 및 옵션 설정
+const chartData = {
+  labels: props.labels,
+  datasets: [
+    {
+      label: "유동인구",
+      backgroundColor: "#3B82F6",
+      data: props.data,
+    },
+  ],
+};
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false, // 비율을 유지하지 않음
+  plugins: {
+    legend: {
+      display: false,
+    },
+    tooltip: {
+      callbacks: {
+        label: function (context) {
+          let label = context.dataset.label || "";
+          if (label) {
+            label += ": ";
+          }
+          if (context.parsed.y !== null) {
+            label +=
+                new Intl.NumberFormat("ko-KR").format(context.parsed.y) + "명";
+          }
+          return label;
         },
       },
-    };
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        callback: function (value) {
+          return new Intl.NumberFormat("ko-KR", {
+            notation: "compact",
+            compactDisplay: "short",
+          }).format(value);
+        },
+      },
+    },
   },
 };
 </script>

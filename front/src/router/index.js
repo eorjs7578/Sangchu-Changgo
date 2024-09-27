@@ -11,7 +11,8 @@ import Chart from '@/views/areaAnalytics/Chart.vue';
 import Mypage from '@/views/accounts/Mypage.vue';
 import Chart2 from "@/views/areaAnalytics/Chart2.vue";
 import CreatePost from "@/views/forum/CreatePost.vue";
-import BoardList from "@/views/forum/BoardList.vue";
+import PostList from "@/views/forum/PostList.vue";
+import PostDetail from "@/views/forum/PostDetail.vue"
 
 import SurveyForm from '@/components/areaAnalytics/SurveyForm.vue';
 import SurveyResult from '@/components/areaAnalytics/SurveyResult.vue';
@@ -98,10 +99,20 @@ const routes = [
     component: CreatePost
   },
   {
-    path: '/BoardList',
-    name: 'BoardList',
-    component: BoardList
+    path: '/PostList',
+    name: 'PostList',
+    component: PostList
   },
+  {
+    path: '/PostDetail/:postId', // :id는 동적 라우트 매개변수
+    name: 'PostDetail',
+    component: PostDetail
+  },
+  {
+    path: '/charts',
+    name: 'Charts',
+    component: Chart
+  }
 ];
 
 const router = createRouter({

@@ -16,7 +16,7 @@ public class LoginCredentialService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return loginCredentialRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디 입니다."));
     }
 }
 
