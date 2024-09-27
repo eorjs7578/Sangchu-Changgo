@@ -10,8 +10,8 @@
             <h3 class="text-lg font-semibold mb-2">주 연령층</h3>
             <div class="grid grid-cols-3 gap-2 mb-2">
               <button v-for="option in ageGroups" :key="option"
-                      @click="selectOption('age', option)"
-                      :class="['option-button', selectedOptions.age === option ? 'selected' : '']">
+                      @click="selectOption('ageGroup', option)"
+                      :class="['option-button', selectedOptions.ageGroup === option ? 'selected' : '']">
                 {{ option }}
               </button>
             </div>
@@ -22,8 +22,8 @@
             <h3 class="text-lg font-semibold mb-2">유동인구</h3>
             <div class="grid grid-cols-3 gap-2 mb-2">
               <button v-for="option in footTraffics" :key="option"
-                      @click="selectOption('mobility', option)"
-                      :class="['option-button', selectedOptions.mobility === option ? 'selected' : '']">
+                      @click="selectOption('footTraffic', option)"
+                      :class="['option-button', selectedOptions.footTraffic === option ? 'selected' : '']">
                 {{ option }}
               </button>
             </div>
@@ -34,8 +34,8 @@
             <h3 class="text-lg font-semibold mb-2">물가</h3>
             <div class="grid grid-cols-3 gap-2 mb-2">
               <button v-for="option in nearbyPrices" :key="option"
-                      @click="selectOption('price', option)"
-                      :class="['option-button', selectedOptions.price === option ? 'selected' : '']">
+                      @click="selectOption('nearbyPrices', option)"
+                      :class="['option-button', selectedOptions.nearbyPrices === option ? 'selected' : '']">
                 {{ option }}
               </button>
             </div>
@@ -67,17 +67,19 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { postAreaEvaluation, putAreaEvaluation, deleteAreaEvaluation, getAllAreaEvaluationType, getMyAreaEvaluation } from '@/api/analytic';
 import axios from 'axios'
 
 const selectedOptions = ref({
-  age: '',
-  mobility: '',
-  price: '',
+  ageGroup: '',
+  footTraffic: '',
+  nearbyPrices: '',
   atmosphere: ''
 })
 
 const isSubmitted = ref(false)
 const evaluationId = ref(null)
+const areaId = ref('3001491'); // 임시로 이태원 관광특구로 설정
 
 const ageGroups = ref([])
 const footTraffics = ref([])
@@ -86,60 +88,135 @@ const atmospheres = ref([])
 
 const fetchTypeList = async () => {
   try {
-    console.log('타입 데이터를 불러옵니다...');
-    const response = await axios.get('https://j11d108.p.ssafy.io/api/area-evaluation/type');
-    const data = response.data;
-    console.log('타입 데이터:', data); // API 응답 데이터 출력
-    ageGroups.value = data.age_groups;
-    footTraffics.value = data.foot_traffics;
-    nearbyPrices.value = data.nearby_prices;
-    atmospheres.value = data.atmospheres;
+    getAllAreaEvaluationType(areaId.value, null, (response) => {
+      const data = response.data;
+      console.log('타입 데이터:', data);
+      ageGroups.value = data.age_groups;
+      footTraffics.value = data.foot_traffics;
+      nearbyPrices.value = data.nearby_prices;
+      atmospheres.value = data.atmospheres;
+    }, (error) => {
+      console.error('타입 데이터 불러오기 실패:', error);
+    });
   } catch (error) {
     console.error('타입 데이터 불러오기 실패:', error);
-    console.error('API 응답:', error.response); // 추가 에러 정보 출력
   }
 };
 
 
 const selectOption = (category, option) => {
-  selectedOptions.value[category] = option
+  selectedOptions.value[category] = option;
 }
 
+// 평가 생성 함수
 const createEvaluation = async () => {
   try {
-    const response = await axios.post('https://j11d108.p.ssafy.io/api/area-evaluation', selectedOptions.value)
-    console.log('평가 제출 성공:', response.data)
-    evaluationId.value = response.data.id
-    isSubmitted.value = true
-  } catch (error) {
-    console.error('평가 제출 실패:', error)
-  }
-}
+    const evaluationData = {
+      age_group: selectedOptions.value.ageGroup || '',
+      foot_traffic: selectedOptions.value.footTraffic || '',
+      atmosphere: selectedOptions.value.atmosphere || '',
+      nearby_prices: selectedOptions.value.nearbyPrices || ''
+    };
 
+    // 필수 필드가 비어있으면 로그 출력 및 함수 종료
+    if (!evaluationData.age_group || !evaluationData.foot_traffic || !evaluationData.atmosphere || !evaluationData.nearby_prices) {
+      console.error('모든 필드를 입력해야 합니다.');
+      return;
+    }
+
+    console.log('전송 데이터', JSON.stringify(evaluationData))
+
+    postAreaEvaluation(areaId.value, evaluationData, 
+    (response) => {
+      console.log('평가 제출 성공:', response);
+      evaluationId.value = response.data.evaluation_Id;
+      console.log(response)
+      isSubmitted.value = true;
+    }, 
+    (error) => {
+      console.error('평가 제출 실패:', error);
+    });
+  } catch (error) {
+    console.error('평가 제출 실패:', error);
+  }
+};
+
+// 평가 수정 함수
 const updateEvaluation = async () => {
-  if (!evaluationId.value) return
+  console.log('evaluationId:', evaluationId.value);
+  if (!evaluationId.value) return;
+  
   try {
-    const response = await axios.put(`https://j11d108.p.ssafy.io/api/area-evaluation/${evaluationId.value}`, selectedOptions.value)
-    console.log('평가 수정 성공:', response.data)
-  } catch (error) {
-    console.error('평가 수정 실패:', error)
-  }
-}
+    const evaluationData = {
+      age_group: selectedOptions.value.ageGroup || '',
+      foot_traffic: selectedOptions.value.footTraffic || '',
+      atmosphere: selectedOptions.value.atmosphere || '',
+      nearby_prices: selectedOptions.value.nearbyPrices || ''
+    };
 
-const deleteEvaluation = async () => {
-  if (!evaluationId.value) return
-  try {
-    await axios.delete(`https://j11d108.p.ssafy.io/api/area-evaluation/${evaluationId.value}`)
-    console.log('평가 삭제 성공')
-    isSubmitted.value = false
-    selectedOptions.value = { age: '', mobility: '', price: '', atmosphere: '' }
+    // 필수 필드가 비어있으면 로그 출력 및 함수 종료
+    if (!evaluationData.age_group || !evaluationData.foot_traffic || !evaluationData.atmosphere || !evaluationData.nearby_prices) {
+      console.error('모든 필드를 입력해야 합니다.');
+      return;
+    }
+
+    // 평가 수정 요청
+    putAreaEvaluation(areaId.value, evaluationId.value, evaluationData, (response) => {
+      console.log('평가 수정 성공:', response);
+    }, (error) => {
+      console.error('평가 수정 실패:', error);
+    });
+
   } catch (error) {
-    console.error('평가 삭제 실패:', error)
+    console.error('평가 수정 실패:', error);
   }
-}
+};
+
+// 평가 삭제 함수
+const deleteEvaluation = async () => {
+  if (!evaluationId.value) return;
+  try {
+    deleteAreaEvaluation(areaId.value, evaluationId.value, (response) => {
+      console.log('평가 삭제 성공');
+      isSubmitted.value = false;
+      selectedOptions.value = { ageGroup: '', footTraffic: '', nearbyPrices: '', atmosphere: '' };
+    }, (error) => {
+      console.error('평가 삭제 실패:', error);
+    });
+  } catch (error) {
+    console.error('평가 삭제 실패:', error);
+  }
+};
+
+// 내 평가 불러오기 함수
+const fetchMyEvaluation = async () => {
+  try {
+    getMyAreaEvaluation(areaId.value, evaluationId.value, (response) => {
+      const data = response.data;
+      console.log('내 평가 데이터:', data);
+
+      evaluationId.value = data.evaluation_id
+      console.log('evaluationId:', evaluationId.value);
+
+      // 서버에서 받은 데이터를 selectedOptions에 반영
+      selectedOptions.value.ageGroup = data.age_group;
+      selectedOptions.value.footTraffic = data.foot_traffic;
+      selectedOptions.value.nearbyPrices = data.nearby_prices;
+      selectedOptions.value.atmosphere = data.atmosphere;
+
+      // 이미 제출된 평가가 있음을 나타냄
+      isSubmitted.value = true;
+    }, (error) => {
+      console.error('내 평가 데이터 불러오기 실패:', error);
+    });
+  } catch (error) {
+    console.error('내 평가 데이터 불러오기 실패:', error);
+  }
+};
 
 onMounted(() => {
-  fetchTypeList()
+  fetchTypeList();
+  fetchMyEvaluation();
 })
 </script>
 

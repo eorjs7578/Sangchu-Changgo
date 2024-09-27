@@ -30,10 +30,14 @@
       <!-- 로그인/회원가입 또는 아바타 이미지 -->
       <div class="bottom-container">
         <ul class="auth-links">
-          <li v-if="!isLoggedIn" @click="closeCommunitySubmenu">
+          <li
+              v-if="!store.isAuthenticated"
+              @click="closeCommunitySubmenu">
             <router-link to="/members/login">로그인</router-link>
           </li>
-          <li v-if="!isLoggedIn" @click="closeCommunitySubmenu">
+          <li
+              v-if="!store.isAuthenticated"
+              @click="closeCommunitySubmenu">
             <router-link to="/members/signup">회원가입</router-link>
           </li>
           <li v-else class="avatar-container">
@@ -69,6 +73,9 @@ import { ref, onMounted } from 'vue';
 import FranchiseFee from '@/views/franchise/FranchiseFee.vue';
 import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue';
 import { getFavoriteFranchises} from '@/api/franchise.js'
+import {useAccountStore} from "@/stores/useAccountStore.js";
+import {api} from "@/lib/api.js";
+import {useRouter} from "vue-router";
 
 const isCommunityOpen = ref(false)
 const isFranchiseOpen = ref(false)
@@ -76,6 +83,10 @@ const favoriteFranchises = ref([])
 
 const isLoggedIn = ref(false)
 const isAvatarMenuOpen = ref(false)
+
+const router = useRouter();
+const store = useAccountStore();
+
 
 const toggleFavorite = () => {
   getFavoriteFranchises(
@@ -131,19 +142,18 @@ const toggleAvatarMenu = () => {
 // 로그아웃 함수
 const logout = () => {
   isLoggedIn.value = false;
-  localStorage.removeItem('isLoggedIn'); // 로그인 상태 제거
-  isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
-
-  router.push("/").then(() => {
-    window.location.reload();
-  }).catch(err => {
-    console.error('Navigation error:', err);
+  api.post("/api/members/logout").then(() => {
+    localStorage.removeItem('isLoggedIn'); // 로그인 상태 제거
+    isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
+    router.push("/").then(() => {
+      window.location.reload();
+  })
   });
 };
 
 // 페이지가 로드될 때 로그인 상태 확인 (onMounted 사용)
 onMounted(() => {
-  isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';
+  isLoggedIn.value = store.isAuthenticated;
   isCommunityOpen.value = false
   isFranchiseOpen.value = !isFranchiseOpen.value
 });

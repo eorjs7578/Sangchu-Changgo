@@ -1,5 +1,6 @@
 import { api } from "@/lib/api.js"
 
+
 // 이메일 정규 표현식
 export function isEmailValidated(email) {
   return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i.test(email);
@@ -83,8 +84,9 @@ export function login(username, password) {
 }
 
 export function kakaoLogin() {
-  window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:5173&mode=login";
+  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/oauth2/authorization/kakao?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`
 }
+
 export function naverLogin() {
-  window.location.href = "http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:5173&mode=login";
+  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/oauth2/authorization/naver?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`;
 }

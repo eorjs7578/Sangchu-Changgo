@@ -105,6 +105,7 @@
 
 
   onMounted( () => {
+    console.log(props.place);
     api.get(`api/areas/analytic/foot-traffics/daily/${props.place}`) // areaId를 URL에 동적으로 삽입
         .then(response => {
           population.value = response.data;

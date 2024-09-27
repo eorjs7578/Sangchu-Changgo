@@ -2,9 +2,14 @@
   <div class="map-container">
     <div id="map">
     </div>
-    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
-        <button @click="closeModal">Close</button>
-    </div>
+    <Dashboard2
+     v-if="showModal" 
+     class="modal-overlay"
+     :place="computedPlace"
+     @click.self="closeModal"
+     >
+    </Dashboard2>
+
 </div>
 </template>
 
@@ -14,9 +19,9 @@ import {
     getDong,
     getArea,
 } from "@/api/polygon.js";
+import Dashboard2 from "@/components/areaAnalytics/Dashboard2.vue";
 
-
-import {ref, onMounted, watch} from 'vue'
+import {ref, onMounted, watch,computed} from 'vue'
 let map = null;
 let areas=ref([]);
 let polygons = ref([]);
@@ -24,6 +29,7 @@ let script=null;
 let mapLevel=null;
 let x = null;
 let y = null;
+let place = ref();
 
 const selectedArea = ref({ name: '', size: 0 }); // 선택된 영역 정보를 저장하는 ref
 const showModal = ref(false); // 모달 표시 여부를 저장하는 ref
@@ -64,6 +70,7 @@ async function getAreaData(code){
     await getArea(code)
     .then(data=>{
         areas = data;
+        console.log(data)
     })
     .catch(error=>{
         console.error("Error:", error);
@@ -189,6 +196,7 @@ function createPolygon(area) {
         x = area.ypos;
         y = area.xpos;
         
+        console.log('Selected place:', place.value);
            // 선택된 지역 정보를 저장하여 모달에 표시
         selectedArea.value = {
             name: area.name,
@@ -203,15 +211,16 @@ function createPolygon(area) {
     };
 
     // 모달을 보이도록 설정
-    showModal.value = true;
-
-        if(area.size==0){ // 구 
-            getDongData(area.id);
-        }
-        else if (area.size ==1){
-            getAreaData(area.id);
-        }else{
-            getGuData();
+    
+    if(area.size==0){ // 구 
+        getDongData(area.id);
+    }
+    else if (area.size ==1){
+        getAreaData(area.id);
+    }else{
+        place.value = area.id;
+            // showModal.value = true;
+            console.log(place.value)
         }
     });
 
@@ -220,12 +229,14 @@ function createPolygon(area) {
 function closeModal() {
   showModal.value = false;
 }
-// watch(areas, () => {
-//     loadMap(x, y);  // areas 값이 변경되면 폴리곤을 다시 그림
-// },
-// { deep: true }
-// );
 
+watch(place, (newPlace) => {
+  if (newPlace) {
+    showModal.value = true;
+    console.log('Showing modal with updated place:', newPlace); // 업데이트된 place 값 확인
+  }
+});
+const computedPlace = computed(() => place.value);
 </script>
 
 <style scoped>
