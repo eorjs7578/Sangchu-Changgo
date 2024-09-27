@@ -18,10 +18,15 @@ function getDongRentFee(regCode,success,fail){
   local.get(`/api/rent/dong/${regCode}`).then(success).catch(fail);
 }
 
+function getAreaServiceType(regCode,success,fail){
+  local.get(`/api/service/area/${regCode}`).then(success).catch(fail);
+}
+
 
 export {
   getGu,
   getDong,
   getGuRentFee,
-  getDongRentFee
+  getDongRentFee,
+  getAreaServiceType
 }

@@ -1,7 +1,6 @@
 <template>
   <div>
-
-    <div class="container-fluid">
+    <div class="container-fluid h-100">
       <div class="row bg-success text-white p-3 align-items-center">
         <div class="col-10">
           <h2 class="font-weight-bold">{{ area }}</h2>
@@ -12,7 +11,7 @@
           </button>
         </div>
       </div>
-  
+
       <nav class="nav nav-pills nav-fill my-3">
         <a
             class="nav-item nav-link"
@@ -50,30 +49,29 @@
           리뷰
         </a>
       </nav>
-  
+
       <div
           ref="scrollContainer"
-          class="overflow-auto custom-scroll"
-          style="max-height: 400px;"
+          class="overflow-auto custom-scroll h-75"        
       >
-  
+
         <!--인구 정보-->
         <PopulationAnalysis
             :place
         />
-  
+
         <!--점포 분석-->
         <StoreAnalysis
           :place
         />
-        
+
         <!--매출 분석-->
         <SalesAnalysis
           :place
         />
-  
+
         <!---->
-  
+
       </div>
     </div>
   </div>
@@ -132,7 +130,6 @@ onMounted(() => {
   const container = scrollContainer.value;
   container.addEventListener('scroll', updateActiveSection);
 
-  console.log(props.place)
   api.get("/api/area-info", {params: {
     areaId: props.place
     }})
