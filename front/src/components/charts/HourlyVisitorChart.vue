@@ -14,7 +14,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineProps } from "vue";
 import { Line } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -38,77 +39,60 @@ ChartJS.register(
   CategoryScale
 );
 
-export default {
-  name: "HourlyVisitorChart",
-  components: { Line },
-  data() {
-    return {
-      // chartData 설정
-      chartData: {
-        labels: [
-          "07",
-          "08",
-          "09",
-          "10",
-          "11",
-          "12",
-          "13",
-          "14",
-          "15",
-          "16",
-          "17",
-          "18",
-          "19",
-          "20",
-          "21",
-        ],
-        datasets: [
-          {
-            label: "Hourly Visitors",
-            backgroundColor: "#36A2EB",
-            borderColor: "#36A2EB",
-            pointBackgroundColor: "#36A2EB",
-            pointBorderColor: "#fff",
-            data: [
-              30, 60, 80, 120, 180, 220, 260, 320, 400, 450, 430, 380, 320, 250,
-              150,
-            ],
-            borderWidth: 2,
-            tension: 0.1, // 부드러운 선을 만들기 위한 옵션
-            fill: false,
-          },
-        ],
-      },
-      // chartOptions 설정
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: true, // 비율을 유지하도록 설정
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: "시간대",
-            },
-          },
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: "방문자 수",
-            },
-          },
-        },
-        plugins: {
-          legend: {
-            display: true,
-            position: "top",
-          },
-          tooltip: {
-            enabled: true,
-          },
-        },
-      },
-    };
+const props = defineProps({
+  labels: {
+    type: Array,
+    required: true,
   },
-};
+  data: {
+    type: Array,
+    required: true,
+  },
+});
+
+const chartData = {
+  labels: props.labels,
+  datasets: [
+    {
+      label: "Hourly Visitors",
+      backgroundColor: "#36A2EB",
+      borderColor: "#36A2EB",
+      pointBackgroundColor: "#36A2EB",
+      pointBorderColor: "#fff",
+      data: props.data,
+      borderWidth: 2,
+      tension: 0.1, // 부드러운 선을 만들기 위한 옵션
+      fill: false,
+    },
+  ],
+}
+
+const chartOptions = {
+  responsive: true,
+      maintainAspectRatio: true, // 비율을 유지하도록 설정
+      scales: {
+    x: {
+      title: {
+        display: true,
+            text: "시간대",
+      },
+    },
+    y: {
+      beginAtZero: true,
+          title: {
+        display: true,
+            text: "방문자 수",
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: true,
+          position: "top",
+    },
+    tooltip: {
+      enabled: true,
+    },
+  },
+}
 </script>

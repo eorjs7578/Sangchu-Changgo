@@ -40,7 +40,11 @@
       <div>
         {{ time }} 유동인구가 가장 높아요.
       </div>
-      <!--      <ChartComponent />-->
+            <HourlyVisitorChart
+            v-if="Object.keys(hourData).length > 0"
+            :labels="hourData.labels"
+            :data="hourData.data"
+            />
     </div>
 
     <div class="card mb-3 shadow-sm" id="quarter">
@@ -79,13 +83,16 @@
   import { onMounted, ref } from "vue";
   import { api } from "@/lib/api.js"
   import WeeklyVisitorChart from "@/components/charts/WeeklyVisitorChart.vue";
+  import HourlyVisitorChart from "@/components/charts/HourlyVisitorChart.vue";
 
   const population = ref(0);
-  const week = ref("");
   const time = ref("");
   const quarter = ref("");
   const age = ref("");
-  let weekData = ref({});
+  const weekData = ref({});
+  const hourData = ref({});
+  const quarterData = ref({});
+
 
   const props = defineProps({
     place: String,
@@ -104,6 +111,20 @@
           console.log(response.data)
           weekData.value = response.data;
 
+        })
+        .catch(err => console.log(err))
+
+    api.get(`api/areas/analytic/foot-traffics/hour/${props.place}`)
+        .then(response => {
+          console.log(response.data)
+          hourData.value = response.data;
+        })
+        .catch(err => console.log(err))
+
+    api.get(`api/areas/analytic/foot-traffics/quarterly/${props.place}`)
+        .then(response => {
+          console.log(response.data)
+          quarterData.value = response.data;
         })
         .catch(err => console.log(err))
   })
