@@ -21,7 +21,7 @@ public class Store {
 
     @ManyToOne
     @JoinColumn(name = "service_code")
-    private Service service;
+    private ServiceType serviceType;
 
     @ManyToOne
     @JoinColumn(name = "area_id")

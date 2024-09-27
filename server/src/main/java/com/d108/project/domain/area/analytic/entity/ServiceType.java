@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 @Setter(value = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "service")
-public class Service {
+public class ServiceType {
 
     @Id
     @Column(name = "service_code")
