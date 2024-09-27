@@ -1,63 +1,27 @@
-<script setup>
-import { ref } from 'vue'
-import { createPost } from '@/api/forum'  // 게시글 생성 API 호출 함수
-import { useRouter } from 'vue-router'    // Vue Router에서 router 사용
-
-// 제목과 내용에 대한 ref 생성
-const subject = ref('')
-const content = ref('')
-
-// router 인스턴스 생성
-const router = useRouter()
-
-// 폼 제출 함수
-const submitForm = () => {
-
-  // 요청 본문 데이터 생성
-  const payload = {
-    board_id: 8,  // 게시판 ID
-    title: subject.value,  // 제목
-    content: content.value  // 내용
-  };
-
-  // 게시글 작성 요청 보내기
-  createPost(payload,
-    (response) => {
-      console.log('게시글 작성 성공:', response);    
-      
-      // Location 헤더에서 새 게시글의 URL 확인 (필요 시 사용)
-      const location = response.headers['location'] || response.headers['Location'];
-      console.log('새로 생성된 게시글 URL:', response.headers);
-
-      // 폼 초기화
-      subject.value = '';
-      content.value = '';
-
-      // 게시글 작성 후 목록 페이지로 이동
-      router.push('/PostList');  // 게시글 목록 경로로 이동
-    },
-    (error) => {
-      console.error('게시글 작성 중 에러 발생:', error);
-    }
-  );
-};
-</script>
-
 <template>
   <div class="community-interface">
-    <h1 class="title">글쓰기</h1>
+    <h1 class="title">{{ isEdit ? "게시글 수정" : "새 게시글 작성" }}</h1>
+
+    <!-- 게시판 선택 -->
+    <!-- <div v-if="!isEdit" class="mb-4">
+      <label for="board" class="block text-sm font-medium text-gray-700 mb-2">게시판 선택</label>
+      <select v-model="boardId" class="search-input">
+        <option disabled value="">게시판을 선택하세요</option>
+        <option v-for="board in boardList" :key="board.id" :value="board.id">{{ board.name }}</option>
+      </select>
+    </div> -->
 
     <!-- 제목 입력 -->
     <div class="mb-4">
-      <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">제목</label>
+      <label for="title" class="block text-sm font-medium text-gray-700 mb-2">제목</label>
       <input
-        id="subject"
-        v-model="subject"
+        id="title"
+        v-model="title"
         type="text"
         required
         class="search-input"
         placeholder="제목을 입력하세요"
-      >
+      />
     </div>
 
     <!-- 내용 입력 -->
@@ -78,13 +42,103 @@ const submitForm = () => {
       <button
         type="submit"
         class="search-button"
-        @click="submitForm"
+        @click="submitPost"
       >
-        제출하기
+        {{ isEdit ? "수정 완료" : "작성 완료" }}
       </button>
     </div>
   </div>
 </template>
+
+<script>
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { createPost, getPostDetail, updatePost } from '@/api/forum'; // API 함수 가져오기
+
+export default {
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+    const postId = route.params.postId;  // postId가 있으면 수정, 없으면 새 글 작성
+    const isEdit = !!postId;  // postId가 있으면 true, 없으면 false로 구분
+
+    const title = ref('');
+    const content = ref('');
+    const boardId = ref('');  // 선택한 게시판 ID
+    const boardList = ref([   // 게시판 목록 (예시)
+      { id: 1, name: '상권 게시판' },
+      { id: 2, name: '프랜차이즈 게시판' },
+      { id: 3, name: '상권 매물 게시판' },
+    ]);
+
+    // 게시글 수정 시 기존 데이터 가져오기
+    const fetchPost = () => {
+      if (isEdit) {
+        getPostDetail(postId, 
+          (response) => {
+            title.value = response.data.title;
+            content.value = response.data.content;
+            boardId.value = 80;  // 수정 시 기존 게시판 ID 불러오기 (필요 시)
+          },
+          (error) => {
+            console.error('게시글을 불러오는 중 에러 발생:', error);
+          }
+        );
+      }
+    };
+
+    onMounted(fetchPost);  // 페이지 로드 시 데이터 가져오기
+
+    const submitPost = () => {
+      const payload = {
+        board_id: 80,  // 게시판 ID
+        title: title.value,       // 제목
+        content: content.value    // 내용
+      };
+
+      console.log('보내는 데이터:', payload);  // 확인을 위한 로그
+
+      // if (!payload.board_id) {
+      //   alert('게시판을 선택하세요.');
+      //   return;
+      // }
+
+      if (isEdit) {
+        // 게시글 수정 처리
+        updatePost(postId, payload, 
+          (response) => {
+            console.log('게시글 수정 성공:', response);
+            router.push(`/PostDetail/${postId}`);  // 수정 후 게시글 상세 페이지로 이동
+          },
+          (error) => {
+            console.error('게시글 수정 중 에러 발생:', error);
+          }
+        );
+      } else {
+        // 새 게시글 작성 처리
+        createPost(payload, 
+          (response) => {
+            console.log('게시글 작성 성공:', response);
+            router.push('/PostList');  // 작성 후 게시글 목록으로 이동
+          },
+          (error) => {
+            console.error('게시글 작성 중 에러 발생:', error);
+          }
+        );
+      }
+    };
+
+    return {
+      title,
+      content,
+      boardId,
+      boardList,
+      submitPost,
+      isEdit,
+    };
+  },
+};
+</script>
 
 <style scoped>
 .community-interface {
@@ -96,7 +150,6 @@ const submitForm = () => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 .title {

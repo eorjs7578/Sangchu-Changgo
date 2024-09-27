@@ -9,30 +9,30 @@ import java.util.List;
 
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
-    @Query("SELECT s.monthSales FROM Sale s WHERE s.area.id = :areaId AND s.service.serviceCode = :serviceCode")
+    @Query("SELECT s.monthSales FROM Sale s WHERE s.area.id = :areaId AND s.serviceType.serviceCode = :serviceCode")
     Long getSaleByMonthByAreaId(@Param("areaId") Long areaId, @Param("serviceCode") String serviceCode);
 
     @Query("SELECT s.monSales, s.tueSales, s.wedSales, " +
             "s.thuSales, s.friSales, s.satSales, s.sunSales " +
-            "FROM Sale s WHERE s.area.id = :areaId AND s.service.serviceCode = :serviceCode")
+            "FROM Sale s WHERE s.area.id = :areaId AND s.serviceType.serviceCode = :serviceCode")
     List<Long[]> getSaleByDayOfWeek(@Param("areaId") Long areaId, @Param("serviceCode") String serviceCode);
 
     @Query("SELECT s.sales0To6, s.sales6To11, s.sales11To14, " +
             "s.sales14To17, s.sales17To21, s.sales21To24 " +
-            "FROM Sale s WHERE s.area.id = :areaId AND s.service.serviceCode = :serviceCode")
+            "FROM Sale s WHERE s.area.id = :areaId AND s.serviceType.serviceCode = :serviceCode")
     List<Long[]> getSaleByHour(@Param("areaId") Long areaId, @Param("serviceCode") String serviceCode);
 
     @Query("SELECT s.salesIn10s, s.salesIn20s, s.salesIn30s, " +
             "s.salesIn40s, s.salesIn50s, s.salesIn60s " +
-            "FROM Sale s WHERE s.area.id = :areaId AND s.service.serviceCode = :serviceCode")
+            "FROM Sale s WHERE s.area.id = :areaId AND s.serviceType.serviceCode = :serviceCode")
     List<Long[]>  getSaleByAge(@Param("areaId") Long areaId, @Param("serviceCode") String serviceCode);
 
     @Query("SELECT s.manSales, s.womanSales FROM Sale s " +
-            "WHERE s.area.id = :areaId AND s.service.serviceCode = :serviceCode")
+            "WHERE s.area.id = :areaId AND s.serviceType.serviceCode = :serviceCode")
     List<Long[]>  getSaleByGender(@Param("areaId") Long areaId, @Param("serviceCode") String serviceCode);
 
     @Query("SELECT s.weekSales, s.weekendSales FROM Sale s " +
-            "WHERE s.area.id = :areaId AND s.service.serviceCode = :serviceCode")
+            "WHERE s.area.id = :areaId AND s.serviceType.serviceCode = :serviceCode")
     List<Long[]>  getSaleByWeekendAndWeekDay(@Param("areaId") Long areaId, @Param("serviceCode") String serviceCode);
 
 
