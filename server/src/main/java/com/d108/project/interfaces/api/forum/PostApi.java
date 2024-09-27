@@ -37,10 +37,11 @@ public interface PostApi {
     ResponseEntity<List<PostResponseDto>> getAllPostsByFranchiseId(@PathVariable("franchiseId") Long franchiseId);
 
     @GetMapping("/{boardId}/{page}/{size}")
-    ResponseEntity<?> getPostsByBoardId(
-        @PathVariable Long boardId,
-        @RequestParam(required = false) Integer page,
-        @RequestParam(required = false) Integer size);
+    public ResponseEntity<?> getPostsByBoardId(
+        @PathVariable Long boardId,  // URL 경로의 boardId
+        @PathVariable Integer page,  // URL 경로의 page
+        @PathVariable Integer size   // URL 경로의 size
+    );
 }
 
 

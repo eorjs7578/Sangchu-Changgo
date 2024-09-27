@@ -49,14 +49,14 @@ export default {
       totalElements: 0, // 전체 게시글 수
       totalPages: 0, // 전체 페이지 수
       currentPage: 0, // 현재 페이지
-      pageSize: 3, // 한 페이지당 게시글 수
+      pageSize: 0, // 한 페이지당 게시글 수
       isFirstPage: true, // 첫 번째 페이지 여부
       isLastPage: false, // 마지막 페이지 여부
     };
   },
   mounted() {
     const route = useRoute();
-    this.boardId = route.params.boardId || 8; // 기본 게시판 ID
+    this.boardId = route.params.boardId || 80; // 기본 게시판 ID
 
     // URL에서 page 값이 있다면 해당 페이지로 로드, 없으면 첫 페이지 로드
     const page = route.query.page ? parseInt(route.query.page) : 0;
@@ -76,28 +76,30 @@ export default {
   methods: {
     // 게시글 목록 불러오기 (페이지네이션 적용)
     loadPosts(page) {
-      // 페이지 범위를 벗어나지 않도록 제한
-      if (this.totalPages !== 0 && (page < 0 || page >= this.totalPages)) return;
+  // 페이지 범위를 벗어나지 않도록 제한
+  if (this.totalPages !== 0 && (page < 0 || page >= this.totalPages)) return;
 
-      this.currentPage = page;  // 페이지 값 업데이트
-      getPostListByBoard(this.boardId, this.currentPage, this.pageSize, 
-        (response) => {
-          console.log("게시글 목록 불러오기 성공:", response.data);
-          this.postList = response.data.posts;
-          this.totalElements = response.data.total_elements;
-          this.totalPages = response.data.total_pages;
-          this.pageSize = response.data.page_size;
-          this.isFirstPage = response.data.first_page;
-          this.isLastPage = response.data.last_page;
+  this.currentPage = page;  // 페이지 값 업데이트
+  getPostListByBoard(this.boardId, this.currentPage, this.pageSize, 
+    (response) => {
+      console.log("게시글 목록 불러오기 성공:", response.data);
 
-          // 페이지 상태를 URL에 저장
-          this.$router.push({ query: { page: this.currentPage } });
-        },
-        (error) => {
-          console.error('게시글 목록 불러오기 중 에러 발생:', error);
-        }
-      );
+      // API로부터 받아온 데이터로 상태 업데이트
+      this.postList = response.data.posts;
+      this.totalElements = response.data.total_elements;
+      this.totalPages = response.data.total_pages;
+      this.pageSize = response.data.page_size;
+      this.isFirstPage = response.data.first_page;
+      this.isLastPage = response.data.last_page;
+
+      // 페이지 상태를 URL에 저장
+      this.$router.push({ query: { page: this.currentPage } });
     },
+    (error) => {
+      console.error('게시글 목록 불러오기 중 에러 발생:', error);
+    }
+  );
+},
     // 이전 페이지 로딩
     loadPreviousPage() {
       console.log("이전페이지 이동");

@@ -9,12 +9,27 @@ function createPost(payload, success, fail) {
     .catch(fail);
 }
 
+// // 게시글 목록 조회 API (페이지네이션 적용)
+// function getPostListByBoard(boardId, page, size, success, fail) {
+//   console.log("API 요청을 보낼 boardId:", boardId, "page:", page, "size:", size); // boardId, page, size 확인
+//   local.get(`/api/posts/${boardId}/${page}/${size}`)
+//     .then(success)
+//     .catch(fail);
+// }
+
 // 게시글 목록 조회 API (페이지네이션 적용)
 function getPostListByBoard(boardId, page, size, success, fail) {
   console.log("API 요청을 보낼 boardId:", boardId, "page:", page, "size:", size); // boardId, page, size 확인
+
   local.get(`/api/posts/${boardId}/${page}/${size}`)
-    .then(success)
-    .catch(fail);
+    .then((response) => {
+      console.log("API 응답 성공:", response); // API 성공 응답 내용 콘솔에 출력
+      success(response);
+    })
+    .catch((error) => {
+      console.error("API 응답 에러:", error); // API 실패 응답 내용 콘솔에 출력
+      fail(error);
+    });
 }
 
 // 게시글 상세 조회 API
