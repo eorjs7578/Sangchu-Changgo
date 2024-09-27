@@ -47,12 +47,14 @@
 
   function handleLogin() {
     login(username.value, password.value)
-        .then(() => {
+        .then((response) => {
           store.isAuthenticated = true;
+          store.userInfo = response.data
           localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
-          router.push("/").then(() => {
-            window.location.reload();
-          });
+          router.push("/")
+          //     .then(() => {
+          //   window.location.reload();
+          // });
         })
         .catch((err) => {
           alert("로그인에 실패했습니다.");

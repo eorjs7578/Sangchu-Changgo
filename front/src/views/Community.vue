@@ -37,10 +37,13 @@
           <h2>{{ category.name }}</h2>
           <ul>
             <li v-for="item in category.items" :key="item.title">
-              <a href="#">
-                {{ item.name }}
-              </a>
+
+
+              <a @click="goToPostList(item.id)">
+              {{ item.name }}
+            </a>
               <span v-if="item.count" >| 게시물 수 {{ item.post_count }}</span>
+            
             </li>
           </ul>
           <div class="pagination">
@@ -58,8 +61,8 @@
                 <h2>{{ board.name }}</h2>
                 <ul>
                   <li v-for="item in board.items" :key="item.title">
-                    <a href="#">
-                      {{ item.name }}
+                    <a @click="goToPostList(item.id)">
+                          {{ item.name }}
                     </a>
                     <span v-if="item.post_count" class="count">| 게시물 수 : {{ item.post_count }}</span>
                   </li>
@@ -81,12 +84,13 @@
     getALLArea,
     getALLFranchise
 } from "@/api/communitySearch.js";
-
+import { useRouter } from 'vue-router'; // Vue Router import
   
   let categories = ref([])
   
   let hotBoard = ref([]);
-  
+  const router = useRouter(); // Vue Router 사용
+
   const searchQuery = ref('')
   
   const options = ['전체', '상권', '프랜차이즈']
@@ -104,6 +108,14 @@ const initCategory = () => ({
   currentGroup: 0, // 현재 페이지 그룹
   groupSize: 10 // 한 번에 보여줄 페이지 수
 });
+
+// 게시물을 클릭했을 때 호출될 메서드 정의
+const goToPostList = (postId) => {
+  router.push({ 
+    name: 'PostList', // 라우터 이름으로 이동
+    params: { postId } // postId를 params로 전달
+  });
+};
 
 onMounted(() => {
   getHotData(); // 인기 데이터 불러오기

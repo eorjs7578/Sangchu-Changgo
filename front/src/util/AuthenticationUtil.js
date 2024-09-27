@@ -76,7 +76,7 @@ export function login(username, password) {
     password,
   })
     .then(response => {
-      return true
+      return response
     })
     .catch(err => {
       return Promise.reject(err)
