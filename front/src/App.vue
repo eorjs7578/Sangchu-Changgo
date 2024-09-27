@@ -9,13 +9,15 @@
 import NavBar from "@/components/NavBar.vue";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useAccountStore } from "@/stores/useAccountStore.js";
+import { onMounted } from "vue";
 
 const store = useAccountStore();
-
-store.checkAuthStatus()
+onMounted(() => {
+  store.checkAuthStatus()
+})
 // 어디든 마운트 될 때마다 인증 정보를 체크
-// 인증 정보는 store.isAuthenticated에 저장
-// 로그인 되어 있으면 json 형태로 회원 정보가 나오고, 안되어 있으면 false만 출력됨
+// 인증 정보는 store.userInfo에 저장
+// true-false는 간단하게 isAUthenticated에서 확인
 
 </script>
 

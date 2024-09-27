@@ -1,5 +1,6 @@
 import { api } from "@/lib/api.js"
 
+
 // 이메일 정규 표현식
 export function isEmailValidated(email) {
   return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i.test(email);

@@ -79,6 +79,8 @@ public class AreaEvaluationServiceImpl implements AreaEvaluationService {
         evaluation.setAtmosphere(Atmosphere.fromDescription(dto.atmosphere().toUpperCase()));
         evaluation.setNearbyPrices(NearbyPrice.fromDescription(dto.nearbyPrices().toUpperCase()));
 
+        evaluationRepository.save(evaluation);
+
         // DTO로 변환하여 반환
         return new AreaEvaluationDto(
                 evaluation.getArea().getId(),  // 평가 ID

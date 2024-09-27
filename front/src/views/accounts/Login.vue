@@ -37,14 +37,18 @@
   import { ref } from "vue";
   import { useRouter } from "vue-router";
   import { login, kakaoLogin, naverLogin } from "@/util/AuthenticationUtil.js";
+  import {useAccountStore} from "@/stores/useAccountStore.js";
 
   const router = useRouter();
   const username = ref("");
   const password = ref("");
 
+  const store = useAccountStore();
+
   function handleLogin() {
     login(username.value, password.value)
         .then(() => {
+          store.isAuthenticated = true;
           localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
           router.push("/").then(() => {
             window.location.reload();
