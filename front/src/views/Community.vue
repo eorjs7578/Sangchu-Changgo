@@ -44,8 +44,12 @@
             </li>
           </ul>
           <div class="pagination">
-            <button v-for="n in 9" :key="n">{{ n }}</button>
-          </div>
+          <button @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">이전 그룹</button>
+          <button v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
+            {{ n }}
+          </button>
+          <button @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">다음 그룹</button>
+        </div>
         </div>
       </div>
       <div class="category-container">
@@ -90,70 +94,64 @@
   const isOpen = ref(false)
   const inputValue = ref("");
 
-  let page;
-  let size;
-  let pageArea;
-  let sizeArea;
-  let pageFranchise;
-  let sizeFranchise;
-
-  onMounted(() => {
-
-    page =0;
-    size =10;
-    pageArea = 0;
-    sizeArea = 10;
-    pageFranchise = 0;
-    sizeFranchise = 10;
-
-    // 구 정보 불러오기 
-    getHotArea()
-    .then(data=>{
-      console.log(data)
-      hotBoard.value.push({name : "인기 상권",
-      items : data
-      });
-    })
-    .catch(error=>{
-        console.error("Error:", error);
-    })
-
-    getHotFranchise()
-    .then(data=>{
-      hotBoard.value.push({name : "인기 프랜차이즈",
-      items : data
-      });
-    })
-    .catch(error=>{
-        console.error("Error:", error);
-    })
-
-    getAllAreaData();
-    getALLFranchiseData();
+// 페이지 정보를 포함하여 카테고리 초기화
+const initCategory = () => ({
+  name: "",
+  items: [],
+  currentPage: 0,
+  totalPages: 0,
+  size: 10,
+  currentGroup: 0, // 현재 페이지 그룹
+  groupSize: 10 // 한 번에 보여줄 페이지 수
 });
 
-async function getAllAreaData(){
-  await getALLArea(pageArea,sizeArea)
-    .then(data=>{
-      categories.value.push({name : "상권 게시판",
-      items : data.content
-      });
-    })
-    .catch(error=>{
-        console.error("Error:", error);
-    })
+onMounted(() => {
+  getHotData(); // 인기 데이터 불러오기
+  getAllAreaData(); // 모든 상권 데이터 불러오기
+  getAllFranchiseData(); // 모든 프랜차이즈 데이터 불러오기
+});
+
+// 인기 데이터 불러오기
+async function getHotData() {
+  try {
+    const hotAreaData = await getHotArea();
+    hotBoard.value.push({ name: "인기 상권", items: hotAreaData });
+
+    const hotFranchiseData = await getHotFranchise();
+    hotBoard.value.push({ name: "인기 프랜차이즈", items: hotFranchiseData });
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
-async function getALLFranchiseData(){
-  await getALLFranchise(pageFranchise,sizeFranchise)
-    .then(data=>{
-      categories.value.push({name : "프랜차이즈 게시판",
-      items : data.content
-      });
+// 상권 게시판 데이터 불러오기
+async function getAllAreaData() {
+  const newCategory = initCategory();
+  newCategory.name = "상권 게시판";
+  await getALLArea(newCategory.currentPage, newCategory.size)
+    .then(data => {
+      newCategory.items = data.content;
+      newCategory.totalPages = data.total_pages;
+      categories.value.push(newCategory);
     })
-    .catch(error=>{
-        console.error("Error:", error);
+    .catch(error => {
+      console.error("Error:", error);
+    });
+}
+
+// 프랜차이즈 게시판 데이터 불러오기
+async function getAllFranchiseData() {
+  const newCategory = initCategory();
+  newCategory.name = "프랜차이즈 게시판";
+  await getALLFranchise(newCategory.currentPage, newCategory.size)
+    .then(data => {
+      newCategory.items = data.content;
+      newCategory.totalPages = data.total_pages;
+      categories.value.push(newCategory);
     })
+    .catch(error => {
+      console.error("Error:", error);
+    });
 }
 
   const toggleDropdown = () => {
@@ -178,29 +176,73 @@ async function getALLFranchiseData(){
     }
   }
 
-  async function searchArea(){
-    await getArea(pageFranchise,sizeFranchise,inputValue.value)
-    .then(data=>{
-      categories.value.push({name : "상권 게시판",
-      items : data.content
-      });
+// 상권 검색
+async function searchArea() {
+  const newCategory = initCategory();
+  newCategory.name = "상권 게시판";
+  await getArea(newCategory.currentPage, newCategory.size, inputValue.value)
+    .then(data => {
+      newCategory.items = data.content;
+      newCategory.totalPages = data.total_pages;
+      categories.value.push(newCategory);
     })
-    .catch(error=>{
-        console.error("Error:", error);
-    })
-  }
+    .catch(error => {
+      console.error("Error:", error);
+    });
+}
 
-  async function searchFranchise(){
-    await getFranchise(pageFranchise,sizeFranchise,inputValue.value)
-    .then(data=>{
-      categories.value.push({name : "프랜차이즈 게시판",
-      items : data.content
-      });
+// 프랜차이즈 검색
+async function searchFranchise() {
+  const newCategory = initCategory();
+  newCategory.name = "프랜차이즈 게시판";
+  await getFranchise(newCategory.currentPage, newCategory.size, inputValue.value)
+    .then(data => {
+      newCategory.items = data.content;
+      newCategory.totalPages = data.total_pages;
+      categories.value.push(newCategory);
     })
-    .catch(error=>{
+    .catch(error => {
+      console.error("Error:", error);
+    });
+}
+
+// 페이지 변경 시 호출할 함수
+const changePage = async (category, newPage) => {
+  if (newPage < 0 || newPage >= category.totalPages) return; // 범위 초과 시 무시
+  category.currentPage = newPage;
+
+  if (category.name === "상권 게시판") {
+    await getArea(category.currentPage, category.size, inputValue.value)
+      .then(data => {
+        category.items = data.content;
+      })
+      .catch(error => {
         console.error("Error:", error);
-    })
+      });
+  } else if (category.name === "프랜차이즈 게시판") {
+    await getFranchise(category.currentPage, category.size, inputValue.value)
+      .then(data => {
+        category.items = data.content;
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
   }
+}
+
+
+// 페이지 그룹 변경 시 호출할 함수
+const changeGroup = (category, newGroup) => {
+  if (newGroup < 0 || newGroup >= Math.ceil(category.totalPages / category.groupSize)) return;
+  category.currentGroup = newGroup;
+}
+
+// 현재 카테고리의 그룹에 속하는 페이지 번호 배열
+const groupPageArray = (category) => {
+  const startPage = category.currentGroup * category.groupSize;
+  const endPage = Math.min(startPage + category.groupSize, category.totalPages);
+  return Array.from({ length: endPage - startPage }, (_, i) => startPage + i + 1);
+}
   
   </script>
   
