@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -102,22 +104,34 @@ public class PostController implements PostApi {
     }
 
 
-    @Operation(summary = "[ALL] 모든 페이징 게시판 조회", description ="page는 0부터 시작")
-    @Override
-    public ResponseEntity<?> getPostsByBoardId(
-        Long boardId,
-        Integer page,  // Integer로 수정
-        Integer size) {
-
-        // 파라미터가 null일 경우 기본값 설정R
-        if (page == null) {
-            page = 0; // 기본 페이지 번호
-        }
-        if (size == null) {
-            size = 10; // 기본 페이지 크기
-        }
+//    @Operation(summary = "[ALL] 모든 페이징 게시판 조회", description ="page는 0부터 시작")
+//    @Override
+//    public ResponseEntity<?> getPostsByBoardId(
+//        @PathVariable Long boardId,  // URL 경로의 boardId
+//        @PathVariable Integer page,  // URL 경로의 page
+//        @PathVariable Integer size   // URL 경로의 size
+//    ) {
+//        System.out.println("응답 : " + boardId + " " + page + " " + size);
+//        // 파라미터가 null일 경우 기본값 설정R
+//        if (page == null) {
+//            page = 0; // 기본 페이지 번호
+//        }
+//        if (size == null) {
+//            size = 10; // 기본 페이지 크기
+//        }
+////        System.out.println("응답 : " + boardId + " " + page + " " + size);
+//        return ResponseEntity.ok(postService.getPostsByBoardId(boardId, page, size));
+//    }
+@Operation(summary = "[ALL] 모든 페이징 게시판 조회", description ="page는 0부터 시작")
+@Override
+public ResponseEntity<?> getPostsByBoardId(
+    @PathVariable Long boardId,  // 쿼리 파라미터로 boardId
+    @PathVariable Integer page,  // 기본값 설정 가능
+    @PathVariable Integer size  // 기본값 설정 가능
+    ) {
         System.out.println("응답 : " + boardId + " " + page + " " + size);
-        return ResponseEntity.ok(postService.getPostsByBoardId(boardId, page, size));
+
+        return ResponseEntity.ok(postService.getPostsByBoardId(boardId, page, 10));
     }
 }
 
