@@ -37,7 +37,7 @@
           <li v-else class="avatar-container">
             <img src="@/assets/img/account.png" alt="User Avatar" class="avatar-image" @click="toggleAvatarMenu" />
             <div v-show="isAvatarMenuOpen" class="avatar-dropdown">
-              <router-link to="/mypage">마이페이지</router-link>
+              <router-link to="/members/mypage">마이페이지</router-link>
               <button @click="logout" class="logout-btn">로그아웃</button>
             </div>
           </li>
@@ -66,18 +66,14 @@
 import { ref, onMounted } from 'vue';
 import FranchiseFee from '@/views/franchise/FranchiseFee.vue';
 import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue';
-
-const isCommunityOpen = ref(false);
-const isFranchiseOpen = ref(false);
-const isAvatarMenuOpen = ref(false);
-import {ref} from 'vue'
-import FranchiseFee from '@/views/franchise/FranchiseFee.vue'
-import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue'
 import { getFavoriteFranchises} from '@/api/franchise.js'
 
 const isCommunityOpen = ref(false)
 const isFranchiseOpen = ref(false)
 const favoriteFranchises = ref([])
+
+const isLoggedIn = ref(false)
+const isAvatarMenuOpen = ref(false)
 
 const toggleFavorite = () => {
   getFavoriteFranchises(
@@ -146,10 +142,9 @@ const logout = () => {
 // 페이지가 로드될 때 로그인 상태 확인 (onMounted 사용)
 onMounted(() => {
   isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';
-});
   isCommunityOpen.value = false
   isFranchiseOpen.value = !isFranchiseOpen.value
-}
+});
 
 </script>
 

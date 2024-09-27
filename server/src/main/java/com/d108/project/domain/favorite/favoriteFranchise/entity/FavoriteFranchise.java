@@ -1,5 +1,6 @@
 package com.d108.project.domain.favorite.favoriteFranchise.entity;
 
+import com.d108.project.domain.favorite.favoriteFranchise.dto.FavoriteFranchiseRequestDto;
 import com.d108.project.domain.franchise.entity.Franchise;
 import com.d108.project.domain.map.entity.Dong;
 import com.d108.project.domain.map.entity.Gu;
