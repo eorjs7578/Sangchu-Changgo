@@ -4,7 +4,6 @@
   <div class="container-fluid">
     <div class="card mb-3 shadow-sm">
       <div class="card-body">
-        <h3 class="card-title">시간대별 유동인구</h3>
         <br />
         <div style="max-width: 100%; height: 200px">
           <Line :data="chartData" :options="chartOptions" />
@@ -54,7 +53,7 @@ const chartData = {
   labels: props.labels,
   datasets: [
     {
-      label: "Hourly Visitors",
+      label: "시간대 별 유동인구",
       backgroundColor: "#36A2EB",
       borderColor: "#36A2EB",
       pointBackgroundColor: "#36A2EB",

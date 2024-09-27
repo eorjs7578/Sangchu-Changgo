@@ -38,7 +38,7 @@
         시간대별 유동인구
       </div>
       <div>
-        {{ time }} 유동인구가 가장 높아요.
+        {{ hourData.many_people_days_of_the_hour }} 유동인구가 가장 높아요.
       </div>
             <HourlyVisitorChart
             v-if="Object.keys(hourData).length > 0"
@@ -52,19 +52,23 @@
         분기별 평균 유동인구
       </div>
       <div>
-        유동인구가 이전분기에 비해 {{quarter}}하고 있습니다.
+        유동인구가 이전분기에 비해 {{ quarterData.qo_q }}하고 있습니다.
       </div>
-      <!--      <ChartComponent />-->
+            <QuarterlyVisitorChart
+                v-if="Object.keys(quarterData).length > 0"
+                :labels="quarterData.labels"
+                :data="quarterData.data"
+            />
     </div>
 
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
-        시간대별 유동인구
+        유동인구 성별
       </div>
       <div>
-        {{ time }} 유동인구가 가장 높아요.
+        {{ genderData.many_people_gender }}성 유동인구가 가장 높아요.
       </div>
-      <!--      <ChartComponent />-->
+      <GenderGroupChart />
     </div>
 
     <div class="card mb-3 shadow-sm" id="age">
@@ -84,15 +88,16 @@
   import { api } from "@/lib/api.js"
   import WeeklyVisitorChart from "@/components/charts/WeeklyVisitorChart.vue";
   import HourlyVisitorChart from "@/components/charts/HourlyVisitorChart.vue";
+  import QuarterlyVisitorChart from "@/components/charts/QuarterlyVisitorChart.vue";
+  import GenderGroupChart from "@/components/charts/GenderGroupChart.vue";
 
   const population = ref(0);
   const time = ref("");
-  const quarter = ref("");
   const age = ref("");
   const weekData = ref({});
   const hourData = ref({});
   const quarterData = ref({});
-
+  const genderData = ref({});
 
   const props = defineProps({
     place: String,
@@ -108,7 +113,6 @@
 
     api.get(`api/areas/analytic/foot-traffics/day-of-week/${props.place}`) // areaId를 URL에 동적으로 삽입
         .then(response => {
-          console.log(response.data)
           weekData.value = response.data;
 
         })
@@ -116,15 +120,20 @@
 
     api.get(`api/areas/analytic/foot-traffics/hour/${props.place}`)
         .then(response => {
-          console.log(response.data)
           hourData.value = response.data;
         })
         .catch(err => console.log(err))
 
     api.get(`api/areas/analytic/foot-traffics/quarterly/${props.place}`)
         .then(response => {
-          console.log(response.data)
           quarterData.value = response.data;
+        })
+        .catch(err => console.log(err))
+
+    api.get(`api/areas/analytic/foot-traffics/gender/${props.place}`)
+        .then(response => {
+          genderData.value = response.data;
+          console.log(genderData.value)
         })
         .catch(err => console.log(err))
   })
