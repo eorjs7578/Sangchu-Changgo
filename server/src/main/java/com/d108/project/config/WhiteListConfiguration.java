@@ -15,10 +15,10 @@ public class WhiteListConfiguration {
             API_PREFIX+"/members/auth-email",
             API_PREFIX+"/members/signup",
             API_PREFIX+"/members/social-login",
-            API_PREFIX+"/login/**",
+            API_PREFIX+"/members/login",
             API_PREFIX+"/members/duplicate/*",
-            "/login/oauth2/code/kakao",
-            "/login/oauth2/code/naver",
+            API_PREFIX+"/login/oauth2/code/kakao",
+            API_PREFIX+"/login/oauth2/code/naver",
             "/oauth2/authorization/kakao",
             "/oauth2/authorization/naver",
             // 기본 설정 관련
