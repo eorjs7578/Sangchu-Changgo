@@ -193,7 +193,6 @@ public class SecurityConfiguration {
         return new JwtAuthorizationFilter(tokenUtil, whiteListConfiguration);
     }
 
-    // "member/login" 의 cors를 맡는거 같음.
 //    @Bean
 //    public CorsConfigurationSource corsConfigurationSource() {
 //        CorsConfiguration configuration = new CorsConfiguration();
