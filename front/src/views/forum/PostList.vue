@@ -57,9 +57,12 @@ export default {
   mounted() {
     const route = useRoute();
 
-    this.boardId = route.params.boardId || 8; // 기본 게시판 ID
-    let postId = route.params.postId;//////////////////////////////@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/id
-    console.log(postId)
+    this.boardId = route.params.boardId || 80; // 기본 게시판 ID
+    this.boardId = 80;
+    
+    // TODO: 
+    // let postId = route.params.postId;// :id는 동적 라우트 매개변수
+    // console.log(postId)
     
     // URL에서 page 값이 있다면 해당 페이지로 로드, 없으면 첫 페이지 로드
     const page = route.query.page ? parseInt(route.query.page) : 0;

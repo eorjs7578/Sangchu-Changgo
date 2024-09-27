@@ -61,13 +61,6 @@ const routes = [
     name: 'Community',
     component: Community
   },
-  // const router = useRouter()
-  // const boardId = router.params.boardId 로 접근
-  // {
-  //   path: "/community/:boardId",
-  //   name: "Community",
-  //   component: Community,
-  // },
   {
     path: '/franchise',
     name: 'Franchise',
@@ -93,13 +86,19 @@ const routes = [
     name: 'Chart',
     component: Chart2
   },
+  {
+    path: '/CreatePost/:postId?',
+    name: 'CreatePost',
+    component: CreatePost
+  },
+  // TODO: 
   // {
-  //   path: '/CreatePost',
-  //   name: 'CreatePost',
-  //   component: CreatePost
+  //   path: '/PostList/:postId',
+  //   name: 'PostList',
+  //   component: PostList
   // },
   {
-    path: '/PostList/:postId',
+    path: '/PostList',
     name: 'PostList',
     component: PostList
   },
@@ -112,11 +111,6 @@ const routes = [
     path: '/charts',
     name: 'Charts',
     component: Chart
-  },
-  {
-    path: '/CreatePost/:postId?',
-    name: 'CreatePost',
-    component: CreatePost
   }
 ];
 
