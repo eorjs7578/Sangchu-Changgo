@@ -99,7 +99,7 @@ const routes = [
   //   component: CreatePost
   // },
   {
-    path: '/PostList',
+    path: '/PostList/:postId',
     name: 'PostList',
     component: PostList
   },
