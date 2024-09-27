@@ -99,7 +99,7 @@ const routes = [
   //   component: CreatePost
   // },
   {
-    path: '/PostList',
+    path: '/PostList/:postId',
     name: 'PostList',
     component: PostList
   },
@@ -124,5 +124,11 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 });
-
+router.beforeEach((to, from, next) => {
+  if (to.path === "/") {
+    next("/marketanalysis");
+  } else {
+    next();
+  }
+})
 export default router;
