@@ -93,11 +93,11 @@ const routes = [
     name: 'Chart',
     component: Chart2
   },
-  {
-    path: '/CreatePost',
-    name: 'CreatePost',
-    component: CreatePost
-  },
+  // {
+  //   path: '/CreatePost',
+  //   name: 'CreatePost',
+  //   component: CreatePost
+  // },
   {
     path: '/PostList',
     name: 'PostList',
@@ -112,6 +112,11 @@ const routes = [
     path: '/charts',
     name: 'Charts',
     component: Chart
+  },
+  {
+    path: '/CreatePost/:postId?',
+    name: 'CreatePost',
+    component: CreatePost
   }
 ];
 
