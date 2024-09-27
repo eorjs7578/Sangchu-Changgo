@@ -2,7 +2,6 @@
   <div class="container-fluid">
     <div class="card mb-3 shadow-sm">
       <div class="card-body">
-        <h3 class="card-title">요일별 유동인구</h3>
         <br />
         <div style="max-width: 100%; height: 300px">
           <Bar :data="chartData" :options="chartOptions" />
