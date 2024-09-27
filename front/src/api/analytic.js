@@ -93,6 +93,44 @@ function getIndustryInfo(areaId, service, success, fail)  {
     .then(success) // 성공 시 콜백 함수 호출
     .catch(fail); // 실패 시 콜백 함수 호출
 } 
+
+// 평가 관련
+function postAreaEvaluation(areaId, evaluationData, success, fail) {
+  local.post(`api/area-evaluation/${areaId}`, evaluationData) // areaId를 URL에 동적으로 삽입
+    .then(success) // 성공 시 콜백 함수 호출
+    .catch(fail) // 실패 시 콜백 함수 호출
+}
+
+function putAreaEvaluation(areaId, evaluationId, evaluationData, success, fail) {
+  local.put(`api/area-evaluation/${evaluationId}`, evaluationData) // evaluationId를 URL에 동적으로 삽입
+    .then(success) // 성공 시 콜백 함수 호출
+    .catch(fail) // 실패 시 콜백 함수 호출
+}
+
+function deleteAreaEvaluation(areaId, evaluationId, success, fail) {
+  local.delete(`api/area-evaluation/${evaluationId}`) // evaluationId를 URL에 동적으로 삽입
+    .then(success) // 성공 시 콜백 함수 호출
+    .catch(fail) // 실패 시 콜백 함수 호출
+}
+
+function getMyAreaEvaluation(areaId, evaluationId, success, fail) {
+  local.get(`api/area-evaluation/${areaId}`) // areaId를 URL에 동적으로 삽입
+    .then(success) // 성공 시 콜백 함수 호출
+    .catch(fail) // 실패 시 콜백 함수 호출
+}
+
+function getAllAreaEvaluationType(areaId, evaluationId, success, fail) {
+  local.get(`api/area-evaluation/type`) // areaId를 URL에 동적으로 삽입
+    .then(success) // 성공 시 콜백 함수 호출
+    .catch(fail) // 실패 시 콜백 함수 호출
+}
+
+function getStatisticsAreaEvaluation(areaId, evaluationId, success, fail) {
+  local.get(`api/area-evaluation/statistics/${areaId}`) // areaId를 URL에 동적으로 삽입
+    .then(success) // 성공 시 콜백 함수 호출
+    .catch(fail) // 실패 시 콜백 함수 호출
+}
+
 export {
     getDailyPopulation,
     getWeeklyPopulation,
@@ -108,5 +146,12 @@ export {
     getSalesByWeekend,
     getSalesByQuarterly,
     getNumberOfSimilarStores,
-    getIndustryInfo
+    getIndustryInfo,
+
+    postAreaEvaluation,
+    putAreaEvaluation,
+    deleteAreaEvaluation,
+    getMyAreaEvaluation,
+    getAllAreaEvaluationType,
+    getStatisticsAreaEvaluation
 }

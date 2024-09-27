@@ -26,7 +26,7 @@ public class AreaEvaluationController implements AreaEvaluationAPI {
 
     // 평가 생성 (POST)
     @Operation(summary = "[Member] 상권의 평가 생성 ", description = "")
-    public ResponseEntity<AreaEvaluationDto> createEvaluation(Member member,Long areaId, AreaEvaluationCreateDto dto) {
+    public ResponseEntity<AreaEvaluationDto> createEvaluation(Member member,Long areaId, @RequestBody AreaEvaluationCreateDto dto) {
         AreaEvaluationDto createdEvaluation = areaEvaluationService.createEvaluation(member, areaId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEvaluation);
     }

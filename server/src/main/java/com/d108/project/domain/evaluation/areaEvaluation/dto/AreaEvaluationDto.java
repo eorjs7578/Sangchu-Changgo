@@ -9,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AreaEvaluationDto {
     // Getter 및 Setter
+    private Long evaluationId;
     private Long areaId;
     private String areaName;
     private String ageGroup;
