@@ -56,7 +56,9 @@
     >
 
       <!--인구 정보-->
-      <PopulationAnalysis />
+      <PopulationAnalysis
+          :place
+      />
 
       <!--점포 정보-->
       <StoreAnalytics />
@@ -71,6 +73,7 @@
 import { ref, onMounted } from "vue";
 import PopulationAnalysis from "@/components/areaAnalytics/PopulationAnalysis.vue";
 import StoreAnalytics from "@/components/areaAnalytics/StoreAnalytics.vue";
+import { useRouter } from "vue-router";
 
 defineProps({
   place: String,
@@ -79,6 +82,7 @@ defineProps({
 const favorite = ref(false);
 const activeSection = ref('');
 const scrollContainer = ref(null);
+const router = useRouter();
 
 const toggleFavorite = () => {
   favorite.value = !favorite.value;

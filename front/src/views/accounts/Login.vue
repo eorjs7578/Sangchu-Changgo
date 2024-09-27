@@ -44,11 +44,17 @@
 
   function handleLogin() {
     login(username.value, password.value)
-        .then(() => router.push("/"))
-        .catch((err) => console.log(err));
+        .then(() => {
+          localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
+          router.push("/").then(() => {
+            window.location.reload();
+          });
+        })
+        .catch((err) => {
+          alert("로그인에 실패했습니다.");
+          console.log(err)
+        });
   }
-
-
 </script>
 
 <style scoped>

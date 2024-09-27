@@ -39,7 +39,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         // DB에서 username으로 사용자 조회
         if (!bCryptPasswordEncoder().matches(userPassword, loginCredential.getPassword())) {
-            throw new BadCredentialsException(loginCredential.getUsername() + "Invalid password");
+            throw new BadCredentialsException("비밀번호가 틀렸습니다.");
         }
         // 인증에 성공하면 인증된 사용자의 정보와 권한을 담은 새로운 UsernamePasswordAuthenticationToken 반환
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginCredential, userPassword, loginCredential.getAuthorities());

@@ -22,9 +22,15 @@
         요일별 유동 인구
       </div>
       <div>
-        {{ week }} 유동인구가 가장 높아요.
+        {{ weekData.many_people_days_of_week }}요일 유동인구가 가장 높아요.
       </div>
-<!--      <ChartComponent />-->
+
+      <WeeklyVisitorChart
+          v-if="Object.keys(weekData).length > 0"
+          :labels="weekData.labels"
+          :data="weekData.data"
+      />
+
     </div>
 
     <div class="card mb-3 shadow-sm" id="time">
@@ -70,13 +76,37 @@
 </template>
 
 <script setup>
-  import {ref} from "vue";
+  import { onMounted, ref } from "vue";
+  import { api } from "@/lib/api.js"
+  import WeeklyVisitorChart from "@/components/charts/WeeklyVisitorChart.vue";
 
   const population = ref(0);
   const week = ref("");
   const time = ref("");
   const quarter = ref("");
   const age = ref("");
+  let weekData = ref({});
+
+  const props = defineProps({
+    place: String,
+  })
+
+
+  onMounted( () => {
+    api.get(`api/areas/analytic/foot-traffics/daily/${props.place}`) // areaId를 URL에 동적으로 삽입
+        .then(response => {
+          population.value = response.data;
+        })
+        .catch(err => console.log(err))
+
+    api.get(`api/areas/analytic/foot-traffics/day-of-week/${props.place}`) // areaId를 URL에 동적으로 삽입
+        .then(response => {
+          console.log(response.data)
+          weekData.value = response.data;
+
+        })
+        .catch(err => console.log(err))
+  })
 </script>
 
 <style scoped>

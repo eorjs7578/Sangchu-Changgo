@@ -14,6 +14,8 @@ import CreatePost from "@/views/forum/CreatePost.vue";
 import PostList from "@/views/forum/PostList.vue";
 import PostDetail from "@/views/forum/PostDetail.vue"
 
+import SurveyForm from '@/components/areaAnalytics/SurveyForm.vue';
+import SurveyResult from '@/components/areaAnalytics/SurveyResult.vue';
 
 // 1. /members/** : 회원 관련 활동 (로그인, 회원가입, 비밀번호 변경 등)
 // 2. /community/** : 커뮤니티 관련 활동 (커뮤니티 CRUD)
@@ -28,6 +30,21 @@ const routes = [
     path: "/members/signup",
     name: "signUp",
     component: SignUp,
+  },
+  {
+    path: '/surveyForm',
+    name: 'SurveyForm',
+    component: SurveyForm
+  },
+  {
+    path: '/surveyResult',
+    name: 'SurveyResult',
+    component: SurveyResult
+  },
+  {
+    path: '/signup',
+    name: 'SignUp',
+    component: SignUp
   },
   {
     path: '/members/mypage',
@@ -90,6 +107,11 @@ const routes = [
     path: '/PostDetail/:postId', // :id는 동적 라우트 매개변수
     name: 'PostDetail',
     component: PostDetail
+  },
+  {
+    path: '/charts',
+    name: 'Charts',
+    component: Chart
   }
 ];
 
