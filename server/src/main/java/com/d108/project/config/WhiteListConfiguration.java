@@ -48,8 +48,7 @@ public class WhiteListConfiguration {
             API_PREFIX + "/gu/analytic/**",
 
             //프랜차이즈 앤드 포인트
-            API_PREFIX+"/franchises/**",
-
+            API_PREFIX+"/rent/**",
             //맵 앤드 포인트
             API_PREFIX+"/map/**",
             API_PREFIX+"/boards/**",
