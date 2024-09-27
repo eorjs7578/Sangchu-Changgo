@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row bg-success text-white p-3 align-items-center">
       <div class="col-10">
-        <h2 class="font-weight-bold">{{ place }}</h2>
+        <h2 class="font-weight-bold">{{ area }}</h2>
       </div>
       <div class="col-2 text-right">
         <button class="btn" @click="toggleFavorite">
@@ -82,14 +82,18 @@ import PopulationAnalysis from "@/components/areaAnalytics/PopulationAnalysis.vu
 import SalesAnalysis from "@/components/areaAnalytics/SalesAnalysis.vue";
 import StoreAnalysis from "@/components/areaAnalytics/StoreAnalysis.vue";
 import { useRouter } from "vue-router";
+import {api} from "@/lib/api.js";
 
-defineProps({
+const props = defineProps({
   place: String,
 });
 
+
+const area = ref("로딩중 입니다.");
 const favorite = ref(false);
 const activeSection = ref('');
 const scrollContainer = ref(null);
+
 const router = useRouter();
 
 const toggleFavorite = () => {
@@ -124,6 +128,17 @@ const updateActiveSection = () => {
 onMounted(() => {
   const container = scrollContainer.value;
   container.addEventListener('scroll', updateActiveSection);
+
+  api.get("/api/area-info", {params: {
+    areaId: props.place
+    }})
+      .then(response => {
+        console.log(response)
+        area.value = response.data.area_name
+      })
+      .catch(err => {
+        console.log(err)
+      })
 });
 
 </script>

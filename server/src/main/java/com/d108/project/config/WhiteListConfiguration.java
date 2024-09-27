@@ -17,8 +17,8 @@ public class WhiteListConfiguration {
             API_PREFIX+"/members/social-login",
             API_PREFIX+"/members/login",
             API_PREFIX+"/members/duplicate/*",
-            "/login/oauth2/code/kakao",
-            "/login/oauth2/code/naver",
+            API_PREFIX+"/login/oauth2/code/kakao",
+            API_PREFIX+"/login/oauth2/code/naver",
             "/oauth2/authorization/kakao",
             "/oauth2/authorization/naver",
             // 기본 설정 관련
@@ -58,7 +58,7 @@ public class WhiteListConfiguration {
             API_PREFIX+"/area-evaluation/",
             API_PREFIX+"/area-evaluation/statistics/*",
 
-            API_PREFIX+"/franchises/**",
+//            API_PREFIX+"/franchises/**",
             API_PREFIX+"/area-evaluation/type",
     };
 }

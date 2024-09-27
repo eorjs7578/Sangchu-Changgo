@@ -82,7 +82,7 @@ public class SecurityConfiguration {
             JwtAuthorizationFilter jwtAuthorizationFilter
     ) throws Exception {
         return http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         // 화이트리스트에 대한 권한 허용
@@ -127,12 +127,15 @@ public class SecurityConfiguration {
             CustomAuthSuccessHandler customAuthSuccessHandler,
             CustomAuthFailureHandler customAuthFailureHandler
     ) {
+        System.out.println("in customAuthenticationFilter");
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
         // "/members/login" 엔드포인트로 들어오는 요청을 CustomAuthenticationFilter에서 처리하도록 지정한다.
         customAuthenticationFilter.setFilterProcessesUrl("/api/members/login");
         customAuthenticationFilter.setAuthenticationSuccessHandler(customAuthSuccessHandler);    // '인증' 성공 시 해당 핸들러로 처리를 전가한다.
         customAuthenticationFilter.setAuthenticationFailureHandler(customAuthFailureHandler);    // '인증' 실패 시 해당 핸들러로 처리를 전가한다.
+        System.out.println("뭥미");
         customAuthenticationFilter.afterPropertiesSet();
+        System.out.println("완");
         return customAuthenticationFilter;
     }
 
@@ -190,19 +193,20 @@ public class SecurityConfiguration {
         return new JwtAuthorizationFilter(tokenUtil, whiteListConfiguration);
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Collections.singletonList("*"));
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
-        configuration.addAllowedOrigin("http://localhost:5173");
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+////        configuration.setAllowedOrigins(Collections.singletonList("*"));
+//        configuration.setAllowedHeaders(Collections.singletonList("*"));
+//        configuration.addAllowedOrigin("http://localhost:5173");
+//        configuration.addAllowedOrigin("https://localhost:5173");
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        configuration.setAllowCredentials(true);
+//        configuration.setMaxAge(3600L);
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 }
 
