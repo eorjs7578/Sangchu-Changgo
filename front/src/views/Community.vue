@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-  
     <div class="custom-dropdown-input">
       <div class="input-dropdown-container">
         <div class="dropdown-container">
@@ -109,11 +108,11 @@ const initCategory = () => ({
   groupSize: 10 // 한 번에 보여줄 페이지 수
 });
 
-// 게시물을 클릭했을 때 호출될 메서드 정의
-const goToPostList = (postId) => {
+const goToPostList = (boardId) => {
+  console.log("boardId : ", boardId);
   router.push({ 
     name: 'PostList', // 라우터 이름으로 이동
-    params: { postId } // postId를 params로 전달
+    params: { boardId } // boardId를 params로 전달
   });
 };
 
@@ -344,9 +343,6 @@ const groupPageArray = (category) => {
     background-color: #f0f0f0;
   }
   
-  
-  
-  /* //////////////////// */
   .custom-dropdown-input {
     display: flex;
     align-items: center;

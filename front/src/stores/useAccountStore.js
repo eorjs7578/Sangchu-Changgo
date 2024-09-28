@@ -13,6 +13,7 @@ export const useAccountStore = defineStore("accounts", () => {
       .then(response => {
         isAuthenticated.value = true;
         userInfo.value = response.data;
+        console.log("userInfo.value: ", userInfo.value);
         return isAuthenticated
       })
       .catch(() => {
