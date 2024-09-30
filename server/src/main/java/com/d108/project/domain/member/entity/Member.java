@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Getter
-@Setter(value = AccessLevel.PROTECTED)
+@Setter
 @Entity
 @Table(name = "members")
 @ToString(exclude = {"favoriteAreas", "favoriteFranchises"})
