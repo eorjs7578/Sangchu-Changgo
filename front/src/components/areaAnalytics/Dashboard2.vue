@@ -130,6 +130,7 @@ onMounted(() => {
   const container = scrollContainer.value;
   container.addEventListener('scroll', updateActiveSection);
 
+  console.log("fdljfdsoijefijfeiolsijfiejwiofiofjewpsi"+props.place)
   api.get("/api/area-info", {params: {
     areaId: props.place
     }})

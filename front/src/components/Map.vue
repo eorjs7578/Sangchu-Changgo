@@ -6,6 +6,7 @@
      v-if="showModal" 
      class="modal-overlay"
      :place="computedPlace"
+     :key="computedPlace"
      @click.self="closeModal"
      >
     </Dashboard2>
@@ -30,6 +31,7 @@ let mapLevel=null;
 let x = null;
 let y = null;
 let place = ref();
+let dongId = ref();
 
 const selectedArea = ref({ name: '', size: 0 }); // 선택된 영역 정보를 저장하는 ref
 const showModal = ref(false); // 모달 표시 여부를 저장하는 ref
@@ -172,23 +174,23 @@ function createPolygon(area) {
         map: map, // 다각형을 표시할 지도 객체
         path: path,
         strokeWeight: 2,
-        strokeColor: '#004c80',
-        strokeOpacity: 0.8,
-        fillColor: '#fff',
-        fillOpacity: 0.7 
+        strokeColor: '#066905',
+        strokeOpacity: 0.7,
+        fillColor: '#D7F9D6',
+        fillOpacity: 0.5 
     });
 
     // 다각형에 mouseover 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 변경합니다 
     // 지역명을 표시하는 커스텀오버레이를 지도위에 표시합니다
     kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
-        polygon.setOptions({fillColor: '#09f'});
+        polygon.setOptions({fillColor: '#066905'});
 
     });
 
     // 다각형에 mouseout 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 원래색으로 변경합니다
     // 커스텀 오버레이를 지도에서 제거합니다 
     kakao.maps.event.addListener(polygon, 'mouseout', function() {
-        polygon.setOptions({fillColor: '#fff'});
+        polygon.setOptions({fillColor: '#D7F9D6'});
     }); 
 
     // 다각형에 click 이벤트를 등록하고 이벤트가 발생하면 다각형의 이름과 면적을 인포윈도우에 표시합니다 
@@ -217,10 +219,14 @@ function createPolygon(area) {
     }
     else if (area.size ==1){
         getAreaData(area.id);
+        dongId = area.id;
     }else{
         place.value = area.id;
+        getAreaData(dongId);
             // showModal.value = true;
+            console.log("ffff")
             console.log(place.value)
+
         }
     });
 
