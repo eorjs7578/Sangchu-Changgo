@@ -111,7 +111,8 @@
 
   const genderPercentage = computed(() => {
     if(genderData.value != 0) {
-      if(genderData.value.many_people_gender == '남') {
+      if(genderData.value.data[0] >= genderData.value.data[1]) {
+
       return Math.round(((genderData.value.data[0] - genderData.value.data[1] ) / (genderData.value.data[0] + genderData.value.data[1])) * 100)
     }
     return Math.round(((genderData.value.data[1] - genderData.value.data[0] ) / (genderData.value.data[0] + genderData.value.data[1])) * 100)
