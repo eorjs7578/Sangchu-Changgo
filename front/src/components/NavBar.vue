@@ -142,17 +142,34 @@ const toggleAvatarMenu = () => {
 };
 
 // 로그아웃 함수
-const logout = () => {
-  isLoggedIn.value = false;
-  api.post("/api/members/logout").then(() => {
+// const logout = () => {
+//   isLoggedIn.value = false;
+//   api.post("/api/members/logout").then(() => {
+//     store.isAuthenticated = false;
+//     store.userInfo = {};
+//     isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
+//     router.push("/").then(() => {
+//       window.location.reload();
+//   })
+//   });
+// };
+
+const logout = async () => {
+  try {
+    isLoggedIn.value = false;
+    await api.post("/api/members/logout");
     store.isAuthenticated = false;
     store.userInfo = {};
     isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
-    router.push("/").then(() => {
-      window.location.reload();
-  })
-  });
+    await router.push("/");
+    window.location.reload();
+  } catch (error) {
+    console.error("로그아웃 중 오류 발생:", error);
+    // 사용자에게 오류 메시지를 표시할 수 있습니다.
+    // 예: alert("로그아웃 중 문제가 발생했습니다. 다시 시도해 주세요.");
+  }
 };
+
 
 // 페이지가 로드될 때 로그인 상태 확인 (onMounted 사용)
 onMounted(() => {
