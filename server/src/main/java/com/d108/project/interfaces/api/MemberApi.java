@@ -4,9 +4,7 @@ package com.d108.project.interfaces.api;
 import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
 import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.domain.forum.reply.dto.ReplyByMemberIdResponseDto;
-import com.d108.project.domain.member.dto.MemberLoginDto;
-import com.d108.project.domain.member.dto.MemberRegisterDto;
-import com.d108.project.domain.member.dto.MemberResponseDto;
+import com.d108.project.domain.member.dto.*;
 import com.d108.project.domain.member.entity.Member;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
@@ -49,4 +47,16 @@ public interface MemberApi {
     ResponseEntity<String> isUsernameDuplicated(@RequestParam String username);
     @GetMapping("/duplicate/nickname")
     ResponseEntity<String> isNicknameDuplicated(@RequestParam String nickname);
+
+    //닉네임, 이메일, 비밀번호 변경
+    @PostMapping("/update/nickname")
+    ResponseEntity<Void> changeNickname(@AuthenticationPrincipal Member member, @RequestBody MemberNicknameRequestDto memberNicknameRequestDto);
+
+    @PostMapping("/update/email")
+    ResponseEntity<Void> changeEmail(@AuthenticationPrincipal Member member, @RequestBody EmailAuthCheckDto emailAuthCheckDto);
+
+    @PostMapping("/update/password")
+    ResponseEntity<Void> changePassword(@AuthenticationPrincipal Member member, @RequestBody MemberPasswordChangeDto memberPasswordChangeDto);
+
+
 }

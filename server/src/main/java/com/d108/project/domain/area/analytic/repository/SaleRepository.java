@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     @Query("SELECT s.monthSales FROM Sale s WHERE s.area.id = :areaId AND s.serviceType.serviceCode = :serviceCode")
-    Long getSaleByMonthByAreaId(@Param("areaId") Long areaId, @Param("serviceCode") String serviceCode);
+    Optional<Long> getSaleByMonthByAreaId(@Param("areaId") Long areaId, @Param("serviceCode") String serviceCode);
 
     @Query("SELECT s.monSales, s.tueSales, s.wedSales, " +
             "s.thuSales, s.friSales, s.satSales, s.sunSales " +
@@ -29,7 +30,7 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     @Query("SELECT s.manSales, s.womanSales FROM Sale s " +
             "WHERE s.area.id = :areaId AND s.serviceType.serviceCode = :serviceCode")
-    List<Long[]>  getSaleByGender(@Param("areaId") Long areaId, @Param("serviceCode") String serviceCode);
+    List<Integer[]>  getSaleByGender(@Param("areaId") Long areaId, @Param("serviceCode") String serviceCode);
 
     @Query("SELECT s.weekSales, s.weekendSales FROM Sale s " +
             "WHERE s.area.id = :areaId AND s.serviceType.serviceCode = :serviceCode")
