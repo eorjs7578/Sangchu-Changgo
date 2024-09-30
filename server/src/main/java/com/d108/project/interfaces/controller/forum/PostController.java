@@ -98,8 +98,8 @@ public class PostController implements PostApi {
     @Override
     public ResponseEntity<?> getPostsByBoardId(
         @PathVariable Long boardId,  // URL 경로의 boardId
-        @PathVariable Integer page,  // URL 경로의 page
-        @PathVariable Integer size   // URL 경로의 size
+        @PathVariable(required = false) Integer page,  // URL 경로의 page
+        @PathVariable(required = false) Integer size   // URL 경로의 size
     ) {
         // 파라미터가 null일 경우 기본값 설정R
         if (page == 0) {
