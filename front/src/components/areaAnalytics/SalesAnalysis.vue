@@ -11,20 +11,37 @@
       </div>
     </div>
 
-    <div class="card shadow-sm p-3 mb-3">
-      <div>
-        성별{{ GenderSales }}
+    <div class="card mb-3 shadow-sm" id="time">
+      <div class="card-body">
+        성별별 매출
       </div>
+      <div>
+        <span>{{ GenderSales.many_sale_gender }}성 매출이 약 {{ genderPercentage }}% 더 높아요.</span>
+      </div>
+      <GenderGroupChart :genderData="GenderSales" />
     </div>
 
 
     <div class="card shadow-sm p-3 mb-3">
+      <h4>주중, 주말별 매출</h4>
       <div>
           <HorizontalBarChart
           v-if="Object.keys(WeekendSales).length > 0"
           :labels="WeekendSales.labels"
           :data="WeekendSales.data"
           />
+      </div>
+    </div>
+
+    <div class="card shadow-sm p-3 mb-3">
+      <h3>연령별 매출</h3>
+      {{ AgeSales.many_sale_age }} 매출이 가장 높아요
+      <div>
+          <AgeGroupChart
+                v-if="Object.keys(AgeSales).length > 0"
+                :labels="AgeSales.labels"
+                :data="AgeSales.data"
+            />
       </div>
     </div>
 
@@ -43,14 +60,14 @@
 
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'; // Composition API에서 필요한 함수들 임포트
+import { ref, onMounted, watch, computed } from 'vue'; // Composition API에서 필요한 함수들 임포트
 import { api } from "@/lib/api.js"
 import WeeklyVisitorChart from "@/components/charts/WeeklyVisitorChart.vue";
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart.vue';
 import HourlyVisitorChart from "@/components/charts/HourlyVisitorChart.vue";
 import QuarterlyVisitorChart from "@/components/charts/QuarterlyVisitorChart.vue";
 import GenderGroupChart from "@/components/charts/GenderGroupChart.vue";
-import AgeGroupChart from "@/components/charts/GenderGroupChart.vue";
+import AgeGroupChart from "@/components/charts/AgeGroupChart.vue";
 import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, getSalesByQuarterly} from "@/api/analytic.js"; // API 함수 가져오기
 
 
@@ -66,6 +83,16 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
   })
 
     const loading = ref(true); // 데이터 로딩 상태
+
+    const genderPercentage = computed(() => {
+    if(GenderSales.value != 0) {
+      if(GenderSales.value.data[0] >= GenderSales.value.data[1]) {
+
+      return Math.round(((GenderSales.value.data[0] - GenderSales.value.data[1] ) / (GenderSales.value.data[0] + GenderSales.value.data[1])) * 100)
+    }
+    return Math.round(((GenderSales.value.data[1] - GenderSales.value.data[0] ) / (GenderSales.value.data[0] + GenderSales.value.data[1])) * 100)
+    }
+  })
 
     watch(
     () => props.service,

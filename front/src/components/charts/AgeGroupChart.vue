@@ -2,7 +2,6 @@
   <div class="container-fluid">
     <div class="card mb-3 shadow-sm">
       <div class="card-body">
-        <h3>연령별 유동인구</h3>
         <!-- 차트 크기를 제한하기 위해 div에 width와 height 설정 -->
         <div style="max-width: 600px; height: 300px">
           <Radar :data="chartData" :options="chartOptions" />
