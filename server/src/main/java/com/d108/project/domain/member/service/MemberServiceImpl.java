@@ -112,7 +112,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public boolean isUsernameDuplicated(String username) {
-        if (loginCredentialRepository.findByUsername(username).isPresent()) {
+        if (memberRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
         return true;
@@ -132,7 +132,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void changeEmail(Member member, EmailAuthCheckDto emailAuthCheckDto) {
-
         if (!redisEmailService.checkAuthCode(emailAuthCheckDto)) {
             throw new RuntimeException("인증번호가 틀립니다.");
         }
@@ -142,6 +141,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void changeNickname(Member member, String nickname) {}
+    public void changeNickname(Member member, MemberNicknameRequestDto memberNicknameRequestDto) {
+            member.setNickname(memberNicknameRequestDto.getNickname());
+            memberRepository.save(member);
+    }
 }
 
