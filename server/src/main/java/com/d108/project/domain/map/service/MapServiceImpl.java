@@ -35,7 +35,7 @@ public class MapServiceImpl implements MapService {
     }
 
     private List<Gu> getGuInfos() {
-        return guRepository.findAll();
+        return guRepository.findAllByOrderByGuName();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class MapServiceImpl implements MapService {
 
     private List<Dong> getDongInfos(Long guCode) {
         Gu gu = guRepository.getReferenceById(guCode);
-        return dongRepository.findByCode(gu);
+        return dongRepository.findByCodeOrderByDongName(gu);
     }
 
     @Override
