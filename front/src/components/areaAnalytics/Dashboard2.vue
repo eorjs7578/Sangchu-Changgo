@@ -57,17 +57,17 @@
 
         <!--인구 정보-->
         <PopulationAnalysis
-            :place
+            :place 
         />
 
         <!--점포 분석-->
         <StoreAnalysis
-          :place
+          :place @update:location="handleLocationUpdate"
         />
 
         <!--매출 분석-->
         <SalesAnalysis
-          :place
+          :place :service
         />
 
         <!---->
@@ -96,10 +96,16 @@ const activeSection = ref('');
 const scrollContainer = ref(null);
 
 const router = useRouter();
+const service = ref()
 
 const toggleFavorite = () => {
   favorite.value = !favorite.value;
 };
+
+const handleLocationUpdate = (location) => {
+      console.log('Selected location received from child:', location);
+      service.value = location
+    };
 
 const scrollToSection = (section) => {
   activeSection.value = section;
