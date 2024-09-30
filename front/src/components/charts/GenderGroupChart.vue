@@ -42,18 +42,11 @@ export default {
         labels: ["20대", "30대", "40대", "50대", "60대 이상"],
         datasets: [
           {
-            label: "남성",
+            label: "연령대별 인구",
             backgroundColor: "rgba(54, 162, 235, 0.2)",
             borderColor: "rgba(54, 162, 235, 1)",
             pointBackgroundColor: "rgba(54, 162, 235, 1)",
             data: [65, 75, 70, 80, 60],
-          },
-          {
-            label: "여성",
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
-            borderColor: "rgba(255, 99, 132, 1)",
-            pointBackgroundColor: "rgba(255, 99, 132, 1)",
-            data: [55, 65, 85, 70, 50],
           },
         ],
       },

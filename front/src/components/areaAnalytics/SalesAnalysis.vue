@@ -7,29 +7,47 @@
           v-if="Object.keys(WeeklySales).length > 0"
           :labels="WeeklySales.labels"
           :data="WeeklySales.data"
-        />
+        />        
       </div>
     </div>
 
-    <div class="card shadow-sm p-3 mb-3">
+    <div class="card mb-3 shadow-sm" id="age">
+      <div class="card-body">
+        연령별 매출
+      </div>
       <div>
-        나이{{AgeSales}}
-        성별{{ GenderSales }}
-        {{ props.service }}
+        {{ AgeSales.many_sale_age}} 매출이 가장 높아요.
+      </div>
+      <AgeGroupChart
+                v-if="Object.keys(AgeSales).length > 0"
+                :labels="AgeSales.labels"
+                :data="AgeSales.data"
+            />
+            
+    </div>
+
+
+
+    <div class="card shadow-sm p-3 mb-3">
+      <div>        
+        성별{{ GenderSales }}          
+      </div>
+    </div>
+
+
+    <div class="card shadow-sm p-3 mb-3">
+      <div>        
+          <HorizontalBarChart
+          v-if="Object.keys(WeekendSales).length > 0"
+          :labels="WeekendSales.labels"
+          :data="WeekendSales.data"          
+          />
       </div>
     </div>
 
     <div class="card shadow-sm p-3 mb-3">
-      <div>
-        주중, 주말
-        {{ WeekendSales }}
-      </div>
-    </div>
-
-    <div class="card shadow-sm p-3 mb-3">
-      <div>      
-       
-        해당업종의 매출이 이전분기에 비해 {{ QuarterlySales.qoq }}하고 있습니다.
+      <div>           
+      {{ QuarterlySales.qoq }}
         <QuarterlyVisitorChart
                 v-if="Object.keys(QuarterlySales ).length > 0"
                 :labels="QuarterlySales.labels"
@@ -45,9 +63,11 @@
 import { ref, onMounted } from 'vue'; // Composition API에서 필요한 함수들 임포트
 import { api } from "@/lib/api.js"
 import WeeklyVisitorChart from "@/components/charts/WeeklyVisitorChart.vue";
+import HorizontalBarChart from '@/components/charts/HorizontalBarChart.vue';
 import HourlyVisitorChart from "@/components/charts/HourlyVisitorChart.vue";
 import QuarterlyVisitorChart from "@/components/charts/QuarterlyVisitorChart.vue";
 import GenderGroupChart from "@/components/charts/GenderGroupChart.vue";
+import AgeGroupChart from "@/components/charts/GenderGroupChart.vue";
 import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, getSalesByQuarterly} from "@/api/analytic.js"; // API 함수 가져오기
 
 
