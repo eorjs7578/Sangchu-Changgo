@@ -66,9 +66,9 @@
         유동인구 성별
       </div>
       <div>
-        {{ genderData.many_people_gender }}성 유동인구가 가장 높아요.
+        <span>{{ genderData.many_people_gender }}성 유동인구가 약 {{ genderPercentage }}% 더 높아요.</span>
       </div>
-      <GenderGroupChart />
+      <GenderGroupChart :genderData="genderData" />
     </div>
 
     <div class="card mb-3 shadow-sm" id="age">
@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-  import { onMounted, ref } from "vue";
+  import { onMounted, ref,computed,watch } from "vue";
   import { api } from "@/lib/api.js"
   import WeeklyVisitorChart from "@/components/charts/WeeklyVisitorChart.vue";
   import HourlyVisitorChart from "@/components/charts/HourlyVisitorChart.vue";
@@ -97,11 +97,60 @@
   const weekData = ref({});
   const hourData = ref({});
   const quarterData = ref({});
-  const genderData = ref({});
+  const genderData = ref(0);
 
   const props = defineProps({
     place: String,
   })
+
+  const genderPercentage = computed(() => {
+    if(genderData.value != 0) {
+      if(genderData.value.many_people_gender == '남') {
+      return Math.round(((genderData.value.data[0] - genderData.value.data[1] ) / (genderData.value.data[0] + genderData.value.data[1])) * 100)
+    }
+    return Math.round(((genderData.value.data[1] - genderData.value.data[0] ) / (genderData.value.data[0] + genderData.value.data[1])) * 100)
+    }
+  })
+
+  watch(
+    () => props.place,
+    (newPlace => {
+    console.log(newPlace);
+    api.get(`api/areas/analytic/foot-traffics/daily/${newPlace}`) // areaId를 URL에 동적으로 삽입
+        .then(response => {
+          population.value = response.data;
+        })
+        .catch(err => console.log(err))
+
+    api.get(`api/areas/analytic/foot-traffics/day-of-week/${newPlace}`) // areaId를 URL에 동적으로 삽입
+        .then(response => {
+          weekData.value = response.data;
+
+        })
+        .catch(err => console.log(err))
+
+    api.get(`api/areas/analytic/foot-traffics/hour/${newPlace}`)
+        .then(response => {
+          hourData.value = response.data;
+        })
+        .catch(err => console.log(err))
+
+    api.get(`api/areas/analytic/foot-traffics/quarterly/${newPlace}`)
+        .then(response => {
+          quarterData.value = response.data;
+        })
+        .catch(err => console.log(err))
+
+    api.get(`api/areas/analytic/foot-traffics/gender/${newPlace}`)
+        .then(response => {
+          genderData.value = response.data;
+          console.log(genderData.value)
+        })
+        .catch(err => console.log(err))
+  },
+    { immediate: true }
+  )
+);
 
 
   onMounted( () => {

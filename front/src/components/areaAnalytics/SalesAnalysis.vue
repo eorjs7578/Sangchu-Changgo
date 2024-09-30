@@ -23,6 +23,7 @@
       <div>
         주중, 주말
         {{ WeekendSales }}
+        
       </div>
     </div>
 
@@ -42,7 +43,7 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue'; // Composition API에서 필요한 함수들 임포트
+import { ref, onMounted, watch } from 'vue'; // Composition API에서 필요한 함수들 임포트
 import { api } from "@/lib/api.js"
 import WeeklyVisitorChart from "@/components/charts/WeeklyVisitorChart.vue";
 import HourlyVisitorChart from "@/components/charts/HourlyVisitorChart.vue";
@@ -64,9 +65,11 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
 
     const loading = ref(true); // 데이터 로딩 상태
 
-    onMounted(() => {
+    watch(
+    () => props.service,
+    (newService) => {
       // 컴포넌트가 마운트되면 데이터 호출
-      getSalesByWeek(props.place, 'CS100002', (data) => {
+      getSalesByWeek(props.place, newService.service_code, (data) => {
         WeeklySales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
         console.log(data)
@@ -76,7 +79,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
         loading.value = false; // 로딩 상태 변경
       });
       
-      getSalesByAge(props.place, 'CS100002', (data) => {
+      getSalesByAge(props.place, newService.service_code, (data) => {
         AgeSales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
         console.log(data)
@@ -86,7 +89,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
         loading.value = false; // 로딩 상태 변경
       });
 
-      getSalesByGender(props.place, 'CS100002', (data) => {
+      getSalesByGender(props.place, newService.service_code, (data) => {
         GenderSales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
         console.log(data)
@@ -96,7 +99,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
         loading.value = false; // 로딩 상태 변경
       });
 
-      getSalesByWeekend(props.place, 'CS100002', (data) => {
+      getSalesByWeekend(props.place, newService.service_code, (data) => {
         WeekendSales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
         console.log(data)
@@ -106,7 +109,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
         loading.value = false; // 로딩 상태 변경
       });
 
-      getSalesByQuarterly(props.place, 'CS100002', (data) => {
+      getSalesByQuarterly(props.place, newService.service_code, (data) => {
         QuarterlySales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
         console.log(data)
@@ -115,7 +118,11 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
         console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
         loading.value = false; // 로딩 상태 변경
       });
-    });
+    },
+    { immediate: true }
+  );
+
+    onMounted(() => {});
 
 </script>
 
