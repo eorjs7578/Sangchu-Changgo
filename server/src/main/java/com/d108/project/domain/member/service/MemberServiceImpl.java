@@ -135,6 +135,8 @@ public class MemberServiceImpl implements MemberService {
         if (!redisEmailService.checkAuthCode(emailAuthCheckDto)) {
             throw new RuntimeException("인증번호가 틀립니다.");
         }
+        System.out.println("Received email: " + emailAuthCheckDto.getEmail());
+        System.out.println("Received authCode: " + emailAuthCheckDto.getAuthCode());
         // 인증 코드 체크 완료 시
         member.setEmail(emailAuthCheckDto.getEmail());
         memberRepository.save(member);

@@ -89,7 +89,8 @@
     isUsernameDuplicated,
     checkAuthCode,
     getAuthCode,
-    signUp, login
+    signUp, login,
+    updateEmail
   } from "@/util/AuthenticationUtil.js";
 
 
