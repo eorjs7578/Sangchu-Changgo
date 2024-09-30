@@ -133,9 +133,9 @@ public class SecurityConfiguration {
         customAuthenticationFilter.setFilterProcessesUrl("/api/members/login");
         customAuthenticationFilter.setAuthenticationSuccessHandler(customAuthSuccessHandler);    // '인증' 성공 시 해당 핸들러로 처리를 전가한다.
         customAuthenticationFilter.setAuthenticationFailureHandler(customAuthFailureHandler);    // '인증' 실패 시 해당 핸들러로 처리를 전가한다.
-        System.out.println("뭥미");
+//        System.out.println("뭥미");
         customAuthenticationFilter.afterPropertiesSet();
-        System.out.println("완");
+//        System.out.println("완");
         return customAuthenticationFilter;
     }
 
