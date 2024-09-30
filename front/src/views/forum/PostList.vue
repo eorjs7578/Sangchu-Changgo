@@ -1,43 +1,69 @@
 <template>
-    <div class="board-list">
-        <div class="common-buttons">
-            <!-- 등록 버튼 -->
-            <button type="button" class="w3-button w3-round w3-blue-gray" @click="handleCreatePost">
-                등록
-            </button>
-        </div>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">게시판</h2>
 
-        <!-- 게시판 목록 테이블 -->
-        <table class="w3-table-all">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>등록일시</th>
-                    <th>조회수</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(row, idx) in postList" :key="row.id">
-                    <td>{{ idx + 1 + currentPage * pageSize }}</td>
-                    <td>
-                        <a @click="viewPost(row.id)">{{ row.title }}</a>
-                    </td>
-                    <td>{{ row.member_id }}</td>
-                    <td>{{ formatDate(row.created_at) }}</td>
-                    <td>{{ row.view }}</td>
-                </tr>
-            </tbody>
-        </table>
+                        <div class="mb-3 text-end">
+                            <button type="button" class="btn btn-primary" @click="handleCreatePost">
+                                새 글 등록
+                            </button>
+                        </div>
 
-        <!-- 페이지네이션 버튼 -->
-        <div class="pagination">
-            <!-- 첫 번째 페이지면 '이전' 버튼 비활성화 -->
-            <button @click="loadPreviousPage">이전</button>
-            <span>{{ currentPage + 1 }} / {{ totalPages }}</span>
-            <!-- 마지막 페이지면 '다음' 버튼 비활성화 -->
-            <button :disabled="isLastPage" @click="loadNextPage">다음</button>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>제목</th>
+                                        <th>작성자</th>
+                                        <th>등록일시</th>
+                                        <th>조회수</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(row, idx) in postList" :key="row.id">
+                                        <td>{{ idx + 1 + currentPage * pageSize }}</td>
+                                        <td>
+                                            <a
+                                                href="#"
+                                                @click.prevent="viewPost(row.id)"
+                                                class="text-decoration-none"
+                                                >{{ row.title }}</a
+                                            >
+                                        </td>
+                                        <td>{{ row.member_id }}</td>
+                                        <td>{{ formatDate(row.created_at) }}</td>
+                                        <td>{{ row.view }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" :class="{ disabled: currentPage === 0 }">
+                                    <a class="page-link" href="#" @click.prevent="loadPreviousPage"
+                                        >이전</a
+                                    >
+                                </li>
+                                <li class="page-item active">
+                                    <span class="page-link">
+                                        {{ currentPage + 1 }} / {{ totalPages }}
+                                    </span>
+                                </li>
+                                <li class="page-item" :class="{ disabled: isLastPage }">
+                                    <a class="page-link" href="#" @click.prevent="loadNextPage"
+                                        >다음</a
+                                    >
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -144,41 +170,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.board-list {
-    margin: 20px;
-}
-
-.common-buttons {
-    margin-bottom: 20px;
-}
-
-.w3-table-all {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.w3-table-all th,
-.w3-table-all td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.pagination button {
-    margin: 0 10px;
-    padding: 5px 10px;
-}
-
-.pagination span {
-    font-size: 16px;
-    line-height: 30px;
-}
-</style>
