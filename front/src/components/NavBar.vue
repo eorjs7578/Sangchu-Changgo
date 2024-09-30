@@ -157,7 +157,7 @@ const toggleAvatarMenu = () => {
 const logout = async () => {
   try {
     isLoggedIn.value = false;
-    const response = await api.post("/api/members/logout");
+    const response = await api.post(`api/members/logout`);
     console.log("Logout response:", response);
     store.isAuthenticated = false;
     store.userInfo = {};
