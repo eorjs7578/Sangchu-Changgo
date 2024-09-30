@@ -4,6 +4,7 @@ import com.d108.project.domain.area.analytic.dto.*;
 import com.d108.project.domain.area.analytic.repository.*;
 import com.d108.project.domain.area.repository.AreaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -66,6 +67,7 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
     }
 
 
+
     @Override
     public FootTrafficByHourDto getFootTrafficByHour(Long areaId) {
         List<String> hourList = List.of("0시~06시", "06시~11시", "11시~14시", "14시~17시", "17시~21시", "21시~24시");
@@ -77,12 +79,21 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         return new FootTrafficByHourDto(footTrafficByHourByArea, hourList, hourList.get(maxIndex));
     }
 
+    // 이거 2개가 null인 값이 존재함.
+    // 3110946
+    // 3110948
     @Override
     public FootTrafficByMonthDto getFootTrafficByQuarterly(Long areaId) {
         List<String> quarterList = List.of("2023/1", "2023/2", "2023/3", "2023/4", "2024/1");
         List<Long> footTrafficByQuarterlyByArea = getList(populationHistoryRepository.getPopulationHistoryByAreaId(areaId), quarterList.size());
 
         String QOQ = compareLast(quarterList, footTrafficByQuarterlyByArea);
+
+        filterZeroValues(footTrafficByQuarterlyByArea, quarterList);
+
+        Pair<List<Long>, List<String>> listListPair = filterZeroValues(footTrafficByQuarterlyByArea, quarterList);
+        footTrafficByQuarterlyByArea = listListPair.getFirst();
+        quarterList = listListPair.getSecond();
 
         return new FootTrafficByMonthDto(footTrafficByQuarterlyByArea, quarterList, QOQ);
     }
@@ -120,6 +131,10 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
 
         int maxIndex = getMaxIndex(saleByDayOfWeekByArea);
 
+        Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByDayOfWeekByArea, dayOfWeekList);
+        saleByDayOfWeekByArea = listListPair.getFirst();
+        dayOfWeekList = listListPair.getSecond();
+
         return new SalesByDayOfWeekDto(saleByDayOfWeekByArea, dayOfWeekList, dayOfWeekList.get(maxIndex));
     }
 
@@ -129,16 +144,25 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<String> hourList = List.of("0시~06시", "06시~11시", "11시~14시", "14시~17시", "17시~21시", "21시~24시");
 
         int maxIndex = getMaxIndex(saleByHourByArea);
+
+        Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByHourByArea, hourList);
+        saleByHourByArea = listListPair.getFirst();
+        hourList = listListPair.getSecond();
+
         return new SalesByHourDto(saleByHourByArea, hourList, hourList.get(maxIndex));
     }
 
     @Override
     public SalesByQuarterlyDto getSaleByQuarterly(Long areaId, String service) {
-        List<Long> saleByQuarterlyByArea = getList(salesHistoryRepository.getSalesHistoryByDongId(areaId, service), 5);
+        List<Long[]> salesHistoryData = salesHistoryRepository.getSalesHistoryByDongId(areaId, service);
+        List<Long> saleByQuarterlyByArea = getList(salesHistoryData, 5);
         List<String> quarterList = List.of("2023/1", "2023/2", "2023/3", "2023/4", "2024/1");
 
-        System.out.println(saleByQuarterlyByArea);
         String QOQ = compareLast(quarterList, saleByQuarterlyByArea);
+
+        Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByQuarterlyByArea, quarterList);
+        saleByQuarterlyByArea = listListPair.getFirst();
+        quarterList = listListPair.getSecond();
 
         return new SalesByQuarterlyDto(saleByQuarterlyByArea, quarterList, QOQ);
 
@@ -150,6 +174,10 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<String> ageList = List.of("10대", "20대", "30대", "40대", "50대", "60대");
 
         int manIndex = getMaxIndex(saleByAgeByArea);
+
+        Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByAgeByArea, ageList);
+        saleByAgeByArea = listListPair.getFirst();
+        ageList = listListPair.getSecond();
 
         return new SalesByAgeDto(saleByAgeByArea, ageList, ageList.get(manIndex));
     }
@@ -175,7 +203,11 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
     @Override
     public WeekendAndWeekdaySalesDto getWeekendAndWeekdaySale(Long areaId, String service) {
         List<Long> weekendAndWeekdaySaleByArea = getList(saleRepository.getSaleByWeekendAndWeekDay(areaId, service), 2);
-        List<String> dayOfWeek = List.of("평일","주말");
+        List<String> dayOfWeek = List.of("평일", "주말");
+
+        Pair<List<Long>, List<String>> listListPair = filterZeroValues(weekendAndWeekdaySaleByArea, dayOfWeek);
+        weekendAndWeekdaySaleByArea = listListPair.getFirst();
+        dayOfWeek = listListPair.getSecond();
 
         return new WeekendAndWeekdaySalesDto(weekendAndWeekdaySaleByArea, dayOfWeek);
     }
@@ -194,10 +226,19 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
     @Override
     public IndustryInfoDto getIndustryInfo(Long areaId, String service) {
         List<Long> industryInfo = getList(storeRepository.getIndustryInfo(areaId, service), 3);
-        List<String> info = List.of("점포수","개업률","폐업률");
+        List<String> info = List.of("점포수", "개업률", "폐업률");
+
+        if (industryInfo.isEmpty()) {
+            return new IndustryInfoDto(List.of(0L, 0L, 0L), info);
+        }
+
+        Pair<List<Long>, List<String>> listListPair = filterZeroValues(industryInfo, info);
+        industryInfo = listListPair.getFirst();
+        info = listListPair.getSecond();
 
         return new IndustryInfoDto(industryInfo, info);
     }
+
     public static String getCurrentQuarter() {
         // 서울 타임존 기준으로 현재 시간을 구함
         ZonedDateTime seoulTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
@@ -228,7 +269,7 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
             return 0.0;
         }
         // 퍼센트 변화 계산 공식: ((현재 매출 - 전년도 매출) / 전년도 매출) * 100
-        return ((double)(nowSale - lastSale) / lastSale) * 100;
+        return ((double) (nowSale - lastSale) / lastSale) * 100;
     }
 
     //    private static <T extends Number> List<T> getList(List<T[]> objects) {
@@ -242,17 +283,29 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
     private static List<Long> getList(List<? extends Number[]> objects, int expectedSize) {
         List<Long> list = new ArrayList<>();
 
-        System.out.println(objects);
+        // 값이 전부 비어 있으면 전부 0으로 돌려줌.
+        if (objects.isEmpty()) {
+            while (list.size() < expectedSize) {
+                list.add(0L);  // Long 타입의 0 추가
+            }
+            return list;
+        }
 
+        // 중간에 값이 없으면 그 값을 0으로 채움.
         // 각 배열의 값을 Long으로 변환하여 리스트에 추가
         for (Number[] row : objects) {
             for (Number num : row) {
-                list.add(num.longValue());  // 모든 Number를 Long으로 변환하여 추가
+                System.out.println(num);
+                if (num == null) {
+                    list.add(0L);
+                } else {
+                    list.add(num.longValue());  // 모든 Number를 Long으로 변환하여 추가
+                }
             }
         }
 
         // 리스트가 비어있거나 예상 크기보다 작은 경우 0으로 채움
-        if (list.isEmpty() || list.size() < expectedSize) {
+        if (list.isEmpty()) {
             while (list.size() < expectedSize) {
                 list.add(0L);  // Long 타입의 0 추가
             }
@@ -284,21 +337,53 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
     private static String compareLast(List<String> quarterList, List<Long> footTrafficByQuarterlyByArea) {
         String currentQuarter = getCurrentQuarter();
         String lastYear = String.valueOf(getLastYear());
-        String nowYear = String.valueOf(getLastYear()+1);
+        String nowYear = String.valueOf(getLastYear() + 1);
         String last = String.format("%s/1", lastYear);
         String now = String.format("%s/1", nowYear);
 
         int nowIndex = quarterList.indexOf(now);
         int lastIndex = quarterList.indexOf(last);
 
-        double percentageChange = calculatePercentageChange(footTrafficByQuarterlyByArea.get(lastIndex), footTrafficByQuarterlyByArea.get(nowIndex));
+        Long lastSale = footTrafficByQuarterlyByArea.get(lastIndex);
+        Long nowSale = footTrafficByQuarterlyByArea.get(nowIndex);
+
+        return getString(lastSale, nowSale);
+    }
+
+    private static String getString(Long lastSale, Long nowSale) {
+        double percentageChange = calculatePercentageChange(lastSale, nowSale);
+
+        // 이전 분기에 비해 ~~ 하고 있습니다.
+        // 해당업종의 매출이 이전분기에 비해 {{ QuarterlySales.qoq }}하고 있습니다.
+        // 이전 연도는 이전 매출가 있습니다.
 
         String QOQ = "유지";
-        if (percentageChange > 0) {
-            QOQ = String.format("%.2f%% 상승", percentageChange);
+        if (nowSale == 0) {
+            QOQ = "이번 년도 매출 정보가 없습니다.";
+        }
+        else if (lastSale == 0) {
+            QOQ = "현재와 일치하는 동일 분기의 매출 정보가 없습니다.";
+        }
+        else if (percentageChange > 0) {
+            QOQ = String.format("해당업종의 매출이 이전분기에 비해 %.2f%% 상승하고 있습니다.", percentageChange);
         } else if (percentageChange < 0) {
-            QOQ = String.format("%.2f%% 하락", Math.abs(percentageChange));
+            QOQ = String.format("해당업종의 매출이 이전분기에 비해 %.2f%% 하락하고 있습니다.", Math.abs(percentageChange));
         }
         return QOQ;
     }
+
+    private Pair<List<Long>, List<String>> filterZeroValues(List<Long> trafficList, List<String> hourList) {
+        List<Long> filteredTrafficList = new ArrayList<>();
+        List<String> filteredHourList = new ArrayList<>();
+
+        // 두 리스트의 크기가 같다는 가정하에 인덱스를 순회
+        for (int i = 0; i < trafficList.size(); i++) {
+            if (trafficList.get(i) != 0) {
+                filteredTrafficList.add(trafficList.get(i)); // 값이 0이 아닌 경우에만 추가
+                filteredHourList.add(hourList.get(i));       // 대응하는 hourList 값도 추가
+            }
+        }
+        return Pair.of(filteredTrafficList, filteredHourList);  // 두 리스트를 함께 반환
+    }
+
 }

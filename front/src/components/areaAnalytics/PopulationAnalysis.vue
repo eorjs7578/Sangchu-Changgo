@@ -76,9 +76,14 @@
         연령별 유동인구
       </div>
       <div>
-        {{ age }} 유동인구가 가장 높아요.
+        {{ ageData.many_people_days_of_age }} 유동인구가 가장 높아요.
       </div>
-      <!--      <ChartComponent />-->
+      <AgeGroupChart
+                v-if="Object.keys(ageData).length > 0"
+                :labels="ageData.labels"
+                :data="ageData.data"
+            />
+            
     </div>
   </div>
 </template>
@@ -90,10 +95,11 @@
   import HourlyVisitorChart from "@/components/charts/HourlyVisitorChart.vue";
   import QuarterlyVisitorChart from "@/components/charts/QuarterlyVisitorChart.vue";
   import GenderGroupChart from "@/components/charts/GenderGroupChart.vue";
+  import AgeGroupChart from "@/components/charts/AgeGroupChart.vue";
 
   const population = ref(0);
   const time = ref("");
-  const age = ref("");
+  const ageData = ref("");
   const weekData = ref({});
   const hourData = ref({});
   const quarterData = ref({});
@@ -171,6 +177,12 @@
     api.get(`api/areas/analytic/foot-traffics/hour/${props.place}`)
         .then(response => {
           hourData.value = response.data;
+        })
+        .catch(err => console.log(err))
+
+    api.get(`api/areas/analytic/foot-traffics/age/${props.place}`)
+        .then(response => {
+          ageData.value = response.data;
         })
         .catch(err => console.log(err))
 
