@@ -27,7 +27,6 @@
           <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal2">예상비용</li>
           <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
         </ul>
-
       </ul>
 
       <!-- 로그인/회원가입 또는 아바타 이미지 -->
@@ -81,7 +80,7 @@ import {api} from "@/lib/api.js";
 import {useRouter} from "vue-router";
 
 const isCommunityOpen = ref(false)
-const isFranchiseOpen = ref(false)
+const isFranchiseOpen = ref(true)
 const favoriteFranchises = ref([])
 
 const isLoggedIn = ref(false)

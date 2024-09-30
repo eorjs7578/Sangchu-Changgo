@@ -15,6 +15,7 @@
       <div>
         나이{{AgeSales}}
         성별{{ GenderSales }}
+        {{ props.service }}
       </div>
     </div>
 
@@ -57,7 +58,8 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
     const QuarterlySales=ref("");
     
     const props = defineProps({
-    place: String,
+    place : String,
+    service : Object
   })
 
     const loading = ref(true); // 데이터 로딩 상태
