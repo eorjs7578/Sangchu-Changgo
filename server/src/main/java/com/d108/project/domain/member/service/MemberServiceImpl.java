@@ -2,14 +2,14 @@ package com.d108.project.domain.member.service;
 
 
 import com.d108.project.cache.redis.RedisUtil;
+import com.d108.project.cache.redisEmail.RedisEmailService;
+import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
 import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.config.util.token.TokenUtil;
 import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
+import com.d108.project.domain.member.dto.*;
 import com.d108.project.domain.member.entity.Member;
-import com.d108.project.domain.member.dto.MemberLoginDto;
-import com.d108.project.domain.member.dto.MemberRegisterDto;
-import com.d108.project.domain.member.dto.MemberResponseDto;
 import com.d108.project.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +28,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final LoginCredentialRepository loginCredentialRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RedisEmailService redisEmailService;
 
     @Override
     public void registerMember(MemberRegisterDto memberRegisterDto) {
@@ -111,11 +112,38 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public boolean isUsernameDuplicated(String username) {
-        if (loginCredentialRepository.findByUsername(username).isPresent()) {
+        if (memberRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
         return true;
     }
 
+
+    @Override
+    public void changePassword(Member member, MemberPasswordChangeDto memberPasswordChangeDto) {
+
+        if (!passwordEncoder.matches(memberPasswordChangeDto.getOldPassword(), member.getPassword())) {
+            throw new RuntimeException("기존 비밀번호가 올바르지 않습니다.");
+        }
+
+        member.setPassword(passwordEncoder.encode(memberPasswordChangeDto.getNewPassword()));
+        memberRepository.save(member);
+    }
+
+    @Override
+    public void changeEmail(Member member, EmailAuthCheckDto emailAuthCheckDto) {
+        if (!redisEmailService.checkAuthCode(emailAuthCheckDto)) {
+            throw new RuntimeException("인증번호가 틀립니다.");
+        }
+        // 인증 코드 체크 완료 시
+        member.setEmail(emailAuthCheckDto.getEmail());
+        memberRepository.save(member);
+    }
+
+    @Override
+    public void changeNickname(Member member, MemberNicknameRequestDto memberNicknameRequestDto) {
+            member.setNickname(memberNicknameRequestDto.getNickname());
+            memberRepository.save(member);
+    }
 }
 
