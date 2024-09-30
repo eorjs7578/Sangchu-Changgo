@@ -2,6 +2,7 @@ package com.d108.project.config.util.token;
 
 import com.d108.project.cache.redis.RedisUtil;
 import com.d108.project.config.util.token.dto.TokenResponseDto;
+import com.d108.project.domain.global.InvalidTokenException;
 import com.d108.project.domain.loginCredential.entity.LoginCredential;
 import com.d108.project.domain.loginCredential.repository.LoginCredentialRepository;
 import io.jsonwebtoken.*;
@@ -154,7 +155,7 @@ public class TokenUtil {
         // 근데 토큰이 DB에 저장된 것과 다른 경우
         if (!refreshToken.equals(storedToken)) {
             deleteTokenOnCookie(response);
-            throw new RuntimeException("토큰이 유효하지 않습니다.");
+            throw new InvalidTokenException("토큰이 유효하지 않습니다.");
         }
 
         // 리프레시 토큰이 확인 되었으면
