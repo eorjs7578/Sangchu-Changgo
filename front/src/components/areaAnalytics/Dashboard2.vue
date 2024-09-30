@@ -104,7 +104,7 @@ const toggleFavorite = () => {
 
 const handleLocationUpdate = (location) => {
       console.log('Selected location received from child:', location);
-      service.value = location
+      service.value = location 
     };
 
 const scrollToSection = (section) => {
