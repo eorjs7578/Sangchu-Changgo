@@ -157,19 +157,31 @@ const toggleAvatarMenu = () => {
 const logout = async () => {
   try {
     isLoggedIn.value = false;
-    await api.post("/api/members/logout");
+    const response = await api.post("/api/members/logout");
+    console.log("Logout response:", response);
     store.isAuthenticated = false;
     store.userInfo = {};
-    isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
+    isAvatarMenuOpen.value = false;
     await router.push("/");
     window.location.reload();
   } catch (error) {
     console.error("로그아웃 중 오류 발생:", error);
-    // 사용자에게 오류 메시지를 표시할 수 있습니다.
-    // 예: alert("로그아웃 중 문제가 발생했습니다. 다시 시도해 주세요.");
+    if (error.response) {
+      // 서버가 2xx 범위를 벗어나는 상태 코드로 응답한 경우
+      console.error("Error response:", error.response.data);
+      console.error("Error status:", error.response.status);
+      console.error("Error headers:", error.response.headers);
+    } else if (error.request) {
+      // 요청은 보냈지만 응답을 받지 못한 경우
+      console.error("Error request:", error.request);
+    } else {
+      // 요청 설정 중에 오류가 발생한 경우
+      console.error("Error message:", error.message);
+    }
+    // 사용자에게 오류 메시지 표시
+    alert("로그아웃 중 문제가 발생했습니다. 다시 시도해 주세요.");
   }
 };
-
 
 // 페이지가 로드될 때 로그인 상태 확인 (onMounted 사용)
 onMounted(() => {
