@@ -2,9 +2,9 @@ package com.d108.project.domain.area.analytic.dto;
 
 import java.util.List;
 
-public record IndustryInfoDto(List<Integer> industryInfo, List<String> info) {
+public record IndustryInfoDto(List<Long> industryInfo, List<String> info) {
 
-    public IndustryInfoDto(List<Integer> industryInfo, List<String> info) {
+    public IndustryInfoDto(List<Long> industryInfo, List<String> info) {
         this.industryInfo = industryInfo;
         this.info = info;
     }

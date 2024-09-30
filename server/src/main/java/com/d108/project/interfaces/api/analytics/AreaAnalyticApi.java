@@ -45,7 +45,6 @@ public interface AreaAnalyticApi {
     @GetMapping("/sales/weekend-weekday/{areaId}/{service}")
     ResponseEntity<WeekendAndWeekdaySalesDto> getWeekendAndWeekdaySale(@PathVariable Long areaId, @PathVariable String service);
 
-
     @GetMapping("/sales/quarterly/{areaId}/{service}")
     ResponseEntity<SalesByQuarterlyDto> getSaleByQuarterly(@PathVariable Long areaId, @PathVariable String service);
     // Similar Industry 관련 경로
