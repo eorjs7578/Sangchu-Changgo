@@ -101,6 +101,7 @@ public class SecurityConfiguration {
                                 .userInfoEndpoint(config -> config.userService(oAuth2UserService))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)
+                                .loginProcessingUrl("/api/login/oauth2/code/{provider}")
                 )
                 .logout(logout -> logout
                                 // 로그아웃 페이지에 대한 설정
