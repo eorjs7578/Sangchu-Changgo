@@ -145,7 +145,8 @@ const toggleAvatarMenu = () => {
 const logout = () => {
   isLoggedIn.value = false;
   api.post("/api/members/logout").then(() => {
-    localStorage.removeItem('isLoggedIn'); // 로그인 상태 제거
+    store.isAuthenticated = false;
+    store.userInfo = {};
     isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
     router.push("/").then(() => {
       window.location.reload();
