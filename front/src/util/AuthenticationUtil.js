@@ -108,9 +108,9 @@ export function login(username, password) {
 }
 
 export function kakaoLogin() {
-  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/oauth2/authorization/kakao?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`
+  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/oauth2/authorization/kakao?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`
 }
 
 export function naverLogin() {
-  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/oauth2/authorization/naver?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`;
+  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/oauth2/authorization/naver?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`;
 }

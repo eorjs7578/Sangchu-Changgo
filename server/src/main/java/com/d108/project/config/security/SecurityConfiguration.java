@@ -95,7 +95,9 @@ public class SecurityConfiguration {
                 .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(configure ->
                         configure.authorizationEndpoint(
-                                        config -> config.authorizationRequestRepository(oAuth2Repository))
+                                        config -> config
+                                                .baseUri("/api/oauth2/authorization")
+                                                .authorizationRequestRepository(oAuth2Repository))
                                 .userInfoEndpoint(config -> config.userService(oAuth2UserService))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)
