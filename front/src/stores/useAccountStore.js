@@ -12,14 +12,12 @@ export const useAccountStore = defineStore("accounts", () => {
   function checkAuthStatus() {
     return api.get("/api/members/my-info")
       .then(response => {
+        console.log(response.data)
         isAuthenticated.value = true;
-        userInfo.value = response.data;
-        console.log("userInfo.value: ", userInfo.value);
-        return isAuthenticated
+        return response
       })
       .catch(() => {
         isAuthenticated.value = false;
-        return isAuthenticated
       })
   }
 
