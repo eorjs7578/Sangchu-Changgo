@@ -49,7 +49,8 @@ const routes = [
   {
     path: '/members/mypage',
     name: 'Mypage',
-    component: Mypage
+    component: Mypage,
+    meta: {requiresAuth: true}
   },
   {
     path: '/members/password',
@@ -125,4 +126,6 @@ router.beforeEach((to, from, next) => {
     next();
   }
 })
+
+
 export default router;
