@@ -162,10 +162,19 @@ export default {
             // PostDetail로 postId와 boardId를 패스 변수로 넘겨줌
             this.$router.push({ name: 'PostDetail', params: { postId, boardId: this.boardId } });
         },
-        // 날짜 형식 변환 함수
         formatDate(dateString) {
+            const date = new Date(dateString);
+
+            // 날짜 부분 (연도-월-일)
             const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-            return new Date(dateString).toLocaleDateString(undefined, options);
+            const formattedDate = date.toLocaleDateString(undefined, options);
+
+            // 시간 부분 (시:분)
+            const hours = date.getHours().toString().padStart(2, '0'); // 시
+            const minutes = date.getMinutes().toString().padStart(2, '0'); // 분
+
+            // 날짜와 시간 결합
+            return `${formattedDate} ${hours}:${minutes}`;
         },
     },
 };
