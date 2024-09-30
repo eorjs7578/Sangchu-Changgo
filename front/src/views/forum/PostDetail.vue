@@ -1,51 +1,90 @@
 <template>
-    <div class="post-detail">
-        <h1>{{ post.title }}</h1>
-        <p><strong>작성자:</strong> {{ post.member_id }}</p>
-        <p><strong>내용:</strong> {{ post.content }}</p>
-        <p><strong>작성일:</strong> {{ formatDate(post.created_at) }}</p>
-        <p><strong>조회수:</strong> {{ post.view }}</p>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h1 class="card-title">{{ post.title }}</h1>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span><strong>작성자:</strong> {{ post.member_id }}</span>
+                            <span><strong>작성일:</strong> {{ formatDate(post.created_at) }}</span>
+                        </div>
+                        <p class="card-text"><strong>내용:</strong> {{ post.content }}</p>
+                        <p class="text-muted"><strong>조회수:</strong> {{ post.view }}</p>
 
-        <!-- 게시글 수정/삭제 버튼 (작성자만 가능) -->
-        <div v-if="post.member_id === currentUserId">
-            <button @click="handleEditPost">수정</button>
-            <button @click="handleDeletePost">삭제</button>
-        </div>
-
-        <!-- 게시글 작성자와 로그인된 사용자의 ID를 콘솔에 출력 -->
-        <div v-else>
-            <p>현재 로그인된 사용자 ID: {{ currentUserId }}</p>
-            <p>게시글 작성자 ID: {{ post.member_id }}</p>
-        </div>
-
-        <!-- 댓글 목록 -->
-        <div class="reply-section">
-            <h3>댓글</h3>
-            <ul>
-                <li v-for="(reply, index) in post.reply" :key="reply.reply_id">
-                    <p><strong>작성자:</strong> {{ reply.member_id }}</p>
-                    <p>{{ reply.content }}</p>
-                    <p><strong>작성일:</strong> {{ formatDate(reply.created_at) }}</p>
-                    <!-- 댓글 수정/삭제 버튼 (댓글 작성자가 currentUserId와 동일할 때만) -->
-                    <div v-if="reply.member_id === currentUserId">
-                        <button @click="handleEditReply(reply.reply_id, reply.content)">
-                            수정
-                        </button>
-                        <button @click="handleDeleteReply(reply.reply_id)">삭제</button>
+                        <div v-if="post.member_id === currentUserId" class="mt-3">
+                            <button @click="handleEditPost" class="btn btn-primary me-2">
+                                수정
+                            </button>
+                            <button @click="handleDeletePost" class="btn btn-danger">삭제</button>
+                        </div>
+                        <div v-else class="mt-3">
+                            <p class="mb-0">
+                                <small>현재 로그인된 사용자 ID: {{ currentUserId }}</small>
+                            </p>
+                            <p>
+                                <small>게시글 작성자 ID: {{ post.member_id }}</small>
+                            </p>
+                        </div>
                     </div>
-                </li>
-            </ul>
-        </div>
+                </div>
 
-        <!-- 댓글 작성 -->
-        <div class="reply-form">
-            <textarea v-model="newReply" placeholder="댓글을 입력하세요"></textarea>
-            <button @click="handleSubmitReply">댓글 등록하기</button>
-        </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title">댓글</h3>
+                        <ul class="list-unstyled">
+                            <li
+                                v-for="(reply, index) in post.reply"
+                                :key="reply.reply_id"
+                                class="mb-3 pb-3 border-bottom"
+                            >
+                                <div class="d-flex justify-content-between">
+                                    <span><strong>작성자:</strong> {{ reply.member_id }}</span>
+                                    <span
+                                        ><small>{{ formatDate(reply.created_at) }}</small></span
+                                    >
+                                </div>
+                                <p class="mt-2">{{ reply.content }}</p>
+                                <div v-if="reply.member_id === currentUserId" class="mt-2">
+                                    <button
+                                        @click="handleEditReply(reply.reply_id, reply.content)"
+                                        class="btn btn-sm btn-outline-primary me-2"
+                                    >
+                                        수정
+                                    </button>
+                                    <button
+                                        @click="handleDeleteReply(reply.reply_id)"
+                                        class="btn btn-sm btn-outline-danger"
+                                    >
+                                        삭제
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
-        <!-- 목록으로 돌아가기 버튼 -->
-        <div class="common-buttons">
-            <button @click="navigateBackToList">목록으로 돌아가기</button>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title">댓글 작성</h3>
+                        <textarea
+                            v-model="newReply"
+                            class="form-control mb-3"
+                            rows="3"
+                            placeholder="댓글을 입력하세요"
+                        ></textarea>
+                        <button @click="handleSubmitReply" class="btn btn-primary">
+                            댓글 등록하기
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button @click="navigateBackToList" class="btn btn-secondary">
+                        목록으로 돌아가기
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -239,40 +278,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.post-detail {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-button {
-    margin-right: 10px;
-}
-
-.reply-section {
-    margin-top: 30px;
-}
-
-.reply-section h3 {
-    margin-bottom: 10px;
-}
-
-.common-buttons {
-    margin-top: 20px;
-}
-
-.reply-form {
-    margin-top: 20px;
-}
-
-.reply-form textarea {
-    width: 100%;
-    height: 60px;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-</style>

@@ -1,36 +1,40 @@
 <template>
-    <div class="edit-post">
-        <h1>게시글 수정</h1>
-
-        <!-- 제목 입력 -->
-        <div class="mb-4">
-            <label for="title">제목 </label>
-            <input
-                id="title"
-                v-model="title"
-                type="text"
-                required
-                class="input"
-                placeholder="제목을 입력하세요"
-            />
-        </div>
-
-        <!-- 내용 입력 -->
-        <div class="mb-4">
-            <label for="content">내용</label>
-            <textarea
-                id="content"
-                v-model="content"
-                rows="6"
-                required
-                class="input"
-                placeholder="내용을 입력하세요"
-            ></textarea>
-        </div>
-
-        <!-- 제출 버튼 -->
-        <div class="flex justify-end">
-            <button @click="submitEdit" class="button">수정 완료</button>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">게시글 수정</h2>
+                        <form @submit.prevent="submitEdit">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">제목</label>
+                                <input
+                                    id="title"
+                                    v-model="title"
+                                    type="text"
+                                    class="form-control"
+                                    required
+                                    placeholder="제목을 입력하세요"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label for="content" class="form-label">내용</label>
+                                <textarea
+                                    id="content"
+                                    v-model="content"
+                                    rows="6"
+                                    class="form-control"
+                                    required
+                                    placeholder="내용을 입력하세요"
+                                ></textarea>
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">수정 완료</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -109,24 +113,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.edit-post {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-.input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-}
-.button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-</style>
