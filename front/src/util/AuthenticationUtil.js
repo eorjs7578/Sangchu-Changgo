@@ -79,6 +79,19 @@ export function checkAuthCode(email, auth_code) {
     })
 }
 
+export function updateEmail(email, auth_code) {
+  return api.post("/api/members/update/email", {
+    email,
+    auth_code,
+  })
+  .then(response => {
+    return true
+  })
+  .catch(err => {
+    return false
+  })
+}
+
 export function signUp(username, nickname, email, password) {
   return api.post("/api/members/signup", {
     username,
