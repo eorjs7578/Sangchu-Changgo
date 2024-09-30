@@ -98,62 +98,17 @@ const toggleAvatarMenu = () => {
   isAvatarMenuOpen.value = !isAvatarMenuOpen.value;
 };
 
-const toggleFavorite = () => {
-  getFavoriteFranchises(
-    ({data}) => {
-      console.log(data);
-      favoriteFranchises.value = transformData(data);
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
-};
-
-const transformData = (data) => {
-  return data.map((item) => ({
-    id: item.franchise_fee_dto.id,
-    gu: item.gu,
-    dong: item.dong,
-    name: item.franchise_fee_dto.name,
-    storeSize: item.size,
-    floor: item.floor,
-    costs: [
-      { name: '임대료', amount: item.franchise_fee_dto.rent_fee },
-      { name: '가맹비', amount: item.franchise_fee_dto.franchise_fee },
-      { name: '보증금', amount: item.franchise_fee_dto.deposit },
-      { name: '교육비', amount: item.franchise_fee_dto.education_fee },
-      { name: '인테리어 비용', amount: item.franchise_fee_dto.interior },
-      { name: '기타비용', amount: item.franchise_fee_dto.other_fee }
-    ],
-    link: item.franchise_fee_dto.link,
-    likeId: item.franchise_fee_dto.like_id
-  }));
-};
-
-const logout = async () => {
-  try {
-    const response = await api.post(`api/members/logout`);
-    console.log("Logout response:", response);
+// 로그아웃 함수
+function logout() {
+  api.post("/api/members/logout").then(() => {
     store.isAuthenticated = false;
     store.userInfo = {};
-    isAvatarMenuOpen.value = false;
-    await router.push("/");
-    window.location.reload();
-  } catch (error) {
-    console.error("로그아웃 중 오류 발생:", error);
-    if (error.response) {
-      console.error("Error response:", error.response.data);
-      console.error("Error status:", error.response.status);
-      console.error("Error headers:", error.response.headers);
-    } else if (error.request) {
-      console.error("Error request:", error.request);
-    } else {
-      console.error("Error message:", error.message);
-    }
-    alert("로그아웃 중 문제가 발생했습니다. 다시 시도해 주세요.");
-  }
-};
+    isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
+    router.push("/").then(() => {
+      window.location.reload();
+    })
+})}
+
 
 onMounted(() => {
   isCommunityOpen.value = false;

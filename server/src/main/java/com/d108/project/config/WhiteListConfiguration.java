@@ -50,6 +50,7 @@ public class WhiteListConfiguration {
 
             //프랜차이즈 앤드 포인트
             API_PREFIX+"/rent/**",
+            API_PREFIX+"/franchises/type",
             //맵 앤드 포인트
             API_PREFIX+"/map/**",
             API_PREFIX+"/boards/**",
@@ -58,9 +59,8 @@ public class WhiteListConfiguration {
             API_PREFIX+"/area-evaluation/",
             API_PREFIX+"/area-evaluation/statistics/*",
             API_PREFIX+"/service/**",
-//            API_PREFIX+"/franchises/**",
             API_PREFIX+"/area-evaluation/type",
-            API_PREFIX+"/area-info"
+            API_PREFIX+"/area-info",
     };
 }
 
