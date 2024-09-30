@@ -166,8 +166,6 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
                 .toList();                          // List<Long[]>로 변환
 
         List<Long> result = getList(saleByGenderByArea, 2);
-        System.out.println(result);
-        System.out.println(result.get(0).getClass());
         List<String> genderList = List.of("남", "여");
 
         int manIndex = getMaxIndex(result);
@@ -227,7 +225,7 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
 
     public static double calculatePercentageChange(Long lastSale, Long nowSale) {
         if (lastSale == 0) {
-            throw new IllegalArgumentException("Last year's sale cannot be zero.");
+            return 0.0;
         }
         // 퍼센트 변화 계산 공식: ((현재 매출 - 전년도 매출) / 전년도 매출) * 100
         return ((double)(nowSale - lastSale) / lastSale) * 100;
@@ -290,11 +288,8 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         String last = String.format("%s/1", lastYear);
         String now = String.format("%s/1", nowYear);
 
-        System.out.println(last + " " + now);
         int nowIndex = quarterList.indexOf(now);
         int lastIndex = quarterList.indexOf(last);
-
-        System.out.println(nowIndex + " " + lastIndex);
 
         double percentageChange = calculatePercentageChange(footTrafficByQuarterlyByArea.get(lastIndex), footTrafficByQuarterlyByArea.get(nowIndex));
 
