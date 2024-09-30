@@ -1,7 +1,7 @@
 <template>
     <div class="container">
       <div class="user-info">
-        <h2>{{ store.userInfo.nickname }}</h2>
+        <h2>{{ store.userInfo.nickname }} 님</h2>
         <div class="email-container">
           <span>{{ store.userInfo.email }}</span>
           <button @click="toggleEditForm" class="edit-button">
