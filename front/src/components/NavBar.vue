@@ -2,7 +2,10 @@
   <div class="contatiner">
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
-      <h5>상추창고</h5>
+      <router-link to="/marketanalysis">
+        <img src="@/assets/img/sangchuLogo2.png" alt="Sangchu Logo" class="logo" />
+      </router-link>
+
       <ul class="nav-links">
         <li @click="closeCommunitySubmenu">
           <router-link to="/marketanalysis">상권분석</router-link>
@@ -305,4 +308,11 @@ onMounted(() => {
 .submenu ul li a:hover {
   color: blue;
 }
+
+/* 로고 이미지 스타일 */.logo {
+  width: 150px;
+  margin-bottom: 2rem;
+  cursor: pointer;
+}
+
 </style>

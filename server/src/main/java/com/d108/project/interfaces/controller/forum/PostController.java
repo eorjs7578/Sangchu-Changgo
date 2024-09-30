@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -42,17 +44,7 @@ public class PostController implements PostApi {
 
         return ResponseEntity.created(location).build();
     }
-//    @Override
-//    public ResponseEntity<Map<String, Long>> createPost(Member member, PostCreateDto postCreateDto) {
-//        Long postId = postService.createPost(member, postCreateDto);
-//
-//        // postId를 JSON 형태로 응답
-//        Map<String, Long> responseBody = new HashMap<>();
-//        responseBody.put("postId", postId);
-//
-//        return ResponseEntity.ok(responseBody);
-//    }
-
+    
     @Operation(summary = "글 수정", description =
             "<p>시큐리티에서 인증 정보를 받아옴</p>" +
                     "<p>로그인 한 유저인지 확인해야함</p>"
@@ -105,18 +97,17 @@ public class PostController implements PostApi {
     @Operation(summary = "[ALL] 모든 페이징 게시판 조회", description ="page는 0부터 시작")
     @Override
     public ResponseEntity<?> getPostsByBoardId(
-        Long boardId,
-        Integer page,  // Integer로 수정
-        Integer size) {
-
+        @PathVariable Long boardId,  // URL 경로의 boardId
+        @PathVariable(required = false) Integer page,  // URL 경로의 page
+        @PathVariable(required = false) Integer size   // URL 경로의 size
+    ) {
         // 파라미터가 null일 경우 기본값 설정R
-        if (page == null) {
+        if (page == 0) {
             page = 0; // 기본 페이지 번호
         }
-        if (size == null) {
+        if (size == 0) {
             size = 10; // 기본 페이지 크기
         }
-        System.out.println("응답 : " + boardId + " " + page + " " + size);
         return ResponseEntity.ok(postService.getPostsByBoardId(boardId, page, size));
     }
 }

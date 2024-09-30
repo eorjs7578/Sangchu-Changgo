@@ -36,6 +36,30 @@ export function isNicknameDuplicated(nickname) {
     })
 }
 
+export function isUsernameDuplicated(username) {
+  return api.get("/api/members/duplicate/username", {
+    params: {
+      username: username
+    }
+  })
+  .then(response => {
+    // Assuming the response contains a boolean indicating if the username is duplicated
+    if (response.data.isDuplicated) {
+      alert("이미 존재하는 아이디입니다.");
+      return false;
+    } else {
+      if (window.confirm("사용할 수 있는 아이디입니다. \n사용하시겠습니까?")) {
+        return true;
+      }
+      return false;
+    }
+  })
+  .catch(error => {
+    console.error("아이디 중복 확인 중 오류가 발생했습니다:", error);
+    return false;
+  });
+}
+
 export function getAuthCode(email) {
   return api.get("/api/members/auth-email", {params: {
       email: email,

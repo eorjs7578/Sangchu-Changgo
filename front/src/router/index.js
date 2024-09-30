@@ -13,7 +13,7 @@ import Chart2 from "@/views/areaAnalytics/Chart2.vue";
 import CreatePost from "@/views/forum/CreatePost.vue";
 import PostList from "@/views/forum/PostList.vue";
 import PostDetail from "@/views/forum/PostDetail.vue"
-
+import EditPost from "@/views/forum/EditPost.vue";
 import SurveyForm from '@/components/areaAnalytics/SurveyForm.vue';
 import SurveyResult from '@/components/areaAnalytics/SurveyResult.vue';
 
@@ -49,7 +49,8 @@ const routes = [
   {
     path: '/members/mypage',
     name: 'Mypage',
-    component: Mypage
+    component: Mypage,
+    meta: {requiresAuth: true}
   },
   {
     path: '/members/password',
@@ -61,13 +62,6 @@ const routes = [
     name: 'Community',
     component: Community
   },
-  // const router = useRouter()
-  // const boardId = router.params.boardId 로 접근
-  // {
-  //   path: "/community/:boardId",
-  //   name: "Community",
-  //   component: Community,
-  // },
   {
     path: '/franchise',
     name: 'Franchise',
@@ -93,18 +87,19 @@ const routes = [
     name: 'Chart',
     component: Chart2
   },
-  // {
-  //   path: '/CreatePost',
-  //   name: 'CreatePost',
-  //   component: CreatePost
-  // },
   {
-    path: '/PostList/:postId',
-    name: 'PostList',
-    component: PostList
+    path: '/CreatePost',
+    name: 'CreatePost',
+    component: CreatePost
   },
   {
-    path: '/PostDetail/:postId', // :id는 동적 라우트 매개변수
+    path: '/PostList/:boardId',
+    name: 'PostList',
+    component: PostList,
+    props: true // boardId를 PostList에 전달
+  },
+  {
+    path: '/PostDetail/:postId/:boardId',
     name: 'PostDetail',
     component: PostDetail
   },
@@ -114,15 +109,23 @@ const routes = [
     component: Chart
   },
   {
-    path: '/CreatePost/:postId?',
-    name: 'CreatePost',
-    component: CreatePost
-  }
+    path: '/EditPost/:postId/:boardId',
+    name: 'EditPost',
+    component: EditPost
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 });
+router.beforeEach((to, from, next) => {
+  if (to.path === "/") {
+    next("/marketanalysis");
+  } else {
+    next();
+  }
+})
+
 
 export default router;
