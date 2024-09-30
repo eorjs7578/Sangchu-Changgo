@@ -2,7 +2,6 @@
   <div class="container-fluid">
     <div class="card mb-3 shadow-sm">
       <div class="card-body">
-        <h4>연령별 유동인구</h4>
         <div style="max-width: 600px; height: 140px">
           <Bar :data="chartData" :options="chartOptions" />
         </div>
