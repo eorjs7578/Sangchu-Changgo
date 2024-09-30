@@ -5,10 +5,11 @@ import {api} from "@/lib/api.js";
 export const useAccountStore = defineStore("accounts", () => {
   const isAuthenticated = ref(false);
   const userInfo = ref({})
+
   /**
    * 인증 정보를 체크하는 함수
    */
-  function checkAuthStatus()  {
+  function checkAuthStatus() {
     return api.get("/api/members/my-info")
       .then(response => {
         isAuthenticated.value = true;
@@ -23,9 +24,16 @@ export const useAccountStore = defineStore("accounts", () => {
   }
 
 
- return {
+  return {
     isAuthenticated,
     checkAuthStatus,
     userInfo
- }
-})
+  }
+},
+   {
+     persist: {
+       paths: ['isAuthenticated', 'userInfo'],
+       storage: sessionStorage,
+     }
+   }
+)
