@@ -16,7 +16,7 @@
               <span
                 :class="{'badge bg-success rounded-pill': area.isFavorite, 'badge bg-secondary rounded-pill': !area.isFavorite}"
                 @click="toggleFavorite(area)">
-                {{ area.isFavorite ? '★' : '☆' }} <!-- Filled or empty star -->
+                {{ area.isFavorite ? "♥" : "♡" }}
               </span>
             </li>
           </ul>
