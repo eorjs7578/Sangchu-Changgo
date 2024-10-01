@@ -48,14 +48,12 @@
           </div>
 
           <!-- 인증번호 확인 -->
-          <div class="verification-code">
-            <div class="input-wrapper">
-              <input type="text" placeholder="인증번호" v-model="authCode" />
-              <span class="timer">{{ formatTime(validationTime) }}</span>
-            </div>
-            <div class="verification-wrapper">
-              <button type="button" @click="handleCheckAuthCode">인증번호 확인</button>
-            </div>
+          <!-- 인증번호 입력 -->
+          <label for="authCode">인증번호</label>
+          <div class="verification-code d-flex">
+            <input type="text" id="authCode" placeholder="인증번호" v-model="authCode" />
+            <span class="timer">{{ formatTime(validationTime) }}</span>
+            <button type="button" @click="handleCheckAuthCode">인증번호 확인</button>
           </div>
 
           <!-- 비밀번호 -->
@@ -256,119 +254,160 @@ function handleUsername(username) {
 </script>
 
 <style scoped>
-    /* 전체 레이아웃을 잡는 컨테이너 */
-    .main-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    width: 100%;
-    background-color: #f3f4f6;
-  }
+/* 전체 레이아웃을 잡는 컨테이너 */
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f3f4f6;
+}
 
-    .signup-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px;
-    padding: 1rem;
-    box-sizing: border-box;
-  }
+.signup-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 1rem;
+  box-sizing: border-box;
+}
 
-    .signup-container {
-    width: 100%;
-    max-width: 600px;
-    padding: 2rem;
-    background-color: white;
-  }
+.signup-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px; /* Add border radius for better UI */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Add subtle shadow for focus */
+}
 
-    .signup-container h2 {
-      font-size: 2rem;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
+.signup-container h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #333;
+}
 
-    .signup-container p {
-      text-align: center;
-    margin-bottom: 1.5rem;
-  }
+.signup-container p {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #666;
+}
 
-    .signup-container form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
+.signup-container form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-    .signup-container label {
-      margin-bottom: 0.5rem;
-  }
+.signup-container label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #444;
+}
 
-    .signup-container input {
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
+.signup-container input {
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
 
-    .signup-container button {
-    padding: 0.8rem;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+.signup-container button {
+  padding: 0.8rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
 
-    .signup-container button:hover {
-      background-color: #218838;
-  }
+.signup-container button:hover {
+  background-color: #218838;
+}
 
-    .email-verification,
-    .verification-code {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
+/* Align 아이디/닉네임 input and button in the same row */
+.signup-container .d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-    .email-verification input,
-    .verification-code input {
-    flex: 1;
-    margin-right: 0.5rem;
-    height: 40px; /* 입력 칸과 버튼의 높이를 동일하게 설정 */
-  }
+.signup-container .d-flex input {
+  flex-grow: 1;
+  margin-right: 10px;
+  min-width: 0; /* To allow shrinking */
+}
 
-    .email-verification button,
-    .verification-code button {
-    padding: 0 10px;
-    height: 40px; /* 버튼 높이를 입력 칸 높이와 동일하게 설정 */
-    white-space: nowrap;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+.signup-container .d-flex button {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
-    .verification-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-left: 0.5rem;
-  }
+.signup-container .email-verification,
+.verification-code {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
 
-    .timer {
-      font-size: 0.8rem;
-    color: #888;
-    margin-top: 0.2rem; /* 타이머를 버튼과 붙이기 */
-  }
+.signup-container .email-verification input,
+.verification-code input {
+  flex: 1;
+  margin-right: 0.5rem;
+  height: 40px;
+}
 
-    .error-text {
-    color: red;
-    font-size: 0.9rem;
-    margin-top: -0.5rem;
-    margin-bottom: 0.5rem;
-  }
+.signup-container .email-verification button,
+.verification-code button {
+  padding: 0 10px;
+  height: 40px;
+  white-space: nowrap;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
+.signup-container .verification-code .timer {
+  font-size: 0.9rem;
+  color: #888;
+  margin-right: 10px;
+}
+
+.error-text {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Disabled button styling */
+.signup-container .btn-secondary {
+  background-color: #6c757d;
+}
+
+.signup-container .btn-primary {
+  background-color: #28a745;
+}
+
+.signup-container .btn-primary:disabled {
+  background-color: #c4c4c4;
+}
+
+.signup-container p a {
+  color: #007bff;
+}
+
+.signup-container p a:hover {
+  text-decoration: underline;
+}
 </style>
