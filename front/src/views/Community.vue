@@ -37,7 +37,6 @@
           <ul>
             <li v-for="item in category.items" :key="item.title">
 
-
               <a @click="goToPostList(item.id)">
               {{ item.name }}
             </a>
@@ -46,11 +45,11 @@
             </li>
           </ul>
           <div class="pagination">
-          <button @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">이전 그룹</button>
-          <button v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
+          <div @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">< </div>
+          <div class="page_number" v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
             {{ n }}
-          </button>
-          <button @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">다음 그룹</button>
+          </div>
+          <div @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">></div>
         </div>
         </div>
       </div>
@@ -227,7 +226,6 @@ const changePage = async (category, newPage) => {
   category.currentPage = newPage;
 
   if(inputValue.value==""){
-    console.log("fffffffffffffffffffffffffff")
     if (category.name === "상권 게시판") {
       await getALLArea(category.currentPage, category.size)
         .then(data => {
@@ -289,6 +287,14 @@ const groupPageArray = (category) => {
   </script>
   
   <style scoped>
+.page_number{
+  margin : 0 1vw;
+}
+
+.page_number:hover{
+  color :#333;
+}
+
   .container {
     max-width: 1200px;
     margin: 0 auto;
