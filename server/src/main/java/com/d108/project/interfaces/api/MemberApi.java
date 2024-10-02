@@ -53,7 +53,7 @@ public interface MemberApi {
     ResponseEntity<Void> changeNickname(@AuthenticationPrincipal Member member, @RequestBody MemberNicknameRequestDto memberNicknameRequestDto);
 
     @PostMapping("/update/email")
-    ResponseEntity<Void> changeEmail(@AuthenticationPrincipal Member member, @RequestBody EmailAuthCheckDto emailAuthCheckDto);
+    ResponseEntity<Void> changeEmail(@AuthenticationPrincipal Member member, @RequestBody MemberEmailRequestDto memberEmailRequestDto);
 
     @PostMapping("/update/password")
     ResponseEntity<Void> changePassword(@AuthenticationPrincipal Member member, @RequestBody MemberPasswordChangeDto memberPasswordChangeDto);

@@ -26,7 +26,7 @@ public interface MemberService {
 
     boolean isEmailDuplicated(String email);
 
-    void changeEmail(Member member, EmailAuthCheckDto emailAuthCheckDto);
+    void changeEmail(Member member, MemberEmailRequestDto memberEmailRequestDto);
 
     void changePassword(Member member, MemberPasswordChangeDto memberPasswordChangeDto);
 

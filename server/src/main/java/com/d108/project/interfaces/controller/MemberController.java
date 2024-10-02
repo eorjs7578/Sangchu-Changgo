@@ -122,8 +122,8 @@ public class MemberController implements MemberApi {
 
     @Operation(summary="이메일 변경", description="이메일 인증 번호를 포함하기 때문에, 이메일 인증을 먼저 호출하고 나서 호출해야함")
     @Override
-    public ResponseEntity<Void> changeEmail(Member member, EmailAuthCheckDto emailAuthCheckDto) {
-        memberService.changeEmail(member, emailAuthCheckDto);
+    public ResponseEntity<Void> changeEmail(Member member, MemberEmailRequestDto memberEmailRequestDto) {
+        memberService.changeEmail(member, memberEmailRequestDto);
         return ResponseEntity.ok().build();
     }
     
