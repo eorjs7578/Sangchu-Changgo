@@ -7,7 +7,11 @@
           <router-link to="/marketanalysis" class="btn-close btn-close-white" aria-label="Close"></router-link>
         </div>
         <div class="modal-body">
-          <ul class="list-group">
+          <!-- 관심 상권이 없을 경우 메시지 표시 -->
+          <p v-if="favoriteAreas.length === 0">관심 상권을 추가해보세요!</p>
+          
+          <!-- 관심 상권이 있을 경우 리스트 출력 -->
+          <ul v-else class="list-group">
             <li v-for="area in favoriteAreas" :key="area.areaId" class="list-group-item d-flex justify-content-between align-items-center">
               <!-- When the area name is clicked, navigate to the marketanalysis page -->
               <span class="area-name" @click="navigateToMarketAnalysis(area)">
@@ -43,38 +47,35 @@ const showLoginPopup = ref(false);
 const maxRetries = 2; // Maximum number of retries
 const retryDelay = 2000; // Delay between retries (in milliseconds)
 
-const fetchFavoriteAreas = async (retryCount = 0) => {
+const fetchFavoriteAreas = async () => { 
   try {
-    console.log(`Attempt ${retryCount + 1}: Requesting favorite areas...`);
+    console.log(`Requesting favorite areas...`);
 
-    // Create a timeout promise that rejects after 10 seconds
-    const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Request timed out')), 10000)
-    );
+    // 단순 API 요청
+    const response = await api.get(`/api/favorite/areas/list`); 
 
-    // Make the request and race it against the timeout
-    const response = await Promise.race([
-      api.get('/api/favorite/areas/list'), // Use api.get instead of axios.get
-      timeout
-    ]);
+    console.log(response); // API 응답 출력
 
-    // Populate the favoriteAreas data, and add `isFavorite` flag to each area
-    favoriteAreas.value = response.data.areaList.map(area => ({
-      ...area,
-      isFavorite: true // Mark it as a favorite (since it came from the favorite list)
-    }));
+    if (response.data.area_list) {
+      console.log(response.data.area_list)
+      // favoriteAreas 데이터를 채우고 각 지역에 `isFavorite` 플래그 추가
+      favoriteAreas.value = response.data.area_list.map(area => ({
+        ...area,
+        isFavorite: true // 즐겨찾기 목록이므로 `isFavorite`으로 표시
+      }));
+    } else {
+      console.log(response.data.area_list)
+      favoriteAreas.value = []; // 응답에 areaList가 없으면 빈 배열로 초기화
+    }
 
     console.log('Request succeeded');
   } catch (error) {
     console.error('Error:', error.message);
 
     if (error.response && error.response.status === 401) {
-      showLoginPopup.value = true;
-    } else if (retryCount < maxRetries) {
-      console.log(`Retrying in ${retryDelay / 1000} seconds...`);
-      setTimeout(() => fetchFavoriteAreas(retryCount + 1), retryDelay);
+      showLoginPopup.value = true; // 401일 경우 로그인 팝업 표시
     } else {
-      console.error('Failed to fetch favorite areas after multiple attempts');
+      console.error('Failed to fetch favorite areas');
     }
   }
 };
@@ -83,7 +84,8 @@ const toggleFavorite = async (area) => {
   if (area.isFavorite) {
     // Send a DELETE request to remove the favorite
     try {
-      await api.delete(`/api/favorite/areas/${area.areaId}`);
+      console.log(area)
+      await api.delete(`/api/favorite/areas/${area.favorite_id}`);
       area.isFavorite = false; // Mark as not favorite in the UI
     } catch (error) {
       console.error('Failed to remove favorite area:', error);
@@ -91,7 +93,7 @@ const toggleFavorite = async (area) => {
   } else {
     // Send a POST request to add the favorite
     try {
-      await api.post('/api/favorite/areas', { areaId: area.areaId });
+      await api.post('/api/favorite/areas', { areaId: area.favorite_id });
       area.isFavorite = true; // Mark as favorite in the UI
     } catch (error) {
       console.error('Failed to add favorite area:', error);
