@@ -81,6 +81,40 @@ const favoriteFranchises = ref([]);
 const router = useRouter();
 const store = useAccountStore();
 
+
+const toggleFavorite = () => {
+  getFavoriteFranchises(
+    ({data}) => {
+      console.log(data)
+      favoriteFranchises.value = transformData(data)
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
+const transformData = (data) => {
+  return data.map((item) => ({
+    id: item.franchise_fee_dto.id,
+    gu: item.gu,  // 실제 구 데이터로 채워야 함
+    dong: item.dong,  // 실제 동 데이터로 채워야 함
+    name: item.franchise_fee_dto.name,
+    storeSize: item.size == 'small' ? 10 : 20,  // storeSize 값을 적절히 입력해야 함
+    floor: item.floor == 'other' ? '1층' : '1층 외',  // floor 값을 적절히 입력해야 함
+    costs: [
+      { name: '임대료', amount: Math.floor(item.franchise_fee_dto.rent_fee * item.size / 1000) },
+      { name: '가맹비', amount: item.franchise_fee_dto.franchise_fee },
+      { name: '보증금', amount: item.franchise_fee_dto.deposit },
+      { name: '교육비', amount: item.franchise_fee_dto.education_fee },
+      { name: '인테리어 비용', amount: item.franchise_fee_dto.interior * item.size },
+      { name: '기타비용', amount: item.franchise_fee_dto.other_fee }
+    ],
+    link: item.franchise_fee_dto.link,
+    likeId: item.franchise_fee_dto.like_id
+  }));
+};
+
 const toggleCommunitySubmenu = () => {
   isCommunityOpen.value = !isCommunityOpen.value;
 };
@@ -94,6 +128,7 @@ const toggleFranchiseSubmenu = () => {
   isFranchiseOpen.value = !isFranchiseOpen.value;
 };
 
+// 아바타 메뉴 토글 함수
 const toggleAvatarMenu = () => {
   isAvatarMenuOpen.value = !isAvatarMenuOpen.value;
 };

@@ -29,12 +29,16 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some(record => record.meta.requiresAuth)) {
     // 로그인 필요한 페이지에 접근하려 할 때, 로그인 여부 확인
     if (!store.isAuthenticated) {
-      next({ name: 'login' }); // 로그인 페이지로 리디렉션
+      next({ name: "login" }); // 로그인 페이지로 리디렉션
     } else {
       next(); // 인증되어 있으면 그대로 진행
     }
   } else {
-    next(); // 인증 필요 없는 페이지는 그대로 진행
+    if (store.isAuthenticated && to.name === "login") {
+      next("/"); // 로그인되어 있으면 메인 페이지로 리디렉션
+    } else {
+      next(); // 로그인되지 않았으면 그대로 진행
+    }
   }
 });
 

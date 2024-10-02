@@ -71,15 +71,16 @@
         <!-- 매출 분석 -->
         <SalesAnalysis :place="place" :service="service" />
 
+        <!-- 평가 결과 -->
+        <SurveyResult
+            :place
+        />
+
         <!--평가 폼-->
         <SurveyForm
             :place
         />
 
-        <!-- 평가 결과 -->
-        <SurveyResult
-            :place
-        />
       </div>
     </div>
 

@@ -21,6 +21,21 @@ export function isUsernameValidated(username) {
   return /^[a-zA-Z0-9]{1,20}$/.test(username);
 }
 
+export function isEmailDuplicated(email) {
+  return api.get("/api/members/duplicate/email", {params: {
+  email: email}
+  })
+    .then(response => {
+      if (window.confirm("사용하실 수 있는 이메일입니다. \n 사용하시겠습니까?")) {
+        return true;
+      }
+      return Promise.reject(response)
+    })
+    .catch(err => {
+      return Promise.reject(err)
+    })
+}
+
 export function isNicknameDuplicated(nickname) {
   return api.get("/api/members/duplicate/nickname", {params: {
       nickname: nickname
@@ -60,10 +75,19 @@ export function isUsernameDuplicated(username) {
   });
 }
 
-export function getAuthCode(email) {
+export async function getAuthCode(email) {
+  if (await isEmailDuplicated(email)) {
   return api.get("/api/members/auth-email", {params: {
       email: email,
     }})
+    .then(response => {
+      alert("인증번호가 이메일로 발송되었습니다. \n네트워크 환경에 따라 발송에 시간이 걸릴 수 있습니다.")
+    })
+    .catch( err => {
+        return Promise.reject(err)
+      }
+    )
+  }
 }
 
 export function checkAuthCode(email, auth_code) {
@@ -75,7 +99,7 @@ export function checkAuthCode(email, auth_code) {
       return true
     })
     .catch(err => {
-      return false
+      return Promise.reject(err);
     })
 }
 
