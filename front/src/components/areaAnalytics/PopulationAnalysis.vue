@@ -1,12 +1,10 @@
 <template>
   <div id="populationAnalysis">
-    <div class="card p-3 mb-3 shadow-sm" id="day">
+    <div class="card mb-3 shadow-sm" id="day">
       <div class="card-body">
-        
-          <h4>일일 평균 유동인구</h4>
-        
+        <h4>일일 평균 유동인구</h4>
         <p>
-          일일 평균 유동인구는 {{population}}명 입니다.
+          일일 평균 유동인구는 <span class="fw-bold text-primary">{{population}}</span>명 입니다.
         </p>
       </div>
     </div>
@@ -14,7 +12,7 @@
     <div class="card mb-3 shadow-sm" id="week">
       <div class="card-body">
         <h4>요일별 유동 인구</h4>
-        {{ weekData.many_people_days_of_week }}요일 유동인구가 가장 높아요.
+        <span class="fw-bold text-primary">{{ weekData.many_people_days_of_week }}요일</span> 유동인구가 가장 높아요.
       </div>
 
       <WeeklyVisitorChart
@@ -28,7 +26,7 @@
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
         <h4>시간대별 유동 인구</h4>
-        {{ hourData.many_people_days_of_the_hour }} 유동인구가 가장 높아요.
+        <span class="fw-bold text-primary">{{ hourData.many_people_days_of_the_hour }}</span> 유동인구가 가장 높아요.
       </div>
     
             <HourlyVisitorChart
@@ -54,7 +52,7 @@
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
         <h4>성별별 유동인구</h4>
-        <span>{{ genderData.many_people_gender }}성 유동인구가 약 {{ genderPercentage }}% 더 높아요.</span>
+        <span><span class="fw-bold text-primary">{{ genderData.many_people_gender }}성</span> 유동인구가 약 <span class="fw-bold text-primary">{{ genderPercentage }}%</span> 더 높아요.</span>
       </div>
 
       <GenderGroupChart :genderData="genderData" />
@@ -63,7 +61,7 @@
     <div class="card mb-3 shadow-sm" id="age">
       <div class="card-body">
         <h4>연령별 유동인구</h4>
-        {{ ageData.many_people_days_of_age }} 유동인구가 가장 높아요.
+        <span class="fw-bold text-primary">{{ ageData.many_people_days_of_age }}</span> 유동인구가 가장 높아요.
       </div>
 
       <AgeGroupChart

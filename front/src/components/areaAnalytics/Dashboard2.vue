@@ -36,13 +36,6 @@
         </a>
         <a
             class="nav-item nav-link"
-            :class="{ active: activeSection === 'rent' }"
-            @click.prevent="scrollToSection('rent')"
-        >
-          임대료
-        </a>
-        <a
-            class="nav-item nav-link"
             :class="{ active: activeSection === 'surveyResult' }"
             @click.prevent="scrollToSection('surveyResult')"
         >

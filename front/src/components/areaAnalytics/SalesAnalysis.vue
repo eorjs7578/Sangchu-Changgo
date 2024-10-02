@@ -3,7 +3,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>요일별 매출</h4>
-        {{ WeeklySales.many_money_days_of_week }}요일 매출이 가장 높아요
+        <span class="fw-bold text-primary">{{ WeeklySales.many_money_days_of_week }}요일</span> 매출이 가장 높아요
       </div>
       <div>        
         <WeeklyVisitorChart
@@ -17,7 +17,7 @@
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
         <h4>성별별 매출</h4>
-        <span>{{ GenderSales.many_sale_gender }}성 매출이 약 {{ genderPercentage }}% 더 높아요</span>
+        <span><span class="fw-bold text-primary">{{ GenderSales.many_sale_gender }}성</span> 매출이 약 <span class="fw-bold text-primary">{{ genderPercentage }}% </span>더 높아요</span>
       </div>
       <div>
         
@@ -42,7 +42,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>연령별 매출</h4>
-      {{ AgeSales.many_sale_age }} 매출이 가장 높아요
+        <span class="fw-bold text-primary">{{ AgeSales.many_sale_age }}</span> 매출이 가장 높아요
       </div>
       
       <div>
@@ -57,18 +57,44 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>분기별 매출</h4>
-        {{ QuarterlySales.qoq }}
+        <div v-if="QuarterlySales && QuarterlySales.qoq">
+        <!-- qoq 값이 존재하고, "유지" 또는 "상승"을 포함하는 경우 -->
+        <p
+          v-if="QuarterlySales.qoq.includes('유지') || QuarterlySales.qoq.includes('상승')"
+        >
+          해당 업종의 매출이 이전분기에 비해 <span class="text-primary">{{ QuarterlySales.qoq }}</span>하고 있습니다.
+        </p>
+
+        <!-- qoq 값이 존재하고, "하락"을 포함하는 경우 -->
+        <p
+          v-else-if="QuarterlySales.qoq.includes('하락')"
+        >
+          해당 업종의 매출이 이전분기에 비해 <span class="text-danger">{{ QuarterlySales.qoq }}</span>하고 있습니다.
+        </p>
+
+        <!-- qoq 값이 특정 문자열인 경우 -->
+        <p
+          v-else-if="QuarterlySales.qoq === '이번 년도 매출 정보가 없습니다.' || QuarterlySales.qoq === '현재와 일치하는 동일 분기의 매출 정보가 없습니다.'"
+          class="text-danger"
+        >
+          {{ QuarterlySales.qoq }}
+        </p>
+      </div>
+
+      <!-- 데이터가 아직 로드되지 않은 경우 로딩 메시지 표시 -->
+      <div v-if = "QuarterlySales.length == 0">
+        데이터를 불러오는 중입니다...
+      </div>
       </div>
       <div>
-      
         <QuarterlyVisitorChart
                 v-if="Object.keys(QuarterlySales ).length > 0"
                 :labels="QuarterlySales.labels"
                 :data="QuarterlySales.data"
             />
       </div>
+      </div>
     </div>
-  </div>
 </template>
 
 
@@ -88,7 +114,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
     const AgeSales = ref("");
     const GenderSales = ref("");
     const WeekendSales = ref("");
-    const QuarterlySales=ref("");
+    const QuarterlySales=ref({});
     
     const props = defineProps({
     place : String,
@@ -154,7 +180,9 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
       getSalesByQuarterly(props.place, newService.service_code, (data) => {
         QuarterlySales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
-        console.log(data)
+        console.log(QuarterlySales.value)
+        console.log(QuarterlySales.value.qoq.includes('하락'))
+        
 
       }, (error) => {
         console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
@@ -164,7 +192,8 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
     { immediate: true }
   );
 
-    onMounted(() => {});
+    onMounted(() => {
+    });
 
 </script>
 
