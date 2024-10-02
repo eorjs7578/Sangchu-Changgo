@@ -1,5 +1,5 @@
 <template>
-  <div id="storeAnalytics">
+  <div id="storeAnalysis">
     <div class="card shadow-sm p-3 mb-3">
       <h2 class="title">선택 상권 총 점포 수</h2>
       <p class="description">

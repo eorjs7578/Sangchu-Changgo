@@ -1,16 +1,10 @@
 <template>
-  <div id="population">
-    <div class="card mb-3 shadow-sm">
-      <div class="card-body">
-        유동 인구
-      </div>
-    </div>
-
+  <div id="populationAnalysis">
     <div class="card p-3 mb-3 shadow-sm" id="day">
       <div class="card-body">
-        <p>
-          일일 평균 유동인구
-        </p>
+        
+          <h4>일일 평균 유동인구</h4>
+        
         <p>
           일일 평균 유동인구는 {{population}}명 입니다.
         </p>
@@ -19,9 +13,7 @@
 
     <div class="card mb-3 shadow-sm" id="week">
       <div class="card-body">
-        요일별 유동 인구
-      </div>
-      <div>
+        <h4>요일별 유동 인구</h4>
         {{ weekData.many_people_days_of_week }}요일 유동인구가 가장 높아요.
       </div>
 
@@ -35,11 +27,10 @@
 
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
-        시간대별 유동인구
-      </div>
-      <div>
+        <h4>시간대별 유동 인구</h4>
         {{ hourData.many_people_days_of_the_hour }} 유동인구가 가장 높아요.
       </div>
+    
             <HourlyVisitorChart
             v-if="Object.keys(hourData).length > 0"
             :labels="hourData.labels"
@@ -49,11 +40,10 @@
 
     <div class="card mb-3 shadow-sm" id="quarter">
       <div class="card-body">
-        분기별 평균 유동인구
+        <h4>분기별 유동 인구</h4>
+        {{ quarterData.qo_q }}
       </div>
-      <div>
-        유동인구가 이전분기에 비해 {{ quarterData.qo_q }}하고 있습니다.
-      </div>
+
             <QuarterlyVisitorChart
                 v-if="Object.keys(quarterData).length > 0"
                 :labels="quarterData.labels"
@@ -63,21 +53,19 @@
 
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
-        유동인구 성별
-      </div>
-      <div>
+        <h4>성별별 유동인구</h4>
         <span>{{ genderData.many_people_gender }}성 유동인구가 약 {{ genderPercentage }}% 더 높아요.</span>
       </div>
+
       <GenderGroupChart :genderData="genderData" />
     </div>
 
     <div class="card mb-3 shadow-sm" id="age">
       <div class="card-body">
-        연령별 유동인구
-      </div>
-      <div>
+        <h4>연령별 유동인구</h4>
         {{ ageData.many_people_days_of_age }} 유동인구가 가장 높아요.
       </div>
+
       <AgeGroupChart
                 v-if="Object.keys(ageData).length > 0"
                 :labels="ageData.labels"
