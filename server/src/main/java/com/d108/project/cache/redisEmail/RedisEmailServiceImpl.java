@@ -2,6 +2,7 @@ package com.d108.project.cache.redisEmail;
 
 import com.d108.project.cache.redis.RedisUtil;
 import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
+import com.d108.project.domain.member.repository.MemberRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class RedisEmailServiceImpl implements RedisEmailService {
     private String hostEmail;
     private final RedisUtil redisUtil;
     private final JavaMailSender mailSender;
+    private final MemberRepository memberRepository;
     private static final SecureRandom random = new SecureRandom();
 
     /**
@@ -48,6 +50,7 @@ public class RedisEmailServiceImpl implements RedisEmailService {
     // 인증 메일 발송
     @Override
     public void sendEmail(String email) throws MessagingException {
+
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "utf-8");
         String authCode = createAuthCode(email);

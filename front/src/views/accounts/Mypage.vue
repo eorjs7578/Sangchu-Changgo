@@ -18,8 +18,9 @@
       <div class="form-group">
         <label for="email">이메일 변경</label>
         <div class="input-group">
-          <input type="email" id="email" v-model="newEmail" required>
-          <button @click="handleGetAuthCode">이메일 인증</button>
+          <input type="email" id="email" v-model="newEmail" required :disabled="isEmailLocked">
+          <button v-if="!isEmailLocked" @click="handleGetAuthCode">이메일 인증</button>
+          <button v-else @click="changeEmail">이메일 변경</button>
         </div>
         <div v-if="isEmailSend">
           <input type="text" v-model="authCode" placeholder="인증 코드 입력" />
@@ -116,6 +117,7 @@ const authCode = ref('');
 const isEmailSend = ref(false); // 이메일 발송 여부
 const isEmailChecked = ref(false);
 const validationTime = ref(0); // 인증 시간 제한
+const isEmailLocked = ref(false)
 
 let timer = null;
 
@@ -132,12 +134,14 @@ const toggleEditForm = () => {
 // 이메일 인증번호 발송
 function handleGetAuthCode() {
     if (isEmailValidated(email.value)) {
-      alert("인증번호가 이메일로 발송되었습니다. \n네트워크 환경에 따라 발송에 시간이 걸릴 수 있습니다.")
-      isEmailSend.value = true;
-      validationTime.value = 300;
       getAuthCode(email.value)
-    } else {
-      alert("유효하지 않은 이메일 입니다. \n이메일을 다시 확인해주세요.")
+          .then(response => {
+          isEmailSend.value = true;
+          validationTime.value = 300;
+          })
+          .catch(err =>
+              alert(err.response.data)
+          )
     }
   }
 
@@ -154,7 +158,8 @@ checkAuthCode(email.value, authCode.value)
       if (isVerified) {
         alert("인증되었습니다.")
         isEmailChecked.value = true;
-        changeEmail();
+        isEmailSend.value = false;
+        isEmailLocked.value = true;
       }
       else {
         alert("인증 번호를 다시 한 번 확인해주세요.")
@@ -162,25 +167,24 @@ checkAuthCode(email.value, authCode.value)
     })
 }
 
+
 // 이메일 변경 API 호출 함수
 const changeEmail = () => {
+  if (isEmailChecked) {
   updateEmail(newEmail.value, authCode.value) // 새로운 이메일과 인증 코드를 전달
     .then(success => {
       if (success) {
         alert('이메일이 성공적으로 변경되었습니다.');
-        console.log(newEmail.value);
-        console.log(authCode.value);
         store.userInfo.email = newEmail.value; // 스토어에 저장된 이메일 업데이트
-        showEditForm.value = false; // 수정 폼 닫기
+        window.location.reload();
       } else {
         alert('이메일 변경 실패. 다시 시도해 주세요.');
-        console.log(newEmail.value);
-        console.log(authCode.value);
       }
     })
     .catch((error) => {
       console.log('이메일 변경 실패:', error);
     });
+  }
 };
 
 // 타이머: 인증 시간이 지나면 초기화
