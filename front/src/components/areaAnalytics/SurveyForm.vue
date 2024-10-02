@@ -1,13 +1,14 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-    <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden border border-gray-300">
+    <div id = "surveyForm">
+      <div class="card shadow-sm p-3 mb-3">
+        <div class="card-body">
       <div class="p-6">
-        <h2 class="text-2xl font-bold mb-6">평가하기</h2>
+        <h4 >평가하기</h4><br>
 
         <div class="space-y-6">
           <!-- 주 연령층 -->
           <div>
-            <h3 class="text-lg font-semibold mb-2">주 연령층</h3>
+            <b>주 연령층</b>
             <div class="grid grid-cols-3 gap-2 mb-2">
               <button v-for="option in ageGroups" :key="option" @click="selectOption('ageGroup', option)"
                 :class="['option-button', selectedOptions.ageGroup === option ? 'selected' : '']">
@@ -18,7 +19,7 @@
 
           <!-- 유동인구 -->
           <div>
-            <h3 class="text-lg font-semibold mb-2">유동인구</h3>
+            <b>유동인구</b>
             <div class="grid grid-cols-3 gap-2 mb-2">
               <button v-for="option in footTraffics" :key="option" @click="selectOption('footTraffic', option)"
                 :class="['option-button', selectedOptions.footTraffic === option ? 'selected' : '']">
@@ -29,7 +30,7 @@
 
           <!-- 물가 -->
           <div>
-            <h3 class="text-lg font-semibold mb-2">물가</h3>
+            <b>물가</b>
             <div class="grid grid-cols-3 gap-2 mb-2">
               <button v-for="option in nearbyPrices" :key="option" @click="selectOption('nearbyPrices', option)"
                 :class="['option-button', selectedOptions.nearbyPrices === option ? 'selected' : '']">
@@ -40,7 +41,7 @@
 
           <!-- 분위기 -->
           <div>
-            <h3 class="text-lg font-semibold mb-2">분위기</h3>
+            <b>분위기</b>
             <div class="grid grid-cols-3 gap-2 mb-2">
               <button v-for="option in atmospheres" :key="option" @click="selectOption('atmosphere', option)"
                 :class="['option-button', selectedOptions.atmosphere === option ? 'selected' : '']">
@@ -48,7 +49,7 @@
               </button>
             </div>
           </div>
-
+          <br>
           <!-- 평가 기능 버튼 -->
           <div class="flex justify-end mt-6 space-x-2">
             <button v-if="!isSubmitted" @click="createEvaluation" class="action-button submit">제출하기</button>
@@ -59,6 +60,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>
@@ -150,7 +152,7 @@ const createEvaluation = async () => {
 
       // 평가 제출 후 평가 데이터를 다시 불러옴
       fetchMyEvaluation();
-      
+
     }, (error) => {
       console.error('평가 제출 실패:', error);
     });
@@ -279,4 +281,19 @@ onMounted(() => {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.left {
+   text-align: left;
+}
+
+.center {
+   text-align: center;
+}
+
+
+.right {
+   text-align: right;
+}
+
+
 </style>
