@@ -27,10 +27,9 @@ public class FavoriteAreaController implements FavoriteAreaApi {
 
     @Operation(summary = "[Member] 회원이 해당 상권에 대한 관심 여부가 있는지 true/fase로 반환", description = "회원과 관련된 모든 관심 상권 조회 (페이징 필요할지도)")
     @Override
-    public ResponseEntity<Boolean> checkFavoriteAreaByMember(Member member, Long favoriteAreaId) {
+    public ResponseEntity<Long> getFavoriteAreaByMember(Member member, Long favoriteAreaId) {
         return ResponseEntity.ok(favoriteAreaService.checkFavoriteAreaByMember(member.getId(), favoriteAreaId));
     }
-
 
     @Operation(summary = "[Member] 관심 상권 삭제!")
     @Override

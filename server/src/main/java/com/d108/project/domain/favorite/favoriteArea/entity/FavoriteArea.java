@@ -23,7 +23,7 @@ public class FavoriteArea extends BaseTimeEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_area_id")
+    @JoinColumn(name = "area_id")
     private Area area;
 
     public static FavoriteArea toFavoriteArea(Member member, Area area) {

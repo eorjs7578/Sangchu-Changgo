@@ -73,12 +73,12 @@
 
         <!-- 평가 결과 -->
         <SurveyResult
-            :place
+            :place="place"
         />
 
         <!--평가 폼-->
         <SurveyForm
-            :place
+            :place="place"
         />
 
       </div>

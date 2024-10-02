@@ -27,20 +27,26 @@ public class FavoriteAreaServiceImpl implements FavoriteAreaService {
 
     @Override
     public AreaListDto getFavoriteAreasByMember(Long memberId) {
-        List<Area> areas = new ArrayList<>();
+        System.out.println(memberId);
+        List<FavoriteArea> favoriteAreaList = favoriteAreaRepository.findAllByMemberId(memberId);
 
-        favoriteAreaRepository.findAllByMemberId(memberId)
-                .forEach(favoriteArea -> areas.add(favoriteArea.getArea()));
+        if (favoriteAreaList.isEmpty()) {
+            return new AreaListDto(null);
+        }
+
+        List<FavoriteArea> areas = new ArrayList<>(favoriteAreaList);
 
         return AreaListDto.createAreaListDto(areas);
     }
 
     @Override
-    public Boolean checkFavoriteAreaByMember(Long memberId, Long areaId) {
-        Optional<FavoriteArea> areaMemberIdAndAreaId = favoriteAreaRepository.findAllByMemberIdAndAreaId(memberId, areaId);
-        return areaMemberIdAndAreaId.isPresent();
+    public Long checkFavoriteAreaByMember(Long memberId, Long areaId) {
+        FavoriteArea favoriteArea = favoriteAreaRepository.findAllByMemberIdAndAreaId(memberId, areaId)
+                .orElseThrow(() -> new IllegalArgumentException("관심 상권을 찾을 수 없습니다."));
 
+        return favoriteArea.getId();
     }
+
 
 
     @Override
