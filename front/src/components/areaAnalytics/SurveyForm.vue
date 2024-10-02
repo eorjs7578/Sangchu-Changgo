@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-    <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden">
+    <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden border border-gray-300">
       <div class="p-6">
         <h2 class="text-2xl font-bold mb-6">평가하기</h2>
 

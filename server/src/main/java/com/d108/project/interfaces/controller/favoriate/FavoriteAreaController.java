@@ -1,5 +1,6 @@
 package com.d108.project.interfaces.controller.favoriate;
 
+import com.d108.project.domain.area.dto.AreaDto;
 import com.d108.project.domain.area.dto.AreaListDto;
 import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaRequestDto;
 import com.d108.project.domain.favorite.favoriteArea.service.FavoriteAreaService;
@@ -23,6 +24,13 @@ public class FavoriteAreaController implements FavoriteAreaApi {
     public ResponseEntity<AreaListDto> getFavoriteAreasByMember(Member member) {
         return ResponseEntity.ok(favoriteAreaService.getFavoriteAreasByMember(member.getId()));
     }
+
+    @Operation(summary = "[Member] 회원이 해당 상권에 대한 관심 여부가 있는지 true/fase로 반환", description = "회원과 관련된 모든 관심 상권 조회 (페이징 필요할지도)")
+    @Override
+    public ResponseEntity<Boolean> checkFavoriteAreaByMember(Member member, Long favoriteAreaId) {
+        return ResponseEntity.ok(favoriteAreaService.checkFavoriteAreaByMember(member.getId(), favoriteAreaId));
+    }
+
 
     @Operation(summary = "[Member] 관심 상권 삭제!")
     @Override
