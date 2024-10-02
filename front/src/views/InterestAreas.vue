@@ -93,7 +93,7 @@ const toggleFavorite = async (area) => {
   } else {
     // Send a POST request to add the favorite
     try {
-      await api.post('/api/favorite/areas', { areaId: area.favorite_id });
+      await api.post('/api/favorite/areas', { area_id: area.area_id });
       area.isFavorite = true; // Mark as favorite in the UI
     } catch (error) {
       console.error('Failed to add favorite area:', error);

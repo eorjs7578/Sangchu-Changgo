@@ -22,12 +22,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getStatisticsAreaEvaluation } from '@/api/analytic' // 필요한 경로에 맞춰 import
 
 
-const areaId = ref('3001491'); // 임시로 이태원 관광특구로 설정
+// props로 전달된 place(areaId 역할)
+const props = defineProps({
+  place: String
+})
+
 // 평가 결과 저장 변수
 const evaluationResult = ref(null)
 
@@ -37,7 +41,7 @@ const route = useRoute()
 // 특정 상권의 평가 결과 조회
 const fetchEvaluationResult = async () => {
   try {
-    getStatisticsAreaEvaluation(areaId.value, null, (response) => {
+    getStatisticsAreaEvaluation(props.place, null, (response) => {
       console.log(response)
       evaluationResult.value = response.data
       
@@ -49,6 +53,13 @@ const fetchEvaluationResult = async () => {
     console.error('평가 결과 조회 실패:', error)
   }
 }
+
+// place 값이 변경될 때마다 평가 결과를 다시 조회
+watch(() => props.place, (newPlace) => {
+  if (newPlace) {
+    fetchEvaluationResult()
+  }
+})
 
 // 페이지가 로드될 때 자동으로 평가 결과를 조회
 onMounted(() => {
