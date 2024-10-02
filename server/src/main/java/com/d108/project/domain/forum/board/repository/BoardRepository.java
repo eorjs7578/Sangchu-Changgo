@@ -15,7 +15,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     // 프랜차이즈 게시판들 조회 (프랜차이즈 ID가 있는 게시판)
     Page<Board> findByFranchiseIdIsNotNull(Pageable pageable);
 
-    // 지역 게시판들 조회 (상권 ID가 있는 게시판)
+    // 지역 게시판들 조회 (상권 ID가 있는 게시판들)
+    @Query("SELECT b FROM Board b LEFT JOIN FETCH b.area WHERE b.area IS NOT NULL")
     Page<Board> findByAreaIdIsNotNull(Pageable pageable);
 
     // 특정 판매 관련 게시판 조회
