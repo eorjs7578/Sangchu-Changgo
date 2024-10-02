@@ -138,11 +138,12 @@ const toggleFavorite = async () => {
   try {
     if (favorite.value) {
       // If currently favorited, send DELETE request to remove favorite
+      // 수정해야함.
       await api.delete(`/api/favorite/areas/${favoriteAreaId}`);
     } else {
       console.log("Sending areaId:", favoriteAreaId);
       // If not favorited, send POST request to add favorite
-      await api.post('/api/favorite/areas', { areaId: favoriteAreaId });
+      await api.post('/api/favorite/areas', { area_id: favoriteAreaId });
     }
     favorite.value = !favorite.value; // Toggle the favorite state in the UI
   } catch (error) {
