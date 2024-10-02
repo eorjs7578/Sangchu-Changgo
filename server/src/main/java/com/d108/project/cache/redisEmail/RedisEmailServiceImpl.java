@@ -39,8 +39,6 @@ public class RedisEmailServiceImpl implements RedisEmailService {
     @Override
     public Boolean checkAuthCode(EmailAuthCheckDto emailAuthCheckDto) {
         String storedAuthCode = redisUtil.getData("auth: " + emailAuthCheckDto.getEmail());
-        System.out.println("Stored Auth Code: " + storedAuthCode);
-        System.out.println("User Input Auth Code: " + emailAuthCheckDto.getAuthCode());
         if (emailAuthCheckDto.getAuthCode().equals(storedAuthCode)) {
             redisUtil.deleteData("auth: " + emailAuthCheckDto.getEmail());
             return true;
