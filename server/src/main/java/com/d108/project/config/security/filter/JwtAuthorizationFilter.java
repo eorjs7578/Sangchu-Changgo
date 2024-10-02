@@ -2,6 +2,7 @@ package com.d108.project.config.security.filter;
 
 import com.d108.project.config.WhiteListConfiguration;
 import com.d108.project.config.util.token.TokenUtil;
+import com.d108.project.domain.global.InvalidTokenException;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,7 +30,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @Nonnull FilterChain filterChain
-    ) throws ServletException, IOException {
+    ) throws ServletException, IOException, InvalidTokenException {
         log.info("요청 주소: {}", request.getRequestURI());
 
         log.info("JWT FILTER START");
@@ -93,13 +94,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     // 리프레시 토큰도 유효하지 않은 경우
                     else {
                         tokenUtil.deleteTokenOnCookie(response);
-                        throw new RuntimeException("토큰이 유효하지 않습니다.");
+                        throw new InvalidTokenException("토큰이 유효하지 않습니다.");
                     }
                 }
                 // 토큰이 제대로 추출되지 않은 경우
             } else {
                 tokenUtil.deleteTokenOnCookie(response);
-                throw new RuntimeException("토큰이 유효하지 않습니다.");
+                throw new InvalidTokenException("토큰이 유효하지 않습니다.");
             }
         } catch (Exception e) {
             throw e;

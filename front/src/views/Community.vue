@@ -120,6 +120,8 @@ onMounted(() => {
   getHotData(); // 인기 데이터 불러오기
   getAllAreaData(); // 모든 상권 데이터 불러오기
   getAllFranchiseData(); // 모든 프랜차이즈 데이터 불러오기
+
+  console.log()
 });
 
 // 인기 데이터 불러오기

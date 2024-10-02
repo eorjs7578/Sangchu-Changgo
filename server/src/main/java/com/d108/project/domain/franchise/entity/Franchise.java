@@ -1,6 +1,7 @@
 package com.d108.project.domain.franchise.entity;
 
 import com.d108.project.domain.favorite.favoriteFranchise.entity.FavoriteFranchise;
+import com.d108.project.domain.forum.board.entity.Board;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -46,8 +47,11 @@ public class Franchise {
     @Column(name = "link", length = 511)
     private String link;
 
-    @OneToMany(mappedBy = "franchise")
+    @OneToMany(mappedBy = "franchise" )
     private List<FavoriteFranchise> FavoriteFranchises = new ArrayList<>();
+
+    @OneToMany(mappedBy = "franchise" , fetch = FetchType.LAZY)
+    private List<Board> Boards = new ArrayList<>();
 
     @Builder
     public Franchise(Long id, String name, String type, Long franchiseFee, Long educationFee,
