@@ -3,70 +3,10 @@
         <div class="custom-card">
             <h2 class="custom-card-title text-center mb-4">게시판</h2>
 
-<<<<<<< HEAD
             <div class="custom-button-group">
-                <button type="button" class="custom-btn" @click="handleCreatePost">
+                <button v-show="store.isAuthenticated" type="button" class="custom-btn" @click="handleCreatePost">
                     새 글 등록
                 </button>
-=======
-                        <div class="mb-3 text-end">
-                            <button v-show="store.isAuthenticated" type="button" class="btn btn-primary" @click="handleCreatePost">
-                                새 글 등록
-                            </button>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>No</th>
-                                        <th>제목</th>
-                                        <th>작성자</th>
-                                        <th>등록일시</th>
-                                        <th>조회수</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(row, idx) in postList" :key="row.id">
-                                        <td>{{ idx + 1 + currentPage * pageSize }}</td>
-                                        <td>
-                                            <a
-                                                href="#"
-                                                @click.prevent="viewPost(row.id)"
-                                                class="text-decoration-none"
-                                                >{{ row.title }}</a
-                                            >
-                                        </td>
-                                        <td>{{ row.member_id }}</td>
-                                        <td>{{ formatDate(row.created_at) }}</td>
-                                        <td>{{ row.view }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item" :class="{ disabled: currentPage === 0 }">
-                                    <a class="page-link" href="#" @click.prevent="loadPreviousPage"
-                                        >이전</a
-                                    >
-                                </li>
-                                <li class="page-item active">
-                                    <span class="page-link">
-                                        {{ currentPage + 1 }} / {{ totalPages }}
-                                    </span>
-                                </li>
-                                <li class="page-item" :class="{ disabled: isLastPage }">
-                                    <a class="page-link" href="#" @click.prevent="loadNextPage"
-                                        >다음</a
-                                    >
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
->>>>>>> 6f00bd469bc4340481ff539c14be29b2397385b3
             </div>
 
             <div class="table-responsive">
