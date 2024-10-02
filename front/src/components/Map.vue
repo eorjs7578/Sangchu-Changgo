@@ -77,10 +77,9 @@ async function getDongData(code){
 async function getAreaData(code){
     mapLevel=4;
     await getArea(code)
-    .then(data=>{
+    .then(data => {
         prevArea.data = data;
         areas = data;
-        console.log(data)
     })
     .catch(error=>{
         console.error("Error:", error);
@@ -108,6 +107,28 @@ const initMap = (x,y) => {
   map = new kakao.maps.Map(container, options);
 
   drawPolygons();
+
+  kakao.maps.event.addListener(map, 'zoom_changed', () => {
+    const lev = map.getLevel()
+    if (lev === 4) {
+      areas = prevArea.data
+      drawPolygons()
+    }
+
+    if (lev === 6) {
+      if (areas !== prevDong.data) {
+        areas = prevDong.data
+        drawPolygons()
+      }
+    }
+    if (lev >= 8) {
+      if (areas !== prevGu.data) {
+        areas = prevGu.data
+        drawPolygons()
+      }
+    }
+
+  })
 };
 
 function drawPolygons(){
@@ -199,28 +220,7 @@ function createPolygon(area) {
     // 커스텀 오버레이를 지도에서 제거합니다
     kakao.maps.event.addListener(polygon, 'mouseout', function() {
         polygon.setOptions({fillColor: '#D7F9D6'});
-    }); 
-
-    kakao.maps.event.addListener(map, 'zoom_changed', () => {
-      const lev = map.getLevel()
-      if (lev === 4) {
-        areas = prevArea.data
-      }
-
-      if (lev === 6) {
-        if (areas !== prevDong.data) {
-          areas = prevDong.data
-          drawPolygons()
-        }
-      }
-      if (lev >= 8) {
-        if (areas !== prevGu.data) {
-          areas = prevGu.data
-          drawPolygons()
-        }
-      }
-
-    })
+    });
 
     // 다각형에 click 이벤트를 등록하고 이벤트가 발생하면 다각형의 이름과 면적을 인포윈도우에 표시합니다 
     kakao.maps.event.addListener(polygon, 'click', function(mouseEvent) {
@@ -261,6 +261,7 @@ function createPolygon(area) {
 
     return polygon;
 }
+
 function closeModal() {
   showModal.value = false;
 }
@@ -272,6 +273,9 @@ watch(place, (newPlace) => {
   }
 });
 const computedPlace = computed(() => place.value);
+
+
+
 </script>
 
 <style scoped>
