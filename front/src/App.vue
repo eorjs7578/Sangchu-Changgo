@@ -1,4 +1,30 @@
 <template>
+  <div class="d-flex">
+    <NavBar />
+    <main class="flex-grow-1 p-3 overflow-auto">
+      <router-view />
+    </main>
+  </div>
+</template>
+
+<script setup>
+import NavBar from './components/NavBar.vue';
+</script>
+
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+}
+#app {
+  height: 100%;
+}
+.d-flex {
+  height: 100%;
+}
+</style>
+
+<!-- <template>
     <div class="App_container">
         <NavBar />
         <router-view />
@@ -28,3 +54,5 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 }
 
 </style>
+
+ -->
