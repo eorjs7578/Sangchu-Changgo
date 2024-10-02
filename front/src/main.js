@@ -1,5 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 
 import piniaPersistedState from "pinia-plugin-persistedstate"
 import { createApp } from 'vue'

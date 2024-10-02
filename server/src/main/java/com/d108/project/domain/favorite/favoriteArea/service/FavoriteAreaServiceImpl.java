@@ -1,5 +1,6 @@
 package com.d108.project.domain.favorite.favoriteArea.service;
 
+import com.d108.project.domain.area.dto.AreaDto;
 import com.d108.project.domain.area.dto.AreaListDto;
 import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaRequestDto;
 import com.d108.project.domain.favorite.favoriteArea.entity.FavoriteArea;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +34,14 @@ public class FavoriteAreaServiceImpl implements FavoriteAreaService {
 
         return AreaListDto.createAreaListDto(areas);
     }
+
+    @Override
+    public Boolean checkFavoriteAreaByMember(Long memberId, Long areaId) {
+        Optional<FavoriteArea> areaMemberIdAndAreaId = favoriteAreaRepository.findAllByMemberIdAndAreaId(memberId, areaId);
+        return areaMemberIdAndAreaId.isPresent();
+
+    }
+
 
     @Override
     public void createFavoriteArea(Long memberId, FavoriteAreaRequestDto favoriteAreaRequestDto) {

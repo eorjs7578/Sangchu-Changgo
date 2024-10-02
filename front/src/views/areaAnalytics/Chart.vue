@@ -16,6 +16,10 @@
 
     <TrendChart />
 
+    <SurveyForm />
+
+    <SurveyResult />
+
     <div class="mb-8">
       <HorizontalBarChart
         title="평일 평균 매출액은"
@@ -79,6 +83,8 @@ import TrendChart from "@/components/charts/TrendChart.vue";
 import HorizontalBarChart from "@/components/charts/HorizontalBarChart.vue";
 import RadarChart from "@/components/charts/RadarChart.vue";
 import VerticalBarChart from "@/components/charts/VerticalBarChart.vue";
+import SurveyForm from "@/components/areaAnalytics/SurveyForm.vue";
+import SurveyResult from "@/components/areaAnalytics/SurveyResult.vue";
 
 export default {
   name: "App",
@@ -96,6 +102,8 @@ export default {
     HorizontalBarChart,
     RadarChart,
     VerticalBarChart,
+    SurveyForm,
+    SurveyResult,
   },
 };
 </script>
