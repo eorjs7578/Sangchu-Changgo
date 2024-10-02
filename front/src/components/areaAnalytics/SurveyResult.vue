@@ -65,6 +65,10 @@ watch(() => props.place, (newPlace) => {
 onMounted(() => {
   fetchEvaluationResult()
 })
+
+defineExpose({
+  fetchEvaluationResult // 이 함수를 외부에서 호출할 수 있도록 노출
+});
 </script>
 
 <style scoped>
