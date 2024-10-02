@@ -6,6 +6,7 @@ import com.d108.project.config.security.filter.JwtAuthorizationFilter;
 import com.d108.project.config.security.handler.CustomAuthFailureHandler;
 import com.d108.project.config.security.handler.CustomAuthSuccessHandler;
 import com.d108.project.config.security.oauth2.OAuth2UserService;
+import com.d108.project.config.security.oauth2.handler.CustomLogoutSuccessHandler;
 import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.d108.project.config.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import com.d108.project.config.security.oauth2.repository.OAuth2Repository;
@@ -49,6 +50,7 @@ public class SecurityConfiguration {
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private final OAuth2UserService oAuth2UserService;
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     // 정적 자원에 대한 보안 적용 해제
     @Bean
@@ -95,10 +97,13 @@ public class SecurityConfiguration {
                 .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(configure ->
                         configure.authorizationEndpoint(
-                                        config -> config.authorizationRequestRepository(oAuth2Repository))
+                                        config -> config
+                                                .baseUri("/api/oauth2/authorization")
+                                                .authorizationRequestRepository(oAuth2Repository))
                                 .userInfoEndpoint(config -> config.userService(oAuth2UserService))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)
+                                .loginProcessingUrl("/api/login/oauth2/code/{provider}")
                 )
                 .logout(logout -> logout
                                 // 로그아웃 페이지에 대한 설정
@@ -109,6 +114,7 @@ public class SecurityConfiguration {
                                 .deleteCookies("access_token", "refresh_token", "JSESSIONID")
                                 // 세션 무효화
                                 .invalidateHttpSession(true)
+                                .logoutSuccessHandler(customLogoutSuccessHandler)
 //                        // 로그아웃에 성공하면 여기로 보냄 (메인으로 리디렉션하는 코드 만들어도 될듯)
 //                        .logoutSuccessUrl("/")
                 )

@@ -57,6 +57,7 @@ watch(
         console.log(data)
         serviceTypes.value = data
         selectedServiceType.value = data[0]
+        emit('update:location', data[0])
       },
       (error) => {
         console.log(error)

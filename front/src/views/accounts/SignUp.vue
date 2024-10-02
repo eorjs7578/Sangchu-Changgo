@@ -5,9 +5,20 @@
         <h2>Sign Up</h2>
         <p>회원가입 후 다양한 기능을 이용하세요.</p>
         <form @submit.prevent="handleSignUp">
-          <!-- 이름 필드 -->
-          <label for="username">아이디</label>
-          <input type="text" id="username" placeholder="아이디" v-model="username" />
+           <!-- 아이디 필드 -->
+           <label for="username">아이디</label>
+          <div class="d-flex justify-content-between mb-1">
+            <input type="text" id="username" placeholder="아이디" v-model="username" :disabled="isUsernameChecked" />
+            <button
+              type="button"
+              @click="handleUsername(username)"
+              :disabled="isUsernameChecked"
+              :class="{ 'btn btn-secondary': isUsernameChecked, 'btn btn-primary': !isUsernameChecked }"
+            >
+              아이디 중복 확인
+            </button>
+          </div>
+          <span v-if="isUsernameError" class="error-text">{{usernameMessage}}</span>
 
           <!-- 닉네임 필드 -->
           <label for="nickname">닉네임</label>
@@ -75,13 +86,16 @@
     isNicknameValidated,
     isPasswordValidated,
     isNicknameDuplicated,
+    isUsernameDuplicated,
     checkAuthCode,
     getAuthCode,
-    signUp, login
+    signUp, login,
+    updateEmail
   } from "@/util/AuthenticationUtil.js";
 
 
   const router = useRouter();
+  const usernameMessage = ref("");
   const nicknameMessage = ref("");
   const username = ref("");
   const password = ref("");
@@ -94,6 +108,8 @@
   const isEmailChecked = ref(false);
   const isNicknameError = ref(false);
   const isNicknameChecked = ref(false);
+  const isUsernameError = ref(false);
+  const isUsernameChecked = ref(false);
 
 
   function handleSignUp() {
@@ -139,6 +155,30 @@
           console.error(error)
         })
     }
+
+// 아이디 유효성 및 중복 확인
+function handleUsername(username) {
+  if (!isUsernameValidated(username)) {
+    usernameMessage.value = "유효하지 않은 아이디입니다.";
+    isUsernameError.value = true;
+    return;
+  }
+
+  isUsernameDuplicated(username).then(isDuplicated => {
+    if (isDuplicated) {
+      usernameMessage.value = "사용할 수 있는 아이디입니다.";
+      isUsernameError.value = false;
+      isUsernameChecked.value = true;
+    } else {
+      usernameMessage.value = "이미 존재하는 아이디입니다.";
+      isUsernameError.value = true;
+    }
+  }).catch(error => {
+    console.error(error);
+    usernameMessage.value = "아이디 확인 중 오류가 발생했습니다.";
+    isUsernameError.value = true;
+  });
+}
 
   // 닉네임 유효성 및 중복 확인
   function handleNickname(nickname) {
