@@ -141,7 +141,6 @@ const createEvaluation = async () => {
 
     if (!evaluationData.age_group || !evaluationData.foot_traffic || !evaluationData.atmosphere || !evaluationData.nearby_prices) {
       console.error('모든 필드를 입력해야 합니다.');
-      window.alert('모든 필드를 입력해야 합니다.');
       return;
     }
 
@@ -151,7 +150,7 @@ const createEvaluation = async () => {
 
       // 평가 제출 후 평가 데이터를 다시 불러옴
       fetchMyEvaluation();
-      
+
       // 성공 알림
       window.alert('평가가 성공적으로 제출되었습니다!');
     }, (error) => {

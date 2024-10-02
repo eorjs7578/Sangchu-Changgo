@@ -19,22 +19,22 @@
       <nav class="nav nav-pills nav-fill my-3">
         <a
             class="nav-item nav-link"
-            :class="{ active: activeSection === 'population' }"
-            @click.prevent="scrollToSection('population')"
+            :class="{ active: activeSection === 'populationAnalysis' }"
+            @click.prevent="scrollToSection('populationAnalysis')"
         >
           인구
         </a>
         <a
             class="nav-item nav-link"
-            :class="{ active: activeSection === 'storeAnalytics' }"
-            @click.prevent="scrollToSection('storeAnalytics')"
+            :class="{ active: activeSection === 'storeAnalysis' }"
+            @click.prevent="scrollToSection('storeAnalysis')"
         >
           점포수
         </a>
         <a
             class="nav-item nav-link"
-            :class="{ active: activeSection === 'analysis' }"
-            @click.prevent="scrollToSection('analysis')"
+            :class="{ active: activeSection === 'salesAnalysis' }"
+            @click.prevent="scrollToSection('salesAnalysis')"
         >
           매출분석
         </a>
@@ -168,8 +168,8 @@ const scrollToSection = (section) => {
 
 const updateActiveSection = () => {
   const container = scrollContainer.value;
-  const sections = ['population', 'storeAnalytics', 'analysis', 'rent', 'surveyForm', 'surveyResult'];
-
+  
+  const sections = ['populationAnalysis', 'storeAnalysis', 'salesAnalysis', 'rent', 'surveyForm', 'surveyResult'];
   sections.forEach(section => {
     const element = document.getElementById(section);
     if (element) {
