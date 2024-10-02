@@ -4,6 +4,7 @@
       <div class="card-body">
         
           <h4>일일 평균 유동인구</h4>
+          <hr>
         
         <p>
           일일 평균 유동인구는 {{population}}명 입니다.
@@ -14,6 +15,7 @@
     <div class="card mb-3 shadow-sm" id="week">
       <div class="card-body">
         <h4>요일별 유동 인구</h4>
+        <hr>
         {{ weekData.many_people_days_of_week }}요일 유동인구가 가장 높아요.
       </div>
 
@@ -28,6 +30,7 @@
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
         <h4>시간대별 유동 인구</h4>
+        <hr>
         {{ hourData.many_people_days_of_the_hour }} 유동인구가 가장 높아요.
       </div>
     
@@ -41,6 +44,7 @@
     <div class="card mb-3 shadow-sm" id="quarter">
       <div class="card-body">
         <h4>분기별 유동 인구</h4>
+        <hr>
         {{ quarterData.qo_q }}
       </div>
 
@@ -54,6 +58,7 @@
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
         <h4>성별별 유동인구</h4>
+        <hr>
         <span>{{ genderData.many_people_gender }}성 유동인구가 약 {{ genderPercentage }}% 더 높아요.</span>
       </div>
 
@@ -63,6 +68,7 @@
     <div class="card mb-3 shadow-sm" id="age">
       <div class="card-body">
         <h4>연령별 유동인구</h4>
+        <hr>
         {{ ageData.many_people_days_of_age }} 유동인구가 가장 높아요.
       </div>
 

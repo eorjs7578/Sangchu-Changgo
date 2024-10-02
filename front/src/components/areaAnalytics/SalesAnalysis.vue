@@ -3,6 +3,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>요일별 매출</h4>
+        <hr>
         {{ WeeklySales.many_money_days_of_week }}요일 매출이 가장 높아요
       </div>
       <div>        
@@ -17,6 +18,7 @@
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
         <h4>성별별 매출</h4>
+        <hr>
         <span>{{ GenderSales.many_sale_gender }}성 매출이 약 {{ genderPercentage }}% 더 높아요</span>
       </div>
       <div>
@@ -29,6 +31,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>주중, 주말별 매출</h4>
+        <hr>
       </div>
       <div>
           <HorizontalBarChart
@@ -42,6 +45,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>연령별 매출</h4>
+        <hr>
       {{ AgeSales.many_sale_age }} 매출이 가장 높아요
       </div>
       
@@ -57,6 +61,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>분기별 매출</h4>
+        <hr>
         {{ QuarterlySales.qoq }}
       </div>
       <div>
