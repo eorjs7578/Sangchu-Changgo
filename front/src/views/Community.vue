@@ -165,6 +165,8 @@ async function getAllFranchiseData() {
     .catch(error => {
       console.error("Error:", error);
     });
+
+    
 }
 
   const toggleDropdown = () => {
@@ -224,22 +226,45 @@ const changePage = async (category, newPage) => {
   if (newPage < 0 || newPage >= category.totalPages) return; // 범위 초과 시 무시
   category.currentPage = newPage;
 
-  if (category.name === "상권 게시판") {
-    await getArea(category.currentPage, category.size, inputValue.value)
-      .then(data => {
-        category.items = data.content;
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
-  } else if (category.name === "프랜차이즈 게시판") {
-    await getFranchise(category.currentPage, category.size, inputValue.value)
-      .then(data => {
-        category.items = data.content;
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
+  if(inputValue.value==""){
+    console.log("fffffffffffffffffffffffffff")
+    if (category.name === "상권 게시판") {
+      await getALLArea(category.currentPage, category.size)
+        .then(data => {
+          category.items = data.content;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    } else if (category.name === "프랜차이즈 게시판") {
+      await getALLFranchise(category.currentPage, category.size)
+        .then(data => {
+          category.items = data.content;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    }
+  }
+  else{
+    if (category.name === "상권 게시판") {
+      await getArea(category.currentPage, category.size, inputValue.value)
+        .then(data => {
+          category.items = data.content;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    } else if (category.name === "프랜차이즈 게시판") {
+      await getFranchise(category.currentPage, category.size, inputValue.value)
+        .then(data => {
+          category.items = data.content;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    }
+
   }
 }
 
