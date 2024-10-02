@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FavoriteAreaService {
     AreaListDto getFavoriteAreasByMember(Long memberId);
-    Boolean checkFavoriteAreaByMember(Long memberId, Long areaId);
+    Long checkFavoriteAreaByMember(Long memberId, Long areaId);
     void createFavoriteArea(Long memberId, FavoriteAreaRequestDto favoriteAreaRequestDto);
     void deleteFavoriteArea(Long memberId, Long id);
 }

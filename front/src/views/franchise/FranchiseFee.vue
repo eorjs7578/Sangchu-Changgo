@@ -136,14 +136,14 @@
               </div>
               </div>
               
-              <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between h-auto">
                 <button @click="prevStep" class="btn btn-secondary w-100 me-2">이전</button>
                 <button @click="showCostBreakdown" class="btn btn-success w-100 ms-2">비용 확인</button>
               </div>
             </div>
 
             <!-- Step 3 -->
-            <div v-else-if="currentStep === 3" key="step3">
+            <div v-else-if="currentStep === 3" key="step3" class = "h-100 d-flex flex-column justify-content-between">
               <div class="card mb-4">
                 <FranchiseInfoCard :franchise="myFranchise"/>
               </div>
