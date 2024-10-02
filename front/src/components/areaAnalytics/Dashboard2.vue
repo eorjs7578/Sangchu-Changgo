@@ -43,17 +43,17 @@
         </a>
         <a
             class="nav-item nav-link"
-            :class="{ active: activeSection === 'surveyForm' }"
-            @click.prevent="scrollToSection('surveyForm')"
-        >
-          평가하기
-        </a>
-        <a
-            class="nav-item nav-link"
             :class="{ active: activeSection === 'surveyResult' }"
             @click.prevent="scrollToSection('surveyResult')"
         >
           평가 결과
+        </a>
+        <a
+            class="nav-item nav-link"
+            :class="{ active: activeSection === 'surveyForm' }"
+            @click.prevent="scrollToSection('surveyForm')"
+        >
+          평가하기
         </a>
       </nav>
 
