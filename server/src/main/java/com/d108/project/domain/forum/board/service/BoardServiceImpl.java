@@ -91,11 +91,37 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Page<BoardResponseDto> getAllAreaBoards(int page, int size) {
+        // 페이지 요청 객체 생성
         Pageable pageable = PageRequest.of(page, size);
+        String key = "area_page_"+page+"_"+size;
 
-        Page<Board> areaBoards = boardRepository.findByAreaIdIsNotNull(pageable); // 지역 게시판 조회
-        // 각 Board에 대해 최신 글과 총 게시물 개수를 가져와 DTO로 변환
-        return getBoardResponseDtos(areaBoards);
+        // Redis에서 조회
+        PageDTO<BoardResponseDto> areaBoardsDTO = (PageDTO<BoardResponseDto>) BoardRedisTemplate.opsForValue().get(key);
+        Page<BoardResponseDto> areaBoards = null;
+
+        // Redis에 값이 없으면 DB에서 조회
+        if (areaBoardsDTO == null) {
+            log.info("db조회");
+            System.out.println("db");
+            Page<Board> boards = boardRepository.findByAreaIdIsNotNull(pageable);
+            areaBoards = getBoardResponseDtos(boards);
+
+            if (areaBoards != null) {
+                // Page를 PageDTO로 변환하여 Redis에 저장
+                PageDTO<BoardResponseDto> pageDTO = new PageDTO<>(areaBoards);
+                BoardRedisTemplate.opsForValue().set(key, pageDTO);
+            }
+        } else {
+            log.info("area redis!");
+            // Redis에서 가져온 PageDTO를 Page로 변환
+            areaBoards = new PageImpl<>(
+                    areaBoardsDTO.getContent(),
+                    PageRequest.of(areaBoardsDTO.getPageNumber(), areaBoardsDTO.getPageSize()),
+                    areaBoardsDTO.getTotalElements()
+            );
+        }
+
+        return areaBoards;
     }
 
     @Override
