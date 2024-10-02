@@ -7,7 +7,7 @@
                         <h2 class="card-title text-center mb-4">게시판</h2>
 
                         <div class="mb-3 text-end">
-                            <button type="button" class="btn btn-primary" @click="handleCreatePost">
+                            <button v-show="store.isAuthenticated" type="button" class="btn btn-primary" @click="handleCreatePost">
                                 새 글 등록
                             </button>
                         </div>
@@ -71,6 +71,7 @@
 <script>
 import { getPostListByBoard } from '@/api/forum'; // API 호출 함수 가져오기
 import { useRoute, useRouter } from 'vue-router';
+import {useAccountStore} from "@/stores/useAccountStore.js";
 
 export default {
     data() {
@@ -97,6 +98,7 @@ export default {
     setup() {
         const route = useRoute(); // 현재 경로 정보 가져오기
         const router = useRouter(); // router 객체 가져오기
+        const store = useAccountStore();
 
         const handleCreatePost = () => {
             // 현재 boardId 가져오기
@@ -108,7 +110,7 @@ export default {
         };
 
         return {
-            handleCreatePost,
+            handleCreatePost, store
         };
     },
     methods: {
