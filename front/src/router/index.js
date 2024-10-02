@@ -48,11 +48,6 @@ const routes = [
     component: SurveyResult
   },
   {
-    path: '/signup',
-    name: 'SignUp',
-    component: SignUp
-  },
-  {
     path: '/members/mypage',
     name: 'Mypage',
     component: Mypage,
@@ -76,7 +71,8 @@ const routes = [
   {
     path: '/interestareas',
     name: 'InterestAreas',
-    component: InterestAreas
+    component: InterestAreas,
+    meta: {requiresAuth: true}
   },
   {
     path: '/marketanalysis',
