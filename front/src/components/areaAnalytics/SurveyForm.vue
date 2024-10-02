@@ -147,6 +147,10 @@ const createEvaluation = async () => {
     postAreaEvaluation(props.place, evaluationData, (response) => {
       evaluationId.value = response.data.evaluation_Id;
       isSubmitted.value = true;
+
+      // 평가 제출 후 평가 데이터를 다시 불러옴
+      fetchMyEvaluation();
+      
     }, (error) => {
       console.error('평가 제출 실패:', error);
     });
