@@ -14,7 +14,7 @@ public interface FavoriteAreaApi {
     ResponseEntity<AreaListDto> getFavoriteAreasByMember(@AuthenticationPrincipal Member member);
 
     @GetMapping("/{favoriteAreaId}")
-    ResponseEntity<Boolean> checkFavoriteAreaByMember(@AuthenticationPrincipal Member member, @PathVariable Long favoriteAreaId);
+    ResponseEntity<Long> getFavoriteAreaByMember(@AuthenticationPrincipal Member member, @PathVariable Long favoriteAreaId);
 
     @DeleteMapping("{favoriteAreaId}")
     ResponseEntity<Object> deleteFavoriteArea(@AuthenticationPrincipal Member member, @PathVariable Long favoriteAreaId);

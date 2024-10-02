@@ -32,6 +32,11 @@ let x = null;
 let y = null;
 let place = ref();
 let dongId = ref();
+let markers = [];
+let customOverlay = null;
+const prevArea = ref();
+const prevDong = ref();
+const prevGu = ref();
 
 const selectedArea = ref({ name: '', size: 0 }); // 선택된 영역 정보를 저장하는 ref
 const showModal = ref(false); // 모달 표시 여부를 저장하는 ref
@@ -48,6 +53,8 @@ async function getGuData(){
     await getGu()
     .then(data=>{
         areas = data;
+        prevGu.data = data;
+        console.log(prevGu.data)
     })
     .catch(error=>{
         console.error("Error:", error);
@@ -59,6 +66,7 @@ async function getDongData(code){
     mapLevel=6;
     await getDong(code)
     .then(data=>{
+        prevDong.data = data;
         areas = data;
     })
     .catch(error=>{
@@ -70,9 +78,9 @@ async function getDongData(code){
 async function getAreaData(code){
     mapLevel=4;
     await getArea(code)
-    .then(data=>{
+    .then(data => {
+        prevArea.data = data;
         areas = data;
-        console.log(data)
     })
     .catch(error=>{
         console.error("Error:", error);
@@ -98,9 +106,47 @@ const initMap = (x,y) => {
     disableDoubleClickZoom: true,
   };
   map = new kakao.maps.Map(container, options);
-
+  customOverlay = new kakao.maps.CustomOverlay({})
   drawPolygons();
+
+  kakao.maps.event.addListener(map, 'zoom_changed', () => {
+    const lev = map.getLevel()
+    if (lev <= 4) {
+      areas = prevArea.data
+      hideMarkers()
+      drawPolygons()
+    }
+
+    if (lev === 6) {
+      if (areas !== prevDong.data) {
+        areas = prevDong.data
+        hideMarkers()
+        drawPolygons()
+      }
+    }
+    if (lev >= 8) {
+      if (areas !== prevGu.data) {
+        areas = prevGu.data
+        hideMarkers()
+        drawPolygons()
+      }
+    }
+
+  })
 };
+
+// "마커 감추기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에서 삭제하는 함수입니다
+function hideMarkers() {
+    setMarkers(null);   
+}
+
+// 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수입니다
+function setMarkers(map) {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+    }            
+}
+
 
 function drawPolygons(){
     
@@ -111,6 +157,8 @@ function drawPolygons(){
 
     if (areas && areas.length > 0) {
         for (let i = 0; i < areas.length; i++) {
+            console.log("이거봐!!" + areas[i].name)
+            // 마커를 생성합니다
             const polygon = createPolygon(areas[i]);
             polygons.value.push(polygon);  // 생성한 폴리곤을 배열에 저장
         }
@@ -184,20 +232,30 @@ function createPolygon(area) {
     // 지역명을 표시하는 커스텀오버레이를 지도위에 표시합니다
     kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
         polygon.setOptions({fillColor: '#066905'});
+        customOverlay.setContent('<div class="area">' + area.name + '</div>');
+        console.log("mouse over!" + area.name)
+        customOverlay.setPosition(mouseEvent.latLng); 
+        customOverlay.setMap(map);
+    });
 
+    // 다각형에 mousemove 이벤트를 등록하고 이벤트가 발생하면 커스텀 오버레이의 위치를 변경합니다 
+    kakao.maps.event.addListener(polygon, 'mousemove', function(mouseEvent) {
+        
+        customOverlay.setPosition(mouseEvent.latLng); 
     });
 
     // 다각형에 mouseout 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 원래색으로 변경합니다
-    // 커스텀 오버레이를 지도에서 제거합니다 
+    // 커스텀 오버레이를 지도에서 제거합니다
     kakao.maps.event.addListener(polygon, 'mouseout', function() {
         polygon.setOptions({fillColor: '#D7F9D6'});
-    }); 
+        customOverlay.setMap(null);
+    });
 
     // 다각형에 click 이벤트를 등록하고 이벤트가 발생하면 다각형의 이름과 면적을 인포윈도우에 표시합니다 
     kakao.maps.event.addListener(polygon, 'click', function(mouseEvent) {
         x = area.ypos;
         y = area.xpos;
-        
+
         console.log('Selected place:', place.value);
            // 선택된 지역 정보를 저장하여 모달에 표시
         selectedArea.value = {
@@ -213,8 +271,8 @@ function createPolygon(area) {
     };
 
     // 모달을 보이도록 설정
-    
-    if(area.size==0){ // 구 
+
+    if(area.size==0){ // 구
         getDongData(area.id);
     }
     else if (area.size ==1){
@@ -230,8 +288,9 @@ function createPolygon(area) {
         }
     });
 
-    return polygon; 
+    return polygon;
 }
+
 function closeModal() {
   showModal.value = false;
 }
@@ -243,7 +302,22 @@ watch(place, (newPlace) => {
   }
 });
 const computedPlace = computed(() => place.value);
+
+
+
 </script>
+<style>
+.area {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #888;
+    border-radius: 3px;
+    font-size: 12px;
+    top: -5px;
+    left: 15px;
+    padding:2px;
+}
+</style>
 
 <style scoped>
 .map-container {
