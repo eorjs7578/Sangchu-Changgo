@@ -7,7 +7,11 @@
         </div>
         <div class="col-2 text-right">
           <button class="btn" @click="toggleFavorite">
-            {{ favorite ? "♥" : "♡" }}
+            <img
+              :src="favorite ? starFilled : starEmpty"
+              alt="Favorite"
+              class="favorite-icon"
+            />
           </button>
         </div>
       </div>
@@ -99,6 +103,8 @@ import { useRouter } from "vue-router";
 import {api} from "@/lib/api.js";
 import SurveyForm from "./SurveyForm.vue";
 import SurveyResult from "./SurveyResult.vue";
+import starEmpty from '@/assets/img/star.png';
+import starFilled from '@/assets/img/filled_star.png';
 
 const props = defineProps({
   place: String,
@@ -212,4 +218,11 @@ onMounted(() => {
   background-color: #007bff;
   color: white;
 }
+
+.favorite-icon {
+    max-width: 30px; /* 원하는 너비 설정 */
+    max-height: 30px; /* 원하는 높이 설정 */
+    width: auto;
+    height: auto;
+  }
 </style>

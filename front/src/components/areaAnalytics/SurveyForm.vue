@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-    <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden border border-gray-300">
+  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm">
+    <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden">
       <div class="p-6">
         <h2 class="text-2xl font-bold mb-6">평가하기</h2>
 
@@ -141,6 +141,7 @@ const createEvaluation = async () => {
 
     if (!evaluationData.age_group || !evaluationData.foot_traffic || !evaluationData.atmosphere || !evaluationData.nearby_prices) {
       console.error('모든 필드를 입력해야 합니다.');
+      window.alert('모든 필드를 입력해야 합니다.');
       return;
     }
 
@@ -151,6 +152,8 @@ const createEvaluation = async () => {
       // 평가 제출 후 평가 데이터를 다시 불러옴
       fetchMyEvaluation();
       
+      // 성공 알림
+      window.alert('평가가 성공적으로 제출되었습니다!');
     }, (error) => {
       console.error('평가 제출 실패:', error);
     });
@@ -173,16 +176,22 @@ const updateEvaluation = async () => {
 
     if (!evaluationData.age_group || !evaluationData.foot_traffic || !evaluationData.atmosphere || !evaluationData.nearby_prices) {
       console.error('모든 필드를 입력해야 합니다.');
+      window.alert('모든 필드를 입력해야 합니다.');
       return;
     }
 
     putAreaEvaluation(props.place, evaluationId.value, evaluationData, (response) => {
       console.log('평가 수정 성공:', response);
+
+      // 성공 알림
+      window.alert('평가가 성공적으로 수정되었습니다!');
     }, (error) => {
       console.error('평가 수정 실패:', error);
+      window.alert('평가 수정에 실패했습니다.');
     });
   } catch (error) {
     console.error('평가 수정 실패:', error);
+    window.alert('평가 수정에 실패했습니다.');
   }
 };
 
@@ -194,8 +203,12 @@ const deleteEvaluation = async () => {
     deleteAreaEvaluation(props.place, evaluationId.value, (response) => {
       isSubmitted.value = false;
       selectedOptions.value = { ageGroup: '', footTraffic: '', nearbyPrices: '', atmosphere: '' };
+
+      // 성공 알림
+      window.alert('평가가 성공적으로 삭제되었습니다!');
     }, (error) => {
       console.error('평가 삭제 실패:', error);
+      window.alert('평가 삭제에 실패했습니다.');
     });
   } catch (error) {
     console.error('평가 삭제 실패:', error);
