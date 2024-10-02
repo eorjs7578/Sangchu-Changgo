@@ -6,13 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.cache.annotation.Cacheable;
+
 import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    // 지역 게시판들 조회 (상권 ID가 있는 게시판)
+    // 지역 게시판들 조회 (상권 ID가 있는 게시판들)
+    @Query("SELECT b FROM Board b LEFT JOIN FETCH b.area WHERE b.area IS NOT NULL")
     Page<Board> findByAreaIdIsNotNull(Pageable pageable);
 
     // 특정 판매 관련 게시판 조회

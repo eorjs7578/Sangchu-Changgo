@@ -8,9 +8,6 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { useAccountStore } from '@/stores/useAccountStore.js';
-
-const store = useAccountStore();
 </script>
 
 <style scoped>
@@ -29,4 +26,5 @@ const store = useAccountStore();
     padding: 0;
     box-sizing: border-box;
 }
+
 </style>

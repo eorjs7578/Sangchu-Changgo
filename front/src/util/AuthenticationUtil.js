@@ -36,6 +36,30 @@ export function isNicknameDuplicated(nickname) {
     })
 }
 
+export function isUsernameDuplicated(username) {
+  return api.get("/api/members/duplicate/username", {
+    params: {
+      username: username
+    }
+  })
+  .then(response => {
+    // Assuming the response contains a boolean indicating if the username is duplicated
+    if (response.data.isDuplicated) {
+      alert("이미 존재하는 아이디입니다.");
+      return false;
+    } else {
+      if (window.confirm("사용할 수 있는 아이디입니다. \n사용하시겠습니까?")) {
+        return true;
+      }
+      return false;
+    }
+  })
+  .catch(error => {
+    console.error("아이디 중복 확인 중 오류가 발생했습니다:", error);
+    return false;
+  });
+}
+
 export function getAuthCode(email) {
   return api.get("/api/members/auth-email", {params: {
       email: email,
@@ -53,6 +77,19 @@ export function checkAuthCode(email, auth_code) {
     .catch(err => {
       return false
     })
+}
+
+export function updateEmail(email, auth_code) {
+  return api.post("/api/members/update/email", {
+    email,
+    auth_code,
+  })
+  .then(response => {
+    return true
+  })
+  .catch(err => {
+    return false
+  })
 }
 
 export function signUp(username, nickname, email, password) {
@@ -84,9 +121,9 @@ export function login(username, password) {
 }
 
 export function kakaoLogin() {
-  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/oauth2/authorization/kakao?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`
+  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/oauth2/authorization/kakao?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`
 }
 
 export function naverLogin() {
-  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/oauth2/authorization/naver?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`;
+  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/oauth2/authorization/naver?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`;
 }

@@ -16,6 +16,7 @@ import PostDetail from "@/views/forum/PostDetail.vue"
 import EditPost from "@/views/forum/EditPost.vue";
 import SurveyForm from '@/components/areaAnalytics/SurveyForm.vue';
 import SurveyResult from '@/components/areaAnalytics/SurveyResult.vue';
+import SocialLoginRedirect from "@/views/accounts/SocialLoginRedirect.vue";
 
 // 1. /members/** : 회원 관련 활동 (로그인, 회원가입, 비밀번호 변경 등)
 // 2. /community/** : 커뮤니티 관련 활동 (커뮤니티 CRUD)
@@ -30,6 +31,11 @@ const routes = [
     path: "/members/signup",
     name: "signUp",
     component: SignUp,
+  },
+  {
+    path: "/members/login/social/redirect",
+    name: "SocialLoginRedirect",
+    component: SocialLoginRedirect,
   },
   {
     path: '/surveyForm',
@@ -49,7 +55,8 @@ const routes = [
   {
     path: '/members/mypage',
     name: 'Mypage',
-    component: Mypage
+    component: Mypage,
+    meta: {requiresAuth: true}
   },
   {
     path: '/members/password',
@@ -125,4 +132,6 @@ router.beforeEach((to, from, next) => {
     next();
   }
 })
+
+
 export default router;

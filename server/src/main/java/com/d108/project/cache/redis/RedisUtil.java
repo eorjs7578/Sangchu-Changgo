@@ -41,12 +41,6 @@ public class RedisUtil {
 
     // 조회수 증가 함수
     public Long incrementView(String key, long ExpireDuration) {
-        ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
-        // increment 메서드는 문자열을 받아서 long 타입으로 반환
-        Long value = valueOperations.increment(key, 1);
-        // 레디스에 만료 기간 재설정
-        redisTemplate.expire(key, Duration.ofSeconds(ExpireDuration));
-        // 반환
-        return value;
+        return redisTemplate.opsForValue().increment(key, 1);
     }
 }

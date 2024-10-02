@@ -2,7 +2,10 @@
   <div class="contatiner">
     <!-- 첫 번째 사이드바 -->
     <nav class="navbar">
-      <h5>상추창고</h5>
+      <router-link to="/marketanalysis">
+        <img src="@/assets/img/sangchuLogo2.png" alt="Sangchu Logo" class="logo" />
+      </router-link>
+
       <ul class="nav-links">
         <li @click="closeCommunitySubmenu">
           <router-link to="/marketanalysis">상권분석</router-link>
@@ -24,7 +27,6 @@
           <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal2">예상비용</li>
           <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
         </ul>
-
       </ul>
 
       <!-- 로그인/회원가입 또는 아바타 이미지 -->
@@ -78,7 +80,7 @@ import {api} from "@/lib/api.js";
 import {useRouter} from "vue-router";
 
 const isCommunityOpen = ref(false)
-const isFranchiseOpen = ref(false)
+const isFranchiseOpen = ref(true)
 const favoriteFranchises = ref([])
 
 const isLoggedIn = ref(false)
@@ -140,16 +142,16 @@ const toggleAvatarMenu = () => {
 };
 
 // 로그아웃 함수
-const logout = () => {
-  isLoggedIn.value = false;
+function logout() {
   api.post("/api/members/logout").then(() => {
-    localStorage.removeItem('isLoggedIn'); // 로그인 상태 제거
+    store.isAuthenticated = false;
+    store.userInfo = {};
     isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
     router.push("/").then(() => {
       window.location.reload();
-  })
-  });
-};
+    })
+})}
+
 
 // 페이지가 로드될 때 로그인 상태 확인 (onMounted 사용)
 onMounted(() => {
@@ -305,4 +307,11 @@ onMounted(() => {
 .submenu ul li a:hover {
   color: blue;
 }
+
+/* 로고 이미지 스타일 */.logo {
+  width: 150px;
+  margin-bottom: 2rem;
+  cursor: pointer;
+}
+
 </style>

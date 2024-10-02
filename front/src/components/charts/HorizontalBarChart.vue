@@ -2,7 +2,6 @@
   <div class="container-fluid">
     <div class="card mb-3 shadow-sm">
       <div class="card-body">
-        <h4>연령별 유동인구</h4>
         <div style="max-width: 600px; height: 140px">
           <Bar :data="chartData" :options="chartOptions" />
         </div>
@@ -36,29 +35,33 @@ export default {
   name: "HorizontalBarChart",
   components: { Bar },
   props: {
-    title: {
-      type: String,
-      default: "",
+    labels: {
+      type: Array,
+      required: true,
     },
     data: {
-      type: Object,
+      type: Array,
       required: true,
     },
   },
-  data() {
-    return {
-      chartData: {
-        labels: ["남성", "여성"],
+  computed: {
+    chartData() {
+      return {
+        labels: this.labels,
         datasets: [
           {
             backgroundColor: [
               "rgba(54, 162, 235, 0.8)",
               "rgba(255, 99, 132, 0.8)",
             ],
-            data: [this.data.male, this.data.female],
+            data: this.data,
           },
         ],
-      },
+      };
+    },
+  },
+  data() {
+    return {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -69,19 +72,18 @@ export default {
           },
           title: {
             display: true,
-            text: this.title,
+            text: "주중, 주말별 매출",
           },
         },
         scales: {
           x: {
             beginAtZero: true,
-            max: 100,
+            max: 2000000000,
             ticks: {
-              callback: function (value) {
-                return value + "%";
-              },
+              display: false,  // x축 숫자 숨기기
             },
           },
+       
         },
       },
     };

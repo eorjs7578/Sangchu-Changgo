@@ -5,11 +5,9 @@ import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
 import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.domain.forum.reply.service.ReplyService;
 import com.d108.project.domain.forum.reply.dto.ReplyByMemberIdResponseDto;
+import com.d108.project.domain.member.dto.*;
 import com.d108.project.domain.member.entity.Member;
 import com.d108.project.domain.member.service.MemberService;
-import com.d108.project.domain.member.dto.MemberLoginDto;
-import com.d108.project.domain.member.dto.MemberRegisterDto;
-import com.d108.project.domain.member.dto.MemberResponseDto;
 import com.d108.project.interfaces.api.MemberApi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -116,9 +114,30 @@ public class MemberController implements MemberApi {
     @Operation(summary = "아이디 중복 확인")
     @Override
     public ResponseEntity<String> isUsernameDuplicated(String username) {
-        if (memberService.isUsernameDuplicated("사용할 수 있는 아이디 입니다.")) {
+        if (memberService.isUsernameDuplicated(username)) {
             return ResponseEntity.ok("사용할 수 있는 아이디 입니다.");
         }
         return ResponseEntity.badRequest().body("중복된 아이디입니다.");
+    }
+
+    @Operation(summary="이메일 변경", description="이메일 인증 번호를 포함하기 때문에, 이메일 인증을 먼저 호출하고 나서 호출해야함")
+    @Override
+    public ResponseEntity<Void> changeEmail(Member member, MemberEmailRequestDto memberEmailRequestDto) {
+        memberService.changeEmail(member, memberEmailRequestDto);
+        return ResponseEntity.ok().build();
+    }
+    
+    @Operation(summary="닉네임 변경", description="닉네임 중복확인을 먼저 버튼을 통해 선행해야 함")
+    @Override
+    public ResponseEntity<Void> changeNickname(Member member, MemberNicknameRequestDto memberNicknameRequestDto) {
+        memberService.changeNickname(member, memberNicknameRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary="비밀번호 변경", description="비밀번호 찾기와 다름")
+    @Override
+    public ResponseEntity<Void> changePassword(Member member, MemberPasswordChangeDto memberPasswordChangeDto) {
+        memberService.changePassword(member, memberPasswordChangeDto);
+        return ResponseEntity.ok().build();
     }
 }
