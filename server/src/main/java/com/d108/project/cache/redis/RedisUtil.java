@@ -16,7 +16,7 @@ public class RedisUtil {
     public static long REDIS_EMAIL_EXPIRE = 60 * 5;       // 60sec * 5min
     public static long REDIS_VIEW_EXPIRE = 60 * 60 * 24;  // 60sec * 60min * 24hour
 
-    // 키(key)에 해당하는 데이터를 Redis에서 가져옴
+    // 키(key)에 해당하는 데이터를 Redis에서 가져옴o
     public String getData(String key) {
         ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(key);

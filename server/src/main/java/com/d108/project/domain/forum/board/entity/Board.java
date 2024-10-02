@@ -20,7 +20,7 @@ public class Board {
     @JoinColumn(name = "area_id")
     private Area area;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "franchise_id")
     private Franchise franchise;
 
