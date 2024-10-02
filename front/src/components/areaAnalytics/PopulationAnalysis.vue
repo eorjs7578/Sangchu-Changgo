@@ -39,7 +39,40 @@
     <div class="card mb-3 shadow-sm" id="quarter">
       <div class="card-body">
         <h4>분기별 유동 인구</h4>
-        {{ quarterData.qo_q }}
+        <div v-if="quarterData && quarterData.qo_q">
+        <!-- qoq 값이 존재하고, "유지" 또는 "상승"을 포함하는 경우 -->
+        <p
+          v-if="quarterData.qo_q.includes('유지') || quarterData.qo_q.includes('상승')"
+        >
+          해당 상권의 유동인구가 이전분기에 비해 <span class="text-primary">{{ quarterData.qo_q }}</span>하고 있습니다.
+        </p>
+
+        <!-- qoq 값이 존재하고, "하락"을 포함하는 경우 -->
+        <p
+          v-else-if="quarterData.qo_q.includes('하락')"
+        >
+          해당 상권의 유동인구가 이전분기에 비해 <span class="text-danger">{{ quarterData.qo_q }}</span>하고 있습니다.
+        </p>
+
+        <!-- qoq 값이 특정 문자열인 경우 -->
+        <p
+          v-else-if="quarterData.qo_q === '올해 없음' "
+          class="text-danger"
+        >
+          이번 년도 유동인구 정보가 없습니다.
+        </p>
+        <p
+          v-else-if="quarterData.qo_q === '현재 없음'"
+          class="text-danger"
+        >
+          현재와 일치하는 동일 분기의 유동인구 정보가 없습니다.
+        </p>
+      </div>
+
+      <!-- 데이터가 아직 로드되지 않은 경우 로딩 메시지 표시 -->
+      <div v-if = "quarterData.length == 0">
+        데이터를 불러오는 중입니다...
+      </div>
       </div>
 
             <QuarterlyVisitorChart
@@ -131,6 +164,7 @@
     api.get(`api/areas/analytic/foot-traffics/quarterly/${newPlace}`)
         .then(response => {
           quarterData.value = response.data;
+          console.log("aaaaa"+quarterData.value)
         })
         .catch(err => console.log(err))
 
@@ -176,6 +210,7 @@
     api.get(`api/areas/analytic/foot-traffics/quarterly/${props.place}`)
         .then(response => {
           quarterData.value = response.data;
+          console.log(quarterData.value)
         })
         .catch(err => console.log(err))
 

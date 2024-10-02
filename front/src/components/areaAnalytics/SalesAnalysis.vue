@@ -74,10 +74,16 @@
 
         <!-- qoq 값이 특정 문자열인 경우 -->
         <p
-          v-else-if="QuarterlySales.qoq === '이번 년도 매출 정보가 없습니다.' || QuarterlySales.qoq === '현재와 일치하는 동일 분기의 매출 정보가 없습니다.'"
+          v-else-if="QuarterlySales.qoq === '올해 없음' "
           class="text-danger"
         >
-          {{ QuarterlySales.qoq }}
+          이번 년도 매출 정보가 없습니다.
+        </p>
+        <p
+          v-else-if="QuarterlySales.qoq === '현재 없음'"
+          class="text-danger"
+        >
+          현재와 일치하는 동일 분기의 매출 정보가 없습니다.
         </p>
       </div>
 
@@ -182,8 +188,6 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
         loading.value = false; // 로딩 상태 변경 
         console.log(QuarterlySales.value)
         console.log(QuarterlySales.value.qoq.includes('하락'))
-        
-
       }, (error) => {
         console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
         loading.value = false; // 로딩 상태 변경
