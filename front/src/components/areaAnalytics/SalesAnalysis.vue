@@ -3,6 +3,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>요일별 매출</h4>
+        <hr>
         <span class="fw-bold text-primary">{{ WeeklySales.many_money_days_of_week }}요일</span> 매출이 가장 높아요
       </div>
       <div>        
@@ -17,6 +18,7 @@
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
         <h4>성별별 매출</h4>
+        <hr>
         <span><span class="fw-bold text-primary">{{ GenderSales.many_sale_gender }}성</span> 매출이 약 <span class="fw-bold text-primary">{{ genderPercentage }}% </span>더 높아요</span>
       </div>
       <div>
@@ -29,6 +31,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>주중, 주말별 매출</h4>
+        <hr>
       </div>
       <div>
           <HorizontalBarChart
@@ -42,6 +45,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>연령별 매출</h4>
+        <hr>
         <span class="fw-bold text-primary">{{ AgeSales.many_sale_age }}</span> 매출이 가장 높아요
       </div>
       
@@ -57,6 +61,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>분기별 매출</h4>
+        <hr>
         <div v-if="QuarterlySales && QuarterlySales.qoq">
         <!-- qoq 값이 존재하고, "유지" 또는 "상승"을 포함하는 경우 -->
         <p
@@ -93,6 +98,7 @@
       </div>
       </div>
       <div>
+      
         <QuarterlyVisitorChart
                 v-if="Object.keys(QuarterlySales ).length > 0"
                 :labels="QuarterlySales.labels"
@@ -186,8 +192,8 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
       getSalesByQuarterly(props.place, newService.service_code, (data) => {
         QuarterlySales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
-        console.log(QuarterlySales.value)
-        console.log(QuarterlySales.value.qoq.includes('하락'))
+        console.log(data)
+
       }, (error) => {
         console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
         loading.value = false; // 로딩 상태 변경
@@ -196,8 +202,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
     { immediate: true }
   );
 
-    onMounted(() => {
-    });
+    onMounted(() => {});
 
 </script>
 

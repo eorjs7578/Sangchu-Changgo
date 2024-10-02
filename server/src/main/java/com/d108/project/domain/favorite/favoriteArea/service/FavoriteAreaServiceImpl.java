@@ -52,7 +52,8 @@ public class FavoriteAreaServiceImpl implements FavoriteAreaService {
     @Override
     public void createFavoriteArea(Long memberId, FavoriteAreaRequestDto favoriteAreaRequestDto) {
         Member member = memberRepository.getReferenceById(memberId);
-        Area area = areaRepository.findById(favoriteAreaRequestDto.areaId()).orElseThrow();
+        Area area = areaRepository.findById(favoriteAreaRequestDto.areaId())
+                .orElseThrow(() -> new IllegalArgumentException("area ID 값이 올바르지 않습니다."));
 
         FavoriteArea favorite = FavoriteArea.toFavoriteArea(member, area);
         favoriteAreaRepository.save(favorite);

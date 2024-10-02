@@ -3,6 +3,7 @@
     <div class="card mb-3 shadow-sm" id="day">
       <div class="card-body">
         <h4>일일 평균 유동인구</h4>
+        <hr>
         <p>
           일일 평균 유동인구는 <span class="fw-bold text-primary">{{population}}</span>명 입니다.
         </p>
@@ -12,6 +13,7 @@
     <div class="card mb-3 shadow-sm" id="week">
       <div class="card-body">
         <h4>요일별 유동 인구</h4>
+        <hr>
         <span class="fw-bold text-primary">{{ weekData.many_people_days_of_week }}요일</span> 유동인구가 가장 높아요.
       </div>
 
@@ -26,6 +28,7 @@
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
         <h4>시간대별 유동 인구</h4>
+        <hr>
         <span class="fw-bold text-primary">{{ hourData.many_people_days_of_the_hour }}</span> 유동인구가 가장 높아요.
       </div>
     
@@ -39,6 +42,7 @@
     <div class="card mb-3 shadow-sm" id="quarter">
       <div class="card-body">
         <h4>분기별 유동 인구</h4>
+        <hr>
         <div v-if="quarterData && quarterData.qo_q">
         <!-- qoq 값이 존재하고, "유지" 또는 "상승"을 포함하는 경우 -->
         <p
@@ -85,6 +89,7 @@
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
         <h4>성별별 유동인구</h4>
+        <hr>
         <span><span class="fw-bold text-primary">{{ genderData.many_people_gender }}성</span> 유동인구가 약 <span class="fw-bold text-primary">{{ genderPercentage }}%</span> 더 높아요.</span>
       </div>
 
@@ -94,6 +99,7 @@
     <div class="card mb-3 shadow-sm" id="age">
       <div class="card-body">
         <h4>연령별 유동인구</h4>
+        <hr>
         <span class="fw-bold text-primary">{{ ageData.many_people_days_of_age }}</span> 유동인구가 가장 높아요.
       </div>
 
@@ -164,7 +170,6 @@
     api.get(`api/areas/analytic/foot-traffics/quarterly/${newPlace}`)
         .then(response => {
           quarterData.value = response.data;
-          console.log("aaaaa"+quarterData.value)
         })
         .catch(err => console.log(err))
 
@@ -210,7 +215,6 @@
     api.get(`api/areas/analytic/foot-traffics/quarterly/${props.place}`)
         .then(response => {
           quarterData.value = response.data;
-          console.log(quarterData.value)
         })
         .catch(err => console.log(err))
 
