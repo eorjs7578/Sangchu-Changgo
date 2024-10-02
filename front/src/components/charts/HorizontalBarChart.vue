@@ -22,14 +22,7 @@ import {
   LinearScale,
 } from "chart.js";
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-);
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 export default {
   name: "HorizontalBarChart",
@@ -45,7 +38,14 @@ export default {
     },
   },
   computed: {
+    // 데이터를 퍼센트로 변환하여 chartData에 적용
     chartData() {
+      // data 배열의 총합 계산
+      const total = this.data.reduce((sum, value) => sum + value, 0);
+
+      // 각 데이터를 퍼센트로 변환
+      const percentageData = this.data.map(value => ((value / total) * 100).toFixed(2));
+
       return {
         labels: this.labels,
         datasets: [
@@ -54,7 +54,7 @@ export default {
               "rgba(54, 162, 235, 0.8)",
               "rgba(255, 99, 132, 0.8)",
             ],
-            data: this.data,
+            data: percentageData,  // 퍼센트로 변환된 데이터 적용
           },
         ],
       };
@@ -65,25 +65,40 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
-        indexAxis: "y",
+        indexAxis: "y",  // 수평 막대 그래프
         plugins: {
           legend: {
             display: false,
           },
           title: {
             display: true,
-            text: "주중, 주말별 매출",
           },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                // 툴팁에서 퍼센트값을 표시
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.x !== null) {
+                  label += context.parsed.x + '%';
+                }
+                return label;
+              }
+            }
+          }
         },
         scales: {
           x: {
             beginAtZero: true,
-            max: 2000000000,
+            max: 100,  // 퍼센트이므로 최대값을 100으로 설정
             ticks: {
-              display: false,  // x축 숫자 숨기기
+              callback: function(value) {
+                return value + '%';  // x축에 퍼센트 표시
+              },
             },
           },
-       
         },
       },
     };
