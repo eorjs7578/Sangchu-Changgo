@@ -140,6 +140,7 @@ const toggleFavorite = async () => {
       // If currently favorited, send DELETE request to remove favorite
       await api.delete(`/api/favorite/areas/${favoriteAreaId}`);
     } else {
+      console.log("Sending areaId:", favoriteAreaId);
       // If not favorited, send POST request to add favorite
       await api.post('/api/favorite/areas', { areaId: favoriteAreaId });
     }
@@ -149,6 +150,7 @@ const toggleFavorite = async () => {
       showLoginPopup.value = true; // Show login modal if unauthorized
     } else {
       console.error("Error toggling favorite status:", error);
+      console.log(favoriteAreaId);
     }
   }
 };
