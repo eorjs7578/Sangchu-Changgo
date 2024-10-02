@@ -142,17 +142,16 @@ const toggleAvatarMenu = () => {
 };
 
 // 로그아웃 함수
-const logout = () => {
-  isLoggedIn.value = false;
+function logout() {
   api.post("/api/members/logout").then(() => {
     store.isAuthenticated = false;
     store.userInfo = {};
     isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
     router.push("/").then(() => {
       window.location.reload();
-  })
-  });
-};
+    })
+})}
+
 
 // 페이지가 로드될 때 로그인 상태 확인 (onMounted 사용)
 onMounted(() => {
