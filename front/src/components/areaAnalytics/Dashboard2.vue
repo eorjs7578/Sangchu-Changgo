@@ -43,10 +43,17 @@
         </a>
         <a
             class="nav-item nav-link"
-            :class="{ active: activeSection === 'review' }"
-            @click.prevent="scrollToSection('review')"
+            :class="{ active: activeSection === 'surveyForm' }"
+            @click.prevent="scrollToSection('surveyForm')"
         >
-          리뷰
+          평가하기
+        </a>
+        <a 
+            class="nav-item nav-link" 
+            :class="{ active: activeSection === 'surveyResult' }" 
+            @click.prevent="scrollToSection('surveyResult')"
+        >
+          평가 결과
         </a>
       </nav>
 
@@ -70,7 +77,15 @@
           :place :service
         />
 
-        <!---->
+        <!--평가 폼-->
+        <SurveyForm
+          :place
+        />
+
+        <!-- 평가 결과 -->
+        <SurveyResult
+          :place
+        />
 
       </div>
     </div>
@@ -84,6 +99,8 @@ import SalesAnalysis from "@/components/areaAnalytics/SalesAnalysis.vue";
 import StoreAnalysis from "@/components/areaAnalytics/StoreAnalysis.vue";
 import { useRouter } from "vue-router";
 import {api} from "@/lib/api.js";
+import SurveyForm from "./SurveyForm.vue";
+import SurveyResult from "./SurveyResult.vue";
 
 const props = defineProps({
   place: String,
@@ -117,7 +134,7 @@ const scrollToSection = (section) => {
 
 const updateActiveSection = () => {
   const container = scrollContainer.value;
-  const sections = ['population', 'storeAnalytics', 'analysis', 'rent', 'review'];
+  const sections = ['population', 'storeAnalytics', 'analysis', 'rent', 'surveyForm', 'surveyResult'];
 
   sections.forEach(section => {
     const element = document.getElementById(section);
