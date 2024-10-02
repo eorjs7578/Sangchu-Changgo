@@ -102,9 +102,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 tokenUtil.deleteTokenOnCookie(response);
                 throw new InvalidTokenException("토큰이 유효하지 않습니다.");
             }
-        } catch (Exception e) {
+        } catch (InvalidTokenException e) {
+            log.error("InvalidTokenException: {}", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");  // 문자 인코딩 설정
+            response.getWriter().write("{\"message\": \"토큰 정보가 이상합니다. 로그인을 재시도해 보세요.\"}");
+        }  catch (Exception e) {
+            System.out.println(e.getClass());
             throw e;
         }
+
     }
 }
 
