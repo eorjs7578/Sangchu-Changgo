@@ -37,7 +37,6 @@
           <ul>
             <li v-for="item in category.items" :key="item.title">
 
-
               <a @click="goToPostList(item.id)">
               {{ item.name }}
             </a>
@@ -46,11 +45,11 @@
             </li>
           </ul>
           <div class="pagination">
-          <button @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">이전 그룹</button>
-          <button v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
+          <div @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">< </div>
+          <div class="page_number" v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
             {{ n }}
-          </button>
-          <button @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">다음 그룹</button>
+          </div>
+          <div @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">></div>
         </div>
         </div>
       </div>
@@ -165,6 +164,8 @@ async function getAllFranchiseData() {
     .catch(error => {
       console.error("Error:", error);
     });
+
+    
 }
 
   const toggleDropdown = () => {
@@ -224,22 +225,44 @@ const changePage = async (category, newPage) => {
   if (newPage < 0 || newPage >= category.totalPages) return; // 범위 초과 시 무시
   category.currentPage = newPage;
 
-  if (category.name === "상권 게시판") {
-    await getArea(category.currentPage, category.size, inputValue.value)
-      .then(data => {
-        category.items = data.content;
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
-  } else if (category.name === "프랜차이즈 게시판") {
-    await getFranchise(category.currentPage, category.size, inputValue.value)
-      .then(data => {
-        category.items = data.content;
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
+  if(inputValue.value==""){
+    if (category.name === "상권 게시판") {
+      await getALLArea(category.currentPage, category.size)
+        .then(data => {
+          category.items = data.content;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    } else if (category.name === "프랜차이즈 게시판") {
+      await getALLFranchise(category.currentPage, category.size)
+        .then(data => {
+          category.items = data.content;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    }
+  }
+  else{
+    if (category.name === "상권 게시판") {
+      await getArea(category.currentPage, category.size, inputValue.value)
+        .then(data => {
+          category.items = data.content;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    } else if (category.name === "프랜차이즈 게시판") {
+      await getFranchise(category.currentPage, category.size, inputValue.value)
+        .then(data => {
+          category.items = data.content;
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    }
+
   }
 }
 
@@ -264,6 +287,14 @@ const groupPageArray = (category) => {
   </script>
   
   <style scoped>
+.page_number{
+  margin : 0 1vw;
+}
+
+.page_number:hover{
+  color :#333;
+}
+
   .container {
     max-width: 1200px;
     margin: 0 auto;

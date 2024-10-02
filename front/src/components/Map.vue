@@ -33,6 +33,10 @@ let y = null;
 let place = ref();
 let dongId = ref();
 
+const prevArea = ref();
+const prevDong = ref();
+const prevGu = ref();
+
 const selectedArea = ref({ name: '', size: 0 }); // 선택된 영역 정보를 저장하는 ref
 const showModal = ref(false); // 모달 표시 여부를 저장하는 ref
 
@@ -48,6 +52,8 @@ async function getGuData(){
     await getGu()
     .then(data=>{
         areas = data;
+        prevGu.data = data;
+        console.log(prevGu.data)
     })
     .catch(error=>{
         console.error("Error:", error);
@@ -59,6 +65,7 @@ async function getDongData(code){
     mapLevel=6;
     await getDong(code)
     .then(data=>{
+        prevDong.data = data;
         areas = data;
     })
     .catch(error=>{
@@ -71,6 +78,7 @@ async function getAreaData(code){
     mapLevel=4;
     await getArea(code)
     .then(data=>{
+        prevArea.data = data;
         areas = data;
         console.log(data)
     })
@@ -188,16 +196,37 @@ function createPolygon(area) {
     });
 
     // 다각형에 mouseout 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 원래색으로 변경합니다
-    // 커스텀 오버레이를 지도에서 제거합니다 
+    // 커스텀 오버레이를 지도에서 제거합니다
     kakao.maps.event.addListener(polygon, 'mouseout', function() {
         polygon.setOptions({fillColor: '#D7F9D6'});
     }); 
+
+    kakao.maps.event.addListener(map, 'zoom_changed', () => {
+      const lev = map.getLevel()
+      if (lev === 4) {
+        areas = prevArea.data
+      }
+
+      if (lev === 6) {
+        if (areas !== prevDong.data) {
+          areas = prevDong.data
+          drawPolygons()
+        }
+      }
+      if (lev >= 8) {
+        if (areas !== prevGu.data) {
+          areas = prevGu.data
+          drawPolygons()
+        }
+      }
+
+    })
 
     // 다각형에 click 이벤트를 등록하고 이벤트가 발생하면 다각형의 이름과 면적을 인포윈도우에 표시합니다 
     kakao.maps.event.addListener(polygon, 'click', function(mouseEvent) {
         x = area.ypos;
         y = area.xpos;
-        
+
         console.log('Selected place:', place.value);
            // 선택된 지역 정보를 저장하여 모달에 표시
         selectedArea.value = {
@@ -213,8 +242,8 @@ function createPolygon(area) {
     };
 
     // 모달을 보이도록 설정
-    
-    if(area.size==0){ // 구 
+
+    if(area.size==0){ // 구
         getDongData(area.id);
     }
     else if (area.size ==1){
@@ -230,7 +259,7 @@ function createPolygon(area) {
         }
     });
 
-    return polygon; 
+    return polygon;
 }
 function closeModal() {
   showModal.value = false;
