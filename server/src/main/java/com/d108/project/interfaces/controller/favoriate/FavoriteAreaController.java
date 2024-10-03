@@ -3,6 +3,7 @@ package com.d108.project.interfaces.controller.favoriate;
 import com.d108.project.domain.area.dto.AreaDto;
 import com.d108.project.domain.area.dto.AreaListDto;
 import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaRequestDto;
+import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaResponse;
 import com.d108.project.domain.favorite.favoriteArea.service.FavoriteAreaService;
 import com.d108.project.domain.member.entity.Member;
 import com.d108.project.interfaces.api.favorite.FavoriteAreaApi;
@@ -25,10 +26,10 @@ public class FavoriteAreaController implements FavoriteAreaApi {
         return ResponseEntity.ok(favoriteAreaService.getFavoriteAreasByMember(member.getId()));
     }
 
-    @Operation(summary = "[Member] 회원이 해당 상권에 대한 관심 여부가 있는지 true/fase로 반환", description = "회원과 관련된 모든 관심 상권 조회 (페이징 필요할지도)")
+    @Operation(summary = "[Member] 회원이 해당 상권에 대한 관심 상권 ID 조회", description = "회원과 관련된 모든 관심 상권 조회 (페이징 필요할지도)")
     @Override
-    public ResponseEntity<Long> getFavoriteAreaByMember(Member member, Long favoriteAreaId) {
-        return ResponseEntity.ok(favoriteAreaService.checkFavoriteAreaByMember(member.getId(), favoriteAreaId));
+    public ResponseEntity<FavoriteAreaResponse> getFavoriteAreaIdByMember(Member member, Long favoriteAreaId) {
+        return ResponseEntity.ok(favoriteAreaService.getFavoriteAreaIdByMember(member.getId(), favoriteAreaId));
     }
 
     @Operation(summary = "[Member] 관심 상권 삭제!")
@@ -40,9 +41,9 @@ public class FavoriteAreaController implements FavoriteAreaApi {
 
     @Operation(summary = "[Member] 관심 상권 추가!", description = "body 안에 상권 아이디 필요")
     @Override
-    public ResponseEntity<Object> createFavoriteArea(Member member, FavoriteAreaRequestDto favoriteAreaRequestDto) {
+    public ResponseEntity<Long> createFavoriteArea(Member member, FavoriteAreaRequestDto favoriteAreaRequestDto) {
         System.out.println("Received areaId: " + favoriteAreaRequestDto.areaId());
-        favoriteAreaService.createFavoriteArea(member.getId(), favoriteAreaRequestDto);
-        return ResponseEntity.ok().build();
+        Long favoriteArea = favoriteAreaService.createFavoriteArea(member.getId(), favoriteAreaRequestDto);
+        return ResponseEntity.ok(favoriteArea);
     }
 }

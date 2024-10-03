@@ -1,93 +1,67 @@
 <template>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h1 class="card-title">{{ post.title }}</h1>
-                        <div class="d-flex justify-content-between mb-3">
-                            <span><strong>작성자:</strong> {{ post.member_id }}</span>
-                            <span><strong>작성일:</strong> {{ formatDate(post.created_at) }}</span>
-                        </div>
-                        <p class="card-text"><strong>내용:</strong> {{ post.content }}</p>
-                        <p class="text-muted"><strong>조회수:</strong> {{ post.view }}</p>
-
-                        <div v-if="post.member_id === currentUserId" class="mt-3">
-                            <button @click="handleEditPost" class="btn btn-primary me-2">
-                                수정
-                            </button>
-                            <button @click="handleDeletePost" class="btn btn-danger">삭제</button>
-                        </div>
-                        <div v-else class="mt-3">
-                            <p class="mb-0">
-                                <small>현재 로그인된 사용자 ID: {{ currentUserId }}</small>
-                            </p>
-                            <p>
-                                <small>게시글 작성자 ID: {{ post.member_id }}</small>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h3 class="card-title">댓글</h3>
-                        <ul class="list-unstyled">
-                            <li
-                                v-for="(reply, index) in post.reply"
-                                :key="reply.reply_id"
-                                class="mb-3 pb-3 border-bottom"
-                            >
-                                <div class="d-flex justify-content-between">
-                                    <span><strong>작성자:</strong> {{ reply.member_id }}</span>
-                                    <span
-                                        ><small>{{ formatDate(reply.created_at) }}</small></span
-                                    >
-                                </div>
-                                <p class="mt-2">{{ reply.content }}</p>
-                                <div v-if="reply.member_id === currentUserId" class="mt-2">
-                                    <button
-                                        @click="handleEditReply(reply.reply_id, reply.content)"
-                                        class="btn btn-sm btn-outline-primary me-2"
-                                    >
-                                        수정
-                                    </button>
-                                    <button
-                                        @click="handleDeleteReply(reply.reply_id)"
-                                        class="btn btn-sm btn-outline-danger"
-                                    >
-                                        삭제
-                                    </button>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h3 class="card-title">댓글 작성</h3>
-                        <textarea
-                            v-model="newReply"
-                            class="form-control mb-3"
-                            rows="3"
-                            placeholder="댓글을 입력하세요"
-                        ></textarea>
-                        <button @click="handleSubmitReply" class="btn btn-primary">
-                            댓글 등록하기
-                        </button>
-                    </div>
-                </div>
-
-                <div class="text-center">
-                    <button @click="navigateBackToList" class="btn btn-secondary">
-                        목록으로 돌아가기
-                    </button>
+    <div class="custom-container">
+        <div class="custom-post">
+            <h1 class="custom-post-title">{{ post.title }}</h1>
+            <div class="custom-post-meta">
+                <span><strong>작성자:</strong> {{ post.member_id }}</span>
+                <div>
+                    <span><strong>작성일:</strong> {{ formatDate(post.created_at) }}</span>
+                    <span class="custom-post-view"><strong> 조회수:</strong> {{ post.view }}</span> 
                 </div>
             </div>
+            <div>
+                
+                <p class="custom-post-content">{{ post.content }}</p>
+            </div>
+
+            <div v-if="post.member_id === currentUserId" class="custom-post-actions">
+                <button @click="handleEditPost" class="custom-btn primary">수정</button>
+                <button @click="handleDeletePost" class="custom-btn danger">삭제</button>
+            </div>
+        </div>
+
+        <div class="custom-comments">
+            <h3 class="custom-section-title">댓글</h3>
+            <ul class="custom-reply-list">
+                <li
+                    v-for="(reply, index) in post.reply"
+                    :key="reply.reply_id"
+                    class="custom-reply-item"
+                >
+                    <div class="custom-reply-meta">
+                        <span><strong>작성자:</strong> {{ reply.member_id }}</span>
+                        <span><small>{{ formatDate(reply.created_at) }}</small></span>
+                    </div>
+                    <p class="custom-reply-content">{{ reply.content }}</p>
+                    <div v-if="reply.member_id === currentUserId" class="custom-reply-actions">
+                        <button @click="handleEditReply(reply.reply_id, reply.content)" class="custom-btn outline-primary">
+                            수정
+                        </button>
+                        <button @click="handleDeleteReply(reply.reply_id)" class="custom-btn outline-danger">
+                            삭제
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="custom-add-comment">
+            <h3 class="custom-section-title">댓글 작성</h3>
+            <textarea
+                v-model="newReply"
+                class="custom-textarea"
+                rows="3"
+                placeholder="댓글을 입력하세요"
+            ></textarea>
+            <button @click="handleSubmitReply" class="custom-btn primary">댓글 등록하기</button>
+        </div>
+
+        <div class="custom-back-button">
+            <button @click="navigateBackToList" class="custom-btn secondary">목록으로 돌아가기</button>
         </div>
     </div>
 </template>
+
 
 <script>
 import { ref, onMounted } from 'vue';
@@ -288,3 +262,183 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+/* 기본 컨테이너 설정 */
+.custom-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 게시글 스타일 */
+.custom-post {
+    margin-bottom: 40px;
+}
+
+.custom-post-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.custom-post-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.custom-post-content {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #444;
+    margin-bottom: 10%;
+    margin-top: 10%;
+}
+
+.custom-post-view {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.custom-post-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end
+}
+
+.custom-post-info {
+    margin-top: 20px;
+}
+
+.info-text {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+/* 댓글 목록 스타일 */
+.custom-comments {
+    margin-bottom: 40px;
+}
+
+.custom-section-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.custom-reply-list {
+    list-style: none;
+    padding: 0;
+}
+
+.custom-reply-item {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.custom-reply-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.custom-reply-content {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.custom-reply-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end
+}
+
+/* 댓글 작성 섹션 */
+.custom-add-comment {
+    margin-bottom: 40px;
+}
+
+.custom-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* 버튼 스타일 */
+.custom-btn {
+    padding: 5px 7px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s ease;
+}
+
+.custom-btn.primary {
+    background-color: #3498db;
+    color: white;
+}
+
+.custom-btn.primary:hover {
+    background-color: #2980b9;
+}
+
+.custom-btn.danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.custom-btn.danger:hover {
+    background-color: #c0392b;
+}
+
+.custom-btn.secondary {
+    background-color: #7f8c8d;
+    color: white;
+}
+
+.custom-btn.secondary:hover {
+    background-color: #95a5a6;
+}
+
+.custom-btn.outline-primary {
+    background-color: transparent;
+    border: 2px solid #3498db;
+    color: #3498db;
+}
+
+.custom-btn.outline-primary:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.custom-btn.outline-danger {
+    background-color: transparent;
+    border: 2px solid #e74c3c;
+    color: #e74c3c;
+}
+
+.custom-btn.outline-danger:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* 목록으로 돌아가기 버튼 */
+.custom-back-button {
+    text-align: center;
+    margin-top: 20px;
+}
+</style>

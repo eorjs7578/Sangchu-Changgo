@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex">
     <NavBar />
-    <main class="flex-grow-1 p-3 overflow-auto">
+    <main class="flex-grow-1 overflow-auto">
       <router-view />
     </main>
   </div>
@@ -21,6 +21,11 @@ html, body {
 }
 .d-flex {
   height: 100%;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 </style>
 

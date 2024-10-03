@@ -147,7 +147,6 @@ function setMarkers(map) {
     }            
 }
 
-
 function drawPolygons(){
     
     polygons.value.forEach(polygon =>{
