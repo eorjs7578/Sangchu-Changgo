@@ -75,7 +75,7 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
-    path: '/marketanalysis/:areaId',
+    path: '/marketanalysis',
     name: 'MarketAnalysis',
     component: MarketAnalysis
   },
