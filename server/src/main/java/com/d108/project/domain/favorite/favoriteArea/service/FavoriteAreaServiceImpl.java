@@ -3,6 +3,7 @@ package com.d108.project.domain.favorite.favoriteArea.service;
 import com.d108.project.domain.area.dto.AreaDto;
 import com.d108.project.domain.area.dto.AreaListDto;
 import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaRequestDto;
+import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaResponse;
 import com.d108.project.domain.favorite.favoriteArea.entity.FavoriteArea;
 import com.d108.project.domain.favorite.favoriteArea.repository.FavoriteAreaRepository;
 import com.d108.project.domain.area.entity.Area;
@@ -40,23 +41,30 @@ public class FavoriteAreaServiceImpl implements FavoriteAreaService {
     }
 
     @Override
-    public Long checkFavoriteAreaByMember(Long memberId, Long areaId) {
-        FavoriteArea favoriteArea = favoriteAreaRepository.findAllByMemberIdAndAreaId(memberId, areaId)
-                .orElseThrow(() -> new IllegalArgumentException("관심 상권을 찾을 수 없습니다."));
+    public FavoriteAreaResponse getFavoriteAreaIdByMember(Long memberId, Long areaId) {
+        Optional<FavoriteArea> favoriteArea = favoriteAreaRepository.findAllByMemberIdAndAreaId(memberId, areaId);
 
-        return favoriteArea.getId();
+        return favoriteArea.map(area -> new FavoriteAreaResponse(true, area.getId()))
+                .orElseGet(() -> new FavoriteAreaResponse(false, 0L));
     }
 
 
 
     @Override
-    public void createFavoriteArea(Long memberId, FavoriteAreaRequestDto favoriteAreaRequestDto) {
+    public Long createFavoriteArea(Long memberId, FavoriteAreaRequestDto favoriteAreaRequestDto) {
         Member member = memberRepository.getReferenceById(memberId);
         Area area = areaRepository.findById(favoriteAreaRequestDto.areaId())
                 .orElseThrow(() -> new IllegalArgumentException("area ID 값이 올바르지 않습니다."));
 
+        Optional<FavoriteArea> favoriteArea = favoriteAreaRepository.findAllByMemberIdAndAreaId(memberId, area.getId());
+        if (favoriteArea.isPresent()) throw new IllegalArgumentException("이미 해당 관심상권이 있습니다.");
+
         FavoriteArea favorite = FavoriteArea.toFavoriteArea(member, area);
-        favoriteAreaRepository.save(favorite);
+        FavoriteArea save = favoriteAreaRepository.save(favorite);
+        System.out.println(save);
+        favoriteArea = favoriteAreaRepository.findAllByMemberIdAndAreaId(memberId, area.getId());
+        System.out.println(favoriteArea.get().getId());
+        return favoriteArea.get().getId();
     }
 
     @Override
