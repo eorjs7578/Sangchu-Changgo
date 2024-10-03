@@ -1,10 +1,9 @@
 <template>
-    <div id = "surveyForm">
-      <div class="card shadow-sm p-3 mb-3">
-        <div class="card-body">
+  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm">
+    <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden">
       <div class="p-6">
-        <h4 >평가하기</h4><br>
-
+        <h4>평가하기</h4>
+        <hr>
         <div class="space-y-6">
           <!-- 주 연령층 -->
           <div>
@@ -49,7 +48,7 @@
               </button>
             </div>
           </div>
-          <br>
+          <hr>
           <!-- 평가 기능 버튼 -->
           <div class="flex justify-end mt-6 space-x-2">
             <button v-if="!isSubmitted" @click="createEvaluation" class="action-button submit">제출하기</button>
@@ -60,7 +59,6 @@
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script setup>
@@ -153,6 +151,8 @@ const createEvaluation = async () => {
       // 평가 제출 후 평가 데이터를 다시 불러옴
       fetchMyEvaluation();
 
+      // 성공 알림
+      window.alert('평가가 성공적으로 제출되었습니다!');
     }, (error) => {
       console.error('평가 제출 실패:', error);
     });
@@ -175,16 +175,22 @@ const updateEvaluation = async () => {
 
     if (!evaluationData.age_group || !evaluationData.foot_traffic || !evaluationData.atmosphere || !evaluationData.nearby_prices) {
       console.error('모든 필드를 입력해야 합니다.');
+      window.alert('모든 필드를 입력해야 합니다.');
       return;
     }
 
     putAreaEvaluation(props.place, evaluationId.value, evaluationData, (response) => {
       console.log('평가 수정 성공:', response);
+
+      // 성공 알림
+      window.alert('평가가 성공적으로 수정되었습니다!');
     }, (error) => {
       console.error('평가 수정 실패:', error);
+      window.alert('평가 수정에 실패했습니다.');
     });
   } catch (error) {
     console.error('평가 수정 실패:', error);
+    window.alert('평가 수정에 실패했습니다.');
   }
 };
 
@@ -196,8 +202,12 @@ const deleteEvaluation = async () => {
     deleteAreaEvaluation(props.place, evaluationId.value, (response) => {
       isSubmitted.value = false;
       selectedOptions.value = { ageGroup: '', footTraffic: '', nearbyPrices: '', atmosphere: '' };
+
+      // 성공 알림
+      window.alert('평가가 성공적으로 삭제되었습니다!');
     }, (error) => {
       console.error('평가 삭제 실패:', error);
+      window.alert('평가 삭제에 실패했습니다.');
     });
   } catch (error) {
     console.error('평가 삭제 실패:', error);
@@ -281,19 +291,4 @@ onMounted(() => {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
-.left {
-   text-align: left;
-}
-
-.center {
-   text-align: center;
-}
-
-
-.right {
-   text-align: right;
-}
-
-
 </style>

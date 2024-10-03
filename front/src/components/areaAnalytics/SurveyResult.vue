@@ -1,9 +1,9 @@
 <template>
-  <div id = "surveyResult">
-    <div class="card shadow-sm p-3 mb-3">
-      <div class="card-body">
-
-        <h4>상권 분석 결과</h4><br>
+  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm">
+    <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden">
+      <div class="p-6">
+        <h4>상권 분석 결과</h4>
+        <hr>
 
         <!-- 평가 결과가 있을 때만 결과를 보여줌 -->
         <div v-if="evaluationResult" class="space-y-4 text-lg">

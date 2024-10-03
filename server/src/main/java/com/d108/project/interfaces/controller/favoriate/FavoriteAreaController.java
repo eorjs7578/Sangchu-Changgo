@@ -41,6 +41,7 @@ public class FavoriteAreaController implements FavoriteAreaApi {
     @Operation(summary = "[Member] 관심 상권 추가!", description = "body 안에 상권 아이디 필요")
     @Override
     public ResponseEntity<Object> createFavoriteArea(Member member, FavoriteAreaRequestDto favoriteAreaRequestDto) {
+        System.out.println("Received areaId: " + favoriteAreaRequestDto.areaId());
         favoriteAreaService.createFavoriteArea(member.getId(), favoriteAreaRequestDto);
         return ResponseEntity.ok().build();
     }

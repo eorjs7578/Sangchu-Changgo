@@ -105,7 +105,7 @@ const router = useRouter();
 
 const navigateToMarketAnalysis = (area) => {
   console.log(`Navigating to market analysis for area: ${area.name}`);
-  router.push("/marketanalysis");
+  router.push({ path: "/marketanalysis", query: { areaId: area.areaId } });
 };
 
 const goBack = () => {

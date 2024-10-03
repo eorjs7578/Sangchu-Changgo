@@ -3,7 +3,8 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>요일별 매출</h4>
-        {{ WeeklySales.many_money_days_of_week }}요일 매출이 가장 높아요
+        <hr>
+        <span class="fw-bold text-primary">{{ WeeklySales.many_money_days_of_week }}요일</span> 매출이 가장 높아요
       </div>
       <div>        
         <WeeklyVisitorChart
@@ -17,7 +18,8 @@
     <div class="card mb-3 shadow-sm" id="time">
       <div class="card-body">
         <h4>성별별 매출</h4>
-        <span>{{ GenderSales.many_sale_gender }}성 매출이 약 {{ genderPercentage }}% 더 높아요</span>
+        <hr>
+        <span><span class="fw-bold text-primary">{{ GenderSales.many_sale_gender }}성</span> 매출이 약 <span class="fw-bold text-primary">{{ genderPercentage }}% </span>더 높아요</span>
       </div>
       <div>
         
@@ -29,6 +31,7 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>주중, 주말별 매출</h4>
+        <hr>
       </div>
       <div>
           <HorizontalBarChart
@@ -42,7 +45,8 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>연령별 매출</h4>
-      {{ AgeSales.many_sale_age }} 매출이 가장 높아요
+        <hr>
+        <span class="fw-bold text-primary">{{ AgeSales.many_sale_age }}</span> 매출이 가장 높아요
       </div>
       
       <div>
@@ -57,7 +61,41 @@
     <div class="card shadow-sm p-3 mb-3">
       <div class="card-body">
         <h4>분기별 매출</h4>
-        {{ QuarterlySales.qoq }}
+        <hr>
+        <div v-if="QuarterlySales && QuarterlySales.qoq">
+        <!-- qoq 값이 존재하고, "유지" 또는 "상승"을 포함하는 경우 -->
+        <p
+          v-if="QuarterlySales.qoq.includes('유지') || QuarterlySales.qoq.includes('상승')"
+        >
+          해당 업종의 매출이 이전분기에 비해 <span class="text-primary">{{ QuarterlySales.qoq }}</span>하고 있습니다.
+        </p>
+
+        <!-- qoq 값이 존재하고, "하락"을 포함하는 경우 -->
+        <p
+          v-else-if="QuarterlySales.qoq.includes('하락')"
+        >
+          해당 업종의 매출이 이전분기에 비해 <span class="text-danger">{{ QuarterlySales.qoq }}</span>하고 있습니다.
+        </p>
+
+        <!-- qoq 값이 특정 문자열인 경우 -->
+        <p
+          v-else-if="QuarterlySales.qoq === '올해 없음' "
+          class="text-danger"
+        >
+          이번 년도 매출 정보가 없습니다.
+        </p>
+        <p
+          v-else-if="QuarterlySales.qoq === '현재 없음'"
+          class="text-danger"
+        >
+          현재와 일치하는 동일 분기의 매출 정보가 없습니다.
+        </p>
+      </div>
+
+      <!-- 데이터가 아직 로드되지 않은 경우 로딩 메시지 표시 -->
+      <div v-if = "QuarterlySales.length == 0">
+        데이터를 불러오는 중입니다...
+      </div>
       </div>
       <div>
       
@@ -67,8 +105,8 @@
                 :data="QuarterlySales.data"
             />
       </div>
+      </div>
     </div>
-  </div>
 </template>
 
 
@@ -88,7 +126,7 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
     const AgeSales = ref("");
     const GenderSales = ref("");
     const WeekendSales = ref("");
-    const QuarterlySales=ref("");
+    const QuarterlySales=ref({});
     
     const props = defineProps({
     place : String,
