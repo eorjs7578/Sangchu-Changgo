@@ -98,6 +98,7 @@ import SurveyForm from "./SurveyForm.vue";
 import SurveyResult from "./SurveyResult.vue";
 import starEmpty from '@/assets/img/star.png';
 import starFilled from '@/assets/img/filled_star.png';
+import { useAccountStore } from "@/stores/useAccountStore";
 
 const props = defineProps({
   place: String,
@@ -110,32 +111,59 @@ const showLoginPopup = ref(false); // Flag for showing login modal
 const activeSection = ref('');
 const scrollContainer = ref(null);
 const service = ref();
-const favoriteAreaId = props.place; // Use the place as the favoriteAreaId
+const areaId = props.place; // Use the place as the favoriteAreaId
+
+const accountStore = useAccountStore(); // Use the account store
 
 const router = useRouter();
+const favoriteAreaId = ref('');
 
 const checkFavoriteStatus = async () => {
-  try {
-    const response = await api.get(`/api/favorite/areas/${favoriteAreaId}`);
-    favorite.value = response.data; // Set favorite status based on the response
-  } catch (error) {
-    if (error.response && error.response.status === 401) {
-      showLoginPopup.value = true; // Show login modal if unauthorized
-    } else {
-      console.error("Error checking favorite status:", error);
-    }
+  console.log(accountStore.isAuthenticated);
+
+  if (!accountStore.isAuthenticated) {
+    favorite.value = false;
+    return;
   }
+
+  const response = await api.get(`/api/favorite/areas/${areaId}`);
+  const { isCheck, favoriteAreaId } = response.data;
+  console.log(response.data); // 여기서도 console.log 사용
+  favoriteAreaId.value = favoriteAreaId;
+  favorite.value = isCheck;
 };
 
+
+// try {
+//     const response = await api.get(`/api/favorite/areas/${areaId}`);
+//     const { isCheck, favoriteAreaId: responseAreaId } = response.data;
+//     favorite.value = isCheck;
+//   } 
+//   catch (error) {
+//     if (error.response && error.response.status === 401) {
+//       showLoginPopup.value = true; // Show login modal if unauthorized
+//     } else {
+//       console.error("Error checking favorite status:", error);
+//     }
+//   }
+
 const toggleFavorite = async () => {
+  if (!accountStore.isAuthenticated) {
+    showLoginPopup.value = true;
+    return;
+  }
+  console.log(favorite.value)
+
   try {
     if (favorite.value) {
       // If currently favorited, send DELETE request to remove favorite
-      await api.delete(`/api/favorite/areas/${favoriteAreaId}`);
+      await api.delete(`/api/favorite/areas/${favoriteAreaId.value}`);
     } else {
-      console.log("Sending areaId:", favoriteAreaId);
+      console.log("Sending areaId:", areaId);
       // If not favorited, send POST request to add favorite
-      await api.post('/api/favorite/areas', { areaId: favoriteAreaId });
+      const response = await api.post('/api/favorite/areas', { area_id: areaId });
+      console.log(response)
+      favoriteAreaId.value = response.data; // 응답에서 favorite_id 받아오기
     }
     favorite.value = !favorite.value; // Toggle the favorite state in the UI
   } catch (error) {
@@ -143,7 +171,7 @@ const toggleFavorite = async () => {
       showLoginPopup.value = true; // Show login modal if unauthorized
     } else {
       console.error("Error toggling favorite status:", error);
-      console.log(favoriteAreaId);
+      console.log(favoriteAreaId, areaId);
     }
   }
 };
