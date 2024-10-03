@@ -93,7 +93,7 @@ const toggleFavorite = async (area) => {
   } else {
     // Send a POST request to add the favorite
     try {
-      await api.post('/api/favorite/areas', { area_id: area.areaId });
+      await api.post('/api/favorite/areas', { area_id: area.area_id });
       window.location.reload(); // 페이지 새로고침
     } catch (error) {
       console.error('Failed to add favorite area:', error);
