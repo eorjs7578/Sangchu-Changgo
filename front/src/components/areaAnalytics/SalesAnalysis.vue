@@ -1,6 +1,6 @@
 <template>
   <div id="salesAnalysis" >
-    <div class="card shadow-sm p-3 mb-3">
+    <div class="card shadow-sm mb-3">
       <div class="card-body">
         <h4>요일별 매출</h4>
         <hr>
@@ -38,7 +38,7 @@
     </div>
 
 
-    <div class="card shadow-sm p-3 mb-3">
+    <div class="card shadow-sm mb-3">
       <div class="card-body">
         <h4>주중, 주말별 매출</h4>
         <hr>
@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <div class="card shadow-sm p-3 mb-3">
+    <div class="card shadow-sm mb-3">
       <div class="card-body">
         <h4>연령별 매출</h4>
         <hr>
@@ -80,7 +80,7 @@
       </div>
     </div>
 
-    <div class="card shadow-sm p-3 mb-3">
+    <div class="card shadow-sm mb-3">
       <div class="card-body">
         <h4>분기별 매출</h4>
         <hr>
