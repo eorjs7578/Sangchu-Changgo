@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const { VITE_VUE_API_URL, VITE_NEWS_API_URL} = import.meta.env;
+const { VITE_VUE_API_URL} = import.meta.env;
 
 // local vue api axios instance
 function localAxios() {

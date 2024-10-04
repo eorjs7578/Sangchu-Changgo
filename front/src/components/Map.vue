@@ -19,8 +19,17 @@ import {
     getGu,
     getDong,
     getArea,
+    getAreaInfo,
 } from "@/api/polygon.js";
 import Dashboard2 from "@/components/areaAnalytics/Dashboard2.vue";
+
+const props = defineProps({
+  areaId: {
+    type: String,
+    required: false,
+    default: null
+  }
+});
 
 import {ref, onMounted, watch,computed} from 'vue'
 let map = null;
@@ -43,8 +52,56 @@ const showModal = ref(false); // 모달 표시 여부를 저장하는 ref
 
 onMounted(() => {
     // 구 정보 불러오기 
-    getGuData();
+    if(props.areaId != null){
+        console.log("aaa")
+        loadArea(props.areaId);
+    }else{
+        console.log("bbb")
+        getGuData();
+    }
 });
+
+async function loadArea(areaId){
+    let loadData;
+    await getAreaInfo(areaId)
+    .then(data=>{
+        loadData = data;
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+
+    await getGu()
+    .then(data=>{
+        prevGu.data = data;
+        console.log(prevGu.data)
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+
+    await getDong(loadData.guCode)
+    .then(data=>{
+        prevDong.data = data;
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+
+    await getArea(loadData.dongCode)
+    .then(data => {
+        prevArea.data = data;
+        areas = data;
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+
+    mapLevel=4;
+    x = loadData.xpos;
+    y=loadData.ypos;
+    loadMap(x, y);
+}
 
 async function getGuData(){
     mapLevel = 9;
@@ -226,6 +283,9 @@ function createPolygon(area) {
         fillColor: '#D7F9D6',
         fillOpacity: 0.5 
     });
+    if(area.id== props.areaId){
+        polygon.setOptions({strokeColor: '#FF0000'});
+    }
 
     // 다각형에 mouseover 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 변경합니다 
     // 지역명을 표시하는 커스텀오버레이를 지도위에 표시합니다
