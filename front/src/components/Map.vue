@@ -175,6 +175,7 @@ const initMap = (x,y) => {
     if (lev === 6) {
       if (areas !== prevDong.data) {
         areas = prevDong.data
+        closeModal()
         hideMarkers()
         drawPolygons()
       }

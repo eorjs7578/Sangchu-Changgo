@@ -13,6 +13,7 @@ import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostServiceImpl implements PostService {
 
     private final RedisUtil redisUtil;
@@ -71,7 +73,7 @@ public class PostServiceImpl implements PostService {
 
         // 조회수 올리고
         Long view = incrementViewCountById(postId);
-
+        log.info(String.valueOf(view));
         // 조회
         PostResponseDto postResponseDto = PostResponseDto.from(post);
         postResponseDto.setView(view);
@@ -167,9 +169,6 @@ public class PostServiceImpl implements PostService {
             .build();
 }
 
-
-
-
     // 조회수 관련 메서드
 
     // redis-DB 싱크
@@ -205,7 +204,7 @@ public class PostServiceImpl implements PostService {
         String redisKey = REDIS_PREFIX + postId;
         String viewCountStr = redisUtil.getData(redisKey);
         // 레디스에 저장된 viewCount가 없는 경우 DB에서 가져옴
-        if (viewCountStr != null) {
+        if (viewCountStr == null) {
             Post post = postRepository.findById(postId)
                     .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 글입니다."));
             // DB에서 가져온 데이터를 문자열로 바꾼 후, 다시 레디스에 저장함
@@ -215,4 +214,5 @@ public class PostServiceImpl implements PostService {
         // DB에도 없는 경우.. 가 있는지는 모르겠는데 그 경우 0으로
         return (viewCountStr == null) ? 0 : Long.parseLong(viewCountStr);
     }
+
 }
