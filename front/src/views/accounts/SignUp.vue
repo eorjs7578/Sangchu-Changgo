@@ -8,12 +8,16 @@
            <!-- 아이디 필드 -->
            <label for="username">아이디</label>
           <div class="d-flex justify-content-between mb-1">
-            <input type="text" id="username" placeholder="아이디" v-model="username" :disabled="isUsernameChecked" />
+            <input type="text"
+                   id="username" placeholder="아이디" v-model="username" :disabled="isUsernameChecked"
+            />
             <button
               type="button"
+              class="mb-3"
               @click="handleUsername(username)"
               :disabled="isUsernameChecked"
               :class="{ 'btn btn-secondary': isUsernameChecked, 'btn btn-primary': !isUsernameChecked }"
+
             >
               아이디 중복 확인
             </button>
@@ -31,6 +35,7 @@
                 :disabled="isNicknameChecked"
             />
             <button
+                class="mb-3"
                 type="button"
                 @click="handleNickname(nickname)"
                 :disabled="isNicknameChecked"
@@ -42,20 +47,45 @@
             <span v-if="isNicknameError" class="error-text">{{nicknameMessage}}</span>
           <!-- 이메일, 인증 -->
           <label for="email">이메일</label>
-          <div class="email-verification">
-            <input type="email" id="email" placeholder="example@example.com" v-model="email" />
-            <button type="button" @click="handleGetAuthCode">인증번호 전송</button>
+          <div class="d-flex justify-content-between mb-1">
+            <input
+                type="email"
+                id="email"
+                placeholder="example@example.com"
+                v-model="email"
+                :disabled="isEmailChecked"
+            />
+            <button
+                class="mb-3"
+                type="button"
+                @click="handleGetAuthCode"
+                :disabled="isEmailChecked || isEmailSend"
+                :class="{ 'btn btn-secondary': isEmailChecked, 'btn btn-primary': !isEmailChecked }"
+            >{{ isEmailChecked ? "인증 완료" : "인증번호 전송" }}</button>
           </div>
 
           <!-- 인증번호 확인 -->
           <!-- 인증번호 입력 -->
-          <label for="authCode">인증번호</label>
-          <div class="verification-code d-flex">
-            <input type="text" id="authCode" placeholder="인증번호" v-model="authCode" />
-            <span class="timer">{{ formatTime(validationTime) }}</span>
-            <button type="button" @click="handleCheckAuthCode">인증번호 확인</button>
+          <div v-if="isEmailSend">
+            <label for="authCode">인증번호</label>
+            <div class="d-flex justify-content-between mb-1">
+              <input
+                  type="text"
+                  id="authCode"
+                  placeholder="인증번호"
+                  v-model="authCode"
+                  :disabled="isEmailChecked"
+              />
+              <span v-if="!isEmailChecked" class="timer mb-3">{{ formatTime(validationTime) }}</span>
+              <button
+                  class="mb-3 ms-2"
+                  type="button"
+                  @click="handleCheckAuthCode"
+                  :disabled="isEmailChecked"
+                  :class="{ 'btn btn-secondary': isEmailChecked, 'btn btn-primary': !isEmailChecked }"
+              >인증번호 확인</button>
+            </div>
           </div>
-
           <!-- 비밀번호 -->
           <label for="password">비밀번호</label>
           <input type="password" id="password" placeholder="비밀번호" v-model="password" />
@@ -205,10 +235,16 @@ function handleUsername(username) {
   // 이메일 인증번호 발송
   function handleGetAuthCode() {
     if (isEmailValidated(email.value)) {
-      alert("인증번호가 이메일로 발송되었습니다. \n네트워크 환경에 따라 발송에 시간이 걸릴 수 있습니다.")
+      if (!window.confirm("사용하실 수 있는 이메일 입니다. \n사용하시겠습니까?")) {
+        return
+      }
+      alert("이메일이 발송되었습니다.")
       isEmailSend.value = true;
       validationTime.value = 300;
+
       getAuthCode(email.value)
+          .then(() => {
+          })
     } else {
       alert("유효하지 않은 이메일 입니다. \n이메일을 다시 확인해주세요.")
     }
@@ -216,21 +252,15 @@ function handleUsername(username) {
 
   // 이메일 인증번호 확인
   function handleCheckAuthCode() {
-
-    if (!isEmailSend.value) {
-      alert("인증 코드를 먼저 받아주세요.")
-      return;
-    }
-
     checkAuthCode(email.value, authCode.value)
         .then(isVerified => {
           if (isVerified) {
             alert("인증되었습니다.")
             isEmailChecked.value = true;
           }
-          else {
-            alert("인증 번호를 다시 한 번 확인해주세요.")
-          }
+        })
+        .catch(() => {
+          alert("인증 번호를 다시 한 번 확인해주세요.")
         })
   }
 
@@ -238,6 +268,10 @@ function handleUsername(username) {
   // 이메일 시간 제한 타이머
   let timer = null;
   watch([isEmailSend, validationTime], ([newIsEmailSend, newValidationTime]) => {
+    if (isEmailChecked.value) {
+      newValidationTime = 0;
+      timer = null;
+    }
     if (timer) {
       clearInterval(timer);
     }

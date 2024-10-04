@@ -1,14 +1,17 @@
 <template>
-  <div v-if="!showLoginPopup" class="modal d-block" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content bg-light">
+  <div class="modal fade fullscreen-modal" id="favoriteArea" tabindex="-1" aria-labelledby="favoriteAreaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
         <div class="modal-header bg-success text-white">
-          <h5 class="modal-title">관심상권 리스트</h5>
-          <router-link to="/marketanalysis" class="btn-close btn-close-white" aria-label="Close"></router-link>
+          <h5 class="modal-title" id="favoriteAreaLabel">관심 상권 리스트</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!-- 관심 상권이 없을 경우 메시지 표시 -->
-          <p v-if="favoriteAreas.length === 0">관심 상권을 추가해보세요!</p>
+          <!-- 로딩 중일 때 표시할 내용 -->
+          <p v-if="isLoading">로딩 중...</p>
+          
+          <!-- 로딩이 완료되고 관심 상권이 없을 경우 메시지 표시 -->
+          <p v-else-if="!isLoading && favoriteAreas.length === 0">관심 상권을 추가해보세요!</p>
           
           <!-- 관심 상권이 있을 경우 리스트 출력 -->
           <ul v-else class="list-group">
@@ -26,129 +29,127 @@
           </ul>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="goBack">닫기</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Import and use the LoginModal component here -->
-  <LoginModal v-if="showLoginPopup" />
+    <!-- Login Modal -->
+    <LoginModal v-if="showLoginPopup" />
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from "@/lib/api.js"
-import LoginModal from "@/components/login/LoginModal.vue";  // Import the LoginModal component
+import LoginModal from "@/components/login/LoginModal.vue";
+import { useAccountStore } from "@/stores/useAccountStore";
 
+const accountStore = useAccountStore(); // Use the account store
 const favoriteAreas = ref([]);
-const showLoginPopup = ref(false);
-const maxRetries = 2; // Maximum number of retries
-const retryDelay = 2000; // Delay between retries (in milliseconds)
+const showLoginPopup = ref(false); // Flag for showing login modal
+const isLoading = ref(true); // New ref for loading state
 
 const fetchFavoriteAreas = async () => { 
+  if (!accountStore.isAuthenticated) {
+    showLoginPopup.value = true;
+    isLoading.value = false;
+    return;
+  }
+
   try {
-    console.log(`Requesting favorite areas...`);
-
-    // 단순 API 요청
-    const response = await api.get(`/api/favorite/areas/list`); 
-
-    console.log(response); // API 응답 출력
-
+    isLoading.value = true;
+    const response = await api.get(`/api/favorite/areas/list`);
     if (response.data.area_list) {
-      console.log(response.data.area_list)
-      // favoriteAreas 데이터를 채우고 각 지역에 `isFavorite` 플래그 추가
       favoriteAreas.value = response.data.area_list.map(area => ({
         ...area,
-        isFavorite: true // 즐겨찾기 목록이므로 `isFavorite`으로 표시
+        isFavorite: true 
       }));
+      console.log(response)
     } else {
-      console.log(response.data.area_list)
-      favoriteAreas.value = []; // 응답에 areaList가 없으면 빈 배열로 초기화
+      favoriteAreas.value = [];
     }
-
-    console.log('Request succeeded');
   } catch (error) {
-    console.error('Error:', error.message);
-
-    if (error.response && error.response.status === 401) {
-      showLoginPopup.value = true; // 401일 경우 로그인 팝업 표시
-    } else {
-      console.error('Failed to fetch favorite areas');
-    }
+    console.error('Failed to fetch favorite areas:', error);
+  } finally {
+    isLoading.value = false;
   }
 };
 
+
 const toggleFavorite = async (area) => {
-  if (area.isFavorite) {
-    // Send a DELETE request to remove the favorite
-    try {
-      console.log(area)
+  if (!accountStore.isAuthenticated) {
+    showLoginPopup.value = true;
+    return;
+  }
+
+  try {
+    if (area.isFavorite) {
       await api.delete(`/api/favorite/areas/${area.favorite_id}`);
-      area.isFavorite = false; // Mark as not favorite in the UI
-    } catch (error) {
-      console.error('Failed to remove favorite area:', error);
-    }
-  } else {
-    // Send a POST request to add the favorite
-    try {
+      area.isFavorite = false;
+    } else {
       await api.post('/api/favorite/areas', { area_id: area.area_id });
-      area.isFavorite = true; // Mark as favorite in the UI
-    } catch (error) {
-      console.error('Failed to add favorite area:', error);
+      window.location.reload();
     }
+  } catch (error) {
+    console.error('Failed to toggle favorite:', error);
   }
 };
 
 const router = useRouter();
 
 const navigateToMarketAnalysis = (area) => {
-  console.log(`Navigating to market analysis for area: ${area.name}`);
-  router.push("/marketanalysis");
+  router.push({ path: "/marketanalysis", query: { areaId: area.areaId } });
 };
 
-const goBack = () => {
-  router.back();
+const handleModalShown = () => {
+  if (!accountStore.isAuthenticated) {
+    showLoginPopup.value = true;
+  }
+  else{
+    fetchFavoriteAreas();
+  }
 };
 
+//컴포넌트가 DOM에 마운트된 직후(즉, 화면에 표시된 직후)에 실행됩니다.
 onMounted(() => {
-  fetchFavoriteAreas();
+  const modalElement = document.getElementById('favoriteArea');
+  modalElement.addEventListener('shown.bs.modal', handleModalShown);
+});
+
+// 컴포넌트가 DOM에서 제거되기 직전에 실행됩니다.
+onUnmounted(() => {
+  // Remove event listener when component is unmounted
+  const modalElement = document.getElementById('favoriteArea');
+  modalElement.removeEventListener('shown.bs.modal', handleModalShown);
 });
 </script>
 
 <style scoped>
-.modal {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
 .modal-content {
   border-radius: 8px;
 }
 
 .modal-header {
   padding: 1rem;
-  border-bottom: none;
 }
 
 .modal-footer {
   padding: 1rem;
-  border-top: none;
 }
 
-.btn-close {
-  background-color: transparent;
-  border: none;
-  font-size: 1.25rem;
-  padding: 0.75rem;
+.area-name {
+  cursor: pointer;
+  color: blue;
 }
 
-.btn-success {
-  background-color: #28a745;
+.area-name:hover {
+  text-decoration: underline;
 }
 
-.btn-success:hover {
-  background-color: #218838;
+.badge {
+  cursor: pointer;
 }
 
 .btn-secondary {
@@ -157,17 +158,5 @@ onMounted(() => {
 
 .btn-secondary:hover {
   background-color: #5a6268;
-}
-
-.badge {
-  cursor: pointer;
-}
-
-.area-name {
-  cursor: pointer;
-  color: blue; /* Optionally style the clickable area name */
-}
-.area-name:hover {
-  text-decoration: underline;
 }
 </style>

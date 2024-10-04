@@ -288,11 +288,13 @@ const groupPageArray = (category) => {
   
   <style scoped>
 .page_number{
-  margin : 0 1vw;
+  margin : 0 0.5vw;
+  padding: 0 0.5vw;
+  border-radius: 20px;
 }
 
 .page_number:hover{
-  color :#333;
+  background-color :#d9efb8;
 }
 
   .container {
@@ -493,6 +495,17 @@ const groupPageArray = (category) => {
   
   .fade-enter-from, .fade-leave-to {
     opacity: 0;
+  }
+
+  .category a {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit; /* 기본 링크 스타일을 제거할 경우 */
+  }
+
+  /* 링크에 커서를 올렸을 때의 스타일 (선택사항) */
+  .category a:hover {
+    color: #9ac18e;
   }
   
   @media (max-width: 480px) {

@@ -2,7 +2,7 @@
   <div>
     <div class="container-fluid h-100">
       <div class="row bg-success text-white p-3 align-items-center">
-        <div class="col-10">
+        <div class="col-8">
           <h2 class="font-weight-bold">{{ area }}</h2>
         </div>
         <div class="col-2 text-right">
@@ -12,6 +12,11 @@
               alt="Favorite"
               class="favorite-icon"
             />
+          </button>
+        </div>
+        <div class="col-2 text-right">
+          <button class="btn" @click="closeModal">
+            x
           </button>
         </div>
       </div>
@@ -37,13 +42,6 @@
             @click.prevent="scrollToSection('salesAnalysis')"
         >
           매출분석
-        </a>
-        <a
-            class="nav-item nav-link"
-            :class="{ active: activeSection === 'rent' }"
-            @click.prevent="scrollToSection('rent')"
-        >
-          임대료
         </a>
         <a
             class="nav-item nav-link"
@@ -105,44 +103,77 @@ import SurveyForm from "./SurveyForm.vue";
 import SurveyResult from "./SurveyResult.vue";
 import starEmpty from '@/assets/img/star.png';
 import starFilled from '@/assets/img/filled_star.png';
+import { useAccountStore } from "@/stores/useAccountStore";
 
 const props = defineProps({
   place: String,
 });
 
-
-const area = ref("로딩중 입니다.");
+const emit = defineEmits(["closeModal"])
+const area = ref("");
 const favorite = ref(false);
 const showLoginPopup = ref(false); // Flag for showing login modal
 const activeSection = ref('');
 const scrollContainer = ref(null);
 const service = ref();
-const favoriteAreaId = props.place; // Use the place as the favoriteAreaId
+const areaId = props.place; // Use the place as the favoriteAreaId
+
+const accountStore = useAccountStore(); // Use the account store
 
 const router = useRouter();
+const favoriteAreaId = ref('');
 
 const checkFavoriteStatus = async () => {
-  try {
-    const response = await api.get(`/api/favorite/areas/${favoriteAreaId}`);
-    favorite.value = response.data; // Set favorite status based on the response
-  } catch (error) {
-    if (error.response && error.response.status === 401) {
-      showLoginPopup.value = true; // Show login modal if unauthorized
-    } else {
-      console.error("Error checking favorite status:", error);
-    }
+  console.log(accountStore.isAuthenticated);
+
+  if (!accountStore.isAuthenticated) {
+    favorite.value = false;
+    return;
   }
+
+  const response = await api.get(`/api/favorite/areas/${areaId}`);
+  const { isCheck, favoriteAreaId } = response.data;
+  console.log(response.data); // 여기서도 console.log 사용
+  favoriteAreaId.value = favoriteAreaId;
+  favorite.value = isCheck;
 };
 
+
+// try {
+//     const response = await api.get(`/api/favorite/areas/${areaId}`);
+//     const { isCheck, favoriteAreaId: responseAreaId } = response.data;
+//     favorite.value = isCheck;
+//   } 
+//   catch (error) {
+//     if (error.response && error.response.status === 401) {
+//       showLoginPopup.value = true; // Show login modal if unauthorized
+//     } else {
+//       console.error("Error checking favorite status:", error);
+//     }
+//   }
+
+function closeModal() {
+  emit("closeModal")
+}
+
 const toggleFavorite = async () => {
+  if (!accountStore.isAuthenticated) {
+    showLoginPopup.value = true;
+    return;
+  }
+  console.log(favorite.value)
+
   try {
     if (favorite.value) {
       // If currently favorited, send DELETE request to remove favorite
-      await api.delete(`/api/favorite/areas/${favoriteAreaId}`);
+      await api.delete(`/api/favorite/areas/${favoriteAreaId.value}`);
     } else {
-      console.log("Sending areaId:", favoriteAreaId);
+      console.log("Sending areaId:", areaId);
       // If not favorited, send POST request to add favorite
-      await api.post('/api/favorite/areas', { area_id: favoriteAreaId });
+      const response = await api.post('/api/favorite/areas', { area_id: areaId });
+      console.log(response)
+      favoriteAreaId.value = response.data; // 응답에서 favorite_id 받아오기
+
     }
     favorite.value = !favorite.value; // Toggle the favorite state in the UI
   } catch (error) {
@@ -150,7 +181,7 @@ const toggleFavorite = async () => {
       showLoginPopup.value = true; // Show login modal if unauthorized
     } else {
       console.error("Error toggling favorite status:", error);
-      console.log(favoriteAreaId);
+      console.log(favoriteAreaId, areaId);
     }
   }
 };

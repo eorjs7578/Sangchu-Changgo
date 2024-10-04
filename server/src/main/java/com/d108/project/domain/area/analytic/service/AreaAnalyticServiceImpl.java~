@@ -135,18 +135,15 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<String> dayOfWeekList = List.of("월", "화", "수", "목", "금", "토", "일");
 
         int maxIndex = getMaxIndex(saleByDayOfWeekByArea);
-        System.out.println(saleByDayOfWeekByArea);
-        System.out.println(dayOfWeekList);
-        System.out.println(maxIndex);
 
-        Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByDayOfWeekByArea, dayOfWeekList);
-        saleByDayOfWeekByArea = listListPair.getFirst();
-        dayOfWeekList = listListPair.getSecond();
-
-
-        if (dayOfWeekList.isEmpty()) {
-            return new SalesByDayOfWeekDto(saleByDayOfWeekByArea, dayOfWeekList, null );
-        }
+//        Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByDayOfWeekByArea, dayOfWeekList);
+//        saleByDayOfWeekByArea = listListPair.getFirst();
+//        dayOfWeekList = listListPair.getSecond();
+//
+//
+//        if (dayOfWeekList.isEmpty()) {
+//            return new SalesByDayOfWeekDto(saleByDayOfWeekByArea, dayOfWeekList, null );
+//        }
 
         return new SalesByDayOfWeekDto(saleByDayOfWeekByArea, dayOfWeekList, dayOfWeekList.get(maxIndex));
     }
@@ -158,13 +155,13 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
 
         int maxIndex = getMaxIndex(saleByHourByArea);
 
-        Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByHourByArea, hourList);
-        saleByHourByArea = listListPair.getFirst();
-        hourList = listListPair.getSecond();
-
-        if (hourList.isEmpty()) {
-            return new SalesByHourDto(saleByHourByArea, hourList, null );
-        }
+//        Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByHourByArea, hourList);
+//        saleByHourByArea = listListPair.getFirst();
+//        hourList = listListPair.getSecond();
+//
+//        if (hourList.isEmpty()) {
+//            return new SalesByHourDto(saleByHourByArea, hourList, null );
+//        }
 
         return new SalesByHourDto(saleByHourByArea, hourList, hourList.get(maxIndex));
     }
@@ -196,13 +193,13 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
 
         int manIndex = getMaxIndex(saleByAgeByArea);
 
-        Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByAgeByArea, ageList);
-        saleByAgeByArea = listListPair.getFirst();
-        ageList = listListPair.getSecond();
-
-        if (saleByAgeByArea.isEmpty()) {
-            return new SalesByAgeDto(saleByAgeByArea, ageList, null );
-        }
+//        Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByAgeByArea, ageList);
+//        saleByAgeByArea = listListPair.getFirst();
+//        ageList = listListPair.getSecond();
+//
+//        if (saleByAgeByArea.isEmpty()) {
+//            return new SalesByAgeDto(saleByAgeByArea, ageList, null );
+//        }
 
         return new SalesByAgeDto(saleByAgeByArea, ageList, ageList.get(manIndex));
     }

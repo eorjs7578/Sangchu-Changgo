@@ -3,11 +3,12 @@
     <div id="map">
     </div>
     <Dashboard2
-     v-if="showModal" 
+     v-if="showModal"
      class="modal-overlay"
      :place="computedPlace"
      :key="computedPlace"
      @click.self="closeModal"
+     @close-modal="closeModal"
      >
     </Dashboard2>
 
@@ -116,10 +117,10 @@ const initMap = (x,y) => {
       hideMarkers()
       drawPolygons()
     }
-
     if (lev === 6) {
       if (areas !== prevDong.data) {
         areas = prevDong.data
+        closeModal()
         hideMarkers()
         drawPolygons()
       }
@@ -137,7 +138,7 @@ const initMap = (x,y) => {
 
 // "마커 감추기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에서 삭제하는 함수입니다
 function hideMarkers() {
-    setMarkers(null);   
+    setMarkers(null);
 }
 
 // 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수입니다
@@ -146,7 +147,6 @@ function setMarkers(map) {
         markers[i].setMap(map);
     }            
 }
-
 
 function drawPolygons(){
     
@@ -281,7 +281,7 @@ function createPolygon(area) {
     }else{
         place.value = area.id;
         getAreaData(dongId);
-            // showModal.value = true;
+            showModal.value = true;
             console.log("ffff")
             console.log(place.value)
 

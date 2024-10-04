@@ -10,7 +10,7 @@
         </router-link>
       </li>
       <li class="nav-item">
-        <router-link to="/interestareas" class="nav-link" @click="closeCommunitySubmenu">
+        <router-link to="#" data-bs-toggle="modal" data-bs-target="#favoriteArea" class="nav-link">
           <i class="bi bi-star-fill me-2"></i>관심상권
         </router-link>
       </li>
@@ -26,7 +26,7 @@
         </a>
         <ul v-if="isFranchiseOpen" class="nav flex-column ms-3 mt-2">
           <li class="nav-item">
-            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click="toggleFavorite">
+            <a class="nav-link" href="#" @click="toggleFavorite">
               <i class="bi bi-heart-fill me-2"></i>관심 프랜차이즈
             </a>
           </li>
@@ -59,7 +59,7 @@
         </router-link>
       </template>
     </div>
-    <FavoriteFranchise :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
+    <FavoriteFranchise v-if="isAuthenticated" :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
     <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
   </nav>
 </template>
@@ -72,6 +72,8 @@ import { getFavoriteFranchises } from '@/api/franchise';
 import { api } from '@/lib/api';
 import FranchiseFee from '@/views/franchise/FranchiseFee.vue';
 import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue';
+import {Modal} from 'bootstrap'
+import FavoriteArea from '@/views/InterestAreas.vue';
 
 const isCommunityOpen = ref(false);
 const isFranchiseOpen = ref(true);
@@ -81,17 +83,30 @@ const favoriteFranchises = ref([]);
 const router = useRouter();
 const store = useAccountStore();
 
+const isAuthenticated = ref(store.isAuthenticated); // store의 인증 상태 확인
+const handleFavoriteClick = () => {
+  
+}
 
 const toggleFavorite = () => {
-  getFavoriteFranchises(
+  if(store.isAuthenticated) {
+    console.log("로그인 완")
+    getFavoriteFranchises(
     ({data}) => {
       console.log(data)
       favoriteFranchises.value = transformData(data)
+      let myModal = new Modal(document.getElementById('exampleModal1'));
+      myModal.show();
     },
     (error) => {
       console.log(error)
     }
   )
+  } else {
+    console.log("로그인 필요")
+    router.push({name : 'login'})
+  }
+  
 }
 
 const transformData = (data) => {
