@@ -291,6 +291,7 @@ const groupPageArray = (category) => {
   margin : 0 0.5vw;
   padding: 0 0.5vw;
   border-radius: 20px;
+  cursor: pointer;
 }
 
 .page_number:hover{
