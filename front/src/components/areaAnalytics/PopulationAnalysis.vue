@@ -5,7 +5,7 @@
         <h4>일일 평균 유동인구</h4>
         <hr>
         <p>
-          일일 평균 유동인구는 <span class="fw-bold text-primary">{{population}}</span>명 입니다.
+          일일 평균 유동인구는 <span class="fw-bold text-primary">{{population.toLocaleString()}}</span>명 입니다.
         </p>
       </div>
     </div>
@@ -48,26 +48,26 @@
         <p
           v-if="quarterData.qo_q.includes('유지') || quarterData.qo_q.includes('상승')"
         >
-          해당 상권의 유동인구가 이전분기에 비해 <span class="text-primary">{{ quarterData.qo_q }}</span>하고 있습니다.
+          해당 상권의 유동인구가 이전분기에 비해 <span class="fw-bold text-primary">{{ quarterData.qo_q }}</span>하고 있습니다.
         </p>
 
         <!-- qoq 값이 존재하고, "하락"을 포함하는 경우 -->
         <p
           v-else-if="quarterData.qo_q.includes('하락')"
         >
-          해당 상권의 유동인구가 이전분기에 비해 <span class="text-danger">{{ quarterData.qo_q }}</span>하고 있습니다.
+          해당 상권의 유동인구가 이전분기에 비해 <span class="fw-bold text-danger">{{ quarterData.qo_q }}</span>하고 있습니다.
         </p>
 
         <!-- qoq 값이 특정 문자열인 경우 -->
         <p
           v-else-if="quarterData.qo_q === '올해 없음' "
-          class="text-danger"
+          class="fw-bold text-danger"
         >
           이번 년도 유동인구 정보가 없습니다.
-        </p>
+        </p> 
         <p
           v-else-if="quarterData.qo_q === '현재 없음'"
-          class="text-danger"
+          class="fw-bold text-danger"
         >
           현재와 일치하는 동일 분기의 유동인구 정보가 없습니다.
         </p>

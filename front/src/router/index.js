@@ -17,6 +17,7 @@ import EditPost from "@/views/forum/EditPost.vue";
 import SurveyForm from '@/components/areaAnalytics/SurveyForm.vue';
 import SurveyResult from '@/components/areaAnalytics/SurveyResult.vue';
 import SocialLoginRedirect from "@/views/accounts/SocialLoginRedirect.vue";
+import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue';
 
 // 1. /members/** : 회원 관련 활동 (로그인, 회원가입, 비밀번호 변경 등)
 // 2. /community/** : 커뮤니티 관련 활동 (커뮤니티 CRUD)

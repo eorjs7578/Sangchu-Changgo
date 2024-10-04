@@ -1,6 +1,7 @@
 package com.d108.project.interfaces.api;
 
 
+import com.d108.project.domain.map.dto.AreaInfoDto;
 import com.d108.project.domain.map.dto.PolygonDto;
 import com.d108.project.domain.map.dto.RegionInfoDto;
 import org.springframework.http.ResponseEntity;
@@ -27,4 +28,7 @@ public interface MapApi {
 
     @GetMapping("/info/gu")
     ResponseEntity<List<RegionInfoDto>> getGu();
+
+    @GetMapping("api/info/area/{code}")
+    ResponseEntity<AreaInfoDto> getArea(@PathVariable("code") Long code);
 }
