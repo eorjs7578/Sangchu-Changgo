@@ -7,7 +7,7 @@
         <form @submit.prevent="handleSignUp">
            <!-- 아이디 필드 -->
            <label for="username">아이디</label>
-          <div class="d-flex justify-content-between mb-1 align-items-center">
+          <div class="d-flex justify-content-between mb-1">
             <input type="text"
                    id="username" placeholder="아이디" v-model="username" :disabled="isUsernameChecked"
             />
@@ -47,7 +47,7 @@
             <span v-if="isNicknameError" class="error-text">{{nicknameMessage}}</span>
           <!-- 이메일, 인증 -->
           <label for="email">이메일</label>
-          <div class="email-verification">
+          <div class="d-flex justify-content-between mb-1">
             <input type="email" id="email" placeholder="example@example.com" v-model="email" />
             <button class="mb-3" type="button" @click="handleGetAuthCode">인증번호 전송</button>
           </div>
@@ -55,10 +55,10 @@
           <!-- 인증번호 확인 -->
           <!-- 인증번호 입력 -->
           <label for="authCode">인증번호</label>
-          <div class="verification-code d-flex">
+          <div class="d-flex justify-content-between mb-1">
             <input type="text" id="authCode" placeholder="인증번호" v-model="authCode" />
             <span class="timer mb-3">{{ formatTime(validationTime) }}</span>
-            <button class="mb-3" type="button" @click="handleCheckAuthCode">인증번호 확인</button>
+            <button class="mb-3 ms-2" type="button" @click="handleCheckAuthCode">인증번호 확인</button>
           </div>
 
           <!-- 비밀번호 -->
