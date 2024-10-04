@@ -18,7 +18,7 @@ cd ..
 # 서브모듈 초기화
 git submodule init
 # 서브모듈 데이터 가져오기 
-git submodule update\
+git submodule update
 ```
 
 
