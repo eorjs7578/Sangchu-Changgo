@@ -10,7 +10,7 @@
         </router-link>
       </li>
       <li class="nav-item">
-        <router-link to="/interestareas" class="nav-link" @click="closeCommunitySubmenu">
+        <router-link to="#" data-bs-toggle="modal" data-bs-target="#favoriteArea" class="nav-link">
           <i class="bi bi-star-fill me-2"></i>관심상권
         </router-link>
       </li>
@@ -64,6 +64,7 @@
     </div>
     <FavoriteFranchise v-if="isAuthenticated" :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
     <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
+    <FavoriteArea class="modal fade fullscreen-modal" id="favoriteArea"></FavoriteArea>
   </nav>
 </template>
 
@@ -75,6 +76,7 @@ import { getFavoriteFranchises } from '@/api/franchise';
 import { api } from '@/lib/api';
 import FranchiseFee from '@/views/franchise/FranchiseFee.vue';
 import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue';
+import FavoriteArea from '@/views/InterestAreas.vue';
 
 const isCommunityOpen = ref(false);
 const isFranchiseOpen = ref(true);
