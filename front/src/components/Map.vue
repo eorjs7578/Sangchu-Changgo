@@ -280,7 +280,7 @@ function createPolygon(area) {
     }else{
         place.value = area.id;
         getAreaData(dongId);
-            // showModal.value = true;
+            showModal.value = true;
             console.log("ffff")
             console.log(place.value)
 
