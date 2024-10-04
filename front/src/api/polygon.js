@@ -37,7 +37,7 @@ async function getGu() {
   }
 
   async function getAreaInfo(code){
-    return await getRequest(`api/info/area/${code}`);
+    return await getRequest(`api/map/info/area/${code}`);
   }
 
 export {

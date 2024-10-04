@@ -6,7 +6,7 @@
 <script setup>
 import Map from "@/components/Map.vue";
 
-defineProps({
+const props = defineProps({
   areaId: {
     type: String,
     required: false

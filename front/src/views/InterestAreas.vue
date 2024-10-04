@@ -48,7 +48,7 @@ const fetchFavoriteAreas = async () => {
         ...area,
         isFavorite: true 
       }));
-      console.log(response)
+      console.log(favoriteAreas.value)
     } else {
       favoriteAreas.value = [];
     }
@@ -74,12 +74,8 @@ const toggleFavorite = async (area) => {
 const router = useRouter();
 
 const navigateToMarketAnalysis = (area) => {
-<<<<<<< HEAD
-  console.log(`Navigating to market analysis for area: ${area.name}`);
-  router.push({ path: "/marketanalysis", params: { areaId: area.areaId } });
-=======
-  router.push({ path: "/marketanalysis", query: { areaId: area.areaId } });
->>>>>>> 551d8687ee02515d29534f3e2bd0787ca679d071
+  window.location.href = `http://localhost:5173/marketanalysis?areaId=${area.area_id}`
+  // router.replace({ path : "/marketanalysis", query: { areaId: area.area_id } });
 };
 
 const handleModalShown = () => {

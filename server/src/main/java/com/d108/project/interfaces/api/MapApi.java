@@ -29,6 +29,6 @@ public interface MapApi {
     @GetMapping("/info/gu")
     ResponseEntity<List<RegionInfoDto>> getGu();
 
-    @GetMapping("api/info/area/{code}")
+    @GetMapping("/info/area/{code}")
     ResponseEntity<AreaInfoDto> getArea(@PathVariable("code") Long code);
 }

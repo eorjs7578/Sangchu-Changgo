@@ -54,10 +54,8 @@ const showModal = ref(false); // 모달 표시 여부를 저장하는 ref
 onMounted(() => {
     // 구 정보 불러오기 
     if(props.areaId != null){
-        console.log("aaa")
         loadArea(props.areaId);
     }else{
-        console.log("bbb")
         getGuData();
     }
 });
@@ -81,7 +79,7 @@ async function loadArea(areaId){
         console.error("Error:", error);
     })
 
-    await getDong(loadData.guCode)
+    await getDong(loadData.gu_code)
     .then(data=>{
         prevDong.data = data;
     })
@@ -89,7 +87,7 @@ async function loadArea(areaId){
         console.error("Error:", error);
     })
 
-    await getArea(loadData.dongCode)
+    await getArea(loadData.dong_code)
     .then(data => {
         prevArea.data = data;
         areas = data;
@@ -101,7 +99,7 @@ async function loadArea(areaId){
     mapLevel=4;
     x = loadData.xpos;
     y=loadData.ypos;
-    loadMap(x, y);
+    loadMap(y, x);
 }
 
 async function getGuData(){
@@ -213,7 +211,6 @@ function drawPolygons(){
 
     if (areas && areas.length > 0) {
         for (let i = 0; i < areas.length; i++) {
-            console.log("이거봐!!" + areas[i].name)
             // 마커를 생성합니다
             const polygon = createPolygon(areas[i]);
             polygons.value.push(polygon);  // 생성한 폴리곤을 배열에 저장
@@ -271,6 +268,7 @@ function parseMultiPolygon(multiPolygonStr) {
 
 // 다각형을 생상하고 이벤트를 등록하는 함수입니다
 function createPolygon(area) {
+
  // polygon 문자열을 처리하여 경로(path)를 생성
     const path = parsePolygon(area.polygon);
     // 다각형을 생성합니다 
@@ -292,7 +290,6 @@ function createPolygon(area) {
     kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
         polygon.setOptions({fillColor: '#066905'});
         customOverlay.setContent('<div class="area">' + area.name + '</div>');
-        console.log("mouse over!" + area.name)
         customOverlay.setPosition(mouseEvent.latLng); 
         customOverlay.setMap(map);
     });
@@ -341,9 +338,6 @@ function createPolygon(area) {
         place.value = area.id;
         getAreaData(dongId);
             showModal.value = true;
-            console.log("ffff")
-            console.log(place.value)
-
         }
     });
 
@@ -362,6 +356,10 @@ watch(place, (newPlace) => {
 });
 const computedPlace = computed(() => place.value);
 
+watch(props.areaId ,(newid)=>{
+    console.log(newid)
+    loadArea(newid)
+});
 
 
 </script>
