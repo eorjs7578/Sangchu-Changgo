@@ -110,7 +110,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["closeModal"])
-const area = ref("로딩중 입니다.");
+const area = ref("");
 const favorite = ref(false);
 const showLoginPopup = ref(false); // Flag for showing login modal
 const activeSection = ref('');
