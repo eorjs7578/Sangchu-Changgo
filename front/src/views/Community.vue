@@ -291,6 +291,7 @@ const groupPageArray = (category) => {
   margin : 0 0.5vw;
   padding: 0 0.5vw;
   border-radius: 20px;
+  cursor: pointer;
 }
 
 .page_number:hover{
@@ -363,6 +364,8 @@ const groupPageArray = (category) => {
   .pagination {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+    max-width: 100%;
     margin-top: 20px;
   }
   

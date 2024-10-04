@@ -1,5 +1,6 @@
 package com.d108.project.interfaces.controller;
 
+import com.d108.project.domain.map.dto.AreaInfoDto;
 import com.d108.project.domain.map.dto.PolygonDto;
 import com.d108.project.domain.map.dto.RegionInfoDto;
 import com.d108.project.domain.map.service.MapService;
@@ -41,5 +42,10 @@ public class MapController implements MapApi {
     @Override
     public ResponseEntity<List<RegionInfoDto>> getGu() {
         return ResponseEntity.ok(mapService.getGuInfo());
+    }
+
+    @Override
+    public ResponseEntity<AreaInfoDto> getArea(Long code) {
+        return ResponseEntity.ok(mapService.getAreaInfo(code));
     }
 }

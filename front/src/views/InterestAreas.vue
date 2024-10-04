@@ -66,7 +66,7 @@ const fetchFavoriteAreas = async () => {
         ...area,
         isFavorite: true 
       }));
-      console.log(response)
+      console.log(favoriteAreas.value)
     } else {
       favoriteAreas.value = [];
     }
@@ -100,7 +100,8 @@ const toggleFavorite = async (area) => {
 const router = useRouter();
 
 const navigateToMarketAnalysis = (area) => {
-  router.push({ path: "/marketanalysis", query: { areaId: area.areaId } });
+  window.location.href = `http://localhost:5173/marketanalysis?areaId=${area.area_id}`
+  // router.replace({ path : "/marketanalysis", query: { areaId: area.area_id } });
 };
 
 const handleModalShown = () => {

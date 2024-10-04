@@ -78,7 +78,8 @@ const routes = [
   {
     path: '/marketanalysis',
     name: 'MarketAnalysis',
-    component: MarketAnalysis
+    component: MarketAnalysis,
+    props: route => ({ areaId: route.query.areaId })
   },
   {
     path: '/areaAnalytics',

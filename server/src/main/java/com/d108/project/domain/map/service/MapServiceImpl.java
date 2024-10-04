@@ -3,6 +3,7 @@ package com.d108.project.domain.map.service;
 
 import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.area.repository.AreaRepository;
+import com.d108.project.domain.map.dto.AreaInfoDto;
 import com.d108.project.domain.map.dto.PolygonDto;
 import com.d108.project.domain.map.dto.RegionInfoDto;
 import com.d108.project.domain.map.entity.Dong;
@@ -89,5 +90,15 @@ public class MapServiceImpl implements MapService {
             dongInfos.add(RegionInfoDto.from(d));
         }
         return dongInfos;
+    }
+
+    @Override
+    public AreaInfoDto getAreaInfo(Long code) {
+        Area area = areaRepository.findById(code).orElse(null);
+        if(area != null){
+            AreaInfoDto areaInfo = AreaInfoDto.toDto(area);
+            return areaInfo;
+        }
+        return null;
     }
 }
