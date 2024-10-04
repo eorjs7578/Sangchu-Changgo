@@ -2,7 +2,7 @@
   <div>
     <div class="container-fluid h-100">
       <div class="row bg-success text-white p-3 align-items-center">
-        <div class="col-10">
+        <div class="col-8">
           <h2 class="font-weight-bold">{{ area }}</h2>
         </div>
         <div class="col-2 text-right">
@@ -12,6 +12,11 @@
               alt="Favorite"
               class="favorite-icon"
             />
+          </button>
+        </div>
+        <div class="col-2 text-right">
+          <button class="btn" @click="closeModal">
+            x
           </button>
         </div>
       </div>
@@ -104,7 +109,7 @@ const props = defineProps({
   place: String,
 });
 
-
+const emit = defineEmits(["closeModal"])
 const area = ref("로딩중 입니다.");
 const favorite = ref(false);
 const showLoginPopup = ref(false); // Flag for showing login modal
@@ -146,6 +151,10 @@ const checkFavoriteStatus = async () => {
 //       console.error("Error checking favorite status:", error);
 //     }
 //   }
+
+function closeModal() {
+  emit("closeModal")
+}
 
 const toggleFavorite = async () => {
   if (!accountStore.isAuthenticated) {
