@@ -359,15 +359,15 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
 
         String QOQ = "유지";
         if (nowSale == 0) {
-            QOQ = "이번 년도 매출 정보가 없습니다.";
+            QOQ = "올해 없음";
         }
         else if (lastSale == 0) {
-            QOQ = "현재와 일치하는 동일 분기의 매출 정보가 없습니다.";
+            QOQ = "현재 없음";
         }
         else if (percentageChange > 0) {
-            QOQ = String.format("해당업종의 매출이 이전분기에 비해 %.2f%% 상승하고 있습니다.", percentageChange);
+            QOQ = String.format("%.2f%% 상승", percentageChange);
         } else if (percentageChange < 0) {
-            QOQ = String.format("해당업종의 매출이 이전분기에 비해 %.2f%% 하락하고 있습니다.", Math.abs(percentageChange));
+            QOQ = String.format("%.2f%% 하락", Math.abs(percentageChange));
         }
         return QOQ;
     }

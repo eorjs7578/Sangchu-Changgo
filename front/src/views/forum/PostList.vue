@@ -1,72 +1,67 @@
 <template>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title text-center mb-4">게시판</h2>
+    <div class="custom-container">
+        <div class="custom-card">
+            <h2 class="custom-card-title text-center mb-4">게시판</h2>
 
-                        <div class="mb-3 text-end">
-                            <button v-show="store.isAuthenticated" type="button" class="btn btn-primary" @click="handleCreatePost">
-                                새 글 등록
-                            </button>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>No</th>
-                                        <th>제목</th>
-                                        <th>작성자</th>
-                                        <th>등록일시</th>
-                                        <th>조회수</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(row, idx) in postList" :key="row.id">
-                                        <td>{{ idx + 1 + currentPage * pageSize }}</td>
-                                        <td>
-                                            <a
-                                                href="#"
-                                                @click.prevent="viewPost(row.id)"
-                                                class="text-decoration-none"
-                                                >{{ row.title }}</a
-                                            >
-                                        </td>
-                                        <td>{{ row.member_id }}</td>
-                                        <td>{{ formatDate(row.created_at) }}</td>
-                                        <td>{{ row.view }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item" :class="{ disabled: currentPage === 0 }">
-                                    <a class="page-link" href="#" @click.prevent="loadPreviousPage"
-                                        >이전</a
-                                    >
-                                </li>
-                                <li class="page-item active">
-                                    <span class="page-link">
-                                        {{ currentPage + 1 }} / {{ totalPages }}
-                                    </span>
-                                </li>
-                                <li class="page-item" :class="{ disabled: isLastPage }">
-                                    <a class="page-link" href="#" @click.prevent="loadNextPage"
-                                        >다음</a
-                                    >
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
+            <div class="custom-button-group">
+                <button v-show="store.isAuthenticated" type="button" class="custom-btn" @click="handleCreatePost">
+                    새 글 등록
+                </button>
             </div>
+
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>등록일시</th>
+                            <th>조회수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(row, idx) in postList" :key="row.id">
+                            <td>{{ idx + 1 + currentPage * pageSize }}</td>
+                            <td>
+                                <a
+                                    href="#"
+                                    @click.prevent="viewPost(row.id)"
+                                    class="custom-link"
+                                    >{{ row.title }}</a
+                                >
+                            </td>
+                            <td>{{ row.member_id }}</td>
+                            <td>{{ formatDate(row.created_at) }}</td>
+                            <td>{{ row.view }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav aria-label="Page navigation">
+                <ul class="custom-pagination">
+                    <li class="custom-page-item" :class="{ disabled: currentPage === 0 }">
+                        <a class="custom-page-link" href="#" @click.prevent="loadPreviousPage">
+                            이전
+                        </a>
+                    </li>
+                    <li class="custom-page-item active">
+                        <span class="custom-page-link">
+                            {{ currentPage + 1 }} / {{ totalPages }}
+                        </span>
+                    </li>
+                    <li class="custom-page-item" :class="{ disabled: isLastPage }">
+                        <a class="custom-page-link" href="#" @click.prevent="loadNextPage">
+                            다음
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </template>
+
 
 <script>
 import { getPostListByBoard } from '@/api/forum'; // API 호출 함수 가져오기
@@ -181,3 +176,119 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+/* 기본 컨테이너 설정 */
+.custom-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* 카드 스타일 */
+.custom-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 스타일 */
+.custom-card-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* 버튼 그룹 */
+.custom-button-group {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.custom-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.custom-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.custom-btn:active {
+    transform: translateY(0);
+}
+
+/* 테이블 스타일 */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.custom-table th, .custom-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.custom-table thead th {
+    background-color: #f4f6f9;
+    color: #2c3e50;
+}
+
+.custom-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.custom-link {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.custom-link:hover {
+    text-decoration: underline;
+}
+
+/* 페이지네이션 */
+.custom-pagination {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.custom-page-item {
+    margin: 0 5px;
+}
+
+.custom-page-link {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.custom-page-link:hover {
+    background-color: #bdc3c7;
+}
+
+.custom-page-item.disabled .custom-page-link {
+    background-color: #e5e7e9;
+    color: #95a5a6;
+    pointer-events: none;
+}
+</style>

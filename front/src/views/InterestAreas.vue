@@ -94,7 +94,7 @@ const toggleFavorite = async (area) => {
     // Send a POST request to add the favorite
     try {
       await api.post('/api/favorite/areas', { area_id: area.area_id });
-      window.location.reload();      
+      window.location.reload(); // 페이지 새로고침
     } catch (error) {
       console.error('Failed to add favorite area:', error);
     }
@@ -105,7 +105,7 @@ const router = useRouter();
 
 const navigateToMarketAnalysis = (area) => {
   console.log(`Navigating to market analysis for area: ${area.name}`);
-  router.push("/marketanalysis");
+  router.push({ path: "/marketanalysis", query: { areaId: area.areaId } });
 };
 
 const goBack = () => {

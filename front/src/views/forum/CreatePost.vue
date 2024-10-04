@@ -1,47 +1,42 @@
 <template>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title text-center mb-4">
-                            {{ isEdit ? '게시글 수정' : '새 게시글 작성' }}
-                        </h2>
-                        <form @submit.prevent="submitPost">
-                            <div class="mb-3">
-                                <label for="title" class="form-label">제목</label>
-                                <input
-                                    id="title"
-                                    v-model="title"
-                                    type="text"
-                                    class="form-control"
-                                    required
-                                    placeholder="제목을 입력하세요"
-                                />
-                            </div>
-                            <div class="mb-3">
-                                <label for="content" class="form-label">내용</label>
-                                <textarea
-                                    id="content"
-                                    v-model="content"
-                                    rows="6"
-                                    class="form-control"
-                                    required
-                                    placeholder="내용을 입력하세요"
-                                ></textarea>
-                            </div>
-                            <div class="text-end">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ isEdit ? '수정 완료' : '작성 완료' }}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+    <div class="custom-container">
+        <div class="custom-card">
+            <h2 class="custom-card-title">
+                {{ isEdit ? '게시글 수정' : '새 게시글 작성' }}
+            </h2>
+            <form @submit.prevent="submitPost" class="custom-form">
+                <div class="custom-form-group">
+                    <label for="title" class="custom-form-label">제목</label>
+                    <input
+                        id="title"
+                        v-model="title"
+                        type="text"
+                        class="custom-form-control"
+                        required
+                        placeholder="제목을 입력하세요"
+                    />
                 </div>
-            </div>
+                <div class="custom-form-group">
+                    <label for="content" class="custom-form-label">내용</label>
+                    <textarea
+                        id="content"
+                        v-model="content"
+                        rows="6"
+                        class="custom-form-control"
+                        required
+                        placeholder="내용을 입력하세요"
+                    ></textarea>
+                </div>
+                <div class="custom-form-submit">
+                    <button type="submit" class="custom-btn">
+                        {{ isEdit ? '수정 완료' : '작성 완료' }}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
+
 
 <script>
 import { ref, onMounted } from 'vue';
@@ -126,3 +121,88 @@ export default {
     },
 };
 </script>
+
+
+<style scoped>
+.custom-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f0f4f8;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.custom-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+}
+
+.custom-card-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #2c3e50;
+}
+
+.custom-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center
+}
+
+.custom-form-label {
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 0.5rem;
+    display: inline;
+}
+
+.custom-form-control {
+    border: 0;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin: 1vh 2vw;
+    display: inline-block;
+    width: 80%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.custom-form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+    outline: none;
+}
+
+.custom-form-submit {
+    text-align: right;
+}
+
+.custom-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.custom-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.custom-btn:active {
+    transform: translateY(0);
+}
+</style>
