@@ -142,7 +142,7 @@ const toggleFavorite = async () => {
     } else {
       console.log("Sending areaId:", favoriteAreaId);
       // If not favorited, send POST request to add favorite
-      await api.post('/api/favorite/areas', { areaId: favoriteAreaId });
+      await api.post('/api/favorite/areas', { area_id: favoriteAreaId });
     }
     favorite.value = !favorite.value; // Toggle the favorite state in the UI
   } catch (error) {

@@ -4,16 +4,10 @@
       <h2>{{ store.userInfo.nickname }} 님</h2>
       <div class="email-container">
         <span>{{ store.userInfo.email }}</span>
-        <button @click="toggleEditForm" class="edit-button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-          </svg>
-        </button>
       </div>
     </div>
 
-    <div v-if="showEditForm" class="edit-form">
+    <div class="edit-form">
       <h3>정보 변경</h3>
       <div class="form-group">
         <label for="email">이메일 변경</label>
@@ -45,40 +39,11 @@
         </div>
       </div>
     </div>
-
-    <div v-if="!showEditForm" class="container-tabs">
-      <div class="tabs">
-        <button
-          v-for="tab in tabs"
-          :key="tab.id"
-          @click="currentTab = tab.id"
-          :class="['tab-button', { active: currentTab === tab.id }]"
-        >
-          {{ tab.name }}
-        </button>
-      </div>
-
-      <div v-if="currentTab === 'posts'" class="posts">
-        <div v-for="post in posts" :key="post.id" class="post">
-          <h3>{{ post.title }}</h3>
-          <p class="gallery">{{ post.gallery }}</p>
-          <p>{{ post.content }}</p>
-        </div>
-      </div>
-
-      <div v-else-if="currentTab === 'areas'" class="empty-state">
-        즐겨찾기한 상권이 없습니다.
-      </div>
-
-      <div v-else-if="currentTab === 'franchises'" class="empty-state">
-        즐겨찾기한 프랜차이즈가 없습니다.
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useAccountStore } from '@/stores/useAccountStore.js';
 import { api } from '@/lib/api.js'; // API 요청을 위한 라이브러리 사용
 import {
@@ -120,6 +85,14 @@ const validationTime = ref(0); // 인증 시간 제한
 const isEmailLocked = ref(false)
 
 let timer = null;
+
+onMounted(() => {
+  newEmail.value = store.userInfo.email;
+  newNickname.value = store.userInfo.nickname;
+  
+  oldPassword.value = '';
+  newPassword.value = '';
+});
 
 const toggleEditForm = () => {
   showEditForm.value = !showEditForm.value;
@@ -229,6 +202,7 @@ const changePassword = () => {
       oldPassword.value = '';
       newPassword.value = '';
       showEditForm.value = false;
+      window.alert("비밀번호 변경 성공")
     })
     .catch((error) => {
       console.log('비밀번호 변경 실패:', error);
