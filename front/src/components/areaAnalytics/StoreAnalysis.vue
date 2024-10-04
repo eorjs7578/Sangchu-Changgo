@@ -1,19 +1,22 @@
 <template>
   <div id="storeAnalysis">
-    <div class="card shadow-sm p-3 mb-3">
-      <h2 class="title">선택 상권 총 점포 수</h2>
-      <p class="description">
-        선택하신 업종
-        <span class="dropdown" ref="dropdownRef">
-          <span class="selected" @click="toggleDropdown">{{ selectedServiceType.service_name }}</span>
-          <ul class="dropdown-menu custom-scroll" v-if="isDropdownOpen" :style="dropdownStyle">
-            <li v-for="location in serviceTypes" :key="location.code" @click="selectLocation(location)">
-              {{ location.service_name }}
-            </li>
-          </ul>
-        </span>
-        과 유사한 업종 점포가 <span class="highlight">{{ storeCount }}</span> 개 있어요.
-      </p>
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h4>선택 상권 총 점포 수</h4>
+        <hr>
+        <p class="description">
+          선택하신 업종
+          <span class="dropdown" ref="dropdownRef">
+            <span class="selected" @click="toggleDropdown">{{ selectedServiceType.service_name }}</span>
+            <ul class="dropdown-menu custom-scroll" v-if="isDropdownOpen" :style="dropdownStyle">
+              <li v-for="location in serviceTypes" :key="location.code" @click="selectLocation(location)">
+                {{ location.service_name }}
+              </li>
+            </ul>
+          </span>
+          과 유사한 업종 점포가 <span class="highlight">{{ storeCount }}</span> 개 있어요.
+        </p>
+      </div>
     </div>
   </div>
 </template>

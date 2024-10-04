@@ -29,6 +29,9 @@
             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click="toggleFavorite">
               <i class="bi bi-heart-fill me-2"></i>관심 프랜차이즈
             </a>
+            <!-- <a class="nav-link" href="#" @click="handleFavoriteClick">
+              <i class="bi bi-heart-fill me-2"></i>관심 프랜차이즈
+            </a> -->
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">
@@ -59,7 +62,7 @@
         </router-link>
       </template>
     </div>
-    <FavoriteFranchise :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
+    <FavoriteFranchise v-if="isAuthenticated" :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
     <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
     <FavoriteArea class="modal fade fullscreen-modal" id="favoriteArea"></FavoriteArea>
   </nav>
@@ -83,9 +86,14 @@ const favoriteFranchises = ref([]);
 const router = useRouter();
 const store = useAccountStore();
 
+const isAuthenticated = ref(store.isAuthenticated); // store의 인증 상태 확인
+const handleFavoriteClick = () => {
+  
+}
 
 const toggleFavorite = () => {
-  getFavoriteFranchises(
+  if(isAuthenticated.value) {
+    getFavoriteFranchises(
     ({data}) => {
       console.log(data)
       favoriteFranchises.value = transformData(data)
@@ -94,6 +102,10 @@ const toggleFavorite = () => {
       console.log(error)
     }
   )
+  } else {
+    router.push({name : 'login'})
+  }
+  
 }
 
 const transformData = (data) => {
