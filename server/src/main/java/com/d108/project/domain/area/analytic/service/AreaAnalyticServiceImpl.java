@@ -95,6 +95,9 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         footTrafficByQuarterlyByArea = listListPair.getFirst();
         quarterList = listListPair.getSecond();
 
+        if (footTrafficByQuarterlyByArea.isEmpty()){
+            return new FootTrafficByMonthDto(footTrafficByQuarterlyByArea, quarterList, null);
+        }
         return new FootTrafficByMonthDto(footTrafficByQuarterlyByArea, quarterList, QOQ);
     }
 
@@ -114,6 +117,8 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<Long> footTrafficByGenderByArea = getList(populationRepository.getFootTrafficByGenderByAreaId(areaId), genderList.size());
 
         int maxIndex = getMaxIndex(footTrafficByGenderByArea);
+
+
         return new FootTrafficByGenderDto(footTrafficByGenderByArea, genderList, genderList.get(maxIndex));
     }
 
@@ -130,10 +135,18 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<String> dayOfWeekList = List.of("월", "화", "수", "목", "금", "토", "일");
 
         int maxIndex = getMaxIndex(saleByDayOfWeekByArea);
+        System.out.println(saleByDayOfWeekByArea);
+        System.out.println(dayOfWeekList);
+        System.out.println(maxIndex);
 
         Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByDayOfWeekByArea, dayOfWeekList);
         saleByDayOfWeekByArea = listListPair.getFirst();
         dayOfWeekList = listListPair.getSecond();
+
+
+        if (dayOfWeekList.isEmpty()) {
+            return new SalesByDayOfWeekDto(saleByDayOfWeekByArea, dayOfWeekList, null );
+        }
 
         return new SalesByDayOfWeekDto(saleByDayOfWeekByArea, dayOfWeekList, dayOfWeekList.get(maxIndex));
     }
@@ -148,6 +161,10 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByHourByArea, hourList);
         saleByHourByArea = listListPair.getFirst();
         hourList = listListPair.getSecond();
+
+        if (hourList.isEmpty()) {
+            return new SalesByHourDto(saleByHourByArea, hourList, null );
+        }
 
         return new SalesByHourDto(saleByHourByArea, hourList, hourList.get(maxIndex));
     }
@@ -164,6 +181,10 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         saleByQuarterlyByArea = listListPair.getFirst();
         quarterList = listListPair.getSecond();
 
+        if (quarterList.isEmpty()) {
+            return new SalesByQuarterlyDto(saleByQuarterlyByArea, quarterList, null );
+        }
+
         return new SalesByQuarterlyDto(saleByQuarterlyByArea, quarterList, QOQ);
 
     }
@@ -178,6 +199,10 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByAgeByArea, ageList);
         saleByAgeByArea = listListPair.getFirst();
         ageList = listListPair.getSecond();
+
+        if (saleByAgeByArea.isEmpty()) {
+            return new SalesByAgeDto(saleByAgeByArea, ageList, null );
+        }
 
         return new SalesByAgeDto(saleByAgeByArea, ageList, ageList.get(manIndex));
     }
@@ -197,6 +222,12 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<String> genderList = List.of("남", "여");
 
         int manIndex = getMaxIndex(result);
+
+        if (result.isEmpty()) {
+            return new SalesByGenderDto(result, genderList, null );
+        }
+
+
         return new SalesByGenderDto(result, genderList, genderList.get(manIndex));
     }
 
@@ -208,6 +239,7 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         Pair<List<Long>, List<String>> listListPair = filterZeroValues(weekendAndWeekdaySaleByArea, dayOfWeek);
         weekendAndWeekdaySaleByArea = listListPair.getFirst();
         dayOfWeek = listListPair.getSecond();
+
 
         return new WeekendAndWeekdaySalesDto(weekendAndWeekdaySaleByArea, dayOfWeek);
     }
