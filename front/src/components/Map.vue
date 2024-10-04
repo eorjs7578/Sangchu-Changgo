@@ -156,7 +156,6 @@ function drawPolygons(){
 
     if (areas && areas.length > 0) {
         for (let i = 0; i < areas.length; i++) {
-            console.log("이거봐!!" + areas[i].name)
             // 마커를 생성합니다
             const polygon = createPolygon(areas[i]);
             polygons.value.push(polygon);  // 생성한 폴리곤을 배열에 저장
@@ -232,7 +231,6 @@ function createPolygon(area) {
     kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
         polygon.setOptions({fillColor: '#066905'});
         customOverlay.setContent('<div class="area">' + area.name + '</div>');
-        console.log("mouse over!" + area.name)
         customOverlay.setPosition(mouseEvent.latLng); 
         customOverlay.setMap(map);
     });
