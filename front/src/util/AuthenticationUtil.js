@@ -76,18 +76,14 @@ export function isUsernameDuplicated(username) {
 }
 
 export async function getAuthCode(email) {
-  if (await isEmailDuplicated(email)) {
   return api.get("/api/members/auth-email", {params: {
       email: email,
     }})
     .then(response => {
-      alert("인증번호가 이메일로 발송되었습니다. \n네트워크 환경에 따라 발송에 시간이 걸릴 수 있습니다.")
     })
     .catch( err => {
         return Promise.reject(err)
-      }
-    )
-  }
+      })
 }
 
 export function checkAuthCode(email, auth_code) {
