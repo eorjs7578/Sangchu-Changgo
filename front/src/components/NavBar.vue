@@ -10,7 +10,7 @@
         </router-link>
       </li>
       <li class="nav-item">
-        <router-link to="/interestareas" class="nav-link" @click="closeCommunitySubmenu">
+        <router-link to="#" data-bs-toggle="modal" data-bs-target="#favoriteArea" class="nav-link">
           <i class="bi bi-star-fill me-2"></i>관심상권
         </router-link>
       </li>
@@ -26,12 +26,9 @@
         </a>
         <ul v-if="isFranchiseOpen" class="nav flex-column ms-3 mt-2">
           <li class="nav-item">
-            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click="toggleFavorite">
+            <a class="nav-link" href="#" @click="toggleFavorite">
               <i class="bi bi-heart-fill me-2"></i>관심 프랜차이즈
             </a>
-            <!-- <a class="nav-link" href="#" @click="handleFavoriteClick">
-              <i class="bi bi-heart-fill me-2"></i>관심 프랜차이즈
-            </a> -->
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">
@@ -48,7 +45,7 @@
         </button>
         <div v-if="isAvatarMenuOpen" class="card mt-2">
           <div class="card-body p-0">
-            <router-link to="/members/mypage" class="btn btn-link text-decoration-none w-100 text-start">마이페이지</router-link>
+            <router-link to="/members/mypage" class="btn btn-link text-decoration-none w-100 text-start">회원정보수정</router-link>
             <button @click="logout" class="btn btn-link text-decoration-none w-100 text-start text-danger">로그아웃</button>
           </div>
         </div>
@@ -64,6 +61,7 @@
     </div>
     <FavoriteFranchise v-if="isAuthenticated" :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
     <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
+    <FavoriteArea class="modal fade fullscreen-modal" id="favoriteArea"></FavoriteArea>
   </nav>
 </template>
 
@@ -75,6 +73,8 @@ import { getFavoriteFranchises } from '@/api/franchise';
 import { api } from '@/lib/api';
 import FranchiseFee from '@/views/franchise/FranchiseFee.vue';
 import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue';
+import {Modal} from 'bootstrap'
+import FavoriteArea from '@/views/InterestAreas.vue';
 
 const isCommunityOpen = ref(false);
 const isFranchiseOpen = ref(true);
@@ -90,17 +90,21 @@ const handleFavoriteClick = () => {
 }
 
 const toggleFavorite = () => {
-  if(isAuthenticated.value) {
+  if(store.isAuthenticated) {
+    console.log("로그인 완")
     getFavoriteFranchises(
     ({data}) => {
       console.log(data)
       favoriteFranchises.value = transformData(data)
+      let myModal = new Modal(document.getElementById('exampleModal1'));
+      myModal.show();
     },
     (error) => {
       console.log(error)
     }
   )
   } else {
+    console.log("로그인 필요")
     router.push({name : 'login'})
   }
   

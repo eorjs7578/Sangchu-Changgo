@@ -110,7 +110,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["closeModal"])
-const area = ref("로딩중 입니다.");
+const area = ref("");
 const favorite = ref(false);
 const showLoginPopup = ref(false); // Flag for showing login modal
 const activeSection = ref('');
@@ -173,6 +173,7 @@ const toggleFavorite = async () => {
       const response = await api.post('/api/favorite/areas', { area_id: areaId });
       console.log(response)
       favoriteAreaId.value = response.data; // 응답에서 favorite_id 받아오기
+
     }
     favorite.value = !favorite.value; // Toggle the favorite state in the UI
   } catch (error) {

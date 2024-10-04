@@ -1,5 +1,6 @@
 package com.d108.project.domain.map.service;
 
+import com.d108.project.domain.map.dto.AreaInfoDto;
 import com.d108.project.domain.map.dto.PolygonDto;
 import com.d108.project.domain.map.dto.RegionInfoDto;
 
@@ -16,4 +17,6 @@ public interface MapService {
     List<RegionInfoDto> getGuInfo();
 
     List<RegionInfoDto> getDongInfo(Long code);
+
+    AreaInfoDto getAreaInfo(Long code);
 }
