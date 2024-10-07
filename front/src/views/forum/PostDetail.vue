@@ -3,7 +3,7 @@
         <div class="custom-post">
             <h1 class="custom-post-title">{{ post.title }}</h1>
             <div class="custom-post-meta">
-                <span><strong>작성자:</strong> {{ post.member_id }}</span>
+                <span><strong>작성자:</strong> {{ post.member_name }}</span>
                 <div>
                     <span><strong>작성일:</strong> {{ formatDate(post.created_at) }}</span>
                     <span class="custom-post-view"><strong> 조회수:</strong> {{ post.view }}</span> 
@@ -29,7 +29,7 @@
                     class="custom-reply-item"
                 >
                     <div class="custom-reply-meta">
-                        <span><strong>작성자:</strong> {{ reply.member_id }}</span>
+                        <span><strong>작성자:</strong> {{ reply.member_name }}</span>
                         <span><small>{{ formatDate(reply.created_at) }}</small></span>
                     </div>
                     <p class="custom-reply-content">{{ reply.content }}</p>
@@ -81,11 +81,13 @@ export default {
 
         // currentUserId를 전역적으로 사용할 수 있게 선언
         const currentUserId = ref(null);
+        const currentUserName = ref(null);
 
         // 사용자 인증 상태 체크 및 currentUserId 설정
         onMounted(() => {
             accountStore.checkAuthStatus().then(() => {
                 currentUserId.value = accountStore.userInfo?.id;
+                currentUserName.value = accountStore.userInfo?.nickname;
                 console.log('로그인된 사용자 ID:', currentUserId.value);
             });
         });
@@ -165,7 +167,8 @@ export default {
                     console.log('댓글 등록 성공:', response);
                     post.value.reply.push({
                         reply_id: response.data.reply_id,
-                        member_id: currentUserId.value, // 로그인된 사용자의 ID 사용
+                        member_id: currentUserId.value,
+                        member_name: currentUserName.value,// 로그인된 사용자의 ID 사용
                         content: newReply.value,
                         created_at: new Date().toISOString(),
                     });
