@@ -6,7 +6,7 @@
           <h5 class="modal-title" id="koreanModalLabel">내 관심 프차</h5>
           <button @click="setParamsDefault" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div v-if="franchises.length > 0" class="modal-body">
           <transition name="fade" mode="out-in">
             <!-- Step 1 -->
             <div v-if="currentStep === 1 || currentStep===2" key="step1" class="h-100 d-flex flex-column justify-content-between ">
@@ -21,7 +21,6 @@
                 </div>
                   <button @click="compareFranchises" class="btn btn-success w-100">비교하기 ({{selectedFranchises.length}}/2)</button>
             </div>
-
             <!-- Step 3 -->
             <div v-else-if="currentStep === 3" key="step3" class="h-100 d-flex flex-column justify-content-between">
               <div class="row">
@@ -34,6 +33,9 @@
                 <button @click="prevStep" class="btn btn-success w-100">이전으로</button>
               </div>
           </transition>
+        </div>
+        <div v-if="franchises.length <= 0" class="modal-body d-flex justify-content-center align-items-center">
+          <h3>관심 프랜차이즈를 등록해주세요!</h3>
         </div>
       </div>
     </div>

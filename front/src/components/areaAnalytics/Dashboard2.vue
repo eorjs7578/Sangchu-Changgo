@@ -2,19 +2,20 @@
   <div>
     <div class="container-fluid h-100">
       <div class="row bg-success text-white p-3 align-items-center">
-        <div class="col-8">
-          <h2 class="font-weight-bold">{{ area }}</h2>
+        <div class="col-10 g-1">
+          <h4
+              class="font-weight-bold"
+              :title="area"
+          >{{ parsingString(area) }}</h4>
         </div>
-        <div class="col-2 text-right">
+        <div class="col-2 g-1 text-right d-flex justify-content-end">
           <button class="btn" @click="toggleFavorite">
             <img
-              :src="favorite ? starFilled : starEmpty"
-              alt="Favorite"
-              class="favorite-icon"
+                :src="favorite ? starFilled : starEmpty"
+                alt="Favorite"
+                class="favorite-icon"
             />
           </button>
-        </div>
-        <div class="col-2 text-right">
           <button class="btn" @click="closeModal">
             <img :src="xIcon" alt="Close" class="close-icon" />
           </button>
@@ -80,8 +81,12 @@
 
         <!--평가 폼-->
         <SurveyForm
+          v-if="isAuthenticated"
             :place="place"
         />
+        <div v-if="!isAuthenticated" class="h-50">
+
+        </div>
 
       </div>
     </div>
@@ -106,6 +111,8 @@ import starFilled from '@/assets/img/filled_star.png';
 import { useAccountStore } from "@/stores/useAccountStore";
 import xIcon from '@/assets/img/xIcon.png';
 
+const store = useAccountStore();
+const isAuthenticated = ref(store.isAuthenticated); // store의 인증 상태 확인
 const props = defineProps({
   place: String,
 });
@@ -217,6 +224,14 @@ const updateActiveSection = () => {
     }
   });
 };
+
+function parsingString(str) {
+  if (str.length > 10) {
+    return str.substring(0,10) + "..."
+  }
+  return str
+}
+
 
 onMounted(() => {
   const container = scrollContainer.value;
