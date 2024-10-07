@@ -1,7 +1,7 @@
 <template>
     <div class="custom-container">
         <div class="custom-card">
-            <h2 class="custom-card-title text-center mb-4">게시판</h2>
+            <h2 class="custom-card-title text-center mb-4">{{ boardName }} 게시판</h2>
 
             <div class="custom-button-group">
                 <button v-show="store.isAuthenticated" type="button" class="custom-btn" @click="handleCreatePost">
@@ -65,6 +65,7 @@
 
 <script>
 import { getPostListByBoard } from '@/api/forum'; // API 호출 함수 가져오기
+import { getBoardName } from '@/api/communitySearch';
 import { useRoute, useRouter } from 'vue-router';
 import {useAccountStore} from "@/stores/useAccountStore.js";
 
@@ -78,6 +79,7 @@ export default {
             pageSize: 0, // 한 페이지당 게시글 수
             isFirstPage: true, // 첫 번째 페이지 여부
             isLastPage: false, // 마지막 페이지 여부
+            boardName: '' // 게시판 이름 저장
         };
     },
     mounted() {
@@ -85,6 +87,9 @@ export default {
 
         this.boardId = route.params.boardId;
         console.log('넘겨받은 boardId: ', this.boardId);
+
+        // 게시판 이름 가져오기
+        this.loadBoardName();
 
         // URL에서 page 값이 있다면 해당 페이지로 로드, 없으면 첫 페이지 로드
         const page = route.query.page ? parseInt(route.query.page) : 0;
@@ -109,6 +114,17 @@ export default {
         };
     },
     methods: {
+        // 게시판 이름 가져오기
+        async loadBoardName() {
+            try {
+                const response = await getBoardName(this.boardId); // API 호출
+                console.log("data :", response)
+                this.boardName = response; // 응답에서 게시판 이름 설정
+            } catch (error) {
+                console.error('게시판 이름 불러오기 중 에러 발생:', error);
+                this.boardName = '게시판 이름 없음'; // 기본 이름 설정
+            }
+        },
         // 게시글 목록 불러오기 (페이지네이션 적용)
         loadPosts(page) {
             // 페이지 범위를 벗어나지 않도록 제한
@@ -125,10 +141,9 @@ export default {
                     // API로부터 받아온 데이터로 상태 업데이트
                     this.postList = response.data.posts;
                     this.totalElements = response.data.total_elements;
-                    
+
                     // 게시물이 없으면 totalPages를 1로 설정
                     this.totalPages = this.totalElements === 0 ? 1 : response.data.total_pages;
-
                     this.pageSize = response.data.page_size;
                     this.isFirstPage = response.data.first_page;
                     this.isLastPage = response.data.last_page;
