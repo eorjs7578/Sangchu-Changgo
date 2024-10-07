@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Component
 public class WhiteListConfiguration {
 
-    private static String API_PREFIX = "/api";
+    private static final String API_PREFIX = "/api";
 
     private final String[] whiteList = {
             // 로그인 관련 엔드포인트
@@ -19,8 +19,7 @@ public class WhiteListConfiguration {
             API_PREFIX+"/members/duplicate/*",
             API_PREFIX+"/login/oauth2/code/kakao",
             API_PREFIX+"/login/oauth2/code/naver",
-            "/oauth2/authorization/kakao",
-            "/oauth2/authorization/naver",
+            API_PREFIX+"/oauth2/authorization/kakao",
             // 기본 설정 관련
             "/favicon.ico"
     };
