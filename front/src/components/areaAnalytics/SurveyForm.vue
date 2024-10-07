@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm">
+  <div id=surveyForm class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm" >
     <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden">
       <div class="p-6">
         <h4>평가하기</h4>
@@ -141,6 +141,7 @@ const createEvaluation = async () => {
 
     if (!evaluationData.age_group || !evaluationData.foot_traffic || !evaluationData.atmosphere || !evaluationData.nearby_prices) {
       console.error('모든 필드를 입력해야 합니다.');
+      window.alert('모든 필드를 입력해야 합니다.');
       return;
     }
 

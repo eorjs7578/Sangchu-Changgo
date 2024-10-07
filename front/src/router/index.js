@@ -76,7 +76,7 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
-    path: '/marketanalysis',
+    path: '/marketanalysis/',
     name: 'MarketAnalysis',
     component: MarketAnalysis,
     props: route => ({ areaId: route.query.areaId })

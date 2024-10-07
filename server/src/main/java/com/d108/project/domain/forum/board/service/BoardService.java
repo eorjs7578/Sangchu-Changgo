@@ -46,6 +46,7 @@ public interface BoardService {
 
     List<BoardResponseDto> getPopularFranchiseBoard();
 
+    String getBoardName(Long boardId);
 }
 // A상권 검색하면 ->  -> 상권 like 상권 게시판 쭉 주는 건
 // 상권 번호 1번

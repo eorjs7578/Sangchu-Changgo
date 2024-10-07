@@ -22,7 +22,7 @@
               아이디 중복 확인
             </button>
           </div>
-          <span v-if="isUsernameError" class="error-text">{{usernameMessage}}</span>
+          <span v-if="isNicknameChecked" class="error-text">{{usernameMessage}}</span>
 
           <!-- 닉네임 필드 -->
           <label for="nickname">닉네임</label>
@@ -89,13 +89,14 @@
           <!-- 비밀번호 -->
           <label for="password">비밀번호</label>
           <input type="password" id="password" placeholder="비밀번호" v-model="password" />
+          <span v-if="!isPasswordValidated(password)" class="error-text">비밀번호는 특수문자와 숫자를 포함한 8자 이상 이어야 합니다.</span>
 
           <!-- 비밀번호 확인 -->
           <label for="passwordConfirm">비밀번호 확인</label>
           <input type="password" id="passwordConfirm" placeholder="비밀번호 확인" v-model="passwordConfirm" />
-
+          <span v-if="isPasswordValidated(password) && passwordConfirm && !isPasswordConfirmed()" class="error-text">비밀번호 확인이 일치하지 않습니다.</span>
           <!-- 확인버튼 -->
-          <button type="submit">Sign Up</button>
+          <button type="submit" class="mt-2">Sign Up</button>
         </form>
 
         <p>이미 계정이 있으신가요? <router-link to="/members/login">Log In</router-link></p>
@@ -139,6 +140,9 @@
   const isUsernameError = ref(false);
   const isUsernameChecked = ref(false);
 
+  function isPasswordConfirmed() {
+    return password.value === passwordConfirm.value
+  }
 
   function handleSignUp() {
     let err = ""
@@ -158,7 +162,7 @@
       case !password.value:
         err = "비밀번호를 입력해주세요."
         break;
-      case password.value !== passwordConfirm.value:
+      case !isPasswordConfirmed():
         err = "비밀번호 확인과 일치하지 않습니다."
         break;
       default:

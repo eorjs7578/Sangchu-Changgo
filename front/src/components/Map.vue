@@ -391,7 +391,7 @@ watch(props.areaId ,(newid)=>{
 .modal-overlay {
     position: fixed;
     top: 0;
-    left: 12vw;
+    left: 20vw;
     width: 25vw;
     height: 100%;
     background: rgb(255, 250, 250);

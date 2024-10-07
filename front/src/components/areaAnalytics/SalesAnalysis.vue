@@ -13,6 +13,7 @@
       </div>
       <div v-if="WeeklySales.many_money_days_of_week">        
         <WeeklySalesChart
+
           v-if="Object.keys(WeeklySales).length > 0"
           :labels="WeeklySales.labels"
           :data="WeeklySales.data"
@@ -25,7 +26,7 @@
         <h4>성별별 매출</h4>
         <hr>
         <div v-if="!isNaN(genderPercentage)">
-          <span><span class="fw-bold text-primary">{{ GenderSales.many_sale_gender }}성</span> 매출이 약 <span class="fw-bold text-primary">{{ genderPercentage }}% </span>더 높아요</span>
+          <span> 전체 매출의 약 <span class="fw-bold text-primary">{{ genderPercentage }}%</span>가 <span class="fw-bold text-primary">{{ GenderSales.many_sale_gender }}성</span> 매출입니다.</span>
         </div>
         <div v-else>
           <span class="fw-bold text-danger">성별별 매출 정보가 없습니다.</span> 
@@ -89,14 +90,14 @@
         <p
           v-if="QuarterlySales.qoq.includes('유지') || QuarterlySales.qoq.includes('상승')"
         >
-          해당 업종의 매출이 이전분기에 비해 <span class="fw-bold text-primary">{{ QuarterlySales.qoq }}</span>하고 있습니다.
+          해당 업종의 매출이 작년 해당 분기에 비해 <span class="fw-bold text-primary">{{ QuarterlySales.qoq }}</span>하고 있습니다.
         </p>
 
         <!-- qoq 값이 존재하고, "하락"을 포함하는 경우 -->
         <p
           v-else-if="QuarterlySales.qoq.includes('하락')"
         >
-          해당 업종의 매출이 이전분기에 비해 <span class="fw-bold text-danger">{{ QuarterlySales.qoq }}</span>하고 있습니다.
+          해당 업종의 매출이 작년 해당 분기에 비해 <span class="fw-bold text-danger">{{ QuarterlySales.qoq }}</span>하고 있습니다.
         </p>
 
         <!-- qoq 값이 특정 문자열인 경우 -->
@@ -162,9 +163,9 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
     if(GenderSales.value != 0) {
       if(GenderSales.value.data[0] >= GenderSales.value.data[1]) {
 
-      return Math.round(((GenderSales.value.data[0] - GenderSales.value.data[1] ) / (GenderSales.value.data[0] + GenderSales.value.data[1])) * 100)
+      return Math.round((GenderSales.value.data[0] / (GenderSales.value.data[0] + GenderSales.value.data[1])) * 100)
     }
-    return Math.round(((GenderSales.value.data[1] - GenderSales.value.data[0] ) / (GenderSales.value.data[0] + GenderSales.value.data[1])) * 100)
+    return Math.round((GenderSales.value.data[1] / (GenderSales.value.data[0] + GenderSales.value.data[1])) * 100)
     }
   })
 

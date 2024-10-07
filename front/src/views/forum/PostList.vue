@@ -125,13 +125,16 @@ export default {
                     // API로부터 받아온 데이터로 상태 업데이트
                     this.postList = response.data.posts;
                     this.totalElements = response.data.total_elements;
-                    this.totalPages = response.data.total_pages;
+                    
+                    // 게시물이 없으면 totalPages를 1로 설정
+                    this.totalPages = this.totalElements === 0 ? 1 : response.data.total_pages;
+
                     this.pageSize = response.data.page_size;
                     this.isFirstPage = response.data.first_page;
                     this.isLastPage = response.data.last_page;
 
                     // 페이지 상태를 URL에 저장
-                    this.$router.push({ query: { page: this.currentPage } });
+                    this.$router.replace({ query: { page: this.currentPage } });
                 },
                 (error) => {
                     console.error('게시글 목록 불러오기 중 에러 발생:', error);
