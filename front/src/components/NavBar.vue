@@ -45,7 +45,7 @@
         </button>
         <div v-if="isAvatarMenuOpen" class="card mt-2">
           <div class="card-body p-0">
-            <router-link to="/members/mypage" class="btn btn-link text-decoration-none w-100 text-start">마이페이지</router-link>
+            <router-link to="/members/mypage" class="btn btn-link text-decoration-none w-100 text-start">회원정보수정</router-link>
             <button @click="logout" class="btn btn-link text-decoration-none w-100 text-start text-danger">로그아웃</button>
           </div>
         </div>
@@ -61,6 +61,7 @@
     </div>
     <FavoriteFranchise v-if="isAuthenticated" :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
     <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
+    <FavoriteArea class="modal fade fullscreen-modal" id="favoriteArea"></FavoriteArea>
   </nav>
 </template>
 

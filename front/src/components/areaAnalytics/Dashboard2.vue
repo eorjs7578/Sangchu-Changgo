@@ -173,6 +173,7 @@ const toggleFavorite = async () => {
       const response = await api.post('/api/favorite/areas', { area_id: areaId });
       console.log(response)
       favoriteAreaId.value = response.data; // 응답에서 favorite_id 받아오기
+
     }
     favorite.value = !favorite.value; // Toggle the favorite state in the UI
   } catch (error) {

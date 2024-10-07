@@ -20,8 +20,17 @@ import {
     getGu,
     getDong,
     getArea,
+    getAreaInfo,
 } from "@/api/polygon.js";
 import Dashboard2 from "@/components/areaAnalytics/Dashboard2.vue";
+
+const props = defineProps({
+  areaId: {
+    type: String,
+    required: false,
+    default: null
+  }
+});
 
 import {ref, onMounted, watch,computed} from 'vue'
 let map = null;
@@ -44,8 +53,54 @@ const showModal = ref(false); // 모달 표시 여부를 저장하는 ref
 
 onMounted(() => {
     // 구 정보 불러오기 
-    getGuData();
+    if(props.areaId != null){
+        loadArea(props.areaId);
+    }else{
+        getGuData();
+    }
 });
+
+async function loadArea(areaId){
+    let loadData;
+    await getAreaInfo(areaId)
+    .then(data=>{
+        loadData = data;
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+
+    await getGu()
+    .then(data=>{
+        prevGu.data = data;
+        console.log(prevGu.data)
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+
+    await getDong(loadData.gu_code)
+    .then(data=>{
+        prevDong.data = data;
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+
+    await getArea(loadData.dong_code)
+    .then(data => {
+        prevArea.data = data;
+        areas = data;
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    })
+
+    mapLevel=4;
+    x = loadData.xpos;
+    y=loadData.ypos;
+    loadMap(y, x);
+}
 
 async function getGuData(){
     mapLevel = 9;
@@ -214,6 +269,7 @@ function parseMultiPolygon(multiPolygonStr) {
 
 // 다각형을 생상하고 이벤트를 등록하는 함수입니다
 function createPolygon(area) {
+
  // polygon 문자열을 처리하여 경로(path)를 생성
     const path = parsePolygon(area.polygon);
     // 다각형을 생성합니다 
@@ -226,6 +282,9 @@ function createPolygon(area) {
         fillColor: '#D7F9D6',
         fillOpacity: 0.5 
     });
+    if(area.id== props.areaId){
+        polygon.setOptions({strokeColor: '#FF0000'});
+    }
 
     // 다각형에 mouseover 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 변경합니다 
     // 지역명을 표시하는 커스텀오버레이를 지도위에 표시합니다
@@ -280,9 +339,6 @@ function createPolygon(area) {
         place.value = area.id;
         getAreaData(dongId);
             showModal.value = true;
-            console.log("ffff")
-            console.log(place.value)
-
         }
     });
 
@@ -301,6 +357,10 @@ watch(place, (newPlace) => {
 });
 const computedPlace = computed(() => place.value);
 
+watch(props.areaId ,(newid)=>{
+    console.log(newid)
+    loadArea(newid)
+});
 
 
 </script>

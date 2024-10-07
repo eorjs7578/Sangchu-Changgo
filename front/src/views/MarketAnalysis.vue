@@ -1,10 +1,18 @@
 <template>
   <div class="map">
-    <Map></Map>
+    <Map :areaId="areaId"></Map>
   </div>
 </template>
 <script setup>
 import Map from "@/components/Map.vue";
+
+const props = defineProps({
+  areaId: {
+    type: String,
+    required: false
+  }
+});
+
 </script>
 <script>
 export default {
