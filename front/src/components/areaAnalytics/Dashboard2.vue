@@ -282,6 +282,6 @@ onMounted(() => {
 .close-icon {
   max-width: 20px; /* 너비를 20px로 설정, 원하는 크기로 변경 가능 */
   max-height: 20px; /* 높이를 20px로 설정 */
-  margin-left: 20px; 
+  /* margin-left: 20px;  */
 }
 </style>
