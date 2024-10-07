@@ -59,7 +59,7 @@
         </router-link>
       </template>
     </div>
-    <FavoriteFranchise v-if="isAuthenticated" :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
+    <FavoriteFranchise v-show="isAuthenticated" :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
     <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
     <FavoriteArea class="modal fade fullscreen-modal" id="favoriteArea"></FavoriteArea>
   </nav>
@@ -77,7 +77,7 @@ import {Modal} from 'bootstrap'
 import FavoriteArea from '@/views/InterestAreas.vue';
 
 const isCommunityOpen = ref(false);
-const isFranchiseOpen = ref(true);
+const isFranchiseOpen = ref(false);
 const isAvatarMenuOpen = ref(false);
 const favoriteFranchises = ref([]);
 
