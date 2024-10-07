@@ -1,13 +1,13 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light flex-column vh-100 p-3" style="width: 250px;">
-    <router-link to="/marketanalysis" class="navbar-brand mb-4">
-      <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
-    </router-link>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light flex-column vh-100 p-3" style="width: 20vw;">
+    <a href="/marketanalysis" class="navbar-brand mb-4">
+      <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150" @onclick="">
+    </a>
     <ul class="nav flex-column mb-auto w-100">
       <li class="nav-item">
-        <router-link to="/marketanalysis" class="nav-link" @click="closeCommunitySubmenu">
+        <a href="/marketanalysis" class="nav-link">
           <i class="bi bi-bar-chart-fill me-2"></i>상권분석
-        </router-link>
+        </a>
       </li>
       <li class="nav-item">
         <router-link to="#" data-bs-toggle="modal" data-bs-target="#favoriteArea" class="nav-link">

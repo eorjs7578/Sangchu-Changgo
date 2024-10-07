@@ -134,7 +134,7 @@ export default {
                     this.isLastPage = response.data.last_page;
 
                     // 페이지 상태를 URL에 저장
-                    this.$router.push({ query: { page: this.currentPage } });
+                    this.$router.replace({ query: { page: this.currentPage } });
                 },
                 (error) => {
                     console.error('게시글 목록 불러오기 중 에러 발생:', error);
