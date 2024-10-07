@@ -80,8 +80,12 @@
 
         <!--평가 폼-->
         <SurveyForm
+          v-if="isAuthenticated"
             :place="place"
         />
+        <div v-if="!isAuthenticated" class="h-50">
+
+        </div>
 
       </div>
     </div>
@@ -106,6 +110,8 @@ import starFilled from '@/assets/img/filled_star.png';
 import { useAccountStore } from "@/stores/useAccountStore";
 import xIcon from '@/assets/img/xIcon.png';
 
+const store = useAccountStore();
+const isAuthenticated = ref(store.isAuthenticated); // store의 인증 상태 확인
 const props = defineProps({
   place: String,
 });
