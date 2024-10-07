@@ -50,7 +50,7 @@
   
       <div class="category-container">
         
-        <div v-for="category in categories" :key="category.name" class="category">
+        <div v-for="category in area_categories" :key="category.name" class="category">
           <h2>{{ category.name }}</h2>
           <ul>
             <li v-for="item in category.items" :key="item.title">
@@ -63,12 +63,32 @@
             </li>
           </ul>
           <div class="pagination">
-          <div @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">< </div>
-          <div class="page_number" v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
-            {{ n }}
+            <div @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">< </div>
+            <div class="page_number" v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
+              {{ n }}
+            </div>
+            <div @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">></div>
           </div>
-          <div @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">></div>
         </div>
+        <div v-for="category in fran_categories" :key="category.name" class="category">
+          <h2>{{ category.name }}</h2>
+          <ul>
+            <li v-for="item in category.items" :key="item.title">
+
+              <a @click="goToPostList(item.id)">
+              {{ item.name }}
+            </a>
+              <span v-if="item.count" >| 게시물 수 {{ item.post_count }}</span>
+            
+            </li>
+          </ul>
+          <div class="pagination">
+            <div @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">< </div>
+            <div class="page_number" v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
+              {{ n }}
+            </div>
+            <div @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">></div>
+          </div>
         </div>
       </div>
       <div class="category-container">
@@ -104,8 +124,9 @@ import { useRouter } from 'vue-router'; // Vue Router import
 
 import {api} from "@/lib/api.js";
 
-
-  let categories = ref([])
+  let area_categories = ref([])
+  let fran_categories = ref([])
+  
 
   let hotBoard = ref([]);
   const router = useRouter(); // Vue Router 사용
@@ -218,7 +239,7 @@ async function getAllAreaData() {
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
-      categories.value.push(newCategory);
+      area_categories.value.push(newCategory);
     })
     .catch(error => {
       console.error("Error:", error);
@@ -233,7 +254,7 @@ async function getAllFranchiseData() {
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
-      categories.value.push(newCategory);
+      fran_categories.value.push(newCategory);
     })
     .catch(error => {
       console.error("Error:", error);
@@ -276,7 +297,7 @@ async function searchArea() {
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
-      categories.value.push(newCategory);
+      area_categories.value.push(newCategory);
     })
     .catch(error => {
       console.error("Error:", error);
@@ -291,7 +312,7 @@ async function searchFranchise() {
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
-      categories.value.push(newCategory);
+      fran_categories.value.push(newCategory);
     })
     .catch(error => {
       console.error("Error:", error);
