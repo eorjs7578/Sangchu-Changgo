@@ -38,6 +38,12 @@ async  function getALLFranchise(page,size) {
     return await getRequest(`/api/boards/all/franchise/${page}/${size}`);
 }
 
+// 게시판 이름 조회 API
+async function getBoardName(boardId) {
+    return await getRequest(`/api/boards/${boardId}`);
+}
+
+
 export {
     getAll,
     getFranchise,
@@ -45,5 +51,6 @@ export {
     getHotArea,
     getHotFranchise,
     getALLArea,
-    getALLFranchise
+    getALLFranchise,
+    getBoardName
 }
