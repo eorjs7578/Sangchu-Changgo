@@ -141,6 +141,7 @@ const createEvaluation = async () => {
 
     if (!evaluationData.age_group || !evaluationData.foot_traffic || !evaluationData.atmosphere || !evaluationData.nearby_prices) {
       console.error('모든 필드를 입력해야 합니다.');
+      window.alert('모든 필드를 입력해야 합니다.');
       return;
     }
 
