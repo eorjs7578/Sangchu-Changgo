@@ -15,12 +15,14 @@
             </div>
           </transition>
         </div>
-        <div class="search-input-container">
-          <input 
-            type="text" 
-            v-model="inputValue" 
+        <div class="search-input-container" id="search">
+          <input
+            ref="searchQ"
+            type="text"
             class="custom-input" 
             placeholder="검색어를 입력하세요"
+            @input="handleInput"
+            @keyup.enter="search"
           />
           <button class="search-button" @click="search">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -102,17 +104,16 @@ import { useRouter } from 'vue-router'; // Vue Router import
 
 import {api} from "@/lib/api.js";
 
+
   let categories = ref([])
-  
+
   let hotBoard = ref([]);
   const router = useRouter(); // Vue Router 사용
 
-  const searchQuery = ref('')
-  
+  const searchQ = ref(null);
   const options = ['전체', '상권', '프랜차이즈']
   const selectedOption = ref('전체')
   const isOpen = ref(false)
-  const inputValue = ref("");
   const recommendations = ref([]);
 
 // 페이지 정보를 포함하여 카테고리 초기화
@@ -138,10 +139,12 @@ onMounted(() => {
   getHotData(); // 인기 데이터 불러오기
   getAllAreaData(); // 모든 상권 데이터 불러오기
   getAllFranchiseData(); // 모든 프랜차이즈 데이터 불러오기
-
   console.log()
 });
 
+function handleInput() {
+  debouncedGetRecommendations();
+}
 
 // debounce 함수 구현
 function debounce(func, wait) {
@@ -158,9 +161,9 @@ function debounce(func, wait) {
 
 // debounce된 getRecommendations 함수
 const debouncedGetRecommendations = debounce(async () => {
-  if (inputValue.value.length > 0) {
+  if (searchQ.value.value.length > 0) {
     try {
-      const response = await api.get(`/api/recommendation/board/search-term?searchTerm=${inputValue.value}`);
+      const response = await api.get(`/api/recommendation/board/search-term?searchTerm=${searchQ.value.value}`);
       recommendations.value = response.data.result;
     } catch (error) {
       console.error("Error fetching recommendations:", error);
@@ -168,18 +171,19 @@ const debouncedGetRecommendations = debounce(async () => {
   } else {
     recommendations.value = [];
   }
-}, 300); // 300ms 딜레이
+}, 50); // 300ms 딜레이
 
 // 추천 검색어 선택
 const selectRecommendation = (recommendation) => {
-  inputValue.value = recommendation;
+  searchQ.value.value = recommendation;
   recommendations.value = [];
   search();
 }
 
 // inputValue가 변경될 때마다 recommendations 초기화 및 debounced 함수 호출
-watch(inputValue, () => {
-  if (inputValue.value.length === 0) {
+watch([searchQ], () => {
+  console.log(searchQ.value)
+  if (searchQ.value.value) {
     recommendations.value = [];
   }
   debouncedGetRecommendations();
@@ -259,7 +263,7 @@ async function getAllFranchiseData() {
 async function searchArea() {
   const newCategory = initCategory();
   newCategory.name = "상권 게시판";
-  await getArea(newCategory.currentPage, newCategory.size, inputValue.value)
+  await getArea(newCategory.currentPage, newCategory.size, searchQ.value.value)
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
@@ -274,7 +278,7 @@ async function searchArea() {
 async function searchFranchise() {
   const newCategory = initCategory();
   newCategory.name = "프랜차이즈 게시판";
-  await getFranchise(newCategory.currentPage, newCategory.size, inputValue.value)
+  await getFranchise(newCategory.currentPage, newCategory.size, searchQ.value.value)
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
@@ -290,7 +294,7 @@ const changePage = async (category, newPage) => {
   if (newPage < 0 || newPage >= category.totalPages) return; // 범위 초과 시 무시
   category.currentPage = newPage;
 
-  if(inputValue.value==""){
+  if(searchQ.value.value==""){
     if (category.name === "상권 게시판") {
       await getALLArea(category.currentPage, category.size)
         .then(data => {
@@ -311,7 +315,7 @@ const changePage = async (category, newPage) => {
   }
   else{
     if (category.name === "상권 게시판") {
-      await getArea(category.currentPage, category.size, inputValue.value)
+      await getArea(category.currentPage, category.size, searchQ.value.value)
         .then(data => {
           category.items = data.content;
         })
@@ -319,7 +323,7 @@ const changePage = async (category, newPage) => {
           console.error("Error:", error);
         });
     } else if (category.name === "프랜차이즈 게시판") {
-      await getFranchise(category.currentPage, category.size, inputValue.value)
+      await getFranchise(category.currentPage, category.size, searchQ.value.value)
         .then(data => {
           category.items = data.content;
         })
@@ -344,12 +348,8 @@ const groupPageArray = (category) => {
   const endPage = Math.min(startPage + category.groupSize, category.totalPages);
   return Array.from({ length: endPage - startPage }, (_, i) => startPage + i + 1);
 }
-  
   </script>
-  
-  <script>
-  
-  </script>
+
   
   <style scoped>
 .page_number{

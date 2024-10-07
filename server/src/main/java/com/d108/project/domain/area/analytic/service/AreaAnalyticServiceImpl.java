@@ -194,12 +194,10 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<Long> saleByAgeByArea = getList(saleRepository.getSaleByAge(areaId, service), 6);
         List<String> ageList = List.of("10대", "20대", "30대", "40대", "50대", "60대");
 
-        int manIndex = getMaxIndex(saleByAgeByArea);
-
         Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByAgeByArea, ageList);
         saleByAgeByArea = listListPair.getFirst();
         ageList = listListPair.getSecond();
-
+        int manIndex = getMaxIndex(saleByAgeByArea);
         if (saleByAgeByArea.isEmpty()) {
             return new SalesByAgeDto(saleByAgeByArea, ageList, null );
         }
