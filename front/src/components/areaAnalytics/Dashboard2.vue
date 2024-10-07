@@ -120,7 +120,7 @@ const emit = defineEmits(["closeModal"])
 const area = ref("");
 const favorite = ref(false);
 const showLoginPopup = ref(false); // Flag for showing login modal
-const activeSection = ref('');
+const activeSection = ref('storeAnalysis');
 const scrollContainer = ref(null);
 const service = ref();
 const areaId = props.place; // Use the place as the favoriteAreaId
@@ -210,7 +210,7 @@ const scrollToSection = (section) => {
 const updateActiveSection = () => {
   const container = scrollContainer.value;
   
-  const sections = ['populationAnalysis', 'storeAnalysis', 'salesAnalysis', 'rent', 'surveyForm', 'surveyResult'];
+  const sections = ['populationAnalysis', 'storeAnalysis', 'salesAnalysis', 'surveyForm', 'surveyResult'];
   sections.forEach(section => {
     const element = document.getElementById(section);
     if (element) {
