@@ -63,7 +63,10 @@
       <div class="card-body">
         <h4>연령별 매출</h4>
         <hr>
-        <div v-if="AgeSales.many_sale_age">
+        <div v-if="AgeSales.data && AgeSales.data.length === 0">
+          <span class="fw-bold text-danger">연령별 매출 정보가 없습니다.</span> 
+        </div>
+        <div v-else-if="AgeSales.many_sale_age">
           <span class="fw-bold text-primary">{{ AgeSales.many_sale_age }}</span> 매출이 가장 높아요
         </div>
         <div v-else>
