@@ -45,7 +45,7 @@
             </ul>
         </div>
 
-        <div class="custom-add-comment">
+        <div v-if="currentUserId" class="custom-add-comment">
             <h3 class="custom-section-title">댓글 작성</h3>
             <textarea
                 v-model="newReply"
