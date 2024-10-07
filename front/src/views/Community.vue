@@ -15,26 +15,33 @@
             </div>
           </transition>
         </div>
-        <input 
-          type="text" 
-          v-model="inputValue" 
-          @input="getRecommendations"
-          class="custom-input" 
-          placeholder="검색어를 입력하세요"
-        />
-        <button class="search-button" @click="search">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-        <!-- 추천 검색어 목록 -->
-        <div v-if="recommendations.length > 0" class="recommendations-container">
-          <ul class="list-group">
-            <li v-for="recommendation in recommendations" :key="recommendation" class="list-group-item list-group-item-action" @click="selectRecommendation(recommendation)">
-              {{ recommendation }}
-            </li>
-          </ul>
+        <div class="search-input-container">
+          <input 
+            type="text" 
+            v-model="inputValue" 
+            class="custom-input" 
+            placeholder="검색어를 입력하세요"
+          />
+          <button class="search-button" @click="search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <!-- 추천 검색어 목록 -->
+          <div v-if="recommendations.length > 0" class="recommendations-container">
+            <ul class="list-group">
+              <li 
+                v-for="recommendation in recommendations" 
+                :key="recommendation" 
+                class="list-group-item list-group-item-action" 
+                @click="selectRecommendation(recommendation)"
+                @mousedown.prevent
+              >
+                {{ recommendation }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -81,7 +88,7 @@
   </template>
   
   <script setup>
-  import { ref ,onMounted} from 'vue'
+  import { ref ,onMounted, watch } from 'vue'
   import {
     getAll,
     getFranchise,
@@ -92,6 +99,7 @@
     getALLFranchise
 } from "@/api/communitySearch.js";
 import { useRouter } from 'vue-router'; // Vue Router import
+
 import {api} from "@/lib/api.js";
 
   let categories = ref([])
@@ -135,21 +143,32 @@ onMounted(() => {
 });
 
 
+// debounce 함수 구현
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
-// 추천 검색어 가져오기
-const getRecommendations = async () => {
+// debounce된 getRecommendations 함수
+const debouncedGetRecommendations = debounce(async () => {
   if (inputValue.value.length > 0) {
     try {
       const response = await api.get(`/api/recommendation/board/search-term?searchTerm=${inputValue.value}`);
       recommendations.value = response.data.result;
-      console.log(recommendations.value)
     } catch (error) {
       console.error("Error fetching recommendations:", error);
     }
   } else {
     recommendations.value = [];
   }
-}
+}, 300); // 300ms 딜레이
 
 // 추천 검색어 선택
 const selectRecommendation = (recommendation) => {
@@ -157,6 +176,14 @@ const selectRecommendation = (recommendation) => {
   recommendations.value = [];
   search();
 }
+
+// inputValue가 변경될 때마다 recommendations 초기화 및 debounced 함수 호출
+watch(inputValue, () => {
+  if (inputValue.value.length === 0) {
+    recommendations.value = [];
+  }
+  debouncedGetRecommendations();
+});
 
 
 
@@ -579,9 +606,19 @@ const groupPageArray = (category) => {
     }
   }
 
-  .recommendations-container {
+
+  .search-input-container {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.recommendations-container {
   position: absolute;
-  width: 100%;
+  top: 100%;
+  left: 0;
+  right: 0;
   max-height: 200px;
   overflow-y: auto;
   background-color: white;
@@ -605,5 +642,7 @@ const groupPageArray = (category) => {
 .list-group-item:hover {
   background-color: #f8f9fa;
 }
+
+
   </style>
   
