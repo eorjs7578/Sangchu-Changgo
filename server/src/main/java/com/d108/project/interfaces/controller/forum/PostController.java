@@ -1,20 +1,16 @@
 package com.d108.project.interfaces.controller.forum;
 
-import com.d108.project.domain.forum.post.dto.PostPageResponseDto;
-import com.d108.project.domain.forum.post.service.PostService;
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
+import com.d108.project.domain.forum.post.service.PostService;
 import com.d108.project.domain.member.entity.Member;
 import com.d108.project.interfaces.api.forum.PostApi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

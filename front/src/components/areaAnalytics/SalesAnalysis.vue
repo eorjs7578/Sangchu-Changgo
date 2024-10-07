@@ -13,6 +13,7 @@
       </div>
       <div v-if="WeeklySales.many_money_days_of_week">        
         <WeeklyVisitorChart
+
           v-if="Object.keys(WeeklySales).length > 0"
           :labels="WeeklySales.labels"
           :data="WeeklySales.data"
@@ -25,7 +26,7 @@
         <h4>성별별 매출</h4>
         <hr>
         <div v-if="!isNaN(genderPercentage)">
-          <span><span class="fw-bold text-primary">{{ GenderSales.many_sale_gender }}성</span> 매출이 약 <span class="fw-bold text-primary">{{ genderPercentage }}% </span>더 높아요</span>
+          <span> 전체 매출의 약 <span class="fw-bold text-primary">{{ genderPercentage }}%</span>가 <span class="fw-bold text-primary">{{ GenderSales.many_sale_gender }}성</span> 매출입니다.</span>
         </div>
         <div v-else>
           <span class="fw-bold text-danger">성별별 매출 정보가 없습니다.</span> 
@@ -161,9 +162,9 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
     if(GenderSales.value != 0) {
       if(GenderSales.value.data[0] >= GenderSales.value.data[1]) {
 
-      return Math.round(((GenderSales.value.data[0] - GenderSales.value.data[1] ) / (GenderSales.value.data[0] + GenderSales.value.data[1])) * 100)
+      return Math.round((GenderSales.value.data[0] / (GenderSales.value.data[0] + GenderSales.value.data[1])) * 100)
     }
-    return Math.round(((GenderSales.value.data[1] - GenderSales.value.data[0] ) / (GenderSales.value.data[0] + GenderSales.value.data[1])) * 100)
+    return Math.round((GenderSales.value.data[1] / (GenderSales.value.data[0] + GenderSales.value.data[1])) * 100)
     }
   })
 
