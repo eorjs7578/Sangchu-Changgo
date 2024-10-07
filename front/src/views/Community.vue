@@ -18,6 +18,7 @@
         <input 
           type="text" 
           v-model="inputValue" 
+          @input="getRecommendations"
           class="custom-input" 
           placeholder="검색어를 입력하세요"
         />
@@ -27,6 +28,14 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
+        <!-- 추천 검색어 목록 -->
+        <div v-if="recommendations.length > 0" class="recommendations-container">
+          <ul class="list-group">
+            <li v-for="recommendation in recommendations" :key="recommendation" class="list-group-item list-group-item-action" @click="selectRecommendation(recommendation)">
+              {{ recommendation }}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   
@@ -83,7 +92,8 @@
     getALLFranchise
 } from "@/api/communitySearch.js";
 import { useRouter } from 'vue-router'; // Vue Router import
-  
+import {api} from "@/lib/api.js";
+
   let categories = ref([])
   
   let hotBoard = ref([]);
@@ -95,6 +105,7 @@ import { useRouter } from 'vue-router'; // Vue Router import
   const selectedOption = ref('전체')
   const isOpen = ref(false)
   const inputValue = ref("");
+  const recommendations = ref([]);
 
 // 페이지 정보를 포함하여 카테고리 초기화
 const initCategory = () => ({
@@ -122,6 +133,33 @@ onMounted(() => {
 
   console.log()
 });
+
+
+
+// 추천 검색어 가져오기
+const getRecommendations = async () => {
+  if (inputValue.value.length > 0) {
+    try {
+      const response = await api.get(`/api/recommendation/board/search-term?searchTerm=${inputValue.value}`);
+      recommendations.value = response.data.result;
+      console.log(recommendations.value)
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+    }
+  } else {
+    recommendations.value = [];
+  }
+}
+
+// 추천 검색어 선택
+const selectRecommendation = (recommendation) => {
+  inputValue.value = recommendation;
+  recommendations.value = [];
+  search();
+}
+
+
+
 
 // 인기 데이터 불러오기
 async function getHotData() {
@@ -540,5 +578,32 @@ const groupPageArray = (category) => {
       border-radius: 0;
     }
   }
+
+  .recommendations-container {
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 0 0 24px 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.list-group-item {
+  cursor: pointer;
+  padding: 10px 15px;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.list-group-item:last-child {
+  border-bottom: none;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
   </style>
   
