@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm">
+  <div id=surveyResult class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm">
     <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden">
       <div class="p-6">
         <h4>상권 분석 결과</h4>
