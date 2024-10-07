@@ -75,5 +75,11 @@ public class BoardController implements BoardAPI {
     public List<BoardResponseDto> getPopularAreaBoards() {
         return boardService.getPopularAreaBoard();
     }
+
+    @Operation(summary = "[ALL] 게시판 이름 조회", description = "")
+    @Override
+    public String getBoardName(Long boardId) {
+        return boardService.getBoardName(boardId);
+    }
 }
 

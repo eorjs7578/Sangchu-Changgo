@@ -33,9 +33,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Login Modal -->
-    <LoginModal v-if="showLoginPopup" />
   </div>
 </template>
 
@@ -43,17 +40,15 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from "@/lib/api.js"
-import LoginModal from "@/components/login/LoginModal.vue";
 import { useAccountStore } from "@/stores/useAccountStore";
 
-const accountStore = useAccountStore(); // Use the account store
+const accountStore = useAccountStore();
+const router = useRouter();
 const favoriteAreas = ref([]);
-const showLoginPopup = ref(false); // Flag for showing login modal
-const isLoading = ref(true); // New ref for loading state
+const isLoading = ref(true);
 
 const fetchFavoriteAreas = async () => { 
   if (!accountStore.isAuthenticated) {
-    showLoginPopup.value = true;
     isLoading.value = false;
     return;
   }
@@ -77,10 +72,9 @@ const fetchFavoriteAreas = async () => {
   }
 };
 
-
 const toggleFavorite = async (area) => {
   if (!accountStore.isAuthenticated) {
-    showLoginPopup.value = true;
+    router.push('/members/login');
     return;
   }
 
@@ -97,31 +91,36 @@ const toggleFavorite = async (area) => {
   }
 };
 
-const router = useRouter();
-
 const navigateToMarketAnalysis = (area) => {
   window.location.href = `http://localhost:5173/marketanalysis?areaId=${area.area_id}`
-  // router.replace({ path : "/marketanalysis", query: { areaId: area.area_id } });
+};
+
+const closeModal = () => {
+  const modalElement = document.getElementById('favoriteArea');
+  modalElement.classList.remove('show');
+  modalElement.style.display = 'none';
+  document.body.classList.remove('modal-open');
+  const modalBackdrop = document.querySelector('.modal-backdrop');
+  if (modalBackdrop) {
+    modalBackdrop.remove();
+  }
 };
 
 const handleModalShown = () => {
-  if (!accountStore.isAuthenticated) {
-    showLoginPopup.value = true;
-  }
-  else{
+  if (accountStore.isAuthenticated) {
     fetchFavoriteAreas();
+  } else {
+    closeModal();
+    router.push('/members/login');
   }
 };
 
-//컴포넌트가 DOM에 마운트된 직후(즉, 화면에 표시된 직후)에 실행됩니다.
 onMounted(() => {
   const modalElement = document.getElementById('favoriteArea');
   modalElement.addEventListener('shown.bs.modal', handleModalShown);
 });
 
-// 컴포넌트가 DOM에서 제거되기 직전에 실행됩니다.
 onUnmounted(() => {
-  // Remove event listener when component is unmounted
   const modalElement = document.getElementById('favoriteArea');
   modalElement.removeEventListener('shown.bs.modal', handleModalShown);
 });

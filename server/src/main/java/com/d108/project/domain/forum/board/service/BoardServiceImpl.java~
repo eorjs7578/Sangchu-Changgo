@@ -189,27 +189,6 @@ public class BoardServiceImpl implements BoardService {
         return getBoardResponseDtos(popularFranchiseBoards);
     }
 
-    @Override
-    public String getBoardName(Long boardId) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + boardId));
-
-        String boardName = "상권 매물";
-
-        if (board.getFranchise() != null) {
-            Franchise franchise = franchiseRepository.findById(board.getFranchise().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Franchise not found with id: " + board.getFranchise().getId()));
-            boardName = franchise.getName();
-        } else if (board.getArea() != null) {
-            Area area = areaRepository.findById(board.getArea().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Area not found with id: " + board.getArea().getId()));
-            boardName = area.getAreaName();
-        }
-
-
-        return boardName;
-    }
-
 
     // Board -> BoardResponseDto로 변환하는 메서드
     private BoardResponseDto toDto(Board board, Optional<Post> latestPost, Long postCount) {
