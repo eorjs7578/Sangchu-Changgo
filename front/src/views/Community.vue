@@ -22,6 +22,7 @@
             class="custom-input" 
             placeholder="검색어를 입력하세요"
             @input="handleInput"
+            @keyup.enter="search"
           />
           <button class="search-button" @click="search">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -103,19 +104,16 @@ import { useRouter } from 'vue-router'; // Vue Router import
 
 import {api} from "@/lib/api.js";
 
-  const searchQ = ref(null);
 
   let categories = ref([])
-  
+
   let hotBoard = ref([]);
   const router = useRouter(); // Vue Router 사용
 
-  const searchQuery = ref('')
-  
+  const searchQ = ref(null);
   const options = ['전체', '상권', '프랜차이즈']
   const selectedOption = ref('전체')
   const isOpen = ref(false)
-  const inputValue = ref("");
   const recommendations = ref([]);
 
 // 페이지 정보를 포함하여 카테고리 초기화
@@ -145,7 +143,6 @@ onMounted(() => {
 });
 
 function handleInput() {
-  console.log(searchQ.value.value)
   debouncedGetRecommendations();
 }
 
@@ -178,14 +175,14 @@ const debouncedGetRecommendations = debounce(async () => {
 
 // 추천 검색어 선택
 const selectRecommendation = (recommendation) => {
-  inputValue.value = recommendation;
+  searchQ.value.value = recommendation;
   recommendations.value = [];
   search();
 }
 
 // inputValue가 변경될 때마다 recommendations 초기화 및 debounced 함수 호출
 watch([searchQ], () => {
-  console.log(searchQ.value.value)
+  console.log(searchQ.value)
   if (searchQ.value.value) {
     recommendations.value = [];
   }
@@ -266,7 +263,7 @@ async function getAllFranchiseData() {
 async function searchArea() {
   const newCategory = initCategory();
   newCategory.name = "상권 게시판";
-  await getArea(newCategory.currentPage, newCategory.size, inputValue.value)
+  await getArea(newCategory.currentPage, newCategory.size, searchQ.value.value)
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
@@ -281,7 +278,7 @@ async function searchArea() {
 async function searchFranchise() {
   const newCategory = initCategory();
   newCategory.name = "프랜차이즈 게시판";
-  await getFranchise(newCategory.currentPage, newCategory.size, inputValue.value)
+  await getFranchise(newCategory.currentPage, newCategory.size, searchQ.value.value)
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
@@ -297,7 +294,7 @@ const changePage = async (category, newPage) => {
   if (newPage < 0 || newPage >= category.totalPages) return; // 범위 초과 시 무시
   category.currentPage = newPage;
 
-  if(inputValue.value==""){
+  if(searchQ.value.value==""){
     if (category.name === "상권 게시판") {
       await getALLArea(category.currentPage, category.size)
         .then(data => {
@@ -318,7 +315,7 @@ const changePage = async (category, newPage) => {
   }
   else{
     if (category.name === "상권 게시판") {
-      await getArea(category.currentPage, category.size, inputValue.value)
+      await getArea(category.currentPage, category.size, searchQ.value.value)
         .then(data => {
           category.items = data.content;
         })
@@ -326,7 +323,7 @@ const changePage = async (category, newPage) => {
           console.error("Error:", error);
         });
     } else if (category.name === "프랜차이즈 게시판") {
-      await getFranchise(category.currentPage, category.size, inputValue.value)
+      await getFranchise(category.currentPage, category.size, searchQ.value.value)
         .then(data => {
           category.items = data.content;
         })
