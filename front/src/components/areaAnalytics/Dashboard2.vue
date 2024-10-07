@@ -220,8 +220,8 @@ const updateActiveSection = () => {
 };
 
 function parsingString(str) {
-  if (str.length > 10) {
-    return str.substring(0,10) + "..."
+  if (str.length > 9) {
+    return str.substring(0,9) + "..."
   }
   return str
 }
