@@ -188,15 +188,15 @@ const toggleAvatarMenu = () => {
 };
 
 // 로그아웃 함수
-function logout() {
-  api.post("/api/members/logout").then(() => {
+async function logout() {
+  await api.post("/api/members/logout")
     store.isAuthenticated = false;
     store.userInfo = {};
     isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
     router.push("/").then(() => {
       window.location.reload();
     })
-})}
+}
 
 
 onMounted(() => {
