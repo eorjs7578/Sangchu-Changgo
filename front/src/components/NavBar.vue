@@ -116,8 +116,8 @@ const transformData = (data) => {
     gu: item.gu,  // 실제 구 데이터로 채워야 함
     dong: item.dong,  // 실제 동 데이터로 채워야 함
     name: item.franchise_fee_dto.name,
-    storeSize: item.size == 'small' ? 10 : 20,  // storeSize 값을 적절히 입력해야 함
-    floor: item.floor == 'other' ? '1층' : '1층 외',  // floor 값을 적절히 입력해야 함
+    storeSize: item.size,  // storeSize 값을 적절히 입력해야 함
+    floor: item.floor == 'other' ? '1층 외' : '1층',  // floor 값을 적절히 입력해야 함
     costs: [
       { name: '임대료', amount: Math.floor(item.franchise_fee_dto.rent_fee * item.size / 1000) },
       { name: '가맹비', amount: item.franchise_fee_dto.franchise_fee },
