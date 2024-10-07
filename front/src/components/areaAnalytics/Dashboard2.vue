@@ -25,18 +25,19 @@
       <nav class="nav nav-pills nav-fill my-3">
         <a
             class="nav-item nav-link"
-            :class="{ active: activeSection === 'populationAnalysis' }"
-            @click.prevent="scrollToSection('populationAnalysis')"
-        >
-          인구
-        </a>
-        <a
-            class="nav-item nav-link"
             :class="{ active: activeSection === 'storeAnalysis' }"
             @click.prevent="scrollToSection('storeAnalysis')"
         >
           점포수
         </a>
+        <a
+            class="nav-item nav-link"
+            :class="{ active: activeSection === 'populationAnalysis' }"
+            @click.prevent="scrollToSection('populationAnalysis')"
+        >
+          인구
+        </a>
+       
         <a
             class="nav-item nav-link"
             :class="{ active: activeSection === 'salesAnalysis' }"
@@ -64,12 +65,10 @@
           ref="scrollContainer"
           class="overflow-auto custom-scroll h-75"
       >
-
-        <!-- 인구 정보 -->
-        <PopulationAnalysis :place="place" />
-
         <!-- 점포 분석 -->
         <StoreAnalysis :place="place" @update:location="handleLocationUpdate" />
+        <!-- 인구 정보 -->
+        <PopulationAnalysis :place="place" />
 
         <!-- 매출 분석 -->
         <SalesAnalysis :place="place" :service="service" />
@@ -218,7 +217,7 @@ const updateActiveSection = () => {
       const rect = element.getBoundingClientRect();
       // 내부 스크롤 컨테이너의 상대적인 위치를 계산
       const containerRect = container.getBoundingClientRect();
-      if (rect.top >= containerRect.top && rect.top < containerRect.bottom) {
+      if (rect.top+1 >= containerRect.top && rect.top+1 < containerRect.bottom) {
         activeSection.value = section;
       }
     }
