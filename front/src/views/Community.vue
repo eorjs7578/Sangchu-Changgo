@@ -176,7 +176,6 @@ const debouncedGetRecommendations = debounce(async () => {
 // 추천 검색어 선택
 const selectRecommendation = (recommendation) => {
   searchQ.value.value = recommendation;
-  recommendations.value = [];
   search();
 }
 
@@ -247,7 +246,6 @@ async function getAllFranchiseData() {
   }
   
   const search = async () => {
-    categories.value =[];
     if(selectedOption.value=='전체'){
       searchArea();
       searchFranchise();
@@ -257,6 +255,10 @@ async function getAllFranchiseData() {
     }else{
       searchFranchise();
     }
+
+    categories.value = [];
+    recommendations.value = [];
+    searchQ.value.value = "";
   }
 
 // 상권 검색
