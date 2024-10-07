@@ -102,8 +102,6 @@
 import { useRouter } from 'vue-router'; // Vue Router import
 
 import {api} from "@/lib/api.js";
-  import {assemble, disassemble} from "es-hangul";
-
 
   const searchQ = ref(null);
 
