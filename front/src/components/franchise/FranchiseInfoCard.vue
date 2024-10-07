@@ -32,8 +32,8 @@ const isFavorite = ref(franchise.likeId > 0);
 const myFranchise = ref({
       dong_code : franchise.dong.code,
       franchise_id: franchise.id,
-      store_size : franchise.storeSize == 'small' ? 10 : 20,
-      floor : franchise.floor == 1 ? true : false
+      store_size : franchise.storeSize,
+      floor : franchise.floor == '1층' ? true : false
 })
 
 // 숫자를 '억', '만원' 형식으로 변환하는 함수
