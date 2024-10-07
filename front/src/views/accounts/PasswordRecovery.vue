@@ -24,7 +24,7 @@
         </form>
     
         <!-- Back to login link -->
-        <router-link to="/login" class="back-to-login">Back to login</router-link>
+        <router-link to="/members/login" class="back-to-login">Back to login</router-link>
       </div>
     </div>
   </div>
