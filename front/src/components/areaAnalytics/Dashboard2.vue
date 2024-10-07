@@ -2,19 +2,20 @@
   <div>
     <div class="container-fluid h-100">
       <div class="row bg-success text-white p-3 align-items-center">
-        <div class="col-8">
-          <h2 class="font-weight-bold">{{ area }}</h2>
+        <div class="col-10 g-1">
+          <h4
+              class="font-weight-bold"
+              :title="area"
+          >{{ parsingString(area) }}</h4>
         </div>
-        <div class="col-2 text-right">
+        <div class="col-2 g-1 text-right d-flex justify-content-end">
           <button class="btn" @click="toggleFavorite">
             <img
-              :src="favorite ? starFilled : starEmpty"
-              alt="Favorite"
-              class="favorite-icon"
+                :src="favorite ? starFilled : starEmpty"
+                alt="Favorite"
+                class="favorite-icon"
             />
           </button>
-        </div>
-        <div class="col-2 text-right">
           <button class="btn" @click="closeModal">
             <img :src="xIcon" alt="Close" class="close-icon" />
           </button>
@@ -217,6 +218,14 @@ const updateActiveSection = () => {
     }
   });
 };
+
+function parsingString(str) {
+  if (str.length > 10) {
+    return str.substring(0,10) + "..."
+  }
+  return str
+}
+
 
 onMounted(() => {
   const container = scrollContainer.value;
