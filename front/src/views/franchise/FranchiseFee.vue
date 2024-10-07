@@ -295,9 +295,9 @@ const showCostBreakdown = () => {
           { name: '가맹비', amount: data.franchise_fee },
           { name: '보증금', amount: data.deposit },
           { name: '교육비', amount: data.education_fee },
-          { name: '인테리어 비용', amount: data.interior },
-          { name: '기타비용', amount: data.other_fee },
-          { name:'임대료', amount:Math.floor(size * data.rent_fee/ 1000)}
+          { name: '인테리어 비용', amount: data.interior * size },
+          { name:'임대료', amount:Math.floor(size * data.rent_fee/ 1000)},
+          { name: '기타비용', amount: data.other_fee }
       ]
       myFranchise.value.link = data.link
       myFranchise.value.likeId = data.like_id
