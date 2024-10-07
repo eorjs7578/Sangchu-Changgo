@@ -31,7 +31,7 @@
                                     >{{ row.title }}</a
                                 >
                             </td>
-                            <td>{{ row.member_id }}</td>
+                            <td>{{ row.member_name }}</td>
                             <td>{{ formatDate(row.created_at) }}</td>
                             <td>{{ row.view }}</td>
                         </tr>

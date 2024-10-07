@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class ReplyResponseDto {
     private Long replyId;
     private Long memberId;
+    private String memberName;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -19,6 +20,7 @@ public class ReplyResponseDto {
         return ReplyResponseDto.builder()
                 .replyId(reply.getId())
                 .memberId(reply.getMember().getId())
+                .memberName(reply.getMember().getNickname())
                 .content(reply.getContent())
                 .createdAt(reply.getCreatedAt())
                 .updatedAt(reply.getUpdatedAt())
