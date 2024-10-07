@@ -41,7 +41,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from "@/lib/api.js"
 import { useAccountStore } from "@/stores/useAccountStore";
-
+const { VITE_VUE_FRONT_URL} = import.meta.env;
 const accountStore = useAccountStore();
 const router = useRouter();
 const favoriteAreas = ref([]);
@@ -92,7 +92,7 @@ const toggleFavorite = async (area) => {
 };
 
 const navigateToMarketAnalysis = (area) => {
-  window.location.href = `http://localhost:5173/marketanalysis?areaId=${area.area_id}`
+  window.location.href = VITE_VUE_FRONT_URL+`marketanalysis?areaId=${area.area_id}`
 };
 
 const closeModal = () => {
