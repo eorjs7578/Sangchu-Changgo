@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import PopulationAnalysis from "@/components/areaAnalytics/PopulationAnalysis.vue";
 import SalesAnalysis from "@/components/areaAnalytics/SalesAnalysis.vue";
 import StoreAnalysis from "@/components/areaAnalytics/StoreAnalysis.vue";
@@ -129,7 +129,7 @@ const areaId = props.place; // Use the place as the favoriteAreaId
 const accountStore = useAccountStore(); // Use the account store
 
 const router = useRouter();
-const favoriteAreaId = ref('');
+const favoriteAreaId = ref(null);
 
 const checkFavoriteStatus = async () => {
   console.log(accountStore.isAuthenticated);
@@ -139,11 +139,21 @@ const checkFavoriteStatus = async () => {
     return;
   }
 
-  const response = await api.get(`/api/favorite/areas/${areaId}`);
-  const { isCheck, favoriteAreaId } = response.data;
-  console.log(response.data); // 여기서도 console.log 사용
-  favoriteAreaId.value = favoriteAreaId;
-  favorite.value = isCheck;
+  try {
+    const response = await api.get(`/api/favorite/areas/${areaId}`);
+    const { is_check: isCheck, favorite_area_id: responseAreaId } = response.data;
+
+    console.log(response.data); // 응답 확인
+
+    // favorite_area_id가 숫자이므로, ref를 통해 저장하지 않고 직접 할당
+    favoriteAreaId.value = responseAreaId; // favoriteAreaId는 숫자로 처리
+    favorite.value = isCheck; // 즐겨찾기 상태 업데이트
+
+    console.log(favoriteAreaId.value);
+    console.log(favorite.value);
+  } catch (error) {
+    console.error("Error fetching favorite status:", error);
+  }
 };
 
 
@@ -232,6 +242,26 @@ function parsingString(str) {
   return str
 }
 
+watch([area], () => {
+  console.log("watch")
+  const container = scrollContainer.value;
+  container.addEventListener('scroll', updateActiveSection);
+
+  api.get("/api/area-info", {
+    params: {
+      areaId: props.place,
+    }
+  })
+    .then(response => {
+      area.value = response.data.area_name;
+    })
+    .catch(err => {
+      console.error("Error fetching area info:", err);
+    });
+
+  // Check if the area is a favorite when component mounts
+  checkFavoriteStatus();
+})
 
 onMounted(() => {
   const container = scrollContainer.value;
