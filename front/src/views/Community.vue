@@ -22,7 +22,7 @@
             class="custom-input" 
             placeholder="검색어를 입력하세요"
             @input="handleInput"
-            @keyup.enter="search"
+            @keyup.enter="handleEnter"
           />
           <button class="search-button" @click="search">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -173,6 +173,11 @@ const debouncedGetRecommendations = debounce(async () => {
   }
 }, 50); // 300ms 딜레이
 
+
+  function handleEnter() {
+    recommendations.value = [];
+    search();
+  }
 // 추천 검색어 선택
 const selectRecommendation = (recommendation) => {
   searchQ.value.value = recommendation;
@@ -247,16 +252,20 @@ async function getAllFranchiseData() {
   }
   
   const search = async () => {
-    categories.value =[];
+    recommendations.value = [];
+    categories.value = [];
+
     if(selectedOption.value=='전체'){
       searchArea();
       searchFranchise();
     }
     else if(selectedOption.value=='상권'){
       searchArea();
-    }else{
+    } else{
       searchFranchise();
     }
+
+    searchQ.value.value = "";
   }
 
 // 상권 검색
