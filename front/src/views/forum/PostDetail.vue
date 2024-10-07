@@ -127,6 +127,7 @@ export default {
 
         // 게시글 삭제 함수
         const handleDeletePost = () => {
+          if (window.confirm("삭제하시겠습니까?")) {
             deletePost(
                 postId,
                 (response) => {
@@ -141,6 +142,7 @@ export default {
                     console.error('게시글 삭제 중 에러 발생:', error);
                 }
             );
+          }
         };
 
         // 댓글 등록 함수
