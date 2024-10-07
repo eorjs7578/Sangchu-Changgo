@@ -63,7 +63,10 @@
       <div class="card-body">
         <h4>연령별 매출</h4>
         <hr>
-        <div v-if="AgeSales.many_sale_age">
+        <div v-if="AgeSales.data && AgeSales.data.length === 0">
+          <span class="fw-bold text-danger">연령별 매출 정보가 없습니다.</span> 
+        </div>
+        <div v-else-if="AgeSales.many_sale_age">
           <span class="fw-bold text-primary">{{ AgeSales.many_sale_age }}</span> 매출이 가장 높아요
         </div>
         <div v-else>
@@ -176,50 +179,43 @@ import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, get
       getSalesByWeek(props.place, newService.service_code, (data) => {
         WeeklySales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
-        console.log(data)
-
       }, (error) => {
-        console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
+        // console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
         loading.value = false; // 로딩 상태 변경
       });
       
       getSalesByAge(props.place, newService.service_code, (data) => {
         AgeSales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
-        console.log(data)
 
       }, (error) => {
-        console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
+        // console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
         loading.value = false; // 로딩 상태 변경
       });
 
       getSalesByGender(props.place, newService.service_code, (data) => {
         GenderSales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
-        console.log(data)
 
       }, (error) => {
-        console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
+        // console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
         loading.value = false; // 로딩 상태 변경
       });
 
       getSalesByWeekend(props.place, newService.service_code, (data) => {
         WeekendSales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
-        console.log(data)
 
       }, (error) => {
-        console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
+        // console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
         loading.value = false; // 로딩 상태 변경
       });
 
       getSalesByQuarterly(props.place, newService.service_code, (data) => {
         QuarterlySales.value = data.data; // 성공 시 데이터 설정
         loading.value = false; // 로딩 상태 변경 
-        console.log(data)
-
       }, (error) => {
-        console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
+        // console.error("월평균 매출 호출 오류:", error); // 실패 시 오류 출력
         loading.value = false; // 로딩 상태 변경
       });
     },

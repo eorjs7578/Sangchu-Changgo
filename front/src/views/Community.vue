@@ -22,6 +22,7 @@
             class="custom-input" 
             placeholder="검색어를 입력하세요"
             @input="handleInput"
+            @keyup.enter="handleEnter"
           />
           <button class="search-button" @click="search">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -49,7 +50,7 @@
   
       <div class="category-container">
         
-        <div v-for="category in categories" :key="category.name" class="category">
+        <div v-for="category in area_categories" :key="category.name" class="category">
           <h2>{{ category.name }}</h2>
           <ul>
             <li v-for="item in category.items" :key="item.title">
@@ -62,12 +63,32 @@
             </li>
           </ul>
           <div class="pagination">
-          <div @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">< </div>
-          <div class="page_number" v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
-            {{ n }}
+            <div @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">< </div>
+            <div class="page_number" v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
+              {{ n }}
+            </div>
+            <div @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">></div>
           </div>
-          <div @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">></div>
         </div>
+        <div v-for="category in fran_categories" :key="category.name" class="category">
+          <h2>{{ category.name }}</h2>
+          <ul>
+            <li v-for="item in category.items" :key="item.title">
+
+              <a @click="goToPostList(item.id)">
+              {{ item.name }}
+            </a>
+              <span v-if="item.count" >| 게시물 수 {{ item.post_count }}</span>
+            
+            </li>
+          </ul>
+          <div class="pagination">
+            <div @click="changeGroup(category, category.currentGroup - 1)" :disabled="category.currentGroup === 0">< </div>
+            <div class="page_number" v-for="n in groupPageArray(category)" :key="n" @click="changePage(category, n - 1)">
+              {{ n }}
+            </div>
+            <div @click="changeGroup(category, category.currentGroup + 1)" :disabled="category.currentGroup >= Math.ceil(category.totalPages / category.groupSize) - 1">></div>
+          </div>
         </div>
       </div>
       <div class="category-container">
@@ -103,19 +124,17 @@ import { useRouter } from 'vue-router'; // Vue Router import
 
 import {api} from "@/lib/api.js";
 
-  const searchQ = ref(null);
-
-  let categories = ref([])
+  let area_categories = ref([])
+  let fran_categories = ref([])
   
+
   let hotBoard = ref([]);
   const router = useRouter(); // Vue Router 사용
 
-  const searchQuery = ref('')
-  
+  const searchQ = ref(null);
   const options = ['전체', '상권', '프랜차이즈']
   const selectedOption = ref('전체')
   const isOpen = ref(false)
-  const inputValue = ref("");
   const recommendations = ref([]);
 
 // 페이지 정보를 포함하여 카테고리 초기화
@@ -145,7 +164,6 @@ onMounted(() => {
 });
 
 function handleInput() {
-  console.log(searchQ.value.value)
   debouncedGetRecommendations();
 }
 
@@ -176,16 +194,21 @@ const debouncedGetRecommendations = debounce(async () => {
   }
 }, 50); // 300ms 딜레이
 
+
+  function handleEnter() {
+    recommendations.value = [];
+    search();
+  }
 // 추천 검색어 선택
 const selectRecommendation = (recommendation) => {
-  inputValue.value = recommendation;
+  searchQ.value.value = recommendation;
   recommendations.value = [];
   search();
 }
 
 // inputValue가 변경될 때마다 recommendations 초기화 및 debounced 함수 호출
 watch([searchQ], () => {
-  console.log(searchQ.value.value)
+  console.log(searchQ.value)
   if (searchQ.value.value) {
     recommendations.value = [];
   }
@@ -216,7 +239,7 @@ async function getAllAreaData() {
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
-      categories.value.push(newCategory);
+      area_categories.value.push(newCategory);
     })
     .catch(error => {
       console.error("Error:", error);
@@ -231,7 +254,7 @@ async function getAllFranchiseData() {
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
-      categories.value.push(newCategory);
+      fran_categories.value.push(newCategory);
     })
     .catch(error => {
       console.error("Error:", error);
@@ -250,27 +273,31 @@ async function getAllFranchiseData() {
   }
   
   const search = async () => {
-    categories.value =[];
+    recommendations.value = [];
+    categories.value = [];
+
     if(selectedOption.value=='전체'){
       searchArea();
       searchFranchise();
     }
     else if(selectedOption.value=='상권'){
       searchArea();
-    }else{
+    } else{
       searchFranchise();
     }
+
+    searchQ.value.value = "";
   }
 
 // 상권 검색
 async function searchArea() {
   const newCategory = initCategory();
   newCategory.name = "상권 게시판";
-  await getArea(newCategory.currentPage, newCategory.size, inputValue.value)
+  await getArea(newCategory.currentPage, newCategory.size, searchQ.value.value)
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
-      categories.value.push(newCategory);
+      area_categories.value.push(newCategory);
     })
     .catch(error => {
       console.error("Error:", error);
@@ -281,11 +308,11 @@ async function searchArea() {
 async function searchFranchise() {
   const newCategory = initCategory();
   newCategory.name = "프랜차이즈 게시판";
-  await getFranchise(newCategory.currentPage, newCategory.size, inputValue.value)
+  await getFranchise(newCategory.currentPage, newCategory.size, searchQ.value.value)
     .then(data => {
       newCategory.items = data.content;
       newCategory.totalPages = data.total_pages;
-      categories.value.push(newCategory);
+      fran_categories.value.push(newCategory);
     })
     .catch(error => {
       console.error("Error:", error);
@@ -297,7 +324,7 @@ const changePage = async (category, newPage) => {
   if (newPage < 0 || newPage >= category.totalPages) return; // 범위 초과 시 무시
   category.currentPage = newPage;
 
-  if(inputValue.value==""){
+  if(searchQ.value.value==""){
     if (category.name === "상권 게시판") {
       await getALLArea(category.currentPage, category.size)
         .then(data => {
@@ -318,7 +345,7 @@ const changePage = async (category, newPage) => {
   }
   else{
     if (category.name === "상권 게시판") {
-      await getArea(category.currentPage, category.size, inputValue.value)
+      await getArea(category.currentPage, category.size, searchQ.value.value)
         .then(data => {
           category.items = data.content;
         })
@@ -326,7 +353,7 @@ const changePage = async (category, newPage) => {
           console.error("Error:", error);
         });
     } else if (category.name === "프랜차이즈 게시판") {
-      await getFranchise(category.currentPage, category.size, inputValue.value)
+      await getFranchise(category.currentPage, category.size, searchQ.value.value)
         .then(data => {
           category.items = data.content;
         })
