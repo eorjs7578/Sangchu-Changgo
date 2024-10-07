@@ -16,7 +16,7 @@
         </div>
         <div class="col-2 text-right">
           <button class="btn" @click="closeModal">
-            x
+            <img :src="xIcon" alt="Close" class="close-icon" />
           </button>
         </div>
       </div>
@@ -104,6 +104,7 @@ import SurveyResult from "./SurveyResult.vue";
 import starEmpty from '@/assets/img/star.png';
 import starFilled from '@/assets/img/filled_star.png';
 import { useAccountStore } from "@/stores/useAccountStore";
+import xIcon from '@/assets/img/xIcon.png';
 
 const props = defineProps({
   place: String,
@@ -261,5 +262,11 @@ onMounted(() => {
   }
 .section {
   margin-bottom: 100px; /* 섹션 간의 간격을 충분히 확보 */
+}
+
+.close-icon {
+  max-width: 20px; /* 너비를 20px로 설정, 원하는 크기로 변경 가능 */
+  max-height: 20px; /* 높이를 20px로 설정 */
+  margin-left: 20px; 
 }
 </style>
