@@ -22,7 +22,7 @@
               아이디 중복 확인
             </button>
           </div>
-          <span v-if="isNicknameChecked" class="error-text">{{usernameMessage}}</span>
+          <span v-if="isUsernameError" class="error-text">{{usernameMessage}}</span>
 
           <!-- 닉네임 필드 -->
           <label for="nickname">닉네임</label>
@@ -63,7 +63,7 @@
                 :class="{ 'btn btn-secondary': isEmailChecked, 'btn btn-primary': !isEmailChecked }"
             >{{ isEmailChecked ? "인증 완료" : "인증번호 전송" }}</button>
           </div>
-
+          <span v-if="isEmailError" class="error-text">{{emailMessage}}</span>
           <!-- 인증번호 확인 -->
           <!-- 인증번호 입력 -->
           <div v-if="isEmailSend">
@@ -119,7 +119,7 @@
     checkAuthCode,
     getAuthCode,
     signUp, login,
-    updateEmail
+    updateEmail, isEmailDuplicated
   } from "@/util/AuthenticationUtil.js";
 
 
@@ -139,6 +139,8 @@
   const isNicknameChecked = ref(false);
   const isUsernameError = ref(false);
   const isUsernameChecked = ref(false);
+  const isEmailError = ref(false);
+  const emailMessage = ref("");
 
   function isPasswordConfirmed() {
     return password.value === passwordConfirm.value
@@ -196,18 +198,17 @@ function handleUsername(username) {
     return;
   }
 
-  isUsernameDuplicated(username).then(isDuplicated => {
-    if (isDuplicated) {
-      usernameMessage.value = "사용할 수 있는 아이디입니다.";
-      isUsernameError.value = false;
-      isUsernameChecked.value = true;
-    } else {
-      usernameMessage.value = "이미 존재하는 아이디입니다.";
-      isUsernameError.value = true;
-    }
-  }).catch(error => {
+  isUsernameDuplicated(username)
+      .then(() => {
+        if (window.confirm("사용할 수 있는 아이디입니다.\n사용하시겠습니까?")) {
+          isUsernameChecked.value = true;
+          isUsernameError.value = false;
+          usernameMessage.value = "";
+        }
+    })
+  .catch(error => {
     console.error(error);
-    usernameMessage.value = "아이디 확인 중 오류가 발생했습니다.";
+    usernameMessage.value = error.response.data;
     isUsernameError.value = true;
   });
 }
@@ -220,38 +221,41 @@ function handleUsername(username) {
       return;
     }
 
-    isNicknameDuplicated(nickname).then(isDuplicated => {
-      if (isDuplicated) {
-        nicknameMessage.value = "사용할 수 있는 닉네임 입니다.";
-        isNicknameError.value = false;
-        isNicknameChecked.value = true;
-      } else {
-        nicknameMessage.value = "이미 존재하는 닉네임 입니다.";
-        isNicknameError.value = true;
-      }
-    }).catch(error => {
+    isNicknameDuplicated(nickname)
+        .then(() => {
+          if (window.confirm("사용할 수 있는 아이디입니다.\n사용하시겠습니까?")) {
+            isNicknameChecked.value = true;
+            isNicknameError.value = false;
+            nicknameMessage.value = "";
+          }})
+        .catch(error => {
       console.error(error);
-      nicknameMessage.value = "닉네임 확인 중 오류가 발생했습니다.";
+      nicknameMessage.value = error.response.data;
       isNicknameError.value = true;
     });
   }
 
   // 이메일 인증번호 발송
   function handleGetAuthCode() {
-    if (isEmailValidated(email.value)) {
-      if (!window.confirm("사용하실 수 있는 이메일 입니다. \n사용하시겠습니까?")) {
-        return
-      }
-      alert("이메일이 발송되었습니다.")
-      isEmailSend.value = true;
-      validationTime.value = 300;
-
-      getAuthCode(email.value)
-          .then(() => {
-          })
-    } else {
-      alert("유효하지 않은 이메일 입니다. \n이메일을 다시 확인해주세요.")
+    if (!isEmailValidated(email.value)) {
+      isEmailError.value = true;
+      emailMessage.value = "유효하지 않은 이메일 입니다."
+      return;
     }
+    isEmailDuplicated(email.value)
+        .then(() => {
+          if (window.confirm("사용하실 수 있는 이메일 입니다. \n사용하시겠습니까?")) {
+            alert("이메일이 발송되었습니다.")
+            isEmailSend.value = true;
+            validationTime.value = 300;
+            getAuthCode(email.value)
+          }
+        })
+        .catch((error) => {
+          console.error(error)
+          emailMessage.value = error.response.data;
+          isEmailError.value = true;
+        })
   }
 
   // 이메일 인증번호 확인
@@ -267,8 +271,17 @@ function handleUsername(username) {
           alert("인증 번호를 다시 한 번 확인해주세요.")
         })
   }
+  watch([nickname], () => {
+    isNicknameError.value = false;
+  })
 
+  watch([username], () => {
+      isUsernameError.value = false;
+  })
 
+  watch([email], () => {
+    isEmailError.value = false;
+  })
   // 이메일 시간 제한 타이머
   let timer = null;
   watch([isEmailSend, validationTime], ([newIsEmailSend, newValidationTime]) => {
