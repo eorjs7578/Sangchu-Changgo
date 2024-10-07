@@ -21,7 +21,6 @@
                 </div>
                   <button @click="compareFranchises" class="btn btn-success w-100">비교하기 ({{selectedFranchises.length}}/2)</button>
             </div>
-
             <!-- Step 3 -->
             <div v-else-if="currentStep === 3" key="step3" class="h-100 d-flex flex-column justify-content-between">
               <div class="row">

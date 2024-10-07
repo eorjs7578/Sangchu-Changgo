@@ -43,14 +43,14 @@
       <div class="card-body">
         <h4>주중, 주말별 매출</h4>
         <hr>
-        <div v-if="WeekendSales.labels">
+        <div v-if="WeekendSales == ''">
           <span class="fw-bold text-danger">주중, 주말별 매출 정보가 없습니다.</span> 
         </div>
       </div>
       <div>
 
       </div>
-      <div v-if="!WeekendSales.labels">
+      <div v-if="WeekendSales.labels">
           <HorizontalBarChart
           v-if="Object.keys(WeekendSales).length > 0"
           :labels="WeekendSales.labels"
