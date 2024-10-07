@@ -48,14 +48,14 @@
         <p
           v-if="quarterData.qo_q.includes('유지') || quarterData.qo_q.includes('상승')"
         >
-          해당 상권의 유동인구가 이전분기에 비해 <span class="fw-bold text-primary">{{ quarterData.qo_q }}</span>하고 있습니다.
+          해당 상권의 유동인구가 작년 해당 분기에 비해 <span class="fw-bold text-primary">{{ quarterData.qo_q }}</span>하고 있습니다.
         </p>
 
         <!-- qoq 값이 존재하고, "하락"을 포함하는 경우 -->
         <p
           v-else-if="quarterData.qo_q.includes('하락')"
         >
-          해당 상권의 유동인구가 이전분기에 비해 <span class="fw-bold text-danger">{{ quarterData.qo_q }}</span>하고 있습니다.
+          해당 상권의 유동인구가 작년 해당 분기에 비해 <span class="fw-bold text-danger">{{ quarterData.qo_q }}</span>하고 있습니다.
         </p>
 
         <!-- qoq 값이 특정 문자열인 경우 -->
@@ -90,7 +90,7 @@
       <div class="card-body">
         <h4>성별별 유동인구</h4>
         <hr>
-        <span><span class="fw-bold text-primary">{{ genderData.many_people_gender }}성</span> 유동인구가 약 <span class="fw-bold text-primary">{{ genderPercentage }}%</span> 더 높아요.</span>
+        <span>전체 유동인구의 <span class="fw-bold text-primary">{{ genderPercentage }}%</span>가 <span class="fw-bold text-primary">{{ genderData.many_people_gender }}성</span> 입니다.</span>
       </div>
 
       <GenderGroupChart :genderData="genderData" />
@@ -138,9 +138,9 @@
     if(genderData.value != 0) {
       if(genderData.value.data[0] >= genderData.value.data[1]) {
 
-      return Math.round(((genderData.value.data[0] - genderData.value.data[1] ) / (genderData.value.data[0] + genderData.value.data[1])) * 100)
+      return Math.round((genderData.value.data[0] / (genderData.value.data[0] + genderData.value.data[1])) * 100)
     }
-    return Math.round(((genderData.value.data[1] - genderData.value.data[0] ) / (genderData.value.data[0] + genderData.value.data[1])) * 100)
+    return Math.round((genderData.value.data[1]  / (genderData.value.data[0] + genderData.value.data[1])) * 100)
     }
   })
 

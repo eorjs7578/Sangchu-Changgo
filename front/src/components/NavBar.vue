@@ -1,13 +1,13 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light flex-column vh-100 p-3" style="width: 250px;">
-    <router-link to="/marketanalysis" class="navbar-brand mb-4">
-      <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
-    </router-link>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light flex-column vh-100 p-3" style="width: 20vw;">
+    <a href="/marketanalysis" class="navbar-brand mb-4">
+      <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150" @onclick="">
+    </a>
     <ul class="nav flex-column mb-auto w-100">
       <li class="nav-item">
-        <router-link to="/marketanalysis" class="nav-link" @click="closeCommunitySubmenu">
+        <a href="/marketanalysis" class="nav-link">
           <i class="bi bi-bar-chart-fill me-2"></i>상권분석
-        </router-link>
+        </a>
       </li>
       <li class="nav-item">
         <router-link to="#" data-bs-toggle="modal" data-bs-target="#favoriteArea" class="nav-link">
@@ -59,7 +59,7 @@
         </router-link>
       </template>
     </div>
-    <FavoriteFranchise v-if="isAuthenticated" :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
+    <FavoriteFranchise v-show="isAuthenticated" :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
     <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
     <FavoriteArea class="modal fade fullscreen-modal" id="favoriteArea"></FavoriteArea>
   </nav>
@@ -77,7 +77,7 @@ import {Modal} from 'bootstrap'
 import FavoriteArea from '@/views/InterestAreas.vue';
 
 const isCommunityOpen = ref(false);
-const isFranchiseOpen = ref(true);
+const isFranchiseOpen = ref(false);
 const isAvatarMenuOpen = ref(false);
 const favoriteFranchises = ref([]);
 
@@ -116,14 +116,14 @@ const transformData = (data) => {
     gu: item.gu,  // 실제 구 데이터로 채워야 함
     dong: item.dong,  // 실제 동 데이터로 채워야 함
     name: item.franchise_fee_dto.name,
-    storeSize: item.size == 'small' ? 10 : 20,  // storeSize 값을 적절히 입력해야 함
-    floor: item.floor == 'other' ? '1층' : '1층 외',  // floor 값을 적절히 입력해야 함
+    storeSize: item.size,  // storeSize 값을 적절히 입력해야 함
+    floor: item.floor == false ? '1층 외' : '1층',  // floor 값을 적절히 입력해야 함
     costs: [
-      { name: '임대료', amount: Math.floor(item.franchise_fee_dto.rent_fee * item.size / 1000) },
       { name: '가맹비', amount: item.franchise_fee_dto.franchise_fee },
       { name: '보증금', amount: item.franchise_fee_dto.deposit },
       { name: '교육비', amount: item.franchise_fee_dto.education_fee },
       { name: '인테리어 비용', amount: item.franchise_fee_dto.interior * item.size },
+      { name: '임대료', amount: Math.floor(item.franchise_fee_dto.rent_fee * item.size / 1000) },
       { name: '기타비용', amount: item.franchise_fee_dto.other_fee }
     ],
     link: item.franchise_fee_dto.link,

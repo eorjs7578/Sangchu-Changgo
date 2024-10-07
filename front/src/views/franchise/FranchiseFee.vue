@@ -22,7 +22,7 @@
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
                         </span>
-                        <input type="text" class="form-control" v-model="gu.name" placeholder="구" @focus="showGuDropdown = true" @blur="hideGuDropdown">
+                        <input type="text" class="form-control" v-model="gu.name" placeholder="구" @focus="showGuDropdown = true" @blur="hideGuDropdown" readonly>
                       </div>
                       <div v-if="showGuDropdown" class="dropdown-menu show custom-dropdown">
                         <a v-for="guItem in gus" :key="guItem.code" class="dropdown-item" @click="selectGu(guItem)">
@@ -37,7 +37,7 @@
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
                         </span>
-                        <input type="text" class="form-control" v-model="dong.name" placeholder="동" @focus="showDongDropdown = true" @blur="hideDongDropdown">
+                        <input type="text" class="form-control" v-model="dong.name" placeholder="동" @focus="showDongDropdown = true" @blur="hideDongDropdown" readonly>
                       </div>
                       <div v-if="showDongDropdown" class="dropdown-menu show custom-dropdown">
                         <a v-for="dongItem in dongs" :key="dongItem.code" class="dropdown-item"  @mousedown="selectDong(dongItem)">
@@ -57,7 +57,7 @@
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
                         </span>
-                        <input type="text" class="form-control" v-model="category" placeholder="분류" @focus="showCategoryDropdown = true" @blur="hideCategoryDropdown">
+                        <input type="text" class="form-control" v-model="category" placeholder="분류" @focus="showCategoryDropdown = true" @blur="hideCategoryDropdown" readonly>
                       </div>
                       <div v-if="showCategoryDropdown" class="dropdown-menu show custom-dropdown">
                         <a v-for="category in categories" class="dropdown-item" @click="selectCategory(category)">
@@ -72,7 +72,7 @@
                               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
                         </span>
-                        <input type="text" class="form-control" v-model="franchise.name" placeholder="프랜차이즈 선택" @focus="showFranchiseDropdown = true" @blur="hideFranchiseDropdown">
+                        <input type="text" class="form-control" v-model="franchise.name" placeholder="프랜차이즈 선택" @focus="showFranchiseDropdown = true" @blur="hideFranchiseDropdown" readonly>
                       </div>
                       <div v-if="showFranchiseDropdown" class="dropdown-menu show custom-dropdown">
                         <a v-for="franchise in franchises" class="dropdown-item" @click="selectFranchise(franchise)">
@@ -147,16 +147,6 @@
               <div class="card mb-4">
                 <FranchiseInfoCard :franchise="myFranchise"/>
               </div>
-              <!-- <h6 class="mb-3">다른 프랜차이즈는 어때요?</h6>
-              <div class="row g-3">
-                <div class="row overflow-x">
-                  <div class="col-auto" v-for="(franchise, index) in otherFranchises" :key="index">
-                    <div class="card" >
-                      <FranchiseInfoCard :franchise="franchise" />
-                    </div>
-                  </div>
-                </div>
-              </div> -->
               <button @click="prevStep" class="btn btn-secondary w-100 mt-4">이전</button>
             </div>
           </transition>
@@ -305,9 +295,9 @@ const showCostBreakdown = () => {
           { name: '가맹비', amount: data.franchise_fee },
           { name: '보증금', amount: data.deposit },
           { name: '교육비', amount: data.education_fee },
-          { name: '인테리어 비용', amount: data.interior },
-          { name: '기타비용', amount: data.other_fee },
-          { name:'임대료', amount:Math.floor(size * data.rent_fee/ 1000)}
+          { name: '인테리어 비용', amount: data.interior * size },
+          { name:'임대료', amount:Math.floor(size * data.rent_fee/ 1000)},
+          { name: '기타비용', amount: data.other_fee }
       ]
       myFranchise.value.link = data.link
       myFranchise.value.likeId = data.like_id

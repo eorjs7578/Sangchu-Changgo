@@ -25,7 +25,7 @@ export default {
 <style scoped>
 .map{
   padding: 0px;
-  width: 88vw;
+  width: 80vw;
   height: 100vh;
   float: right;
 }
