@@ -9,10 +9,15 @@
           <i class="bi bi-bar-chart-fill me-2"></i>상권분석
         </a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <router-link to="#" data-bs-toggle="modal" data-bs-target="#favoriteArea" class="nav-link">
           <i class="bi bi-star-fill me-2"></i>관심상권
         </router-link>
+      </li> -->
+      <li class="nav-item">
+        <a href="#" class="nav-link" @click.prevent="toggleFavoriteArea">
+          <i class="bi bi-star-fill me-2"></i>관심상권
+        </a>
       </li>
       <li class="nav-item">
         <router-link to="/community" class="nav-link" @click="toggleCommunitySubmenu">
@@ -30,8 +35,13 @@
               <i class="bi bi-heart-fill me-2"></i>관심 프랜차이즈
             </a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+              <i class="bi bi-currency-dollar me-2"></i>예상비용
+            </a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="#" @click.prevent="toggleEstimatedCost">
               <i class="bi bi-currency-dollar me-2"></i>예상비용
             </a>
           </li>
@@ -89,6 +99,19 @@ const handleFavoriteClick = () => {
   
 }
 
+const toggleFavoriteArea = () => {
+  if (store.isAuthenticated) {
+    console.log("로그인 완료")
+    // 여기에 관심상권 관련 로직을 추가합니다.
+    // 예: API 호출, 데이터 처리 등
+    let favoriteAreaModal = new Modal(document.getElementById('favoriteArea'));
+    favoriteAreaModal.show();
+  } else {
+    console.log("로그인 필요")
+    router.push({name : 'login'})
+  }
+}
+
 const toggleFavorite = () => {
   if(store.isAuthenticated) {
     console.log("로그인 완")
@@ -109,6 +132,21 @@ const toggleFavorite = () => {
   }
   
 }
+
+const toggleEstimatedCost = () => {
+  if (store.isAuthenticated) {
+    console.log("로그인 완료")
+    // 여기에 예상비용 관련 로직을 추가합니다.
+    // 예: API 호출, 데이터 처리 등
+    let estimatedCostModal = new Modal(document.getElementById('exampleModal2'));
+    estimatedCostModal.show();
+  } else {
+    console.log("로그인 필요")
+    router.push({name : 'login'})
+  }
+}
+
+
 
 const transformData = (data) => {
   return data.map((item) => ({
