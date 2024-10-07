@@ -21,7 +21,6 @@
                 </div>
                   <button @click="compareFranchises" class="btn btn-success w-100">비교하기 ({{selectedFranchises.length}}/2)</button>
             </div>
-
             <!-- Step 3 -->
             <div v-else-if="currentStep === 3" key="step3" class="h-100 d-flex flex-column justify-content-between">
               <div class="row">
@@ -76,8 +75,13 @@ const isSelected = (franchise) => {
 }
 
 const compareFranchises = () => {
-  console.log(franchises)
-  currentStep.value = 3
+  if(selectedFranchises.value.length < 2) {
+    window.alert("두 개의 프랜차이즈를 골라주세요!")
+  } else {
+    console.log(franchises)
+    currentStep.value = 3
+  }
+  
 }
 
 const nextStep = () => {
