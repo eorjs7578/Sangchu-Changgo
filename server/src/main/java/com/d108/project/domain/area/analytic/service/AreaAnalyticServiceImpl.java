@@ -134,14 +134,11 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<Long> saleByDayOfWeekByArea = getList(saleRepository.getSaleByDayOfWeek(areaId, service), 7);
         List<String> dayOfWeekList = List.of("월", "화", "수", "목", "금", "토", "일");
 
-        int maxIndex = getMaxIndex(saleByDayOfWeekByArea);
-        System.out.println(saleByDayOfWeekByArea);
-        System.out.println(dayOfWeekList);
-        System.out.println(maxIndex);
-
         Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByDayOfWeekByArea, dayOfWeekList);
         saleByDayOfWeekByArea = listListPair.getFirst();
         dayOfWeekList = listListPair.getSecond();
+
+        int maxIndex = getMaxIndex(saleByDayOfWeekByArea);
 
 
         if (dayOfWeekList.isEmpty()) {
@@ -156,11 +153,12 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         List<Long> saleByHourByArea = getList(saleRepository.getSaleByHour(areaId, service), 6);
         List<String> hourList = List.of("0시~06시", "06시~11시", "11시~14시", "14시~17시", "17시~21시", "21시~24시");
 
-        int maxIndex = getMaxIndex(saleByHourByArea);
 
         Pair<List<Long>, List<String>> listListPair = filterZeroValues(saleByHourByArea, hourList);
         saleByHourByArea = listListPair.getFirst();
         hourList = listListPair.getSecond();
+
+        int maxIndex = getMaxIndex(saleByHourByArea);
 
         if (hourList.isEmpty()) {
             return new SalesByHourDto(saleByHourByArea, hourList, null );
@@ -198,6 +196,7 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
         saleByAgeByArea = listListPair.getFirst();
         ageList = listListPair.getSecond();
         int manIndex = getMaxIndex(saleByAgeByArea);
+
         if (saleByAgeByArea.isEmpty()) {
             return new SalesByAgeDto(saleByAgeByArea, ageList, null );
         }

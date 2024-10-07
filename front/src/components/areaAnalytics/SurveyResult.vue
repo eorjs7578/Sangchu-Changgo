@@ -48,7 +48,12 @@ const fetchEvaluationResult = async () => {
       
       console.log('평가 결과 조회 성공:', response.data)
     }, (error) => {
-      console.error('평가 결과 조회 실패:', error)
+      if (error.data == "평가 데이터가 하나도 없는 상권입니다. 평가를 해주세요.") {
+        console.log("데이터가 없습니다.")
+      }
+      else{
+        console.error('평가 결과 조회 실패:', error)
+      }
     })
   } catch (error) {
     console.error('평가 결과 조회 실패:', error)
