@@ -62,7 +62,7 @@
 
 <style scoped>
 .login-container {
-  width: 80%;
+  width: 80vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
