@@ -11,10 +11,6 @@ import App from './App.vue'
 import router from './router'
 import { useAccountStore } from "@/stores/useAccountStore.js";
 
-// Bootstrap CSS 및 JS 임포트
-import 'bootstrap/dist/css/bootstrap.min.css'; // Bootstrap CSS
-import 'bootstrap'; // Bootstrap JS
-
 const app = createApp(App)
 const pinia = createPinia()
 
