@@ -353,6 +353,7 @@ onMounted ( () => {
   const searchField = document.getElementById("search")
   searchField.addEventListener("input", () => {
     inputValue.value = searchQ.value.value;
+    console.log(inputValue.value)
     debouncedGetRecommendations();
   })
 })
