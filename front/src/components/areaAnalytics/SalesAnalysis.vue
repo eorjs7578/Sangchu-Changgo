@@ -12,7 +12,7 @@
         </div>
       </div>
       <div v-if="WeeklySales.many_money_days_of_week">        
-        <WeeklyVisitorChart
+        <WeeklySalesChart
 
           v-if="Object.keys(WeeklySales).length > 0"
           :labels="WeeklySales.labels"
@@ -43,14 +43,14 @@
       <div class="card-body">
         <h4>주중, 주말별 매출</h4>
         <hr>
-        <div v-if="WeekendSales.labels">
+        <div v-if="WeekendSales == ''">
           <span class="fw-bold text-danger">주중, 주말별 매출 정보가 없습니다.</span> 
         </div>
       </div>
       <div>
 
       </div>
-      <div v-if="!WeekendSales.labels">
+      <div v-if="WeekendSales.labels">
           <HorizontalBarChart
           v-if="Object.keys(WeekendSales).length > 0"
           :labels="WeekendSales.labels"
@@ -122,7 +122,7 @@
       </div>
       <div v-if="!(QuarterlySales.qoq === '올해 없음' || QuarterlySales.qoq === '현재 없음')">
       
-        <QuarterlyVisitorChart
+        <QuarterlySalesChart
                 v-if="Object.keys(QuarterlySales ).length > 0"
                 :labels="QuarterlySales.labels"
                 :data="QuarterlySales.data"
@@ -137,9 +137,10 @@
 import { ref, onMounted, watch, computed } from 'vue'; // Composition API에서 필요한 함수들 임포트
 import { api } from "@/lib/api.js"
 import WeeklyVisitorChart from "@/components/charts/WeeklyVisitorChart.vue";
+import WeeklySalesChart from "@/components/charts/WeeklySalesChart.vue";
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart.vue';
 import HourlyVisitorChart from "@/components/charts/HourlyVisitorChart.vue";
-import QuarterlyVisitorChart from "@/components/charts/QuarterlyVisitorChart.vue";
+import QuarterlySalesChart from "@/components/charts/QuarterlySalesChart.vue";
 import GenderGroupChart from "@/components/charts/GenderGroupChart.vue";
 import AgeGroupChart from "@/components/charts/AgeGroupChart.vue";
 import { getSalesByWeek, getSalesByAge, getSalesByGender, getSalesByWeekend, getSalesByQuarterly} from "@/api/analytic.js"; // API 함수 가져오기
