@@ -23,6 +23,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "WHERE post.board.area.id = :areaId")
     List<Post> findAllByAreaId(Long areaId);
 
+    @Query("SELECT post FROM Post post " +
+            "WHERE post.board.franchise.id = :franchiseId " +
+            "ORDER BY post.createdAt DESC")
+    List<Post> findAllByFranchiseIdOrderByCreatedAtDesc(Long franchiseId);
+
     Optional<Post> findFirstByBoardOrderByCreatedAtDesc(Board board);
     long countByBoard(Board board);
 

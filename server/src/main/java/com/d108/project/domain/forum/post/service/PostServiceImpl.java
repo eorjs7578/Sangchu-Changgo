@@ -1,22 +1,22 @@
 package com.d108.project.domain.forum.post.service;
 
 import com.d108.project.cache.redis.RedisUtil;
-import com.d108.project.domain.forum.board.dto.BoardResponseDto;
 import com.d108.project.domain.forum.board.entity.Board;
-import com.d108.project.domain.forum.post.dto.PostPageResponseDto;
-import com.d108.project.domain.forum.post.entity.Post;
-import com.d108.project.domain.forum.post.repository.PostRepository;
 import com.d108.project.domain.forum.board.repository.BoardRepository;
-import com.d108.project.domain.member.entity.Member;
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
+import com.d108.project.domain.forum.post.dto.PostPageResponseDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
+import com.d108.project.domain.forum.post.entity.Post;
+import com.d108.project.domain.forum.post.repository.PostRepository;
+import com.d108.project.domain.member.entity.Member;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -132,7 +132,7 @@ public class PostServiceImpl implements PostService {
     // 프랜차이즈 ID 기반으로 게시글 반환
     @Override
     public List<PostResponseDto> getAllPostsByFranchiseId(Long franchiseId) {
-        List<Post> posts = postRepository.findAllByFranchiseId(franchiseId);
+        List<Post> posts = postRepository.findAllByFranchiseIdOrderByCreatedAtDesc(franchiseId);
 
         return posts.stream()
                 .map(post -> {
@@ -146,7 +146,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostPageResponseDto getPostsByBoardId(Long boardId, int page, int size) {
         Board board = boardRepository.getReferenceById(boardId);
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Post> posts = postRepository.findByBoard(pageable, board);
 
         List<PostResponseDto> postDtos = posts.stream()

@@ -1,11 +1,9 @@
 package com.d108.project.interfaces.api.forum;
 
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
-import com.d108.project.domain.forum.post.dto.PostPageResponseDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
 import com.d108.project.domain.member.entity.Member;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +35,7 @@ public interface PostApi {
     ResponseEntity<List<PostResponseDto>> getAllPostsByFranchiseId(@PathVariable("franchiseId") Long franchiseId);
 
     @GetMapping("/{boardId}/{page}/{size}")
-    public ResponseEntity<?> getPostsByBoardId(
+    ResponseEntity<?> getPostsByBoardId(
         @PathVariable Long boardId,  // URL 경로의 boardId
         @PathVariable Integer page,  // URL 경로의 page
         @PathVariable Integer size   // URL 경로의 size
