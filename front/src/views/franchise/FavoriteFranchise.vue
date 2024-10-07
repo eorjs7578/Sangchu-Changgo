@@ -75,8 +75,13 @@ const isSelected = (franchise) => {
 }
 
 const compareFranchises = () => {
-  console.log(franchises)
-  currentStep.value = 3
+  if(selectedFranchises.value.length < 2) {
+    window.alert("두 개의 프랜차이즈를 골라주세요!")
+  } else {
+    console.log(franchises)
+    currentStep.value = 3
+  }
+  
 }
 
 const nextStep = () => {
