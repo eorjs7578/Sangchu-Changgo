@@ -43,14 +43,14 @@
       <div class="card-body">
         <h4>주중, 주말별 매출</h4>
         <hr>
-        <div v-if="WeekendSales.labels">
+        <div v-if="WeekendSales == ''">
           <span class="fw-bold text-danger">주중, 주말별 매출 정보가 없습니다.</span> 
         </div>
       </div>
       <div>
 
       </div>
-      <div v-if="!WeekendSales.labels">
+      <div v-if="WeekendSales.labels">
           <HorizontalBarChart
           v-if="Object.keys(WeekendSales).length > 0"
           :labels="WeekendSales.labels"
@@ -90,14 +90,14 @@
         <p
           v-if="QuarterlySales.qoq.includes('유지') || QuarterlySales.qoq.includes('상승')"
         >
-          해당 업종의 매출이 이전분기에 비해 <span class="fw-bold text-primary">{{ QuarterlySales.qoq }}</span>하고 있습니다.
+          해당 업종의 매출이 작년 해당 분기에 비해 <span class="fw-bold text-primary">{{ QuarterlySales.qoq }}</span>하고 있습니다.
         </p>
 
         <!-- qoq 값이 존재하고, "하락"을 포함하는 경우 -->
         <p
           v-else-if="QuarterlySales.qoq.includes('하락')"
         >
-          해당 업종의 매출이 이전분기에 비해 <span class="fw-bold text-danger">{{ QuarterlySales.qoq }}</span>하고 있습니다.
+          해당 업종의 매출이 작년 해당 분기에 비해 <span class="fw-bold text-danger">{{ QuarterlySales.qoq }}</span>하고 있습니다.
         </p>
 
         <!-- qoq 값이 특정 문자열인 경우 -->
