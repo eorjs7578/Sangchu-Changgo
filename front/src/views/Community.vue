@@ -15,10 +15,10 @@
             </div>
           </transition>
         </div>
-        <div class="search-input-container">
-          <input 
-            type="text" 
-            v-model="inputValue" 
+        <div class="search-input-container" id="search">
+          <input
+            ref="searchQ"
+            type="text"
             class="custom-input" 
             placeholder="검색어를 입력하세요"
           />
@@ -101,6 +101,10 @@
 import { useRouter } from 'vue-router'; // Vue Router import
 
 import {api} from "@/lib/api.js";
+  import {assemble, disassemble} from "es-hangul";
+
+
+  const searchQ = ref(null);
 
   let categories = ref([])
   
@@ -168,7 +172,7 @@ const debouncedGetRecommendations = debounce(async () => {
   } else {
     recommendations.value = [];
   }
-}, 300); // 300ms 딜레이
+}, 50); // 300ms 딜레이
 
 // 추천 검색어 선택
 const selectRecommendation = (recommendation) => {
@@ -344,7 +348,14 @@ const groupPageArray = (category) => {
   const endPage = Math.min(startPage + category.groupSize, category.totalPages);
   return Array.from({ length: endPage - startPage }, (_, i) => startPage + i + 1);
 }
-  
+
+onMounted ( () => {
+  const searchField = document.getElementById("search")
+  searchField.addEventListener("input", () => {
+    inputValue.value = searchQ.value.value;
+    debouncedGetRecommendations();
+  })
+})
   </script>
   
   <script>
