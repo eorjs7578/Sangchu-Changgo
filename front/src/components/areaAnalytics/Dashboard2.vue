@@ -193,6 +193,7 @@ const handleLocationUpdate = (location) => {
 
 const scrollToSection = (section) => {
   activeSection.value = section;
+   console.log('Scrolling to section:', section);
   const element = document.getElementById(section);
   if (element) {
     element.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -258,4 +259,7 @@ onMounted(() => {
     width: auto;
     height: auto;
   }
+.section {
+  margin-bottom: 100px; /* 섹션 간의 간격을 충분히 확보 */
+}
 </style>
