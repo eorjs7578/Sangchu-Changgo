@@ -26,10 +26,7 @@ export function isEmailDuplicated(email) {
   email: email}
   })
     .then(response => {
-      if (window.confirm("사용하실 수 있는 이메일입니다. \n 사용하시겠습니까?")) {
-        return true;
-      }
-      return Promise.reject(response)
+      return response
     })
     .catch(err => {
       return Promise.reject(err)
@@ -40,14 +37,9 @@ export function isNicknameDuplicated(nickname) {
   return api.get("/api/members/duplicate/nickname", {params: {
       nickname: nickname
     }})
-    .then(response => {
-      if (window.confirm("사용할 수 있는 닉네임입니다. \n사용하시겠습니까?")) {
-        return true;
-      }
-      return false;
-    })
-    .catch(() => {
-      return false;
+    .then(response => response)
+    .catch((err) => {
+      return Promise.reject(err)
     })
 }
 
@@ -58,21 +50,11 @@ export function isUsernameDuplicated(username) {
     }
   })
   .then(response => {
-    // Assuming the response contains a boolean indicating if the username is duplicated
-    if (response.data.isDuplicated) {
-      alert("이미 존재하는 아이디입니다.");
-      return false;
-    } else {
-      if (window.confirm("사용할 수 있는 아이디입니다. \n사용하시겠습니까?")) {
-        return true;
-      }
-      return false;
-    }
+    return response
   })
-  .catch(error => {
-    console.error("아이디 중복 확인 중 오류가 발생했습니다:", error);
-    return false;
-  });
+  .catch(err => {
+    return Promise.reject(err)
+  })
 }
 
 export async function getAuthCode(email) {
