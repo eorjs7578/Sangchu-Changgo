@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class PostResponseDto {
     private Long id;
     private Long memberId;
+    private String memberName;
     private String title;
     private String content;
     private Long view;
@@ -29,6 +30,7 @@ public class PostResponseDto {
         return PostResponseDto.builder()
                 .id(post.getId())
                 .memberId(post.getMember().getId())
+                .memberName(post.getMember().getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .view(post.getView())
