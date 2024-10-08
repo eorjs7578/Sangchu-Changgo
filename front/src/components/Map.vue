@@ -234,17 +234,20 @@ function parsePolygon(polygonStr) {
 
 // 단일 POLYGON 문자열을 처리하여 LatLng 배열로 변환하는 함수
 function parseSinglePolygon(polygonStr) {
-    const coordinates = polygonStr
+    const polygons = polygonStr
         .replace("POLYGON ((", "")  // POLYGON (( 제거
         .replace("))", "")  // )) 제거
-        .split(", ");  // 좌표들을 분리
+        .split("), (");  // 경계들을 분리
 
-    const path = coordinates.map(coord => {
-        const [lng, lat] = coord.split(" ").map(Number);
-        return new kakao.maps.LatLng(lat, lng);  // LatLng 객체로 변환
+    const paths = polygons.map(polygon => {
+        const coordinates = polygon.split(", ");  // 각 경계 내 좌표들을 분리
+        return coordinates.map(coord => {
+            const [lng, lat] = coord.split(" ").map(Number);
+            return new kakao.maps.LatLng(lat, lng);  // LatLng 객체로 변환
+        });
     });
 
-    return [path]; // 단일 POLYGON이므로 하나의 배열을 반환
+    return paths;  // 여러 경계를 반환
 }
 
 // MULTIPOLYGON 문자열을 처리하여 LatLng 배열로 변환하는 함수
@@ -255,16 +258,21 @@ function parseMultiPolygon(multiPolygonStr) {
         .replace(")))", "") // ))) 제거
         .split(")), (("); // 각 POLYGON 그룹을 나눔
 
-    const paths = polygonGroups.map(polygonStr => {
-        // POLYGON 그룹 내의 각 경로를 처리
-        const coordinates = polygonStr.split(", ");
-        return coordinates.map(coord => {
-            const [lng, lat] = coord.split(" ").map(Number);
-            return new kakao.maps.LatLng(lat, lng);  // LatLng 객체로 변환
+    const paths = polygonGroups.flatMap(polygonStr => {
+
+        // POLYGON 그룹 내의 각 경계(다각형)를 처리
+        const polygons = polygonStr.split("), ("); // 경계들을 분리
+
+        // 각 경계에 대해 좌표를 처리
+        return polygons.map(polygon => {
+            const coordinates = polygon.split(", "); // 각 경계 내 좌표들을 분리
+            return coordinates.map(coord => {
+                const [lng, lat] = coord.split(" ").map(Number);
+                return new kakao.maps.LatLng(lat, lng); // LatLng 객체로 변환
+            });
         });
     });
-
-    return paths; // MULTIPOLYGON이므로 배열들의 배열을 반환
+    return paths; // 평평한 배열로 반환
 }
 
 // 다각형을 생상하고 이벤트를 등록하는 함수입니다
