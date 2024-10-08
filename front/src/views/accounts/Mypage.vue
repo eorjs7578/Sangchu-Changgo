@@ -212,6 +212,7 @@ const changePassword = () => {
 </script>
 
 <style scoped>
+
 /* 기존 스타일 유지 */
 .container {
   min-height: 100vh;

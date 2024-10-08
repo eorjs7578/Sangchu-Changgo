@@ -1,5 +1,5 @@
 <template>
-  <div id=surveyForm class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm" >
+  <div id="surveyForm" class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm">
     <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden">
       <div class="p-6">
         <h4>평가하기</h4>
@@ -8,7 +8,7 @@
           <!-- 주 연령층 -->
           <div>
             <b>주 연령층</b>
-            <div class="grid grid-cols-3 gap-2 mb-2">
+            <div class="grid grid-cols-3 gap-4 mb-4"> <!-- Increased gap from gap-2 to gap-4 -->
               <button v-for="option in ageGroups" :key="option" @click="selectOption('ageGroup', option)"
                 :class="['option-button', selectedOptions.ageGroup === option ? 'selected' : '']">
                 {{ option }}
@@ -19,7 +19,7 @@
           <!-- 유동인구 -->
           <div>
             <b>유동인구</b>
-            <div class="grid grid-cols-3 gap-2 mb-2">
+            <div class="grid grid-cols-3 gap-4 mb-4"> <!-- Increased gap from gap-2 to gap-4 -->
               <button v-for="option in footTraffics" :key="option" @click="selectOption('footTraffic', option)"
                 :class="['option-button', selectedOptions.footTraffic === option ? 'selected' : '']">
                 {{ option }}
@@ -30,7 +30,7 @@
           <!-- 물가 -->
           <div>
             <b>물가</b>
-            <div class="grid grid-cols-3 gap-2 mb-2">
+            <div class="grid grid-cols-3 gap-4 mb-4"> <!-- Increased gap from gap-2 to gap-4 -->
               <button v-for="option in nearbyPrices" :key="option" @click="selectOption('nearbyPrices', option)"
                 :class="['option-button', selectedOptions.nearbyPrices === option ? 'selected' : '']">
                 {{ option }}
@@ -41,7 +41,7 @@
           <!-- 분위기 -->
           <div>
             <b>분위기</b>
-            <div class="grid grid-cols-3 gap-2 mb-2">
+            <div class="grid grid-cols-3 gap-4 mb-4"> <!-- Increased gap from gap-2 to gap-4 -->
               <button v-for="option in atmospheres" :key="option" @click="selectOption('atmosphere', option)"
                 :class="['option-button', selectedOptions.atmosphere === option ? 'selected' : '']">
                 {{ option }}
@@ -50,7 +50,7 @@
           </div>
           <hr>
           <!-- 평가 기능 버튼 -->
-          <div class="flex justify-end mt-6 space-x-2">
+          <div class="flex justify-end mt-6 space-x-4"> <!-- Increased space-x-2 to space-x-4 -->
             <button v-if="!isSubmitted" @click="createEvaluation" class="action-button submit">제출하기</button>
             <button v-if="isSubmitted" @click="updateEvaluation" class="action-button edit">수정하기</button>
             <button v-if="isSubmitted" @click="deleteEvaluation" class="action-button delete">삭제하기</button>
@@ -232,6 +232,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+* {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
 .option-button {
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
@@ -285,6 +291,10 @@ onMounted(() => {
 
 .action-button.delete:hover {
   background-color: #cbd5e0;
+}
+
+.grid {
+  gap: 1.5rem; /* Increased gap between buttons */
 }
 
 @media (max-width: 640px) {

@@ -86,6 +86,11 @@ defineExpose({
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
 .result-value {
   font-weight: 600;
   color: #005eff;

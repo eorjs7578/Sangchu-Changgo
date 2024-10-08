@@ -228,6 +228,34 @@
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
 
+.button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.nav-link {
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #e9ecef;
+    color: #007bff;
+    border-radius: 5px;
+}
 </style>
