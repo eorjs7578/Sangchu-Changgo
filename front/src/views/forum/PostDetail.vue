@@ -32,10 +32,19 @@
                         <span><strong>작성자:</strong> {{ reply.member_name }}</span>
                         <span><small>{{ formatDate(reply.created_at) }}</small></span>
                     </div>
-                    <p class="custom-reply-content">{{ reply.content }}</p>
+                    <div v-if="!reply.isEditing">
+                        <p class="custom-reply-content">{{ reply.content }}</p>
+                    </div>
+                    <div v-else>
+                        <input v-model="reply.editingContent" class="custom-input" />
+                    </div>
+
                     <div v-if="reply.member_id === currentUserId" class="custom-reply-actions">
-                        <button @click="handleEditReply(reply.reply_id, reply.content)" class="custom-btn outline-primary">
+                        <button v-if="!reply.isEditing" @click="startEditReply(reply)" class="custom-btn outline-primary">
                             수정
+                        </button>
+                        <button v-if="reply.isEditing" @click="saveEditReply(reply)" class="custom-btn outline-primary">
+                            저장
                         </button>
                         <button @click="handleDeleteReply(reply.reply_id)" class="custom-btn outline-danger">
                             삭제
@@ -100,6 +109,10 @@ export default {
                     post.value = response.data;
                     console.log('게시글 상세 정보:', post.value);
                     console.log('게시글 작성자 ID:', post.value.member_id);
+                    post.value.reply.forEach(reply => {
+                        reply.isEditing = false;
+                        reply.editingContent = reply.content;
+                    });
                 },
                 (error) => {
                     console.error('게시글 상세 정보를 가져오는 중 에러 발생:', error);
@@ -226,6 +239,33 @@ export default {
             }
         };
 
+        const startEditReply = (reply) => {
+            reply.isEditing = true;
+            console.log("ff");
+        };
+
+        const saveEditReply = (reply) => {
+            if (reply.editingContent === reply.content) {
+                reply.isEditing = false;
+                return;
+            }
+
+            const payload = { content: reply.editingContent };
+            updateReply(
+                postId,
+                reply.reply_id,
+                payload,
+                (response) => {
+                    reply.content = reply.editingContent;
+                    reply.isEditing = false;
+                },
+                (error) => {
+                    console.error('댓글 수정 중 에러 발생:', error);
+                }
+            );
+        };
+
+
         // 목록으로 돌아가기 함수 (boardId를 패스변수로 전달)
         const navigateBackToList = () => {
             console.log('boardId:', boardId);
@@ -261,6 +301,8 @@ export default {
             handleSubmitReply,
             handleDeleteReply,
             handleEditReply,
+            saveEditReply,
+            startEditReply,
             navigateBackToList,
             formatDate,
         };
