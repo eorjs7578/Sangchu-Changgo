@@ -215,6 +215,8 @@ onMounted(() => {
 .navbar {
   font-family: 'Noto Sans KR', sans-serif;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1); /* Border for separation */
+  background-color: #f8f9fa; /* Light background to distinguish from content */
 }
 
 .nav-link {
@@ -258,5 +260,12 @@ onMounted(() => {
 
 .btn-link {
   padding: 10px;
+}
+.btn-toggle-mode {
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-color);
 }
 </style>
