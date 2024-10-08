@@ -1,6 +1,5 @@
 package com.d108.project.domain.member.service;
 
-import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
 import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.domain.member.dto.*;
 import com.d108.project.domain.member.entity.Member;
@@ -19,7 +18,6 @@ public interface MemberService {
 
     MemberResponseDto getMyInfo(Member member);
 
-
     boolean isUsernameDuplicated(String username);
 
     boolean isNicknameDuplicated(String nickname);
@@ -31,4 +29,8 @@ public interface MemberService {
     void changePassword(Member member, MemberPasswordChangeDto memberPasswordChangeDto);
 
     void changeNickname(Member member, MemberNicknameRequestDto memberNicknameRequestDto);
+
+    void checkBeforeFindPassword(MemberCheckRequestDto memberCheckRequestDto);
+
+    void findPassword(MemberFindPasswordDto memberFindPasswordDto);
 }

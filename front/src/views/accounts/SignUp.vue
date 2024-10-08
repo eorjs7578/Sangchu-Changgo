@@ -181,6 +181,7 @@
           // 여기 위치에서 로그인
           if (response) {
             login(username.value, password.value)
+
                 .then(() => router.push("/"))
           }
         })

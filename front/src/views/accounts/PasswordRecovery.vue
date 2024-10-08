@@ -5,21 +5,29 @@
         <h2>Password Recovery</h2>
         <p>이메일 입력 후 해당 이메일로 임시 비밀번호를 확인하세요.</p>
 
-        <form @submit.prevent="recoverPassword">
+        <form @submit.prevent="find">
           <!-- 이메일 입력 및 인증번호 전송 버튼 -->
           <div class="input-group">
             <input
+                type="email"
+                id="email"
+                placeholder="아이디"
+                v-model="username"
+                :disabled="isEmailChecked || isEmailSend"
+                class="rounded-input mb-2"
+            />
+            <input
               type="email"
               id="email"
-              placeholder="example@example.com"
+              placeholder="이메일"
               v-model="email"
-              :disabled="isEmailChecked"
+              :disabled="isEmailChecked || isEmailSend"
               class="rounded-input"
             />
             <button
               type="button"
               class="verify-btn"
-              @click="handleGetAuthCode"
+              @click="check"
               :disabled="isEmailChecked || isEmailSend"
               :class="{'btn-secondary': isEmailChecked || isEmailSend, 'btn-primary': !isEmailChecked && !isEmailSend }"
             >
@@ -48,12 +56,21 @@
               인증번호 확인
             </button>
           </div>
-
+          <div class="input-group" v-if="isEmailChecked">
+            <input
+                type="password"
+                id="verificationCode"
+                placeholder="비밀번호"
+                v-model="password"
+                class="code-input rounded-input"
+            />
+          </div>
           <!-- 비밀번호 복구 버튼 -->
           <button
             type="submit"
             class="recover-btn"
             :disabled="!isEmailChecked"
+            :class="{ 'btn btn-secondary': isEmailChecked, 'btn btn-primary': !isEmailChecked }"
           >
             Recover password
           </button>
@@ -71,7 +88,13 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';  // 라우터 사용
-import { getAuthCode, isEmailValidated, checkAuthCode } from "@/util/AuthenticationUtil.js";
+import {
+  getAuthCode,
+  isEmailValidated,
+  checkAuthCode,
+  findPassword,
+  checkBeforeFindPassword
+} from "@/util/AuthenticationUtil.js";
 
 // 상태 변수 선언
 const email = ref('');
@@ -79,8 +102,9 @@ const verificationCode = ref('');
 const isEmailSend = ref(false);
 const validationTime = ref(300); // 5분 타이머
 const isEmailChecked = ref(false);
-
+const username = ref("");
 const router = useRouter();  // 라우터 객체 생성
+const password = ref("");
 
 // 타이머 포맷 함수
 const formatTime = (time) => {
@@ -172,6 +196,34 @@ const recoverPassword = () => {
     alert('먼저 이메일 인증을 완료하세요.');
   }
 };
+
+function check() {
+  checkBeforeFindPassword(username.value, email.value)
+      .then(() => {
+          alert("인증번호가 전송되었습니다.")
+          isEmailSend.value = true;
+      })
+      .then(() => {
+      getAuthCode(email.value)
+      validationTime.value = 300;
+      startTimer();
+      })
+      .catch((err) => {
+        alert(err.response.data)
+      })
+}
+
+function find() {
+  findPassword(username.value, password.value)
+      .then(() => {
+        alert("변경 되었습니다.")
+        router.push("/members/login")
+
+      })
+      .catch(err => {
+        alert(err.response.data)
+      })
+}
 </script>
 
 <style scoped>

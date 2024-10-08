@@ -140,4 +140,16 @@ public class MemberController implements MemberApi {
         memberService.changePassword(member, memberPasswordChangeDto);
         return ResponseEntity.ok().build();
     }
+
+    @Override
+    public ResponseEntity<Void> checkBeforeFindPassword(MemberCheckRequestDto memberCheckRequestDto) {
+        memberService.checkBeforeFindPassword(memberCheckRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> findPassword(MemberFindPasswordDto memberFindPasswordDto) {
+        memberService.findPassword(memberFindPasswordDto);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -20,6 +20,7 @@ public class WhiteListConfiguration {
             API_PREFIX+"/login/oauth2/code/kakao",
             API_PREFIX+"/login/oauth2/code/naver",
             API_PREFIX+"/oauth2/authorization/kakao",
+            API_PREFIX+"/members/find/**",
             // 기본 설정 관련
             "/favicon.ico"
     };

@@ -58,5 +58,9 @@ public interface MemberApi {
     @PostMapping("/update/password")
     ResponseEntity<Void> changePassword(@AuthenticationPrincipal Member member, @RequestBody MemberPasswordChangeDto memberPasswordChangeDto);
 
+    @PostMapping("/find/check")
+    ResponseEntity<Void> checkBeforeFindPassword(@RequestBody MemberCheckRequestDto memberCheckRequestDto);
 
+    @PostMapping("/find/password")
+    ResponseEntity<Void> findPassword(@RequestBody MemberFindPasswordDto memberFindPasswordDto);
 }
