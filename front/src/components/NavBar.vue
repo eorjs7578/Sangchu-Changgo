@@ -134,7 +134,7 @@ function handleAreaEnter() {
 }
 
 const debouncedGetAreaRecommendations = debounce(async () => {
-  console.log("debo: " + areaSearchQ.value.value)
+  console.log("debo: " + areaSearchQ.value.value + " "  + areaSearchQ.value)
   if (areaSearchQ.value && areaSearchQ.value.value.length > 0) {
     try {
       const response = await api.get(`/api/recommendation/area?areaName=${areaSearchQ.value.value}`);
