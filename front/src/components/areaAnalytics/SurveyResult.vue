@@ -24,11 +24,12 @@
   <SurveyForm
           v-if="isAuthenticated"
             :place="place"
+            @evaluationUpdated="fetchEvaluationResult"
         />
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, defineProps } from 'vue'
 import { useRoute } from 'vue-router'
 import { getStatisticsAreaEvaluation } from '@/api/analytic' // 필요한 경로에 맞춰 import
 import SurveyForm from "./SurveyForm.vue";
@@ -40,6 +41,7 @@ const store = useAccountStore();
 const props = defineProps({
   place: String
 })
+
 const isAuthenticated = ref(store.isAuthenticated); // store의 인증 상태 확인
 // 평가 결과 저장 변수
 const evaluationResult = ref(null)
@@ -56,7 +58,8 @@ const fetchEvaluationResult = async () => {
       
       console.log('평가 결과 조회 성공:', response.data)
     }, (error) => {
-      if (error.data == "평가 데이터가 하나도 없는 상권입니다. 평가를 해주세요.") {
+      if (error.response.data == "평가 데이터가 하나도 없는 상권입니다. 평가를 해주세요.") {
+        evaluationResult.value = null;
         console.log("데이터가 없습니다.")
       }
       else{

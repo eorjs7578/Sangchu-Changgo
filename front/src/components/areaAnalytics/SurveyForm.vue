@@ -65,6 +65,8 @@
 import { ref, watch, onMounted } from 'vue';
 import { postAreaEvaluation, putAreaEvaluation, deleteAreaEvaluation, getAllAreaEvaluationType, getMyAreaEvaluation } from '@/api/analytic';
 
+const emit = defineEmits(['evaluationUpdated']);
+
 const props = defineProps({
   place: String // 외부에서 전달되는 place (areaId 역할)
 });
@@ -151,7 +153,7 @@ const createEvaluation = async () => {
 
       // 평가 제출 후 평가 데이터를 다시 불러옴
       fetchMyEvaluation();
-
+      emit('evaluationUpdated');
       // 성공 알림
       window.alert('평가가 성공적으로 제출되었습니다!');
     }, (error) => {
@@ -182,7 +184,7 @@ const updateEvaluation = async () => {
 
     putAreaEvaluation(props.place, evaluationId.value, evaluationData, (response) => {
       console.log('평가 수정 성공:', response);
-
+      emit('evaluationUpdated');
       // 성공 알림
       window.alert('평가가 성공적으로 수정되었습니다!');
     }, (error) => {
@@ -203,7 +205,7 @@ const deleteEvaluation = async () => {
     deleteAreaEvaluation(props.place, evaluationId.value, (response) => {
       isSubmitted.value = false;
       selectedOptions.value = { ageGroup: '', footTraffic: '', nearbyPrices: '', atmosphere: '' };
-
+      emit('evaluationUpdated');
       // 성공 알림
       window.alert('평가가 성공적으로 삭제되었습니다!');
     }, (error) => {
