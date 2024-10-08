@@ -130,7 +130,7 @@ const checkFavoriteStatus = async () => {
   try {
     const response = await api.get(`/api/favorite/areas/${areaId}`);
     const { is_check: isCheck, favorite_area_id: responseAreaId } = response.data;
-
+    
     console.log(response.data); // 응답 확인
 
     // favorite_area_id가 숫자이므로, ref를 통해 저장하지 않고 직접 할당
@@ -140,7 +140,11 @@ const checkFavoriteStatus = async () => {
     console.log(favoriteAreaId.value);
     console.log(favorite.value);
   } catch (error) {
-    console.error("Error fetching favorite status:", error);
+    if (error.response.data.message === "토큰 정보가 이상합니다. 로그인을 재시도해 보세요.") {
+      console.log("로그인이 안되서 관심 상권 여부를 알 수 없습니다.")
+    } else{
+      console.error("Error fetching favorite status:", error);
+    }
   }
 };
 
