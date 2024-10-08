@@ -26,7 +26,7 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
 
     @Override
     public Long getFootTrafficByDaily(Long areaId) {
-        return populationRepository.getPopulationByAreaId(areaId);
+        return populationRepository.getPopulationByAreaId(areaId)/7;
     }
 
     private static int getMaxIndex(List<Long> footTrafficByHourByArea) {
