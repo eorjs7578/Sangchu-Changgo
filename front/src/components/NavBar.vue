@@ -9,11 +9,6 @@
           <i class="bi bi-bar-chart-fill me-2"></i>상권분석
         </a>
       </li>
-      <!-- <li class="nav-item">
-        <router-link to="#" data-bs-toggle="modal" data-bs-target="#favoriteArea" class="nav-link">
-          <i class="bi bi-star-fill me-2"></i>관심상권
-        </router-link>
-      </li> -->
       <li class="nav-item">
         <a href="#" class="nav-link" @click.prevent="toggleFavoriteArea">
           <i class="bi bi-star-fill me-2"></i>관심상권
@@ -35,11 +30,6 @@
               <i class="bi bi-heart-fill me-2"></i>관심 프랜차이즈
             </a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-              <i class="bi bi-currency-dollar me-2"></i>예상비용
-            </a>
-          </li> -->
           <li class="nav-item">
             <a class="nav-link" href="#" @click.prevent="toggleEstimatedCost">
               <i class="bi bi-currency-dollar me-2"></i>예상비용
@@ -48,6 +38,38 @@
         </ul>
       </li>
     </ul>
+    <div class="mt-3 w-100">
+      <div class="search-input-container" id="area-search">
+        <input
+          ref="areaSearchQ"
+          type="text"
+          class="custom-input"
+          placeholder="상권 검색"
+          @input="handleAreaInput"
+          @keyup.enter="handleAreaEnter"
+        />
+        <button class="search-button" @click="searchArea">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <!-- 추천 검색어 목록 -->
+        <div v-if="areaRecommendations.length > 0" class="recommendations-container">
+          <ul class="list-group">
+            <li 
+              v-for="recommendation in areaRecommendations" 
+              :key="recommendation" 
+              class="list-group-item list-group-item-action" 
+              @click="selectAreaRecommendation(recommendation)"
+              @mousedown.prevent
+            >
+              {{ recommendation }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <div class="mt-auto w-100">
       <template v-if="store.isAuthenticated">
         <button @click="toggleAvatarMenu" class="btn btn-outline-success w-100 mb-2">
@@ -76,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAccountStore } from '@/stores/useAccountStore';
 import { getFavoriteFranchises } from '@/api/franchise';
@@ -94,9 +116,66 @@ const favoriteFranchises = ref([]);
 const router = useRouter();
 const store = useAccountStore();
 
+const areaSearchQ = ref(null);
+const areaRecommendations = ref([]);
+
 const isAuthenticated = ref(store.isAuthenticated); // store의 인증 상태 확인
 const handleFavoriteClick = () => {
   
+}
+
+function handleAreaInput() {
+  debouncedGetAreaRecommendations();
+}
+
+function handleAreaEnter() {
+  areaRecommendations.value = [];
+  searchArea();
+}
+
+const debouncedGetAreaRecommendations = debounce(async () => {
+  if (areaSearchQ.value && areaSearchQ.value.value.length > 0) {
+    try {
+      const response = await api.get(`/api/recommendation/area?areaName=${areaSearchQ.value.value}`);
+      areaRecommendations.value = response.data.result;
+    } catch (error) {
+      console.error("Error fetching area recommendations:", error);
+    }
+  } else {
+    areaRecommendations.value = [];
+  }
+}, 300);
+
+const selectAreaRecommendation = (recommendation) => {
+  areaSearchQ.value.value = recommendation;
+  areaRecommendations.value = [];
+  searchArea();
+}
+
+function searchArea() {
+  // Implement the area search logic here
+  console.log("Searching for area:", areaSearchQ.value.value);
+  // You might want to navigate to a search results page or update the current view
+  router.push({ name: 'AreaSearch', query: { q: areaSearchQ.value.value } });
+}
+
+watch([areaSearchQ], () => {
+  if (areaSearchQ.value && areaSearchQ.value.value) {
+    areaRecommendations.value = [];
+  }
+  debouncedGetAreaRecommendations();
+});
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
 }
 
 const toggleFavoriteArea = () => {
@@ -267,5 +346,63 @@ onMounted(() => {
   font-size: 1rem;
   cursor: pointer;
   color: var(--text-color);
+}
+
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.custom-input {
+  flex-grow: 1;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-button {
+  background-color: transparent;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.recommendations-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.list-group-item {
+  cursor: pointer;
+  padding: 10px 15px;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.list-group-item:last-child {
+  border-bottom: none;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
 }
 </style>
