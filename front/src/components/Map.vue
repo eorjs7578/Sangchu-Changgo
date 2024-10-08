@@ -231,20 +231,22 @@ function parsePolygon(polygonStr) {
         return [];
     }
 }
-
 // 단일 POLYGON 문자열을 처리하여 LatLng 배열로 변환하는 함수
 function parseSinglePolygon(polygonStr) {
-    const coordinates = polygonStr
+    const polygons = polygonStr
         .replace("POLYGON ((", "")  // POLYGON (( 제거
         .replace("))", "")  // )) 제거
-        .split(", ");  // 좌표들을 분리
+        .split("), (");  // 경계들을 분리
 
-    const path = coordinates.map(coord => {
-        const [lng, lat] = coord.split(" ").map(Number);
-        return new kakao.maps.LatLng(lat, lng);  // LatLng 객체로 변환
+    const paths = polygons.map(polygon => {
+        const coordinates = polygon.split(", ");  // 각 경계 내 좌표들을 분리
+        return coordinates.map(coord => {
+            const [lng, lat] = coord.split(" ").map(Number);
+            return new kakao.maps.LatLng(lat, lng);  // LatLng 객체로 변환
+        });
     });
 
-    return [path]; // 단일 POLYGON이므로 하나의 배열을 반환
+    return paths;  // 여러 경계를 반환
 }
 
 // MULTIPOLYGON 문자열을 처리하여 LatLng 배열로 변환하는 함수

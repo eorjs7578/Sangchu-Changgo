@@ -145,6 +145,7 @@ const toggleEstimatedCost = () => {
   } else {
     console.log("로그인 필요")
     window.alert("로그인이 필요합니다!")
+
     router.push({name : 'login'})
   }
 }
@@ -209,13 +210,62 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
 .navbar {
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  font-family: 'Noto Sans KR', sans-serif;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1); /* Border for separation */
+  background-color: #f8f9fa; /* Light background to distinguish from content */
 }
+
 .nav-link {
   color: #333;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 10px 15px;
 }
+
 .nav-link:hover {
   background-color: #e9ecef;
+  color: #007bff;
+  border-radius: 5px;
+}
+
+.navbar-brand img {
+  max-width: 100%;
+  height: auto;
+}
+
+.navbar .btn {
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.navbar .btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.navbar .btn-outline-success:hover {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: #fff;
+}
+
+.card {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-link {
+  padding: 10px;
+}
+.btn-toggle-mode {
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-color);
 }
 </style>
