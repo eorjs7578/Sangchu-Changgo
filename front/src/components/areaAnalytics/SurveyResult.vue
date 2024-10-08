@@ -1,5 +1,5 @@
 <template>
-  <div id=surveyResult class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm">
+  <div id=survey class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm">
     <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden">
       <div class="p-6">
         <h4>상권 분석 결과</h4>
@@ -20,19 +20,27 @@
       </div>
     </div>
   </div>
+  <!--평가 폼-->
+  <SurveyForm
+          v-if="isAuthenticated"
+            :place="place"
+        />
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getStatisticsAreaEvaluation } from '@/api/analytic' // 필요한 경로에 맞춰 import
+import SurveyForm from "./SurveyForm.vue";
+import { useAccountStore } from "@/stores/useAccountStore";
 
 
+const store = useAccountStore();
 // props로 전달된 place(areaId 역할)
 const props = defineProps({
   place: String
 })
-
+const isAuthenticated = ref(store.isAuthenticated); // store의 인증 상태 확인
 // 평가 결과 저장 변수
 const evaluationResult = ref(null)
 
