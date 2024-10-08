@@ -27,4 +27,12 @@ public class AreaServiceImpl implements AreaService {
 
         return AreaResponseDto.from(area);
     }
+
+    @Override
+    public Long getAreaName(String areaName) {
+        Area area = areaRepository.findByAreaName(areaName)
+                .orElseThrow(() -> new IllegalArgumentException("해당 상권을 찾을 수 없습니다."));
+
+        return area.getId();
+    }
 }

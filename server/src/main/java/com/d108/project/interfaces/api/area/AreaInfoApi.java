@@ -11,4 +11,8 @@ public interface AreaInfoApi {
 
     @GetMapping()
     ResponseEntity<AreaResponseDto> getAreaById(@RequestParam("areaId") Long areaId);
+
+    @GetMapping("/name")
+    public ResponseEntity<Long> getAreaID(@RequestParam String areaName);
+
 }
