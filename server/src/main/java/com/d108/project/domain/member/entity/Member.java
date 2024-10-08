@@ -22,8 +22,10 @@ import java.util.List;
 public class Member extends LoginCredential {
 
     @NotNull
+    @Column(unique = true)
     private String nickname;
 
+    @Column(unique = true)
     private String email;
 
     // 관심 상권

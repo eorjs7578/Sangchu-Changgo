@@ -129,3 +129,30 @@ export function kakaoLogin() {
 export function naverLogin() {
   window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/oauth2/authorization/naver?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`;
 }
+
+
+export function checkBeforeFindPassword(username, email) {
+  return api.post("/api/members/find/check", {
+    username,
+    email
+  })
+    .then(response => {
+      return response
+    })
+    .catch((err) => {
+      return Promise.reject(err)
+    })
+}
+
+export function findPassword(username, password) {
+  return api.post("/api/members/find/password", {
+    username,
+    password
+  })
+    .then(response => {
+      return response
+    })
+    .catch(err => {
+      return Promise.reject(err)
+    })
+}

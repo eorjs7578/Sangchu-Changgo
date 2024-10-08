@@ -31,4 +31,6 @@ public interface MapApi {
 
     @GetMapping("/info/area/{code}")
     ResponseEntity<AreaInfoDto> getArea(@PathVariable("code") Long code);
+
+
 }

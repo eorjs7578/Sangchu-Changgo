@@ -25,6 +25,7 @@ public class LoginCredential extends BaseTimeEntity implements UserDetails {
     private Long id;
 
     @NotNull
+    @Column(unique = true)
     private String username;
 
     @NotNull
