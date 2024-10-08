@@ -25,18 +25,19 @@
       <nav class="nav nav-pills nav-fill my-3">
         <a
             class="nav-item nav-link"
-            :class="{ active: activeSection === 'populationAnalysis' }"
-            @click.prevent="scrollToSection('populationAnalysis')"
-        >
-          인구
-        </a>
-        <a
-            class="nav-item nav-link"
             :class="{ active: activeSection === 'storeAnalysis' }"
             @click.prevent="scrollToSection('storeAnalysis')"
         >
           점포수
         </a>
+        <a
+            class="nav-item nav-link"
+            :class="{ active: activeSection === 'populationAnalysis' }"
+            @click.prevent="scrollToSection('populationAnalysis')"
+        >
+          인구
+        </a>
+       
         <a
             class="nav-item nav-link"
             :class="{ active: activeSection === 'salesAnalysis' }"
@@ -46,17 +47,10 @@
         </a>
         <a
             class="nav-item nav-link"
-            :class="{ active: activeSection === 'surveyResult' }"
-            @click.prevent="scrollToSection('surveyResult')"
+            :class="{ active: activeSection === 'survey' }"
+            @click.prevent="scrollToSection('survey')"
         >
-          평가 결과
-        </a>
-        <a
-            class="nav-item nav-link"
-            :class="{ active: activeSection === 'surveyForm' }"
-            @click.prevent="scrollToSection('surveyForm')"
-        >
-          평가하기
+          평가
         </a>
       </nav>
 
@@ -64,12 +58,10 @@
           ref="scrollContainer"
           class="overflow-auto custom-scroll h-75"
       >
-
-        <!-- 인구 정보 -->
-        <PopulationAnalysis :place="place" />
-
         <!-- 점포 분석 -->
         <StoreAnalysis :place="place" @update:location="handleLocationUpdate" />
+        <!-- 인구 정보 -->
+        <PopulationAnalysis :place="place" />
 
         <!-- 매출 분석 -->
         <SalesAnalysis :place="place" :service="service" />
@@ -79,11 +71,7 @@
             :place="place"
         />
 
-        <!--평가 폼-->
-        <SurveyForm
-          v-if="isAuthenticated"
-            :place="place"
-        />
+        
         <div v-if="!isAuthenticated" class="h-50">
 
         </div>
@@ -104,7 +92,7 @@ import StoreAnalysis from "@/components/areaAnalytics/StoreAnalysis.vue";
 import LoginModal from "@/components/login/LoginModal.vue"; // Import the LoginModal
 import { useRouter } from "vue-router";
 import {api} from "@/lib/api.js";
-import SurveyForm from "./SurveyForm.vue";
+
 import SurveyResult from "./SurveyResult.vue";
 import starEmpty from '@/assets/img/star.png';
 import starFilled from '@/assets/img/filled_star.png';
@@ -121,7 +109,7 @@ const emit = defineEmits(["closeModal"])
 const area = ref("");
 const favorite = ref(false);
 const showLoginPopup = ref(false); // Flag for showing login modal
-const activeSection = ref('');
+const activeSection = ref('storeAnalysis');
 const scrollContainer = ref(null);
 const service = ref();
 const areaId = props.place; // Use the place as the favoriteAreaId
@@ -221,14 +209,14 @@ const scrollToSection = (section) => {
 const updateActiveSection = () => {
   const container = scrollContainer.value;
   
-  const sections = ['populationAnalysis', 'storeAnalysis', 'salesAnalysis', 'rent', 'surveyForm', 'surveyResult'];
+  const sections = ['populationAnalysis', 'storeAnalysis', 'salesAnalysis', 'survey'];
   sections.forEach(section => {
     const element = document.getElementById(section);
     if (element) {
       const rect = element.getBoundingClientRect();
       // 내부 스크롤 컨테이너의 상대적인 위치를 계산
       const containerRect = container.getBoundingClientRect();
-      if (rect.top >= containerRect.top && rect.top < containerRect.bottom) {
+      if (rect.top+1 >= containerRect.top && rect.top+1 < containerRect.bottom) {
         activeSection.value = section;
       }
     }

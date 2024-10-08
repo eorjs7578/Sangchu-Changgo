@@ -245,6 +245,7 @@ function find() {
   max-width: 1200px;
   padding: 1rem;
   box-sizing: border-box;
+  margin-bottom: 20rem;
 }
 
 .password-recovery-container {
