@@ -139,6 +139,7 @@ const debouncedGetAreaRecommendations = debounce(async () => {
     try {
       const response = await api.get(`/api/recommendation/area?areaName=${areaSearchQ.value.value}`);
       areaRecommendations.value = response.data.result;
+      console.log(response)
     } catch (error) {
       console.error("Error fetching area recommendations:", error);
     }
