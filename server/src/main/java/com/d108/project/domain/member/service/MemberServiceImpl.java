@@ -3,7 +3,6 @@ package com.d108.project.domain.member.service;
 
 import com.d108.project.cache.redis.RedisUtil;
 import com.d108.project.cache.redisEmail.RedisEmailService;
-import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
 import com.d108.project.config.util.token.dto.TokenResponseDto;
 import com.d108.project.config.util.token.TokenUtil;
 import com.d108.project.domain.loginCredential.entity.LoginCredential;
@@ -23,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+    private final RedisEmailService emailService;
     private final TokenUtil tokenUtil;
     private final RedisUtil redisUtil;
     private final MemberRepository memberRepository;
@@ -141,5 +141,27 @@ public class MemberServiceImpl implements MemberService {
             member.setNickname(memberNicknameRequestDto.getNickname());
             memberRepository.save(member);
     }
+
+    @Override
+    public void checkBeforeFindPassword(MemberCheckRequestDto memberCheckRequestDto) {
+
+        Member member = memberRepository.findByUsername(memberCheckRequestDto.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        if (!member.getEmail().equals(memberCheckRequestDto.getEmail())) {
+            throw new IllegalArgumentException("회원 정보가 일치하지 않습니다.");
+        }
+    }
+
+    @Override
+    public void findPassword(MemberFindPasswordDto memberFindPasswordDto) {
+
+        Member member = memberRepository.findByUsername(memberFindPasswordDto.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        member.setPassword(passwordEncoder.encode(memberFindPasswordDto.getPassword()));
+        memberRepository.save(member);
+    }
+
 }
 
