@@ -161,7 +161,8 @@ function searchArea() {
 }
 
 watch([areaSearchQ], () => {
-  if (areaSearchQ.value && areaSearchQ.value.value) {
+  console.log(areaSearchQ.value)
+  if (areaSearchQ.value.value) {
     areaRecommendations.value = [];
   }
   debouncedGetAreaRecommendations();
