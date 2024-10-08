@@ -108,6 +108,7 @@ const toggleFavoriteArea = () => {
     favoriteAreaModal.show();
   } else {
     console.log("로그인 필요")
+    window.alert("로그인이 필요합니다!")
     router.push({name : 'login'})
   }
 }
@@ -128,6 +129,7 @@ const toggleFavorite = () => {
   )
   } else {
     console.log("로그인 필요")
+    window.alert("로그인이 필요합니다!")
     router.push({name : 'login'})
   }
   
@@ -142,6 +144,7 @@ const toggleEstimatedCost = () => {
     estimatedCostModal.show();
   } else {
     console.log("로그인 필요")
+    window.alert("로그인이 필요합니다!")
     router.push({name : 'login'})
   }
 }
