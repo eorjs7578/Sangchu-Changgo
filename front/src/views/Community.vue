@@ -287,6 +287,7 @@ async function getAllFranchiseData() {
       searchFranchise();
     }
 
+    categories.value = [];
     searchQ.value.value = "";
   }
 
