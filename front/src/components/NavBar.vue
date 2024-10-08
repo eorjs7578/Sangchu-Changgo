@@ -38,7 +38,7 @@
         </ul>
       </li>
     </ul>
-    <div class="mt-3 w-100">
+    <div class="w-100 mt-4 mb-4">
       <div class="search-input-container" id="area-search">
         <input
           ref="areaSearchQ"
@@ -140,6 +140,7 @@ const debouncedGetAreaRecommendations = debounce(async () => {
       const response = await api.get(`/api/recommendation/area?areaName=${areaSearchQ.value.value}`);
       areaRecommendations.value = response.data.result;
       console.log(response)
+      console.log(areaRecommendations.value)
     } catch (error) {
       console.error("Error fetching area recommendations:", error);
     }
@@ -358,7 +359,7 @@ onMounted(() => {
   background-color: #fff;
   border-radius: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .custom-input {
@@ -367,6 +368,7 @@ onMounted(() => {
   padding: 10px 15px;
   font-size: 14px;
   outline: none;
+  background: transparent;
 }
 
 .search-button {
