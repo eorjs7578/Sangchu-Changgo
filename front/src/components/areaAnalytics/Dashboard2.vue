@@ -273,6 +273,11 @@ onMounted(() => {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
 .custom-scroll {
   scrollbar-width: none;
   -ms-overflow-style: none;

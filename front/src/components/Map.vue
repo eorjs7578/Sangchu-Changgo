@@ -231,7 +231,6 @@ function parsePolygon(polygonStr) {
         return [];
     }
 }
-
 // 단일 POLYGON 문자열을 처리하여 LatLng 배열로 변환하는 함수
 function parseSinglePolygon(polygonStr) {
     const polygons = polygonStr

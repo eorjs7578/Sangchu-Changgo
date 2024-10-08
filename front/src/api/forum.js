@@ -55,9 +55,9 @@ function createReply(postId, payload, success, fail) {
 }
 
 // 댓글 목록 조회 API
-function getReplyList(postId, success, fail) {
+function getReplyList(postId, replyId, success, fail) {
     // getRepliesAPI -> getReplyList
-    local.get(`/api/posts/${postId}/replies`).then(success).catch(fail);
+    local.get(`/api/posts/${postId}/replies/${replyId}`).then(success).catch(fail);
 }
 
 // 댓글 수정 API

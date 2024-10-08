@@ -274,7 +274,8 @@ async function getAllFranchiseData() {
   
   const search = async () => {
     recommendations.value = [];
-    categories.value = [];
+    area_categories.value = [];
+    fran_categories.value = [];
 
     if(selectedOption.value=='전체'){
       searchArea();
@@ -286,6 +287,7 @@ async function getAllFranchiseData() {
       searchFranchise();
     }
 
+    categories.value = [];
     searchQ.value.value = "";
   }
 
