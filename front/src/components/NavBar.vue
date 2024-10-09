@@ -162,13 +162,11 @@ const selectAreaRecommendation = (recommendation) => {
 }
 
 function searchArea() {
-  // Implement the area search logic here
-  console.log("Searching for area:", areaSearchQ.value.value);
-  // You might want to navigate to a search results page or update the current view
-  // router.push({ name: 'AreaSearch', query: { q: areaSearchQ.value.value } });
-  const response = api.get(`api/area-info/name/${areaSearchQ.value.value}`) // areaId를 URL에 동적으로 삽입
-  console.log(response.data);
-  window.location.href = VITE_VUE_FRONT_URL+`marketanalysis?areaId=${response.data}`
+  if (areaSearchQ.value && areaSearchQ.value.value.length > 0) {
+    console.log("Searching for area:", areaSearchQ.value.value);
+    const response = api.get(`api/area-info/name/${areaSearchQ.value.value}`) 
+    window.location.href = VITE_VUE_FRONT_URL+`marketanalysis?areaId=${response.data}`
+  }
 }
 
 watch([areaSearchQ], () => {
