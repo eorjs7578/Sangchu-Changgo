@@ -107,6 +107,7 @@ import FranchiseFee from '@/views/franchise/FranchiseFee.vue';
 import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue';
 import {Modal} from 'bootstrap'
 import FavoriteArea from '@/views/InterestAreas.vue';
+const { VITE_VUE_FRONT_URL} = import.meta.env;
 
 const isCommunityOpen = ref(false);
 const isFranchiseOpen = ref(false);
@@ -165,7 +166,7 @@ function searchArea() {
   console.log("Searching for area:", areaSearchQ.value.value);
   // You might want to navigate to a search results page or update the current view
   // router.push({ name: 'AreaSearch', query: { q: areaSearchQ.value.value } });
-  const response = api.get(`api/area-info/name/{areaSearchQ.value.value}`) // areaId를 URL에 동적으로 삽입
+  const response = api.get(`api/area-info/name/${areaSearchQ.value.value}`) // areaId를 URL에 동적으로 삽입
   console.log(response.data);
   window.location.href = VITE_VUE_FRONT_URL+`marketanalysis?areaId=${response.data}`
 }
