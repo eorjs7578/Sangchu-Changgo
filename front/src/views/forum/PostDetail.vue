@@ -179,7 +179,7 @@ export default {
                 (response) => {
                     console.log('댓글 등록 성공:', response);
                     post.value.reply.push({
-                        reply_id: response.data.reply_id,
+                        reply_id: response.data,
                         member_id: currentUserId.value,
                         member_name: currentUserName.value,// 로그인된 사용자의 ID 사용
                         content: newReply.value,
@@ -192,6 +192,7 @@ export default {
                     console.error('댓글 등록 중 에러 발생:', error);
                 }
             );
+
         };
 
         // 댓글 삭제 함수
