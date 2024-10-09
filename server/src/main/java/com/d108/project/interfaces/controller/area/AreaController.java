@@ -19,4 +19,9 @@ public class AreaController implements AreaInfoApi {
     public ResponseEntity<AreaResponseDto> getAreaById(Long areaId) {
         return ResponseEntity.ok(areaService.getAreaNameById(areaId));
     }
+
+    @Override
+    public ResponseEntity<Long> getAreaID(String areaName) {
+        return ResponseEntity.ok(areaService.getAreaName(areaName));
+    }
 }

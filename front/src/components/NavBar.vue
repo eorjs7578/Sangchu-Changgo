@@ -1,9 +1,9 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light flex-column vh-100 p-3" style="width: 20vw;">
-    <a href="/marketanalysis" class="navbar-brand mb-4">
-      <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150" @onclick="">
-    </a>
-    <ul class="nav flex-column mb-auto w-100">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light flex-column vh-100 p-3" style="width: 250px;">
+    <router-link to="/marketanalysis" class="navbar-brand mb-4">
+      <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
+    </router-link>
+    <ul class="nav flex-column mb-2 w-100">
       <li class="nav-item">
         <a href="/marketanalysis" class="nav-link">
           <i class="bi bi-bar-chart-fill me-2"></i>상권분석
@@ -26,7 +26,7 @@
         </a>
         <ul v-if="isFranchiseOpen" class="nav flex-column ms-3 mt-2">
           <li class="nav-item">
-            <a class="nav-link" href="#" @click="toggleFavorite">
+            <a class="nav-link" href="#" @click="toggleFavorite" compact-submenu>
               <i class="bi bi-heart-fill me-2"></i>관심 프랜차이즈
             </a>
           </li>
@@ -124,6 +124,12 @@ const handleFavoriteClick = () => {
   
 }
 
+const navigateToAreaAnalysis = (area) => {
+  response.get(`/api/area-info`, {areaName})
+  
+  window.location.href = VITE_VUE_FRONT_URL+`marketanalysis?areaId=${area.area_id}`
+};
+
 function handleAreaInput() {
   debouncedGetAreaRecommendations();
 }
@@ -159,7 +165,10 @@ function searchArea() {
   // Implement the area search logic here
   console.log("Searching for area:", areaSearchQ.value.value);
   // You might want to navigate to a search results page or update the current view
-  router.push({ name: 'AreaSearch', query: { q: areaSearchQ.value.value } });
+  // router.push({ name: 'AreaSearch', query: { q: areaSearchQ.value.value } });
+  const response = api.get(`api/area-info/name/{areaSearchQ.value.value}`) // areaId를 URL에 동적으로 삽입
+  console.log(response.data)
+  window.location.href = VITE_VUE_FRONT_URL+`marketanalysis?areaId=${response.data}`
 }
 
 watch([areaSearchQ], () => {
@@ -409,5 +418,15 @@ onMounted(() => {
 
 .list-group-item:hover {
   background-color: #f8f9fa;
+}
+
+.compact-menu .nav-link {
+  padding: 8px 10px;
+  font-size: 0.95rem;
+}
+
+.compact-submenu .nav-link {
+  padding: 6px 10px;
+  font-size: 0.9rem;
 }
 </style>

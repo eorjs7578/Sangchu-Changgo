@@ -9,4 +9,6 @@ public interface AreaService {
     AreaListDto getAreaList(List<Long> areaIds);
 
     AreaResponseDto getAreaNameById(Long areaId);
+
+    Long getAreaName(String areaName);
 }
