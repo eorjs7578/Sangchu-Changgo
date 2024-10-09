@@ -35,4 +35,10 @@ public class Area {
     @Column(name = "polygon", columnDefinition = "geometry(Polygon, 4326)") // SRID는 적절히 설정
     private Geometry polygon;
 
+    @Column(name = "view")
+    private Long view;
+
+    public void addView(){
+        view += 1;
+    }
 }

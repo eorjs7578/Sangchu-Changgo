@@ -2,6 +2,7 @@ package com.d108.project.domain.area.analytic.service;
 
 import com.d108.project.domain.area.analytic.dto.*;
 import com.d108.project.domain.area.analytic.repository.*;
+import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.area.repository.AreaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
@@ -26,6 +27,9 @@ public class AreaAnalyticServiceImpl implements AreaAnalyticService {
 
     @Override
     public Long getFootTrafficByDaily(Long areaId) {
+        Area area = areaRepository.findById(areaId)
+                .orElseThrow(() -> new IllegalArgumentException("상권을 찾을 수 없습니다."));
+        area.addView();
         return populationRepository.getPopulationByAreaId(areaId)/7;
     }
 
