@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ReplyService {
 
-    void createReply(Member member, Long postId, ReplyCreateDto replyCreateDto);
+    Long createReply(Member member, Long postId, ReplyCreateDto replyCreateDto);
 
     List<ReplyByPostIdResponseDto> getAllReplyByPostId(Long postId);
 
