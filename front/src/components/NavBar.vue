@@ -144,9 +144,7 @@ const debouncedGetAreaRecommendations = debounce(async () => {
   if (areaSearchQ.value && areaSearchQ.value.value.length > 0) {
     try {
       const response = await api.get(`/api/recommendation/area?areaName=${areaSearchQ.value.value}`);
-      areaRecommendations.value = response.data.result;
-      console.log(response)
-      console.log(areaRecommendations.value)
+      areaRecommendations.value = response.data.result; 
     } catch (error) {
       console.error("Error fetching area recommendations:", error);
     }
@@ -161,27 +159,23 @@ const selectAreaRecommendation = (recommendation) => {
   searchArea();
 }
 
-function searchArea() {
-  async function searchArea() {
+async function searchArea() {
   if (areaSearchQ.value && areaSearchQ.value.value.length > 0) {
     console.log("Searching for area:", areaSearchQ.value.value);
 
     try {
       const response = await api.get(`api/area-info/name/${areaSearchQ.value.value}`);
-      
       const areaId = response.data;
       console.log(response);
-
       window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
     } catch (error) {
-      console.error("Error fetching area info:", error); // 에러 처리
+      console.error("Error fetching area info:", error);
     }
   } else {
     console.warn("Area search query is empty or undefined.");
   }
 }
 
-}
 
 watch([areaSearchQ], () => {
   console.log(areaSearchQ.value)
