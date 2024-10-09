@@ -162,13 +162,25 @@ const selectAreaRecommendation = (recommendation) => {
 }
 
 function searchArea() {
+  async function searchArea() {
   if (areaSearchQ.value && areaSearchQ.value.value.length > 0) {
     console.log("Searching for area:", areaSearchQ.value.value);
-    const response = api.get(`api/area-info/name/${areaSearchQ.value.value}`) 
-    const areaId = response.data;
-    console.log(response)
-    // window.location.href = VITE_VUE_FRONT_URL+`marketanalysis?areaId=${areaId}`
+
+    try {
+      const response = await api.get(`api/area-info/name/${areaSearchQ.value.value}`);
+      
+      const areaId = response.data;
+      console.log(response);
+
+      window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
+    } catch (error) {
+      console.error("Error fetching area info:", error); // 에러 처리
+    }
+  } else {
+    console.warn("Area search query is empty or undefined.");
   }
+}
+
 }
 
 watch([areaSearchQ], () => {
