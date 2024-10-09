@@ -166,7 +166,7 @@ function searchArea() {
     console.log("Searching for area:", areaSearchQ.value.value);
     const response = api.get(`api/area-info/name/${areaSearchQ.value.value}`) 
     const areaId = response.data;
-    console.log(areaId)
+    console.log(response)
     // window.location.href = VITE_VUE_FRONT_URL+`marketanalysis?areaId=${areaId}`
   }
 }
