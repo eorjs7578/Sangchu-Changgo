@@ -1,8 +1,11 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light flex-column vh-100 p-3" style="width: 250px;">
-    <router-link to="/marketanalysis" class="navbar-brand mb-4">
+    <!-- <router-link to="/marketanalysis" class="navbar-brand mb-4">
       <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
-    </router-link>
+    </router-link> -->
+    <a href="/marketanalysis" class="navbar-brand mb-4">
+      <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
+    </a>
     <ul class="nav flex-column mb-2 w-100">
       <li class="nav-item">
         <a href="/marketanalysis" class="nav-link">
@@ -162,7 +165,6 @@ const selectAreaRecommendation = (recommendation) => {
 async function searchArea() {
   if (areaSearchQ.value && areaSearchQ.value.value.length > 0) {
     console.log("Searching for area:", areaSearchQ.value.value);
-
     try {
       const response = await api.get(`api/area-info/name/${areaSearchQ.value.value}`);
       const areaId = response.data;
