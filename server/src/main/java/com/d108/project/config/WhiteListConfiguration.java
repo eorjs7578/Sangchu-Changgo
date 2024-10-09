@@ -61,7 +61,7 @@ public class WhiteListConfiguration {
             API_PREFIX+"/service/**",
             API_PREFIX+"/area-evaluation/type",
             API_PREFIX+"/area-info",
-            API_PREFIX+"/area-info/*",
+            API_PREFIX+"/area-info/**",
     };
 }
 

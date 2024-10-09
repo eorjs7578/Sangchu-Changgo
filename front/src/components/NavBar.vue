@@ -113,6 +113,9 @@ const isFranchiseOpen = ref(false);
 const isAvatarMenuOpen = ref(false);
 const favoriteFranchises = ref([]);
 
+const { VITE_VUE_FRONT_URL} = import.meta.env;
+
+
 const router = useRouter();
 const store = useAccountStore();
 
