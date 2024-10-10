@@ -389,6 +389,8 @@ onMounted(() => {
 }
 
 .search-button {
+  position: absolute;
+  right: 0;
   background-color: transparent;
   border: none;
   padding: 10px;
