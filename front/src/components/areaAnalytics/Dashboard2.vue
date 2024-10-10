@@ -30,20 +30,20 @@
         >
           점포수
         </a>
-        <a
-            class="nav-item nav-link"
-            :class="{ active: activeSection === 'populationAnalysis' }"
-            @click.prevent="scrollToSection('populationAnalysis')"
-        >
-          인구
-        </a>
-       
+
         <a
             class="nav-item nav-link"
             :class="{ active: activeSection === 'salesAnalysis' }"
             @click.prevent="scrollToSection('salesAnalysis')"
         >
           매출분석
+        </a>
+        <a
+            class="nav-item nav-link"
+            :class="{ active: activeSection === 'populationAnalysis' }"
+            @click.prevent="scrollToSection('populationAnalysis')"
+        >
+          인구
         </a>
         <a
             class="nav-item nav-link"
@@ -60,12 +60,10 @@
       >
         <!-- 점포 분석 -->
         <StoreAnalysis  :place="place" @update:location="handleLocationUpdate" />
-        <!-- 인구 정보 -->
-        <PopulationAnalysis  :place="place" />
-
         <!-- 매출 분석 -->
         <SalesAnalysis :key="refreshKey" :place="place" :service="service" />
-
+        <!-- 인구 정보 -->
+        <PopulationAnalysis  :place="place" />
         <!-- 평가 결과 -->
         <SurveyResult
 
