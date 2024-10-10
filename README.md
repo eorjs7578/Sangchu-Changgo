@@ -39,9 +39,12 @@ SSAFY 11기 특화 프로젝트
 
 
 ### erd
+[ERD 상세 보기](https://www.erdcloud.com/d/3kkFXSxpjhoWZ3LYJ) 
+![ERD](/image/ERD.PNG)
 ### 피그마
-### 기술 스택
 
+### 기술 스택
+![기술 스택](/image/기술스택.PNG)
 
 ### 아키텍처
 ![시스템 구조도](/image/시스템구조도.png)
