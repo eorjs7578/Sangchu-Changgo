@@ -121,6 +121,7 @@
     signUp, login,
     updateEmail, isEmailDuplicated
   } from "@/util/AuthenticationUtil.js";
+  import {useAccountStore} from "@/stores/useAccountStore.js";
 
 
   const router = useRouter();
@@ -141,6 +142,7 @@
   const isUsernameChecked = ref(false);
   const isEmailError = ref(false);
   const emailMessage = ref("");
+  const accountStore = useAccountStore();
 
   function isPasswordConfirmed() {
     return password.value === passwordConfirm.value
@@ -181,10 +183,14 @@
           // 여기 위치에서 로그인
           if (response) {
             login(username.value, password.value)
-                .then(() => router.push("/")
-                    .then(() => {
-              window.location.reload();
-            }))
+                .then((response) => {
+                  accountStore.isAuthenticated = true;
+                  accountStore.userInfo = response.data
+                  router.push("/")
+                      .then(() => {
+                        window.location.reload();
+                      }
+                )})
           }
         })
         .catch((error) => {
@@ -218,6 +224,7 @@ function handleUsername(username) {
 
   // 닉네임 유효성 및 중복 확인
   function handleNickname(nickname) {
+    console.log(nickname)
     if (!isNicknameValidated(nickname)) {
       nicknameMessage.value = "유효하지 않은 닉네임 입니다.";
       isNicknameError.value = true;
@@ -225,8 +232,9 @@ function handleUsername(username) {
     }
 
     isNicknameDuplicated(nickname)
-        .then(() => {
-          if (window.confirm("사용할 수 있는 아이디입니다.\n사용하시겠습니까?")) {
+        .then((response) => {
+          console.log(response)
+          if (window.confirm("사용할 수 있는 닉네임입니다.\n사용하시겠습니까?")) {
             isNicknameChecked.value = true;
             isNicknameError.value = false;
             nicknameMessage.value = "";
