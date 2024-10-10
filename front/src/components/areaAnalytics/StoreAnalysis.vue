@@ -31,8 +31,7 @@ const emit = defineEmits(['update:location'])
 
 const place = ref()
 const selectedServiceType = ref({
-  service_name: 'aa',
-  service_code: 1234
+
 })
 const isDropdownOpen = ref(false)
 const serviceTypes = ref([])
@@ -57,7 +56,7 @@ watch(
     getAreaServiceType(
       place.value,
       ({ data }) => {
-        console.log(data)
+        console.log("여기봐"+ data)
         serviceTypes.value = data
         selectedServiceType.value = data[0]
         emit('update:location', data[0])
@@ -144,16 +143,92 @@ onMounted(() => {
     background-color: #138496;
 }
 
-.nav-link {
-    color: #333;
-    font-size: 1.1rem;
-    font-weight: 500;
-    transition: background-color 0.3s ease, color 0.3s ease;
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
 }
 
-.nav-link:hover {
-    background-color: #e9ecef;
-    color: #17a2b8;
-    border-radius: 5px;
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  display: none;
 }
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.store-selector {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 1.2em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 1em;
+  color: #555;
+  line-height: 1.5;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.selected {
+  color: #007bff;
+  cursor: pointer;
+  border-bottom: 1px dashed #007bff;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: block;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  font-size: 1em;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
+}
+
+.dropdown-menu li {
+  padding: 5px 20px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background-color: #f8f9fa;
+}
+
+.highlight {
+  color: #007bff;
+  font-weight: bold;
+}
+
 </style>

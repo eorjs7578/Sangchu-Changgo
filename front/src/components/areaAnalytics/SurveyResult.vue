@@ -51,24 +51,19 @@ const route = useRoute()
 
 // 특정 상권의 평가 결과 조회
 const fetchEvaluationResult = async () => {
-  try {
     getStatisticsAreaEvaluation(props.place, null, (response) => {
-      console.log(response)
-      evaluationResult.value = response.data
-      
-      console.log('평가 결과 조회 성공:', response.data)
-    }, (error) => {
-      if (error.response.data == "평가 데이터가 하나도 없는 상권입니다. 평가를 해주세요.") {
+      console.log('평가 결과 조회 성공:',response.data.area_id)
+      if (response.data.area_id ) {
+        evaluationResult.value = response.data
+      }
+      else{
+        console.log()
         evaluationResult.value = null;
         console.log("데이터가 없습니다.")
       }
-      else{
+    }, (error) => {
         console.error('평가 결과 조회 실패:', error)
-      }
     })
-  } catch (error) {
-    console.error('평가 결과 조회 실패:', error)
-  }
 }
 
 // place 값이 변경될 때마다 평가 결과를 다시 조회
