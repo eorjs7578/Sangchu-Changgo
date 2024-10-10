@@ -46,7 +46,7 @@ SSAFY 11기 특화 프로젝트
 [figma](https://www.figma.com/design/tde91Y45Rt5Eoyb0AAtLZy/D108-%ED%8A%B9%ED%99%94%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0-1&node-type=canvas&t=2XqcXYVPhUk2vsCN-0)
 
 ### 기술 스택
-[기술 스택](https://radial-detective-510.notion.site/4cd2ec1bd67442e1a89a33d81e0accd3)
+[기술 스택 상세보기](https://radial-detective-510.notion.site/4cd2ec1bd67442e1a89a33d81e0accd3)
 ![기술 스택](/image/기술스택.PNG)
 
 ### erd
