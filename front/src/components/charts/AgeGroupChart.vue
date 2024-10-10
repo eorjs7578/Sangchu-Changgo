@@ -42,13 +42,17 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  chartType: {
+    type: String,
+    required: true,
+  }
 });
   
   const chartData= {
     labels: props.labels,
     datasets: [
       {
-        label: "연령대별 인구",
+        label: props.chartType,
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         borderColor: "rgba(54, 162, 235, 1)",
         pointBackgroundColor: "rgba(54, 162, 235, 1)",
@@ -63,6 +67,21 @@ const props = defineProps({
       legend: {
         position: "top", // 범례를 차트 상단에 표시
       },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            let suffix = "";
+            if (props.chartType === "연령별 매출") {
+              suffix = "원"
+            } else {
+              suffix = "명"
+            }
+            const dataset = tooltipItem.dataset;
+            const value = dataset.data[tooltipItem.dataIndex];
+            return `${props.chartType}: ${value.toLocaleString()}${suffix}`;
+          },
+        },
+      }
     },
     scales: {
       r: {

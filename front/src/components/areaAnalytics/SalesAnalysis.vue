@@ -80,6 +80,7 @@
                 v-if="Object.keys(AgeSales).length > 0"
                 :labels="AgeSales.labels"
                 :data="AgeSales.data"
+                chart-type="연령별 매출"
             />
       </div>
     </div>

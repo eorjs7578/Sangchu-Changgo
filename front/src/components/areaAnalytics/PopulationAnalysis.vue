@@ -107,6 +107,7 @@
                 v-if="Object.keys(ageData).length > 0"
                 :labels="ageData.labels"
                 :data="ageData.data"
+                chart-type="연령별 유동인구"
             />
             
     </div>

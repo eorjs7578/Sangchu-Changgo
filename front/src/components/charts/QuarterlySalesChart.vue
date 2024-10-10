@@ -51,7 +51,7 @@ const chartData = {
   labels: props.labels,
   datasets: [
     {
-      label: "유동인구",
+      label: "분기별 매출",
       backgroundColor: "#3B82F6",
       data: props.data,
     },
