@@ -305,7 +305,6 @@ async function logout() {
 
 onMounted(() => {
   isCommunityOpen.value = false;
-  isFranchiseOpen.value = true;
 });
 </script>
 
