@@ -53,12 +53,45 @@ SSAFY 11기 특화 프로젝트
 
 ## 4️⃣기술 특이점 
 
+
 - ### 하둡을 사용한 분산 처리
     - Hadoop 클러스터 서버에서 Spark를 사용하여 데이터 전처리 및 데이터 저장
+    
+    - HDFS(Hadoop Distributed File System)는 하둡 분산 파일 시스템으로, Hadoop 에서는 파일(데이터) 를 Block 단위로 관리하게 됨. 하나의 파일을 여러개의 Block으로 쪼개고 이 Block들을 여러 nodes 들에 분산하여 저장하는 원리로, 이 프로젝트에서는 아래 정보들에 대해 분산 저장시킴.
+    
     - 상권 분석 정보
-        - 유동인구 : 상권 별 연령별, 분기별 유동인구
-        - 매출 : 상권과 서비스 업종 별 연령별, 분기별 매출
-        - 점포 : 상권 업종별 점포 수
+        - 유동인구: 상권 별 연령별, 분기별 유동인구
+        - 매출: 상권과 서비스 업종 별 연령별, 분기별 매출
+        
+    - Spark의 사용 : Hadoop 의 Map Reduce 모델은 대용량 데이터 분석을 쉽게 만들어주었지만,  ML이나 Graph 와 같은 복잡한 처리에 부족하고 HDFS(스토리지)에 데이터를 읽고 쓰는 연산을 해 반복 작업을 하는 경우 성능 저하가 일어난다는 단점이 있다. 
+    
+        따라서 Disk 대신 가격이 저렴해지고 빠른 RAM을 사용하여 데이터를 처리해보자는 아이디어가 Spark이고, 이러한 RAM의 특성에 최적화하여 fault-tolerant 하고 효율적인 방식으로 데이터를 처리하기 위해, RAM을 read-only 방식으로 사용하기 위해 등장한 것이 바로 RDD(Resilient Distributed Dataset).
+    
+        하지만 버전이 올라감에 따라 RDD와 같은 저수준 API보다 DataFrame, DataSet과 같은 고수준 API를 사용하며 이 프로젝트에선 DataFrame API를 사용.
+    
+    - 아래 코드는 Spark Session으로 시작해 분산처리 환경에서 데이터를 읽고, 처리하는 코드입니다. 특히 Spark의 `groupBy`와 `pivot` 연산은 기본적으로 많은 데이터를 처리할 때 각 워커 노드에서 병렬로 연산이 이루어지며, 그 결과를 셔플링(shuffling)하여 집계합니다. Spark 클러스터의 노드가 여러 개 있을 경우, 이 코드의 각 연산이 여러 노드에서 분산되어 처리됨.
+    
+        
+    
+        ```python
+        # Spark 세션 시작
+        spark = SparkSession.builder \
+            .appName("CSV to MariaDB") \
+            .getOrCreate()
+            
+        # CSV 파일 읽기
+        area_df = spark.read.option("encoding", "cp949").csv("hdfs://master:9000/input/서울시_상권분석서비스(추정매출-상권).csv", header=True, inferSchema=True)
+        
+        # 필요한 컬럼 선택
+        area_2023_2024 = area_df.select('기준_년분기_코드', '상권_코드', '상권_코드_명', '서비스_업종_코드', '서비스_업종_코드_명', '당월_매출_금액')
+        
+        # groupBy와 pivot을 사용해 기준_년분기_코드별 매출 합계 계산
+        pivot_area = area_2023_2024.groupBy('상권_코드', '상권_코드_명', '서비스_업종_코드', '서비스_업종_코드_명') \
+                                     .pivot('기준_년분기_코드') \
+                                     .agg(F.sum('당월_매출_금액'))
+        ```
+    
+        
 
 - ### Elastic Search를 활용한 검색어 추천
     - 상권 검색어 추천 인덱스 
