@@ -138,9 +138,15 @@ function handleAreaInput() {
   debouncedGetAreaRecommendations();
 }
 
-function handleAreaEnter() {
+async function handleAreaEnter() {
+  if (areaRecommendations.value) {
+  const response = await api.get(`api/area-info/name/${areaRecommendations.value[0]}`);
+  const areaId = response.data;
+  window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
   areaRecommendations.value = [];
-  searchArea();
+  } else {
+    alert("검색어를 입력해 주세요.")
+  }
 }
 
 const debouncedGetAreaRecommendations = debounce(async () => {
@@ -170,7 +176,12 @@ async function searchArea() {
       const response = await api.get(`api/area-info/name/${areaSearchQ.value.value}`);
       const areaId = response.data;
       console.log(response);
-      window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
+      if (response.data.length === undefined) {
+        alert('그러한 상권이 없습니다.')
+      }
+      else{
+       window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
+      }
     } catch (error) {
       console.error("Error fetching area info:", error);
     }
