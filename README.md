@@ -50,7 +50,7 @@ SSAFY 11기 특화 프로젝트
 [기술 스택 상세보기](https://radial-detective-510.notion.site/4cd2ec1bd67442e1a89a33d81e0accd3)
 ![기술 스택](/image/기술스택.PNG)
 
-### erd
+### ERD
 [ERD 상세 보기](https://www.erdcloud.com/d/3kkFXSxpjhoWZ3LYJ) 
 ![ERD](/image/ERD.png)
 
