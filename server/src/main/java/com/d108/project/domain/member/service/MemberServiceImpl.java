@@ -98,24 +98,15 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public boolean isEmailDuplicated(String email) {
-        if (memberRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-        }
-        return true;
+        return memberRepository.findByEmail(email).isEmpty();
     }
 
     public boolean isNicknameDuplicated(String nickname) {
-        if (memberRepository.findByNickname(nickname).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
-        }
-        return true;
+        return memberRepository.findByNickname(nickname).isEmpty();
     }
 
     public boolean isUsernameDuplicated(String username) {
-        if (memberRepository.findByUsername(username).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
-        }
-        return true;
+        return memberRepository.findByUsername(username).isEmpty();
     }
 
 
