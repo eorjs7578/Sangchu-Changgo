@@ -1,11 +1,43 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light flex-column vh-100 p-3" style="width: 20vw;">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light flex-column vh-100 px-3 py-1" style="width: 20vw;">
     <!-- <router-link to="/marketanalysis" class="navbar-brand mb-4">
       <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
     </router-link> -->
-    <a href="/marketanalysis" class="navbar-brand mb-4">
+    <a href="/marketanalysis" class="navbar-brand mb-1">
       <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
     </a>
+    <div class="w-100 mt-1 mb-4">
+        <div class="search-input-container" id="area-search">
+          <input
+            ref="areaSearchQ"
+            type="text"
+            class="custom-input"
+            placeholder="상권 검색"
+            @input="handleAreaInput"
+            @keyup.enter="handleAreaEnter"
+          />
+          <button class="search-button" @click="searchArea">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <!-- 추천 검색어 목록 -->
+          <div v-if="areaRecommendations.length > 0" class="recommendations-container">
+            <ul class="list-group">
+              <li 
+                v-for="recommendation in areaRecommendations" 
+                :key="recommendation" 
+                class="list-group-item list-group-item-action" 
+                @click="selectAreaRecommendation(recommendation)"
+                @mousedown.prevent
+              >
+                {{ recommendation }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     <ul class="nav flex-column mb-2 w-100">
       <li class="nav-item">
         <a href="/marketanalysis" class="nav-link">
@@ -41,39 +73,8 @@
         </ul>
       </li>
     </ul>
-    <div class="w-100 mt-4 mb-4">
-      <div class="search-input-container" id="area-search">
-        <input
-          ref="areaSearchQ"
-          type="text"
-          class="custom-input"
-          placeholder="상권 검색"
-          @input="handleAreaInput"
-          @keyup.enter="handleAreaEnter"
-        />
-        <button class="search-button" @click="searchArea">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-        <!-- 추천 검색어 목록 -->
-        <div v-if="areaRecommendations.length > 0" class="recommendations-container">
-          <ul class="list-group">
-            <li 
-              v-for="recommendation in areaRecommendations" 
-              :key="recommendation" 
-              class="list-group-item list-group-item-action" 
-              @click="selectAreaRecommendation(recommendation)"
-              @mousedown.prevent
-            >
-              {{ recommendation }}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
     <div class="mt-auto w-100">
+      
       <template v-if="store.isAuthenticated">
         <button @click="toggleAvatarMenu" class="btn btn-outline-success w-100 mb-2">
           <i class="bi bi-person-fill me-2"></i>내 계정
