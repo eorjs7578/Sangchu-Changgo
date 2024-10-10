@@ -180,7 +180,7 @@ async function searchArea() {
         alert('그러한 상권이 없습니다.')
       }
       else{
-      //  window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
+        window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
       }
     } catch (error) {
       console.error("Error fetching area info:", error);
