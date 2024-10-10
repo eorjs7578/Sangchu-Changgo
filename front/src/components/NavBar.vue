@@ -176,8 +176,9 @@ async function searchArea() {
       const response = await api.get(`api/area-info/name/${areaSearchQ.value.value}`);
       const areaId = response.data;
       console.log(response);
-      console.log(!response.data.length)
-      if (!response.data.length) {
+      console.log(response.data.length)
+      console.log(typeof response.data)
+      if (typeof response.data === 'object') {
         alert('그러한 상권이 없습니다.')
       }
       else{
