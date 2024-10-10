@@ -6,7 +6,7 @@
     <a href="/marketanalysis" class="navbar-brand mb-1">
       <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
     </a>
-    <div class="w-100 mt-4 mb-4">
+    <div class="w-100 mt-1 mb-4">
         <div class="search-input-container" id="area-search">
           <input
             ref="areaSearchQ"
