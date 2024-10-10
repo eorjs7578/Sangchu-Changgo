@@ -6,7 +6,7 @@
     <a href="/marketanalysis" class="navbar-brand mb-1">
       <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
     </a>
-    <div class="w-100 mt-4 mb-4">
+    <div class="w-100 mt-1 mb-4">
         <div class="search-input-container" id="area-search">
           <input
             ref="areaSearchQ"
@@ -176,7 +176,12 @@ async function searchArea() {
       const response = await api.get(`api/area-info/name/${areaSearchQ.value.value}`);
       const areaId = response.data;
       console.log(response);
-      window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
+      if (response.data.length === undefined) {
+        alert('그러한 상권이 없습니다.')
+      }
+      else{
+       window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
+      }
     } catch (error) {
       console.error("Error fetching area info:", error);
     }
