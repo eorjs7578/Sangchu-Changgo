@@ -176,13 +176,11 @@ async function searchArea() {
       const response = await api.get(`api/area-info/name/${areaSearchQ.value.value}`);
       const areaId = response.data;
       console.log(response);
-      console.log(response.data.length)
-      console.log(typeof response.data)
-      if (typeof response.data === 'object') {
+      if (typeof response.data === 'object' && Object.keys(response.data).length === 0) {
         alert('그러한 상권이 없습니다.')
       }
       else{
-       window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
+      //  window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
       }
     } catch (error) {
       console.error("Error fetching area info:", error);
