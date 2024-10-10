@@ -34,25 +34,27 @@ SSAFY 11기 특화 프로젝트
 |           | spark           |         3.5.2         |
 
 
-### 산출물 
-[산출물](https://radial-detective-510.notion.site/339ba87a3f8c45a68df7a7411d10278b?pvs=4) 
+## 주요 기능 
+- 빅데이터를 활용한 상권 분석
+- 프랜차이즈 창업 비용 예측
+- 상권 및 프랜차이즈 커뮤니티
+- 상권 및 게시판 검색어 추천 
 
+## 산출물 
+
+### 피그마
+[figma](https://www.figma.com/design/tde91Y45Rt5Eoyb0AAtLZy/D108-%ED%8A%B9%ED%99%94%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0-1&node-type=canvas&t=2XqcXYVPhUk2vsCN-0)
+
+### 기술 스택
+[기술 스택](https://radial-detective-510.notion.site/4cd2ec1bd67442e1a89a33d81e0accd3)
+![기술 스택](/image/기술스택.PNG)
 
 ### erd
 [ERD 상세 보기](https://www.erdcloud.com/d/3kkFXSxpjhoWZ3LYJ) 
 ![ERD](/image/ERD.PNG)
-### 피그마
-
-### 기술 스택
-![기술 스택](/image/기술스택.PNG)
 
 ### 아키텍처
 ![시스템 구조도](/image/시스템구조도.png)
-
-### 주요 기능 
-- 빅데이터를 활용한 상권 분석
-- 프랜차이즈 창업 비용 예측
-- 상권 및 프랜차이즈 커뮤니티
 
 ### 팀원
 
