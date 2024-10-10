@@ -27,24 +27,26 @@ SSAFY 11기 특화 프로젝트
 
 
 ### 산출물 
-[산출물](https://radial-detective-510.notion.site/339ba87a3f8c45a68df7a7411d10278b?pvs=4)
+[산출물](https://radial-detective-510.notion.site/339ba87a3f8c45a68df7a7411d10278b?pvs=4) 
 
 ### 주요 기능 
+- 빅데이터를 활용한 상권 분석
+- 프랜차이즈 창업 비용 예측
+- 상권 및 프랜차이즈 커뮤니티
 
 ### 아키텍처
-
+![시스템 구조도](/image/시스템구조도.png)
 
 
 ### 팀원
 
 |  이름  | 역할                                                                             |
 | :----: | :------------------------------------------------------------------------------- |
-| 조시현 | 팀장 |
-| 박동현 |            |
-| 이승봉 |                  |
-| 조민기 |                                  |
-| 곽대건 |                           |
-| 정진규 |   |
-| 김민솔 |   |
+| 조시현 |  팀장, Backend, Frontend          |
+| 박동현 |  Backend, Frontend                |
+| 이승봉 |  Backend, Frontend, Infra         |
+| 조민기 |  Backend, Frontend, Data Infra    |
+| 곽대건 |  Backend, Frontend                |
+| 정진규 |  Backend, Frontend, Data Engineer |
+| 김민솔 |  Backend, Frontend, Data Engineer |
 
-# [submodule 주소](https://lab.ssafy.com/si4018/d108_secret.git) 
