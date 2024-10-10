@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <div class="container-fluid h-100">
       <div class="row bg-success text-white p-3 align-items-center">
         <div class="col-10 g-1">
@@ -59,15 +59,16 @@
           class="overflow-auto custom-scroll h-75"
       >
         <!-- 점포 분석 -->
-        <StoreAnalysis :place="place" @update:location="handleLocationUpdate" />
+        <StoreAnalysis  :place="place" @update:location="handleLocationUpdate" />
         <!-- 인구 정보 -->
-        <PopulationAnalysis :place="place" />
+        <PopulationAnalysis  :place="place" />
 
         <!-- 매출 분석 -->
-        <SalesAnalysis :place="place" :service="service" />
+        <SalesAnalysis :key="refreshKey" :place="place" :service="service" />
 
         <!-- 평가 결과 -->
         <SurveyResult
+
             :place="place"
         />
 
@@ -112,6 +113,8 @@ const showLoginPopup = ref(false); // Flag for showing login modal
 const activeSection = ref('storeAnalysis');
 const scrollContainer = ref(null);
 const service = ref();
+const refreshKey = ref(0);
+
 const areaId = props.place; // Use the place as the favoriteAreaId
 
 const accountStore = useAccountStore(); // Use the account store
@@ -197,8 +200,9 @@ const toggleFavorite = async () => {
 };
 
 const handleLocationUpdate = (location) => {
-  console.log('Selected location received from child:', location);
-  service.value = location;
+    console.log('Selected location received from child:', location);
+    service.value = location;
+    refreshKey.value += 1;
 };
 
 const scrollToSection = (section) => {
@@ -274,6 +278,7 @@ onMounted(() => {
   // Check if the area is a favorite when component mounts
   checkFavoriteStatus();
 });
+
 </script>
 
 <style>
