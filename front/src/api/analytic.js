@@ -132,9 +132,9 @@ function getAllAreaEvaluationType(areaId, evaluationId, success, fail) {
 }
 
 function getStatisticsAreaEvaluation(areaId, evaluationId, success, fail) {
-  local.get(`/api/area-evaluation/statistics/${areaId}`) // areaId를 URL에 동적으로 삽입
+  local.get(`/api/area-evaluation/statistics/${areaId}`)
     .then(success) // 성공 시 콜백 함수 호출
-    .catch(fail) // 실패 시 콜백 함수 호출
+    .catch(fail);
 }
 
 export {
