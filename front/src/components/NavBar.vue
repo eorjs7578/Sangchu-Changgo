@@ -139,7 +139,7 @@ function handleAreaInput() {
 }
 
 async function handleAreaEnter() {
-  if (areaRecommendations.value) {
+  if (areaRecommendations.value.length) {
   const response = await api.get(`api/area-info/name/${areaRecommendations.value[0]}`);
   const areaId = response.data;
   window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
@@ -161,7 +161,7 @@ const debouncedGetAreaRecommendations = debounce(async () => {
   } else {
     areaRecommendations.value = [];
   }
-}, 300);
+}, 30);
 
 const selectAreaRecommendation = (recommendation) => {
   areaSearchQ.value.value = recommendation;
