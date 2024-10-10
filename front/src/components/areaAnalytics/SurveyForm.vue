@@ -117,6 +117,9 @@ const fetchMyEvaluation = async () => {
   try {
     getMyAreaEvaluation(props.place, evaluationId.value, (response) => {
       const data = response.data;
+      if(data.evaluation_id == undefined) {
+        return
+      }
       evaluationId.value = data.evaluation_id;
       selectedOptions.value.ageGroup = data.age_group;
       selectedOptions.value.footTraffic = data.foot_traffic;
