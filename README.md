@@ -51,7 +51,7 @@ SSAFY 11기 특화 프로젝트
 
 ### erd
 [ERD 상세 보기](https://www.erdcloud.com/d/3kkFXSxpjhoWZ3LYJ) 
-![ERD](/image/ERD.PNG)
+![ERD](/image/ERD.png)
 
 ### 아키텍처
 ![시스템 구조도](/image/시스템구조도.png)
