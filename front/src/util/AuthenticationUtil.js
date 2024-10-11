@@ -22,7 +22,7 @@ export function isUsernameValidated(username) {
 }
 
 export function isEmailDuplicated(email) {
-  return api.get("/api/members/duplicate/email", {params: {
+  return api.get("/api/v1/members/duplicate/email", {params: {
   email: email}
   })
     .then(response => {
@@ -34,7 +34,7 @@ export function isEmailDuplicated(email) {
 }
 
 export function isNicknameDuplicated(nickname) {
-  return api.get("/api/members/duplicate/nickname", {params: {
+  return api.get("/api/v1/members/duplicate/nickname", {params: {
       nickname: nickname
     }})
     .then(response => response)
@@ -44,7 +44,7 @@ export function isNicknameDuplicated(nickname) {
 }
 
 export function isUsernameDuplicated(username) {
-  return api.get("/api/members/duplicate/username", {
+  return api.get("/api/v1/members/duplicate/username", {
     params: {
       username: username
     }
@@ -58,7 +58,7 @@ export function isUsernameDuplicated(username) {
 }
 
 export async function getAuthCode(email) {
-  return api.get("/api/members/auth-email", {params: {
+  return api.get("/api/v1/members/auth-email", {params: {
       email: email,
     }})
     .then(response => {
@@ -69,7 +69,7 @@ export async function getAuthCode(email) {
 }
 
 export function checkAuthCode(email, auth_code) {
-  return api.post("/api/members/auth-email", {
+  return api.post("/api/v1/members/auth-email", {
     email,
     auth_code,
   })
@@ -82,7 +82,7 @@ export function checkAuthCode(email, auth_code) {
 }
 
 export function updateEmail(email, auth_code) {
-  return api.post("/api/members/update/email", {
+  return api.post("/api/v1/members/update/email", {
     email,
     auth_code,
   })
@@ -95,7 +95,7 @@ export function updateEmail(email, auth_code) {
 }
 
 export function signUp(username, nickname, email, password) {
-  return api.post("/api/members/signup", {
+  return api.post("/api/v1/members/signup", {
     username,
     nickname,
     email,
@@ -110,7 +110,7 @@ export function signUp(username, nickname, email, password) {
 }
 
 export function login(username, password) {
-  return api.post("/api/members/login", {
+  return api.post("/api/v1/members/login", {
     username,
     password,
   })
@@ -123,16 +123,16 @@ export function login(username, password) {
 }
 
 export function kakaoLogin() {
-  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/oauth2/authorization/kakao?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`
+  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/v1/oauth2/authorization/kakao?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`
 }
 
 export function naverLogin() {
-  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/oauth2/authorization/naver?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`;
+  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/v1/oauth2/authorization/naver?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`;
 }
 
 
 export function checkBeforeFindPassword(username, email) {
-  return api.post("/api/members/find/check", {
+  return api.post("/api/v1/members/find/check", {
     username,
     email
   })
@@ -145,7 +145,7 @@ export function checkBeforeFindPassword(username, email) {
 }
 
 export function findPassword(username, password) {
-  return api.post("/api/members/find/password", {
+  return api.post("/api/v1/members/find/password", {
     username,
     password
   })

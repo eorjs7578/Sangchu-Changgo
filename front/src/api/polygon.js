@@ -13,7 +13,7 @@ async function getRequest(url) {
 
 
 async function getGu() {
-    return await getRequest(`/api/map/gu`);
+    return await getRequest(`/api/v1/map/gu`);
   }
   
   /**
@@ -23,7 +23,7 @@ async function getGu() {
    * @returns {Promise} - 동 데이터를 가져오는 Promise
    */
   async  function getDong(code) {
-    return await getRequest(`/api/map/dong/${code}`);
+    return await getRequest(`/api/v1/map/dong/${code}`);
   }
   
   /**
@@ -33,7 +33,7 @@ async function getGu() {
    * @returns {Promise} - 지역 데이터를 가져오는 Promise
    */
   async  function getArea(code) {
-    return await getRequest(`/api/map/area/${code}`);
+    return await getRequest(`/api/v1/map/area/${code}`);
   }
 
   async function getAreaInfo(code){

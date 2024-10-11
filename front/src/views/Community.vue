@@ -184,7 +184,7 @@ function debounce(func, wait) {
 const debouncedGetRecommendations = debounce(async () => {
   if (searchQ.value.value.length > 0) {
     try {
-      const response = await api.get(`/api/recommendation/board/search-term?searchTerm=${searchQ.value.value}`);
+      const response = await api.get(`/api/v1/recommendation/board/search-term?searchTerm=${searchQ.value.value}`);
       recommendations.value = response.data.result;
     } catch (error) {
       console.error("Error fetching recommendations:", error);

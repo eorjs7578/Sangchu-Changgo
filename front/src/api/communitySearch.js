@@ -15,32 +15,32 @@ async function getRequest(url) {
 
 
 async  function getAll(page,size,str) {
-    return await getRequest(`/api/boards/search/${page}/${size}?keyword=${str}`);
+    return await getRequest(`/api/v1/boards/search/${page}/${size}?keyword=${str}`);
 }
 async  function getFranchise(page,size,str) {
-    return await getRequest(`/api/boards/search/franchise/${page}/${size}?keyword=${str}`);
+    return await getRequest(`/api/v1/boards/search/franchise/${page}/${size}?keyword=${str}`);
 }
 async  function getArea(page,size,str) {
-    return await getRequest(`/api/boards/search/area/${page}/${size}?keyword=${str}`);
+    return await getRequest(`/api/v1/boards/search/area/${page}/${size}?keyword=${str}`);
 }
 
 async  function getHotArea() {
-    return await getRequest(`/api/boards/popular/area`);
+    return await getRequest(`/api/v1/boards/popular/area`);
 }
 async  function getHotFranchise() {
-    return await getRequest(`/api/boards/popular/franchise`);
+    return await getRequest(`/api/v1/boards/popular/franchise`);
 }
 
 async  function getALLArea(page,size) {
-    return await getRequest(`/api/boards/all/area/${page}/${size}`);
+    return await getRequest(`/api/v1/boards/all/area/${page}/${size}`);
 }
 async  function getALLFranchise(page,size) {
-    return await getRequest(`/api/boards/all/franchise/${page}/${size}`);
+    return await getRequest(`/api/v1/boards/all/franchise/${page}/${size}`);
 }
 
 // 게시판 이름 조회 API
 async function getBoardName(boardId) {
-    return await getRequest(`/api/boards/${boardId}`);
+    return await getRequest(`/api/v1/boards/${boardId}`);
 }
 
 

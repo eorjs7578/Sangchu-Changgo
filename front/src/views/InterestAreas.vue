@@ -55,7 +55,7 @@ const fetchFavoriteAreas = async () => {
 
   try {
     isLoading.value = true;
-    const response = await api.get(`/api/favorite/areas/list`);
+    const response = await api.get(`/api/v1/favorite/areas/list`);
     if (response.data.area_list) {
       favoriteAreas.value = response.data.area_list.map(area => ({
         ...area,
@@ -80,10 +80,10 @@ const toggleFavorite = async (area) => {
 
   try {
     if (area.isFavorite) {
-      await api.delete(`/api/favorite/areas/${area.favorite_id}`);
+      await api.delete(`/api/v1/favorite/areas/${area.favorite_id}`);
       area.isFavorite = false;
     } else {
-      await api.post('/api/favorite/areas', { area_id: area.area_id });
+      await api.post('/api/v1/favorite/areas', { area_id: area.area_id });
       window.location.reload();
     }
   } catch (error) {
