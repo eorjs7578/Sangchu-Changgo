@@ -130,7 +130,7 @@ const handleFavoriteClick = () => {
 }
 
 const navigateToAreaAnalysis = (area) => {
-  response.get(`/api/area-info`, {areaName})
+  response.get(`/api/v1/area-info`, {areaName})
   window.location.href = VITE_VUE_FRONT_URL+`marketanalysis?areaId=${area.area_id}`
 };
 
@@ -153,7 +153,7 @@ const debouncedGetAreaRecommendations = debounce(async () => {
   console.log("debo: " + areaSearchQ.value.value + " "  + areaSearchQ.value)
   if (areaSearchQ.value && areaSearchQ.value.value.length > 0) {
     try {
-      const response = await api.get(`/api/recommendation/area?areaName=${areaSearchQ.value.value}`);
+      const response = await api.get(`/api/v1/recommendation/area?areaName=${areaSearchQ.value.value}`);
       areaRecommendations.value = response.data.result; 
     } catch (error) {
       console.error("Error fetching area recommendations:", error);
@@ -305,7 +305,7 @@ const toggleAvatarMenu = () => {
 
 // 로그아웃 함수
 async function logout() {
-  await api.post("/api/members/logout")
+  await api.post("/api/v1/members/logout")
     store.isAuthenticated = false;
     store.userInfo = {};
     isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기

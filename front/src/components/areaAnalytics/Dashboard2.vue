@@ -129,7 +129,7 @@ const checkFavoriteStatus = async () => {
   }
 
   try {
-    const response = await api.get(`/api/favorite/areas/${areaId}`);
+    const response = await api.get(`/api/v1/favorite/areas/${areaId}`);
     const { is_check: isCheck, favorite_area_id: responseAreaId } = response.data;
     
     console.log(response.data); // 응답 확인
@@ -151,7 +151,7 @@ const checkFavoriteStatus = async () => {
 
 
 // try {
-//     const response = await api.get(`/api/favorite/areas/${areaId}`);
+//     const response = await api.get(`/api/v1/favorite/areas/${areaId}`);
 //     const { isCheck, favoriteAreaId: responseAreaId } = response.data;
 //     favorite.value = isCheck;
 //   } 
@@ -177,11 +177,11 @@ const toggleFavorite = async () => {
   try {
     if (favorite.value) {
       // If currently favorited, send DELETE request to remove favorite
-      await api.delete(`/api/favorite/areas/${favoriteAreaId.value}`);
+      await api.delete(`/api/v1/favorite/areas/${favoriteAreaId.value}`);
     } else {
       console.log("Sending areaId:", areaId);
       // If not favorited, send POST request to add favorite
-      const response = await api.post('/api/favorite/areas', { area_id: areaId });
+      const response = await api.post('/api/v1/favorite/areas', { area_id: areaId });
       console.log(response)
       favoriteAreaId.value = response.data; // 응답에서 favorite_id 받아오기
 
@@ -241,7 +241,7 @@ watch([area], () => {
   const container = scrollContainer.value;
   container.addEventListener('scroll', updateActiveSection);
 
-  api.get("/api/area-info", {
+  api.get("/api/v1/area-info", {
     params: {
       areaId: props.place,
     }
@@ -261,7 +261,7 @@ onMounted(() => {
   const container = scrollContainer.value;
   container.addEventListener('scroll', updateActiveSection);
 
-  api.get("/api/area-info", {
+  api.get("/api/v1/area-info", {
     params: {
       areaId: props.place,
     }

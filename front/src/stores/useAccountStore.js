@@ -10,7 +10,7 @@ export const useAccountStore = defineStore("accounts", () => {
    * 인증 정보를 체크하는 함수
    */
   function checkAuthStatus() {
-    return api.get("/api/members/my-info")
+    return api.get("/api/v1/members/my-info")
       .then(response => {
         console.log(response.data)
         isAuthenticated.value = true;

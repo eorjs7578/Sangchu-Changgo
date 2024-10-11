@@ -178,7 +178,7 @@ watch([isEmailSend, validationTime], ([newIsEmailSend, newValidationTime]) => {
 
 // 닉네임 변경 함수
 const changeNickname = () => {
-  api.post('/api/members/update/nickname', {
+  api.post('/api/v1/members/update/nickname', {
     nickname: newNickname.value,
   })
     .then(() => {
@@ -193,7 +193,7 @@ const changeNickname = () => {
 
 // 비밀번호 변경 함수
 const changePassword = () => {
-  api.post('/api/members/update/password', {
+  api.post('/api/v1/members/update/password', {
     old_password: oldPassword.value,
     new_password: newPassword.value,
   })
