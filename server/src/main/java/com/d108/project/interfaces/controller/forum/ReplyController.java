@@ -27,9 +27,9 @@ public class ReplyController implements ReplyApi {
                     "<p>로그인 한 유저인지 확인해야함</p>"
     )
     @Override
-    public ResponseEntity<Void> createReply(Member member, Long postId, ReplyCreateDto replyCreateDto) {
-        replyService.createReply(member, postId, replyCreateDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Long> createReply(Member member, Long postId, ReplyCreateDto replyCreateDto) {
+        Long replyId = replyService.createReply(member, postId, replyCreateDto);
+        return ResponseEntity.ok(replyId);
     }
 
     @Operation(summary = "작성 글 댓글 조회", description = "게시글 조회에 포함된 기능이라 사용할 필요 없어보임")

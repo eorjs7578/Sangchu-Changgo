@@ -1,10 +1,18 @@
 <template>
-  <div class="map-container">
-    <Map></Map>
+  <div class="map">
+    <Map :areaId="areaId"></Map>
   </div>
 </template>
 <script setup>
 import Map from "@/components/Map.vue";
+
+const props = defineProps({
+  areaId: {
+    type: String,
+    required: false
+  }
+});
+
 </script>
 <script>
 export default {
@@ -15,9 +23,9 @@ export default {
 </script>
 
 <style scoped>
-.map-container{
+.map{
   padding: 0px;
-  width: 88vw;
+  width: 80vw;
   height: 100vh;
   float: right;
 }

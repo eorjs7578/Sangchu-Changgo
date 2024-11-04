@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api/posts/{postId}/replies")
 public interface ReplyApi {
     @PostMapping
-    ResponseEntity<Void> createReply(@AuthenticationPrincipal Member member, @PathVariable("postId") Long postId, @RequestBody ReplyCreateDto replyCreateDto);
+    ResponseEntity<Long> createReply(@AuthenticationPrincipal Member member, @PathVariable("postId") Long postId, @RequestBody ReplyCreateDto replyCreateDto);
 
     @GetMapping
     ResponseEntity<List<ReplyByPostIdResponseDto>> getAllReplyByPostId(@PathVariable("postId") Long postId);

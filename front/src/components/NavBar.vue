@@ -1,91 +1,268 @@
 <template>
-  <div>
-    <!-- 첫 번째 사이드바 -->
-    <nav class="navbar">
-      <h5>상추창고</h5>
-      <ul class="nav-links">
-        <li @click="closeCommunitySubmenu">
-          <router-link to="/marketanalysis">상권분석</router-link>
-        </li>
-        <li @click="closeCommunitySubmenu">
-          <router-link to="/interestareas">관심상권</router-link>
-        </li>
-        <li @click="toggleCommunitySubmenu" class="link">커뮤니티</li>
-
-        <!-- 프랜차이즈 메뉴 -->
-        <li @click="toggleFranchiseSubmenu" class="link">프랜차이즈</li>
-
-        <!-- 프랜차이즈 하위 메뉴 -->
-        <ul v-show="isFranchiseOpen ">
-          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal1" @click="toggleFavorite">관심프차</li>
-          <FavoriteFranchise :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
-          <li class="link" data-bs-toggle="modal" data-bs-target="#exampleModal2">예상비용</li>
-          <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
-        </ul>
-
-      </ul>
-
-      <!-- 로그인/회원가입 또는 아바타 이미지 -->
-      <div class="bottom-container">
-        <ul class="auth-links">
-          <li v-if="!isLoggedIn" @click="closeCommunitySubmenu">
-            <router-link to="/members/login">로그인</router-link>
-          </li>
-          <li v-if="!isLoggedIn" @click="closeCommunitySubmenu">
-            <router-link to="/members/signup">회원가입</router-link>
-          </li>
-          <li v-else class="avatar-container">
-            <img src="@/assets/img/account.png" alt="User Avatar" class="avatar-image" @click="toggleAvatarMenu" />
-            <div v-show="isAvatarMenuOpen" class="avatar-dropdown">
-              <router-link to="/members/mypage">마이페이지</router-link>
-              <button @click="logout" class="logout-btn">로그아웃</button>
-            </div>
-          </li>
-        </ul>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light flex-column vh-100 px-3 py-1" style="width: 20vw;">
+    <!-- <router-link to="/marketanalysis" class="navbar-brand mb-4">
+      <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
+    </router-link> -->
+    <a href="/marketanalysis" class="navbar-brand mb-1">
+      <img src="@/assets/img/sangchuLogo2.png" alt="상추창고" height="112" width="150">
+    </a>
+    <div class="w-100 mt-1 mb-4">
+        <div class="search-input-container" id="area-search">
+          <input
+            ref="areaSearchQ"
+            type="text"
+            class="custom-input"
+            placeholder="상권 검색"
+            @input="handleAreaInput"
+            @keyup.enter="handleAreaEnter"
+          />
+          <button class="search-button" @click="searchArea">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <!-- 추천 검색어 목록 -->
+          <div v-if="areaRecommendations.length > 0" class="recommendations-container">
+            <ul class="list-group">
+              <li 
+                v-for="recommendation in areaRecommendations" 
+                :key="recommendation" 
+                class="list-group-item list-group-item-action" 
+                @click="selectAreaRecommendation(recommendation)"
+                @mousedown.prevent
+              >
+                {{ recommendation }}
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </nav>
-
-    <!-- 두 번째 서브메뉴 (커뮤니티를 클릭할 때 표시) -->
-    <nav class="submenu" v-if="isCommunityOpen">
-      <h1>커뮤니티</h1>
-      <ul>
-        <li><router-link to="/CreatePost">상권 게시판</router-link></li>
-        <li><router-link to="/PostList">프랜차이즈 게시판</router-link></li>
-        <li><router-link to="/community/propertyboard">상권 매물 게시판</router-link></li>
-      </ul>
-    </nav>
-
-    <!-- 메인 콘텐츠 영역 -->
-    <div class="content">
-
+    <ul class="nav flex-column mb-2 w-100">
+      <li class="nav-item">
+        <a href="/marketanalysis" class="nav-link">
+          <i class="bi bi-bar-chart-fill me-2"></i>상권분석
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" @click.prevent="toggleFavoriteArea">
+          <i class="bi bi-star-fill me-2"></i>관심상권
+        </a>
+      </li>
+      <li class="nav-item">
+        <router-link to="/community" class="nav-link" @click="toggleCommunitySubmenu">
+          <i class="bi bi-people-fill me-2"></i>커뮤니티
+        </router-link>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" @click.prevent="toggleFranchiseSubmenu">
+          <i class="bi bi-shop me-2"></i>프랜차이즈
+          <i :class="['bi', isFranchiseOpen ? 'bi-chevron-up' : 'bi-chevron-down', 'ms-2']"></i>
+        </a>
+        <ul v-if="isFranchiseOpen" class="nav flex-column ms-3 mt-2">
+          <li class="nav-item">
+            <a class="nav-link" href="#" @click="toggleFavorite" compact-submenu>
+              <i class="bi bi-heart-fill me-2"></i>관심 프랜차이즈
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" @click.prevent="toggleEstimatedCost">
+              <i class="bi bi-currency-dollar me-2"></i>예상비용
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div class="mt-auto w-100">
+      
+      <template v-if="store.isAuthenticated">
+        <button @click="toggleAvatarMenu" class="btn btn-outline-success w-100 mb-2">
+          <i class="bi bi-person-fill me-2"></i>내 계정
+        </button>
+        <div v-if="isAvatarMenuOpen" class="card mt-2">
+          <div class="card-body p-0">
+            <router-link to="/members/mypage" class="btn btn-link text-decoration-none w-100 text-start">회원정보수정</router-link>
+            <button @click="logout" class="btn btn-link text-decoration-none w-100 text-start text-danger">로그아웃</button>
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <router-link to="/members/login" class="btn btn-success w-100 mb-2">
+          <i class="bi bi-box-arrow-in-right me-2"></i>로그인
+        </router-link>
+        <router-link to="/members/signup" class="btn btn-outline-success w-100">
+          <i class="bi bi-person-plus-fill me-2"></i>회원가입
+        </router-link>
+      </template>
     </div>
-  </div>
+    <FavoriteFranchise v-show="isAuthenticated" :franchise="favoriteFranchises" class="modal fade fullscreen-modal" id="exampleModal1"></FavoriteFranchise>
+    <FranchiseFee class="modal fade fullscreen-modal" id="exampleModal2"></FranchiseFee>
+    <FavoriteArea class="modal fade fullscreen-modal" id="favoriteArea"></FavoriteArea>
+  </nav>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAccountStore } from '@/stores/useAccountStore';
+import { getFavoriteFranchises } from '@/api/franchise';
+import { api } from '@/lib/api';
 import FranchiseFee from '@/views/franchise/FranchiseFee.vue';
 import FavoriteFranchise from '@/views/franchise/FavoriteFranchise.vue';
-import { getFavoriteFranchises} from '@/api/franchise.js'
+import {Modal} from 'bootstrap'
+import FavoriteArea from '@/views/InterestAreas.vue';
+const { VITE_VUE_FRONT_URL} = import.meta.env;
 
-const isCommunityOpen = ref(false)
-const isFranchiseOpen = ref(false)
-const favoriteFranchises = ref([])
+const isCommunityOpen = ref(false);
+const isFranchiseOpen = ref(false);
+const isAvatarMenuOpen = ref(false);
+const favoriteFranchises = ref([]);
 
-const isLoggedIn = ref(false)
-const isAvatarMenuOpen = ref(false)
+const router = useRouter();
+const store = useAccountStore();
+
+const areaSearchQ = ref(null);
+const areaRecommendations = ref([]);
+
+const isAuthenticated = ref(store.isAuthenticated); // store의 인증 상태 확인
+const handleFavoriteClick = () => {
+  
+}
+
+const navigateToAreaAnalysis = (area) => {
+  response.get(`/api/v1/area-info`, {areaName})
+  window.location.href = VITE_VUE_FRONT_URL+`marketanalysis?areaId=${area.area_id}`
+};
+
+function handleAreaInput() {
+  debouncedGetAreaRecommendations();
+}
+
+async function handleAreaEnter() {
+  if (areaRecommendations.value.length) {
+  const response = await api.get(`api/area-info/name/${areaRecommendations.value[0]}`);
+  const areaId = response.data;
+  window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
+  areaRecommendations.value = [];
+  } else {
+    alert("검색어를 입력해 주세요.")
+  }
+}
+
+const debouncedGetAreaRecommendations = debounce(async () => {
+  console.log("debo: " + areaSearchQ.value.value + " "  + areaSearchQ.value)
+  if (areaSearchQ.value && areaSearchQ.value.value.length > 0) {
+    try {
+      const response = await api.get(`/api/v1/recommendation/area?areaName=${areaSearchQ.value.value}`);
+      areaRecommendations.value = response.data.result; 
+    } catch (error) {
+      console.error("Error fetching area recommendations:", error);
+    }
+  } else {
+    areaRecommendations.value = [];
+  }
+}, 30);
+
+const selectAreaRecommendation = (recommendation) => {
+  areaSearchQ.value.value = recommendation;
+  areaRecommendations.value = [];
+  searchArea();
+}
+
+async function searchArea() {
+  if (areaSearchQ.value && areaSearchQ.value.value.length > 0) {
+    console.log("Searching for area:", areaSearchQ.value.value);
+    try {
+      const response = await api.get(`api/area-info/name/${areaSearchQ.value.value}`);
+      const areaId = response.data;
+      console.log(response);
+      if (typeof response.data === 'object' && Object.keys(response.data).length === 0) {
+        alert('그러한 상권이 없습니다.')
+      }
+      else{
+        window.location.href = VITE_VUE_FRONT_URL + `marketanalysis?areaId=${areaId}`;
+      }
+    } catch (error) {
+      console.error("Error fetching area info:", error);
+    }
+  } else {
+    console.warn("Area search query is empty or undefined.");
+  }
+}
+
+
+watch([areaSearchQ], () => {
+  console.log(areaSearchQ.value)
+  if (areaSearchQ.value.value) {
+    areaRecommendations.value = [];
+  }
+  debouncedGetAreaRecommendations();
+});
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+const toggleFavoriteArea = () => {
+  if (store.isAuthenticated) {
+    console.log("로그인 완료")
+    // 여기에 관심상권 관련 로직을 추가합니다.
+    // 예: API 호출, 데이터 처리 등
+    let favoriteAreaModal = new Modal(document.getElementById('favoriteArea'));
+    favoriteAreaModal.show();
+  } else {
+    console.log("로그인 필요")
+    window.alert("로그인이 필요합니다!")
+    router.push({name : 'login'})
+  }
+}
 
 const toggleFavorite = () => {
-  getFavoriteFranchises(
+  if(store.isAuthenticated) {
+    console.log("로그인 완")
+    getFavoriteFranchises(
     ({data}) => {
       console.log(data)
       favoriteFranchises.value = transformData(data)
+      let myModal = new Modal(document.getElementById('exampleModal1'));
+      myModal.show();
     },
     (error) => {
       console.log(error)
     }
   )
+  } else {
+    console.log("로그인 필요")
+    window.alert("로그인이 필요합니다!")
+    router.push({name : 'login'})
+  }
+  
 }
+
+const toggleEstimatedCost = () => {
+  if (store.isAuthenticated) {
+    console.log("로그인 완료")
+    // 여기에 예상비용 관련 로직을 추가합니다.
+    // 예: API 호출, 데이터 처리 등
+    let estimatedCostModal = new Modal(document.getElementById('exampleModal2'));
+    estimatedCostModal.show();
+  } else {
+    console.log("로그인 필요")
+    window.alert("로그인이 필요합니다!")
+
+    router.push({name : 'login'})
+  }
+}
+
+
 
 const transformData = (data) => {
   return data.map((item) => ({
@@ -94,13 +271,13 @@ const transformData = (data) => {
     dong: item.dong,  // 실제 동 데이터로 채워야 함
     name: item.franchise_fee_dto.name,
     storeSize: item.size,  // storeSize 값을 적절히 입력해야 함
-    floor: item.floor,  // floor 값을 적절히 입력해야 함
+    floor: item.floor == false ? '1층 외' : '1층',  // floor 값을 적절히 입력해야 함
     costs: [
-      { name: '임대료', amount: item.franchise_fee_dto.rent_fee },
       { name: '가맹비', amount: item.franchise_fee_dto.franchise_fee },
       { name: '보증금', amount: item.franchise_fee_dto.deposit },
       { name: '교육비', amount: item.franchise_fee_dto.education_fee },
-      { name: '인테리어 비용', amount: item.franchise_fee_dto.interior },
+      { name: '인테리어 비용', amount: item.franchise_fee_dto.interior * item.size },
+      { name: '임대료', amount: Math.floor(item.franchise_fee_dto.rent_fee * item.size / 1000) },
       { name: '기타비용', amount: item.franchise_fee_dto.other_fee }
     ],
     link: item.franchise_fee_dto.link,
@@ -127,170 +304,150 @@ const toggleAvatarMenu = () => {
 };
 
 // 로그아웃 함수
-const logout = () => {
-  isLoggedIn.value = false;
-  localStorage.removeItem('isLoggedIn'); // 로그인 상태 제거
-  isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
+async function logout() {
+  await api.post("/api/v1/members/logout")
+    store.isAuthenticated = false;
+    store.userInfo = {};
+    isAvatarMenuOpen.value = false; // 드롭다운 메뉴 닫기
+    router.push("/").then(() => {
+      window.location.reload();
+    })
+}
 
-  router.push("/").then(() => {
-    window.location.reload();
-  }).catch(err => {
-    console.error('Navigation error:', err);
-  });
-};
 
-// 페이지가 로드될 때 로그인 상태 확인 (onMounted 사용)
 onMounted(() => {
-  isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';
-  isCommunityOpen.value = false
-  isFranchiseOpen.value = !isFranchiseOpen.value
+  isCommunityOpen.value = false;
 });
-
 </script>
 
 <style scoped>
-/* 컨테이너 설정 */
-.container {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
-/* 네비게이션 바 설정 */
 .navbar {
-  position: relative;
-  width: 12vw;
-  background-color: #f8f8f8;
-  padding: 1rem;
-  height: 100vh; /* 네비게이션 바의 높이를 화면 전체로 설정 */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* 요소들을 위아래로 균일하게 배치 */
+  font-family: 'Noto Sans KR', sans-serif;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1); /* Border for separation */
+  background-color: #f8f9fa; /* Light background to distinguish from content */
 }
 
-/* 네비게이션 아이템 중앙 정렬 */
-.nav-links {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2rem; /* 항목 사이 간격 추가 */
-}
-
-.navbar ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.navbar ul li {
-  margin-bottom: 1.5rem;
-  font-size: 1.2rem;
-  text-align: center;
-}
-
-/* 커뮤니티 링크에 대한 hover 스타일 추가 */
-.link:hover {
-  color: blue; /* 마우스를 올렸을 때 파란색으로 변경 */
-  cursor: pointer; /* 커서를 포인터로 변경 */
-}
-
-/* 두 번째 서브메뉴 */
-.submenu {
-  width: 300px;
-  background-color: #e6f0ff;
-  padding: 2rem;
-  height: 100vh;
-  transition: transform 0.3s ease-in-out;
-}
-
-/* 메인 콘텐츠 영역 */
-.content {
-  flex-grow: 1; /* 메인 콘텐츠가 사이드바를 제외한 나머지 공간을 채움 */
-  padding: 2rem;
-  background-color: #f3f4f6;
-  overflow-y: auto;
-}
-
-/* 로그인/회원가입 링크를 네비게이션 바의 하단에 고정 */
-.auth-links {
-  /* position: absolute; */
-  bottom: 0;
-  left: 2rem;
-  margin: 0;
-}
-
-/* 아바타 컨테이너를 하단으로 고정 */
-.bottom-container {
-  margin-top: auto;
-  display: flex;
-  justify-content: center;
-}
-
-/* 아바타 이미지 스타일 */
-.avatar-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-
-.avatar-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-bottom: 0.5rem;
-  cursor: pointer;
-}
-
-/* 아바타 드롭다운을 오른쪽으로 배치 */
-.avatar-dropdown {
-  position: absolute;
-  left: 80px; /* 아바타 오른쪽으로 드롭다운 메뉴 배치 */
-  top: -100px;
-  background-color: #f3e8fc;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  width: 150px;
-  padding: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-}
-
-.avatar-dropdown a,
-.avatar-dropdown button {
-  display: block;
-  padding: 8px 12px;
+.nav-link {
   color: #333;
-  text-align: center;
-  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 10px 15px;
+}
+
+.nav-link:hover {
+  background-color: #e9ecef;
+  color: #007bff;
+  border-radius: 5px;
+}
+
+.navbar-brand img {
+  max-width: 100%;
+  height: auto;
+}
+
+.navbar .btn {
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.navbar .btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.navbar .btn-outline-success:hover {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: #fff;
+}
+
+.card {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-link {
+  padding: 10px;
+}
+.btn-toggle-mode {
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: visible;
+}
+
+.custom-input {
+  flex-grow: 1;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  outline: none;
+  background: transparent;
+}
+
+.search-button {
+  position: absolute;
+  right: 0;
+  background-color: transparent;
+  border: none;
+  padding: 10px;
   cursor: pointer;
 }
 
-.avatar-dropdown button {
-  background: none;
+.search-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.recommendations-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.list-group-item {
+  cursor: pointer;
+  padding: 10px 15px;
   border: none;
-  color: #dc3545;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.avatar-dropdown button:hover {
-  background-color: #f7d7d7;
+.list-group-item:last-child {
+  border-bottom: none;
 }
 
-.avatar-dropdown a:hover {
-  background-color: #eee;
+.list-group-item:hover {
+  background-color: #f8f9fa;
 }
 
-/* 기본 링크 스타일 */
-.auth-links a,
-.navbar ul li a {
-  text-decoration: none;
-  color: inherit;
+.compact-menu .nav-link {
+  padding: 8px 10px;
+  font-size: 0.95rem;
 }
 
-/* 마우스를 올렸을 때 파란색으로 변경 */
-.auth-links a:hover,
-.navbar ul li a:hover,
-.submenu ul li a:hover {
-  color: blue;
+.compact-submenu .nav-link {
+  padding: 6px 10px;
+  font-size: 0.9rem;
 }
 </style>

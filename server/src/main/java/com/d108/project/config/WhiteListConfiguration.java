@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Component
 public class WhiteListConfiguration {
 
-    private static String API_PREFIX = "/api";
+    private static final String API_PREFIX = "/api";
 
     private final String[] whiteList = {
             // 로그인 관련 엔드포인트
@@ -17,10 +17,10 @@ public class WhiteListConfiguration {
             API_PREFIX+"/members/social-login",
             API_PREFIX+"/members/login",
             API_PREFIX+"/members/duplicate/*",
-            "/login/oauth2/code/kakao",
-            "/login/oauth2/code/naver",
-            "/oauth2/authorization/kakao",
-            "/oauth2/authorization/naver",
+            API_PREFIX+"/login/oauth2/code/kakao",
+            API_PREFIX+"/login/oauth2/code/naver",
+            API_PREFIX+"/oauth2/authorization/kakao",
+            API_PREFIX+"/members/find/**",
             // 기본 설정 관련
             "/favicon.ico"
     };
@@ -50,6 +50,7 @@ public class WhiteListConfiguration {
 
             //프랜차이즈 앤드 포인트
             API_PREFIX+"/rent/**",
+            API_PREFIX+"/franchises/type",
             //맵 앤드 포인트
             API_PREFIX+"/map/**",
             API_PREFIX+"/boards/**",
@@ -57,9 +58,10 @@ public class WhiteListConfiguration {
             API_PREFIX+"/posts",
             API_PREFIX+"/area-evaluation/",
             API_PREFIX+"/area-evaluation/statistics/*",
-
-            API_PREFIX+"/franchises/**",
+            API_PREFIX+"/service/**",
             API_PREFIX+"/area-evaluation/type",
+            API_PREFIX+"/area-info",
+            API_PREFIX+"/area-info/**",
     };
 }
 

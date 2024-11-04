@@ -24,7 +24,7 @@ public class ReplyServiceImpl implements ReplyService {
     private final PostRepository postRepository;
 
     @Override
-    public void createReply(Member member, Long postId, ReplyCreateDto replyCreateDto) {
+    public Long createReply(Member member, Long postId, ReplyCreateDto replyCreateDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
@@ -34,7 +34,7 @@ public class ReplyServiceImpl implements ReplyService {
                 .content(replyCreateDto.getContent())
                 .build();
 
-        replyRepository.save(reply);
+        return replyRepository.save(reply).getId();
     }
 
     // 글 기준으로 전체 댓글 조회

@@ -1,5 +1,6 @@
 package com.d108.project.domain.forum.post.service;
 
+import com.d108.project.domain.forum.post.dto.PostPageResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
@@ -27,6 +28,5 @@ public interface PostService {
 
     List<PostResponseDto> getAllPostsByFranchiseId(Long franchiseId);
 
-    List<PostResponseDto> getPostsByBoardId(Long boardId, int page, int size);
-
+    PostPageResponseDto getPostsByBoardId(Long boardId, int page, int size);
 }

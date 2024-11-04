@@ -6,6 +6,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# EC2 서버의 .env 파일을 이미지에 복사
+COPY .env .env
+
 # 소스 코드 복사 후 빌드
 COPY . .
 RUN npm run build

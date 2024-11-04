@@ -2,7 +2,6 @@
   <div class="container-fluid">
     <div class="card mb-3 shadow-sm">
       <div class="card-body">
-        <h4>연령별 유동인구</h4>
         <div style="max-width: 600px; height: 140px">
           <Bar :data="chartData" :options="chartOptions" />
         </div>
@@ -23,62 +22,80 @@ import {
   LinearScale,
 } from "chart.js";
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-);
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 export default {
   name: "HorizontalBarChart",
   components: { Bar },
   props: {
-    title: {
-      type: String,
-      default: "",
+    labels: {
+      type: Array,
+      required: true,
     },
     data: {
-      type: Object,
+      type: Array,
       required: true,
     },
   },
-  data() {
-    return {
-      chartData: {
-        labels: ["남성", "여성"],
+  computed: {
+    // 데이터를 퍼센트로 변환하여 chartData에 적용
+    chartData() {
+      // data 배열의 총합 계산
+      const total = this.data.reduce((sum, value) => sum + value, 0);
+
+      // 각 데이터를 퍼센트로 변환
+      const percentageData = this.data.map(value => ((value / total) * 100).toFixed(2));
+
+      return {
+        labels: this.labels,
         datasets: [
           {
             backgroundColor: [
               "rgba(54, 162, 235, 0.8)",
               "rgba(255, 99, 132, 0.8)",
             ],
-            data: [this.data.male, this.data.female],
+            data: percentageData,  // 퍼센트로 변환된 데이터 적용
           },
         ],
-      },
+      };
+    },
+  },
+  data() {
+    return {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
-        indexAxis: "y",
+        indexAxis: "y",  // 수평 막대 그래프
         plugins: {
           legend: {
             display: false,
           },
           title: {
             display: true,
-            text: this.title,
           },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                // 툴팁에서 퍼센트값을 표시
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.x !== null) {
+                  label += context.parsed.x + '%';
+                }
+                return label;
+              }
+            }
+          }
         },
         scales: {
           x: {
             beginAtZero: true,
-            max: 100,
+            max: 100,  // 퍼센트이므로 최대값을 100으로 설정
             ticks: {
-              callback: function (value) {
-                return value + "%";
+              callback: function(value) {
+                return value + '%';  // x축에 퍼센트 표시
               },
             },
           },

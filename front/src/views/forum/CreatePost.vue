@@ -1,125 +1,208 @@
-<script setup>
-import { ref } from 'vue'
-import { createPost } from '@/api/forum'  // 게시글 생성 API 호출 함수
-import { useRouter } from 'vue-router'    // Vue Router에서 router 사용
+<template>
+    <div class="custom-container">
+        <div class="custom-card">
+            <h2 class="custom-card-title">
+                {{ isEdit ? '게시글 수정' : '새 게시글 작성' }}
+            </h2>
+            <form @submit.prevent="submitPost" class="custom-form">
+                <div class="custom-form-group">
+                    <label for="title" class="custom-form-label">제목</label>
+                    <input
+                        id="title"
+                        v-model="title"
+                        type="text"
+                        class="custom-form-control"
+                        required
+                        placeholder="제목을 입력하세요"
+                    />
+                </div>
+                <div class="custom-form-group">
+                    <label for="content" class="custom-form-label">내용</label>
+                    <textarea
+                        id="content"
+                        v-model="content"
+                        rows="6"
+                        class="custom-form-control"
+                        required
+                        placeholder="내용을 입력하세요"
+                    ></textarea>
+                </div>
+                <div class="custom-form-submit">
+                    <button type="submit" class="custom-btn">
+                        {{ isEdit ? '수정 완료' : '작성 완료' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
 
-// 제목과 내용에 대한 ref 생성
-const subject = ref('')
-const content = ref('')
 
-// router 인스턴스 생성
-const router = useRouter()
+<script>
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { createPost, getPostDetail, updatePost } from '@/api/forum'; // API 함수 가져오기
 
-// 폼 제출 함수
-const submitForm = () => {
+export default {
+    setup() {
+        const route = useRoute();
+        const router = useRouter();
 
-  // 요청 본문 데이터 생성
-  const payload = {
-    board_id: 8,  // 게시판 ID
-    title: subject.value,  // 제목
-    content: content.value  // 내용
-  };
+        // 경로에서 boardId와 postId를 가져옴
+        const boardId = route.query.boardId; // 쿼리에서 boardId 가져오기 (없으면 기본값)
+        const postId = route.params.postId; // postId가 있으면 수정, 없으면 새 글 작성
+        const isEdit = !!postId; // postId가 있으면 true, 없으면 false로 구분
 
-  // 게시글 작성 요청 보내기
-  createPost(payload,
-    (response) => {
-      console.log('게시글 작성 성공:', response);    
-      
-      // Location 헤더에서 새 게시글의 URL 확인 (필요 시 사용)
-      const location = response.headers['location'] || response.headers['Location'];
-      console.log('새로 생성된 게시글 URL:', response.headers);
+        const title = ref('');
+        const content = ref('');
 
-      // 폼 초기화
-      subject.value = '';
-      content.value = '';
+        // 게시글 수정 시 기존 데이터 가져오기
+        const fetchPost = () => {
+            if (isEdit) {
+                getPostDetail(
+                    postId,
+                    (response) => {
+                        title.value = response.data.title;
+                        content.value = response.data.content;
+                    },
+                    (error) => {
+                        console.error('게시글을 불러오는 중 에러 발생:', error);
+                    }
+                );
+            }
+        };
 
-      // 게시글 작성 후 목록 페이지로 이동
-      router.push('/PostList');  // 게시글 목록 경로로 이동
+        onMounted(fetchPost); // 페이지 로드 시 데이터 가져오기
+
+        const submitPost = () => {
+            console.log('submitPost시 board_id: ', boardId);
+            const payload = {
+                board_id: boardId, // 경로에서 가져온 boardId 사용
+                title: title.value, // 제목
+                content: content.value, // 내용
+            };
+
+            console.log('보내는 데이터:', payload); // 확인을 위한 로그
+
+            if (isEdit) {
+                // 게시글 수정 처리
+                updatePost(
+                    postId,
+                    payload,
+                    (response) => {
+                        console.log('게시글 수정 성공:', response);
+                        router.push(`/PostDetail/${postId}`); // 수정 후 게시글 상세 페이지로 이동
+                    },
+                    (error) => {
+                        console.error('게시글 수정 중 에러 발생:', error);
+                    }
+                );
+            } else {
+                // 새 게시글 작성 처리
+                createPost(
+                    payload,
+                    (response) => {
+                        console.log('게시글 작성 성공:', response);
+                        router.push(`/PostList/${boardId}`); // 작성 후 해당 게시판의 게시글 목록으로 이동
+                    },
+                    (error) => {
+                        console.error('게시글 작성 중 에러 발생:', error);
+                    }
+                );
+            }
+        };
+
+        return {
+            title,
+            content,
+            submitPost,
+            isEdit,
+        };
     },
-    (error) => {
-      console.error('게시글 작성 중 에러 발생:', error);
-    }
-  );
 };
 </script>
 
-<template>
-  <div class="community-interface">
-    <h1 class="title">글쓰기</h1>
-
-    <!-- 제목 입력 -->
-    <div class="mb-4">
-      <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">제목</label>
-      <input
-        id="subject"
-        v-model="subject"
-        type="text"
-        required
-        class="search-input"
-        placeholder="제목을 입력하세요"
-      >
-    </div>
-
-    <!-- 내용 입력 -->
-    <div class="mb-4">
-      <label for="content" class="block text-sm font-medium text-gray-700 mb-2">내용</label>
-      <textarea
-        id="content"
-        v-model="content"
-        rows="6"
-        required
-        class="search-input"
-        placeholder="내용을 입력하세요"
-      ></textarea>
-    </div>
-
-    <!-- 제출 버튼 -->
-    <div class="flex justify-end">
-      <button
-        type="submit"
-        class="search-button"
-        @click="submitForm"
-      >
-        제출하기
-      </button>
-    </div>
-  </div>
-</template>
 
 <style scoped>
-.community-interface {
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+.custom-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f0f4f8;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.title {
-  font-size: 24px;
-  margin-bottom: 20px;
+.custom-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
 }
 
-.search-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.custom-card-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #2c3e50;
 }
 
-.search-button {
-  padding: 10px 20px;
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.custom-form {
+    display: flex;
+    flex-direction: column;
 }
 
-.mb-4 {
-  margin-bottom: 20px;
+.custom-form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center
+}
+
+.custom-form-label {
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 0.5rem;
+    display: inline;
+}
+
+.custom-form-control {
+    border: 0;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin: 1vh 2vw;
+    display: inline-block;
+    width: 80%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.custom-form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+    outline: none;
+}
+
+.custom-form-submit {
+    text-align: right;
+}
+
+.custom-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.custom-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.custom-btn:active {
+    transform: translateY(0);
 }
 </style>

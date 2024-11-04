@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Getter
-@Setter(value = AccessLevel.PROTECTED)
+@Setter
 @Entity
 @Table(name = "members")
 @ToString(exclude = {"favoriteAreas", "favoriteFranchises"})
@@ -22,8 +22,10 @@ import java.util.List;
 public class Member extends LoginCredential {
 
     @NotNull
+    @Column(unique = true)
     private String nickname;
 
+    @Column(unique = true)
     private String email;
 
     // 관심 상권

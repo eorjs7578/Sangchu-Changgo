@@ -11,25 +11,22 @@
 
       <p><router-link to="/members/password">비밀번호가 생각나지 않으신가요?</router-link></p>
       <button type="submit">Log In</button>
-    </form>
 
-    <p>아직 회원이 아니신가요? <router-link to="/members/signup">Sign up</router-link></p>
+    <p class="mt-3 ms-auto me-auto">
+      아직 회원이 아니신가요?
+      <router-link to="/members/signup">Sign up</router-link>
+    </p>
 
     <!-- 외부 로그인 버튼 -->
-    <div class="external-login-buttons">
+    <div class="external-login-buttons ms-auto me-auto">
       <img
-        src="@/assets/img/카카오 로그인.png"
+        src="@/assets/img/kakao_login.png"
         alt="Kakao Login"
         class="kakao-login-btn"
         @click="kakaoLogin"
       />
-      <img
-        src="@/assets/img/btnG_축약형.png"
-        alt="Naver Login"
-        class="naver-login-btn"
-        @click="naverLogin"
-      />
     </div>
+    </form>
   </div>
 </template>
 
@@ -37,18 +34,24 @@
   import { ref } from "vue";
   import { useRouter } from "vue-router";
   import { login, kakaoLogin, naverLogin } from "@/util/AuthenticationUtil.js";
+  import {useAccountStore} from "@/stores/useAccountStore.js";
 
   const router = useRouter();
   const username = ref("");
   const password = ref("");
 
+  const store = useAccountStore();
+
   function handleLogin() {
     login(username.value, password.value)
-        .then(() => {
+        .then((response) => {
+          store.isAuthenticated = true;
+          store.userInfo = response.data
           localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
-          router.push("/").then(() => {
-            window.location.reload();
-          });
+          router.push("/")
+          //     .then(() => {
+          //   window.location.reload();
+          // });
         })
         .catch((err) => {
           alert("로그인에 실패했습니다.");
@@ -59,12 +62,13 @@
 
 <style scoped>
 .login-container {
-  width: 80%;
+  width: 80vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem;
+  margin-top: 4rem;
 }
 
 .login-container h2 {
@@ -103,16 +107,7 @@
   background-color: #218838;
 }
 
-.external-login-buttons {
-  display: flex;
-  justify-content: center; /* 버튼들을 가운데 정렬 */
-  gap: 20px; /* 버튼 간의 간격 조정 */
-  margin-top: 1rem;
-}
-
-.kakao-login-btn,
-.naver-login-btn {
-  width: 100px; /* 버튼의 너비 설정 */
+.kakao-login-btn {
   height: auto; /* 비율을 유지하면서 높이 자동 설정 */
   cursor: pointer;
 }

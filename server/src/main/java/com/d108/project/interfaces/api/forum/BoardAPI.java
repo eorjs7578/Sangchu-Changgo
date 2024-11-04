@@ -39,4 +39,7 @@ public interface BoardAPI {
 
     @GetMapping("/popular/area")
     List<BoardResponseDto> getPopularAreaBoards();
+
+    @GetMapping("/{boardId}")
+    String getBoardName(@PathVariable Long boardId);
 }

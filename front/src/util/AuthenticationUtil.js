@@ -1,5 +1,6 @@
 import { api } from "@/lib/api.js"
 
+
 // 이메일 정규 표현식
 export function isEmailValidated(email) {
   return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i.test(email);
@@ -20,29 +21,55 @@ export function isUsernameValidated(username) {
   return /^[a-zA-Z0-9]{1,20}$/.test(username);
 }
 
-export function isNicknameDuplicated(nickname) {
-  return api.get("/api/members/duplicate/nickname", {params: {
-      nickname: nickname
-    }})
+export function isEmailDuplicated(email) {
+  return api.get("/api/v1/members/duplicate/email", {params: {
+  email: email}
+  })
     .then(response => {
-      if (window.confirm("사용할 수 있는 닉네임입니다. \n사용하시겠습니까?")) {
-        return true;
-      }
-      return false;
+      return response
     })
-    .catch(() => {
-      return false;
+    .catch(err => {
+      return Promise.reject(err)
     })
 }
 
-export function getAuthCode(email) {
-  return api.get("/api/members/auth-email", {params: {
+export function isNicknameDuplicated(nickname) {
+  return api.get("/api/v1/members/duplicate/nickname", {params: {
+      nickname: nickname
+    }})
+    .then(response => response)
+    .catch((err) => {
+      return Promise.reject(err)
+    })
+}
+
+export function isUsernameDuplicated(username) {
+  return api.get("/api/v1/members/duplicate/username", {
+    params: {
+      username: username
+    }
+  })
+  .then(response => {
+    return response
+  })
+  .catch(err => {
+    return Promise.reject(err)
+  })
+}
+
+export async function getAuthCode(email) {
+  return api.get("/api/v1/members/auth-email", {params: {
       email: email,
     }})
+    .then(response => {
+    })
+    .catch( err => {
+        return Promise.reject(err)
+      })
 }
 
 export function checkAuthCode(email, auth_code) {
-  return api.post("/api/members/auth-email", {
+  return api.post("/api/v1/members/auth-email", {
     email,
     auth_code,
   })
@@ -50,12 +77,25 @@ export function checkAuthCode(email, auth_code) {
       return true
     })
     .catch(err => {
-      return false
+      return Promise.reject(err);
     })
 }
 
+export function updateEmail(email, auth_code) {
+  return api.post("/api/v1/members/update/email", {
+    email,
+    auth_code,
+  })
+  .then(response => {
+    return true
+  })
+  .catch(err => {
+    return false
+  })
+}
+
 export function signUp(username, nickname, email, password) {
-  return api.post("/api/members/signup", {
+  return api.post("/api/v1/members/signup", {
     username,
     nickname,
     email,
@@ -70,12 +110,12 @@ export function signUp(username, nickname, email, password) {
 }
 
 export function login(username, password) {
-  return api.post("/api/members/login", {
+  return api.post("/api/v1/members/login", {
     username,
     password,
   })
     .then(response => {
-      return true
+      return response
     })
     .catch(err => {
       return Promise.reject(err)
@@ -83,8 +123,36 @@ export function login(username, password) {
 }
 
 export function kakaoLogin() {
-  window.location.href = "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:5173&mode=login";
+  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/v1/oauth2/authorization/kakao?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`
 }
+
 export function naverLogin() {
-  window.location.href = "http://localhost:8080/oauth2/authorization/naver?redirect_uri=http://localhost:5173&mode=login";
+  window.location.href = `${import.meta.env.VITE_VUE_API_URL}/api/v1/oauth2/authorization/naver?redirect_uri=${import.meta.env.VITE_VUE_SOCIAL_REDIRECT_URL}&mode=login`;
+}
+
+
+export function checkBeforeFindPassword(username, email) {
+  return api.post("/api/v1/members/find/check", {
+    username,
+    email
+  })
+    .then(response => {
+      return response
+    })
+    .catch((err) => {
+      return Promise.reject(err)
+    })
+}
+
+export function findPassword(username, password) {
+  return api.post("/api/v1/members/find/password", {
+    username,
+    password
+  })
+    .then(response => {
+      return response
+    })
+    .catch(err => {
+      return Promise.reject(err)
+    })
 }

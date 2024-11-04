@@ -100,7 +100,9 @@ public class AreaAnalyticController implements AreaAnalyticApi {
         return ResponseEntity.ok(areaAnalyticService.getNumberOfSimilarStores(areaId, service));
     }
 
-    @Operation(summary = "[ALL] 업종 정보 조회", description = "")
+    @Operation(summary = "[ALL] 업종 정보 조회", description = "industry_info는 정보 Info는 현재 정보가 무엇을 의미하는지</br>" +
+            ",점포수,개업률,폐업률")
+
     @Override
     public ResponseEntity<IndustryInfoDto> getIndustryInfo(Long areaId, String service) {
         return ResponseEntity.ok(areaAnalyticService.getIndustryInfo(areaId, service));

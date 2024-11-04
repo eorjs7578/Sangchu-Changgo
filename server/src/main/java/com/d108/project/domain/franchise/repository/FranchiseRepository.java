@@ -10,11 +10,11 @@ import java.util.Optional;
 public interface FranchiseRepository extends JpaRepository<Franchise, Long> {
 
 
-    @Query("SELECT DISTINCT f.type FROM Franchise f")
+    @Query("SELECT DISTINCT f.type FROM Franchise f ORDER BY f.type")
     List<String> findDistinctByType();
     List<Franchise> findAll();
     @Query("SELECT f FROM Franchise f WHERE f.name like %:name%")
     List<Franchise>findAllByName(String name);
-    List<Franchise> findAllByType(String type);
+    List<Franchise> findAllByTypeOrderByName(String type);
     Optional<Franchise> findById(Long id);
 }

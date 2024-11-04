@@ -22,7 +22,7 @@
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
                         </span>
-                        <input type="text" class="form-control" v-model="gu.name" placeholder="구" @focus="showGuDropdown = true" @blur="hideGuDropdown">
+                        <input type="text" class="form-control" v-model="gu.name" placeholder="구" @focus="showGuDropdown = true" @blur="hideGuDropdown" readonly>
                       </div>
                       <div v-if="showGuDropdown" class="dropdown-menu show custom-dropdown">
                         <a v-for="guItem in gus" :key="guItem.code" class="dropdown-item" @click="selectGu(guItem)">
@@ -37,7 +37,7 @@
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
                         </span>
-                        <input type="text" class="form-control" v-model="dong.name" placeholder="동" @focus="showDongDropdown = true" @blur="hideDongDropdown">
+                        <input type="text" class="form-control" v-model="dong.name" placeholder="동" @focus="showDongDropdown = true" @blur="hideDongDropdown" readonly>
                       </div>
                       <div v-if="showDongDropdown" class="dropdown-menu show custom-dropdown">
                         <a v-for="dongItem in dongs" :key="dongItem.code" class="dropdown-item"  @mousedown="selectDong(dongItem)">
@@ -57,7 +57,7 @@
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
                         </span>
-                        <input type="text" class="form-control" v-model="category" placeholder="분류" @focus="showCategoryDropdown = true" @blur="hideCategoryDropdown">
+                        <input type="text" class="form-control" v-model="category" placeholder="분류" @focus="showCategoryDropdown = true" @blur="hideCategoryDropdown" readonly>
                       </div>
                       <div v-if="showCategoryDropdown" class="dropdown-menu show custom-dropdown">
                         <a v-for="category in categories" class="dropdown-item" @click="selectCategory(category)">
@@ -72,7 +72,7 @@
                               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                           </svg>
                         </span>
-                        <input type="text" class="form-control" v-model="franchise.name" placeholder="프랜차이즈 선택" @focus="showFranchiseDropdown = true" @blur="hideFranchiseDropdown">
+                        <input type="text" class="form-control" v-model="franchise.name" placeholder="프랜차이즈 선택" @focus="showFranchiseDropdown = true" @blur="hideFranchiseDropdown" readonly>
                       </div>
                       <div v-if="showFranchiseDropdown" class="dropdown-menu show custom-dropdown">
                         <a v-for="franchise in franchises" class="dropdown-item" @click="selectFranchise(franchise)">
@@ -91,24 +91,24 @@
                 <h3 class="mb-4"><span class="text-primary">매장 크기</span>를 선택해 주세요.</h3>
               <div class="row mb-4">
                 <div class="col-6">
-                  <div class="card" :class="{ 'border-primary': storeSize === 'small' }" @click="storeSize = 'small'">
+                  <div class="card" :class="{ 'border-primary': storeSize == 'small' }" @click="storeSize = 'small'">
                     <div class="card-body text-center">
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16">
                         <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
                       </svg>
-                      <p class="mt-2">10평 이하</p>
+                      <p class="mt-2">약 10평</p>
                       <h6>소형</h6>
                     </div>
                   </div>
                 </div>
                 <div class="col-6">
-                  <div class="card" :class="{ 'border-primary': storeSize === 'large' }" @click="storeSize = 'large'">
+                  <div class="card" :class="{ 'border-primary': storeSize == 'large' }" @click="storeSize = 'large'">
                     <div class="card-body text-center">
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
                         <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
                         <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3z"/>
                       </svg>
-                      <p class="mt-2">11평 이상</p>
+                      <p class="mt-2">약 20평</p>
                       <h6>중대형</h6>
                     </div>
                   </div>
@@ -136,27 +136,17 @@
               </div>
               </div>
               
-              <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between h-auto">
                 <button @click="prevStep" class="btn btn-secondary w-100 me-2">이전</button>
                 <button @click="showCostBreakdown" class="btn btn-success w-100 ms-2">비용 확인</button>
               </div>
             </div>
 
             <!-- Step 3 -->
-            <div v-else-if="currentStep === 3" key="step3">
+            <div v-else-if="currentStep === 3" key="step3" class = "h-100 d-flex flex-column justify-content-between">
               <div class="card mb-4">
                 <FranchiseInfoCard :franchise="myFranchise"/>
               </div>
-              <!-- <h6 class="mb-3">다른 프랜차이즈는 어때요?</h6>
-              <div class="row g-3">
-                <div class="row overflow-x">
-                  <div class="col-auto" v-for="(franchise, index) in otherFranchises" :key="index">
-                    <div class="card" >
-                      <FranchiseInfoCard :franchise="franchise" />
-                    </div>
-                  </div>
-                </div>
-              </div> -->
               <button @click="prevStep" class="btn btn-secondary w-100 mt-4">이전</button>
             </div>
           </transition>
@@ -182,13 +172,12 @@ const showCategoryDropdown = ref(false)
 const showFranchiseDropdown = ref(false)
 const currentStep = ref(1)
 const location = ref('')
-const category = ref('')
-const franchise = ref('')
 const storeSize = ref('')
 const selectedFloor = ref('')
 const gu = ref('')
 const dong = ref('')
-
+const category = ref('')
+const franchise = ref('')
 
 const getGuInfos = () => {
   getGu(
@@ -280,6 +269,10 @@ const hideFranchiseDropdown = () => {
 }
 
 const nextStep = () => {
+  if(gu.value == '' || dong.value == '' || category.value=='' || franchise.value == '') {
+    window.alert("모든 선택지를 선택해주세요!")
+    return;
+  }
   currentStep.value++
 }
 
@@ -288,9 +281,14 @@ const prevStep = () => {
 }
 
 const showCostBreakdown = () => {
+  if(storeSize.value == '' || selectedFloor.value == '') {
+    window.alert("모든 선택지를 선택해주세요!")
+    return
+  }
   let size = storeSize.value == 'small' ? 10 : 20;
+  myFranchise.value.storeSize = size
   let fee = selectedFloor.value == 'other' ? false : true;
-
+  myFranchise.value.floor = fee ? '1층' : '1층 외'
   getFranchisesFee(
     franchise.value.id,
     dong.value.code,
@@ -304,9 +302,9 @@ const showCostBreakdown = () => {
           { name: '가맹비', amount: data.franchise_fee },
           { name: '보증금', amount: data.deposit },
           { name: '교육비', amount: data.education_fee },
-          { name: '인테리어 비용', amount: data.interior },
-          { name: '기타비용', amount: data.other_fee },
-          { name:'임대료', amount:Math.floor(size * data.rent_fee / 1000)}
+          { name: '인테리어 비용', amount: data.interior * size },
+          { name:'임대료', amount:Math.floor(size * data.rent_fee/ 1000)},
+          { name: '기타비용', amount: data.other_fee }
       ]
       myFranchise.value.link = data.link
       myFranchise.value.likeId = data.like_id
