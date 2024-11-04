@@ -2,9 +2,16 @@
   <div class="map-container">
     <div id="map">
     </div>
-    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
-        <button @click="closeModal">Close</button>
-    </div>
+    <Dashboard2
+     v-if="showModal"
+     class="modal-overlay"
+     :place="computedPlace"
+     :key="computedPlace"
+     @click.self="closeModal"
+     @close-modal="closeModal"
+     >
+    </Dashboard2>
+
 </div>
 </template>
 
@@ -14,9 +21,9 @@ import {
     getDong,
     getArea,
 } from "@/api/polygon.js";
+import Dashboard2 from "@/components/areaAnalytics/Dashboard2.vue";
 
-
-import {ref, onMounted, watch} from 'vue'
+import {ref, onMounted, watch,computed} from 'vue'
 let map = null;
 let areas=ref([]);
 let polygons = ref([]);
@@ -24,6 +31,13 @@ let script=null;
 let mapLevel=null;
 let x = null;
 let y = null;
+let place = ref();
+let dongId = ref();
+let markers = [];
+let customOverlay = null;
+const prevArea = ref();
+const prevDong = ref();
+const prevGu = ref();
 
 const selectedArea = ref({ name: '', size: 0 }); // 선택된 영역 정보를 저장하는 ref
 const showModal = ref(false); // 모달 표시 여부를 저장하는 ref
@@ -40,6 +54,8 @@ async function getGuData(){
     await getGu()
     .then(data=>{
         areas = data;
+        prevGu.data = data;
+        console.log(prevGu.data)
     })
     .catch(error=>{
         console.error("Error:", error);
@@ -51,6 +67,7 @@ async function getDongData(code){
     mapLevel=6;
     await getDong(code)
     .then(data=>{
+        prevDong.data = data;
         areas = data;
     })
     .catch(error=>{
@@ -62,7 +79,8 @@ async function getDongData(code){
 async function getAreaData(code){
     mapLevel=4;
     await getArea(code)
-    .then(data=>{
+    .then(data => {
+        prevArea.data = data;
         areas = data;
     })
     .catch(error=>{
@@ -89,9 +107,46 @@ const initMap = (x,y) => {
     disableDoubleClickZoom: true,
   };
   map = new kakao.maps.Map(container, options);
-
+  customOverlay = new kakao.maps.CustomOverlay({})
   drawPolygons();
+
+  kakao.maps.event.addListener(map, 'zoom_changed', () => {
+    const lev = map.getLevel()
+    if (lev <= 4) {
+      areas = prevArea.data
+      hideMarkers()
+      drawPolygons()
+    }
+    if (lev === 6) {
+      if (areas !== prevDong.data) {
+        areas = prevDong.data
+        closeModal()
+        hideMarkers()
+        drawPolygons()
+      }
+    }
+    if (lev >= 8) {
+      if (areas !== prevGu.data) {
+        areas = prevGu.data
+        hideMarkers()
+        drawPolygons()
+      }
+    }
+
+  })
 };
+
+// "마커 감추기" 버튼을 클릭하면 호출되어 배열에 추가된 마커를 지도에서 삭제하는 함수입니다
+function hideMarkers() {
+    setMarkers(null);
+}
+
+// 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수입니다
+function setMarkers(map) {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+    }            
+}
 
 function drawPolygons(){
     
@@ -102,6 +157,8 @@ function drawPolygons(){
 
     if (areas && areas.length > 0) {
         for (let i = 0; i < areas.length; i++) {
+            console.log("이거봐!!" + areas[i].name)
+            // 마커를 생성합니다
             const polygon = createPolygon(areas[i]);
             polygons.value.push(polygon);  // 생성한 폴리곤을 배열에 저장
         }
@@ -165,30 +222,41 @@ function createPolygon(area) {
         map: map, // 다각형을 표시할 지도 객체
         path: path,
         strokeWeight: 2,
-        strokeColor: '#004c80',
-        strokeOpacity: 0.8,
-        fillColor: '#fff',
-        fillOpacity: 0.7 
+        strokeColor: '#066905',
+        strokeOpacity: 0.7,
+        fillColor: '#D7F9D6',
+        fillOpacity: 0.5 
     });
 
     // 다각형에 mouseover 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 변경합니다 
     // 지역명을 표시하는 커스텀오버레이를 지도위에 표시합니다
     kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
-        polygon.setOptions({fillColor: '#09f'});
+        polygon.setOptions({fillColor: '#066905'});
+        customOverlay.setContent('<div class="area">' + area.name + '</div>');
+        console.log("mouse over!" + area.name)
+        customOverlay.setPosition(mouseEvent.latLng); 
+        customOverlay.setMap(map);
+    });
 
+    // 다각형에 mousemove 이벤트를 등록하고 이벤트가 발생하면 커스텀 오버레이의 위치를 변경합니다 
+    kakao.maps.event.addListener(polygon, 'mousemove', function(mouseEvent) {
+        
+        customOverlay.setPosition(mouseEvent.latLng); 
     });
 
     // 다각형에 mouseout 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 원래색으로 변경합니다
-    // 커스텀 오버레이를 지도에서 제거합니다 
+    // 커스텀 오버레이를 지도에서 제거합니다
     kakao.maps.event.addListener(polygon, 'mouseout', function() {
-        polygon.setOptions({fillColor: '#fff'});
-    }); 
+        polygon.setOptions({fillColor: '#D7F9D6'});
+        customOverlay.setMap(null);
+    });
 
     // 다각형에 click 이벤트를 등록하고 이벤트가 발생하면 다각형의 이름과 면적을 인포윈도우에 표시합니다 
     kakao.maps.event.addListener(polygon, 'click', function(mouseEvent) {
         x = area.ypos;
         y = area.xpos;
-        
+
+        console.log('Selected place:', place.value);
            // 선택된 지역 정보를 저장하여 모달에 표시
         selectedArea.value = {
             name: area.name,
@@ -203,30 +271,53 @@ function createPolygon(area) {
     };
 
     // 모달을 보이도록 설정
-    showModal.value = true;
 
-        if(area.size==0){ // 구 
-            getDongData(area.id);
-        }
-        else if (area.size ==1){
-            getAreaData(area.id);
-        }else{
-            getGuData();
+    if(area.size==0){ // 구
+        getDongData(area.id);
+    }
+    else if (area.size ==1){
+        getAreaData(area.id);
+        dongId = area.id;
+    }else{
+        place.value = area.id;
+        getAreaData(dongId);
+            showModal.value = true;
+            console.log("ffff")
+            console.log(place.value)
+
         }
     });
 
-    return polygon; 
+    return polygon;
 }
+
 function closeModal() {
   showModal.value = false;
 }
-// watch(areas, () => {
-//     loadMap(x, y);  // areas 값이 변경되면 폴리곤을 다시 그림
-// },
-// { deep: true }
-// );
+
+watch(place, (newPlace) => {
+  if (newPlace) {
+    showModal.value = true;
+    console.log('Showing modal with updated place:', newPlace); // 업데이트된 place 값 확인
+  }
+});
+const computedPlace = computed(() => place.value);
+
+
 
 </script>
+<style>
+.area {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #888;
+    border-radius: 3px;
+    font-size: 12px;
+    top: -5px;
+    left: 15px;
+    padding:2px;
+}
+</style>
 
 <style scoped>
 .map-container {

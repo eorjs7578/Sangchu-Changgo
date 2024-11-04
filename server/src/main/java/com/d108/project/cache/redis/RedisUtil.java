@@ -16,7 +16,7 @@ public class RedisUtil {
     public static long REDIS_EMAIL_EXPIRE = 60 * 5;       // 60sec * 5min
     public static long REDIS_VIEW_EXPIRE = 60 * 60 * 24;  // 60sec * 60min * 24hour
 
-    // 키(key)에 해당하는 데이터를 Redis에서 가져옴
+    // 키(key)에 해당하는 데이터를 Redis에서 가져옴o
     public String getData(String key) {
         ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(key);
@@ -41,12 +41,6 @@ public class RedisUtil {
 
     // 조회수 증가 함수
     public Long incrementView(String key, long ExpireDuration) {
-        ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
-        // increment 메서드는 문자열을 받아서 long 타입으로 반환
-        Long value = valueOperations.increment(key, 1);
-        // 레디스에 만료 기간 재설정
-        redisTemplate.expire(key, Duration.ofSeconds(ExpireDuration));
-        // 반환
-        return value;
+        return redisTemplate.opsForValue().increment(key, 1);
     }
 }

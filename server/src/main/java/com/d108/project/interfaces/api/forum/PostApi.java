@@ -1,6 +1,7 @@
 package com.d108.project.interfaces.api.forum;
 
 import com.d108.project.domain.forum.post.dto.PostCreateDto;
+import com.d108.project.domain.forum.post.dto.PostPageResponseDto;
 import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
 import com.d108.project.domain.member.entity.Member;
@@ -19,7 +20,6 @@ public interface PostApi {
 
     @PostMapping
     ResponseEntity<Void> createPost(@AuthenticationPrincipal Member member, @RequestBody PostCreateDto postCreateDto);
-//    ResponseEntity<Map<String, Long>> createPost(Member member, PostCreateDto postCreateDto);
 
     @GetMapping("/{postId}")
     ResponseEntity<PostResponseDto> getPostById(@PathVariable("postId") Long postId);
@@ -37,7 +37,11 @@ public interface PostApi {
     ResponseEntity<List<PostResponseDto>> getAllPostsByFranchiseId(@PathVariable("franchiseId") Long franchiseId);
 
     @GetMapping("/{boardId}/{page}/{size}")
-    ResponseEntity<List<PostResponseDto>> getAllPostsByBoardId(@PathVariable Long boardId, @PathVariable int page, @PathVariable int size);
+    public ResponseEntity<?> getPostsByBoardId(
+        @PathVariable Long boardId,  // URL 경로의 boardId
+        @PathVariable Integer page,  // URL 경로의 page
+        @PathVariable Integer size   // URL 경로의 size
+    );
 }
 
 

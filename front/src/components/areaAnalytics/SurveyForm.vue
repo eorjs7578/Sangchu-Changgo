@@ -1,17 +1,16 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4 card mb-3 shadow-sm">
     <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl overflow-hidden">
       <div class="p-6">
-        <h2 class="text-2xl font-bold mb-6">평가하기</h2>
-
+        <h4>평가하기</h4>
+        <hr>
         <div class="space-y-6">
           <!-- 주 연령층 -->
           <div>
-            <h3 class="text-lg font-semibold mb-2">주 연령층</h3>
+            <b>주 연령층</b>
             <div class="grid grid-cols-3 gap-2 mb-2">
-              <button v-for="option in ageGroups" :key="option"
-                      @click="selectOption('age', option)"
-                      :class="['option-button', selectedOptions.age === option ? 'selected' : '']">
+              <button v-for="option in ageGroups" :key="option" @click="selectOption('ageGroup', option)"
+                :class="['option-button', selectedOptions.ageGroup === option ? 'selected' : '']">
                 {{ option }}
               </button>
             </div>
@@ -19,11 +18,10 @@
 
           <!-- 유동인구 -->
           <div>
-            <h3 class="text-lg font-semibold mb-2">유동인구</h3>
+            <b>유동인구</b>
             <div class="grid grid-cols-3 gap-2 mb-2">
-              <button v-for="option in footTraffics" :key="option"
-                      @click="selectOption('mobility', option)"
-                      :class="['option-button', selectedOptions.mobility === option ? 'selected' : '']">
+              <button v-for="option in footTraffics" :key="option" @click="selectOption('footTraffic', option)"
+                :class="['option-button', selectedOptions.footTraffic === option ? 'selected' : '']">
                 {{ option }}
               </button>
             </div>
@@ -31,11 +29,10 @@
 
           <!-- 물가 -->
           <div>
-            <h3 class="text-lg font-semibold mb-2">물가</h3>
+            <b>물가</b>
             <div class="grid grid-cols-3 gap-2 mb-2">
-              <button v-for="option in nearbyPrices" :key="option"
-                      @click="selectOption('price', option)"
-                      :class="['option-button', selectedOptions.price === option ? 'selected' : '']">
+              <button v-for="option in nearbyPrices" :key="option" @click="selectOption('nearbyPrices', option)"
+                :class="['option-button', selectedOptions.nearbyPrices === option ? 'selected' : '']">
                 {{ option }}
               </button>
             </div>
@@ -43,16 +40,15 @@
 
           <!-- 분위기 -->
           <div>
-            <h3 class="text-lg font-semibold mb-2">분위기</h3>
+            <b>분위기</b>
             <div class="grid grid-cols-3 gap-2 mb-2">
-              <button v-for="option in atmospheres" :key="option"
-                      @click="selectOption('atmosphere', option)"
-                      :class="['option-button', selectedOptions.atmosphere === option ? 'selected' : '']">
+              <button v-for="option in atmospheres" :key="option" @click="selectOption('atmosphere', option)"
+                :class="['option-button', selectedOptions.atmosphere === option ? 'selected' : '']">
                 {{ option }}
               </button>
             </div>
           </div>
-
+          <hr>
           <!-- 평가 기능 버튼 -->
           <div class="flex justify-end mt-6 space-x-2">
             <button v-if="!isSubmitted" @click="createEvaluation" class="action-button submit">제출하기</button>
@@ -66,81 +62,172 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { ref, watch, onMounted } from 'vue';
+import { postAreaEvaluation, putAreaEvaluation, deleteAreaEvaluation, getAllAreaEvaluationType, getMyAreaEvaluation } from '@/api/analytic';
+
+const props = defineProps({
+  place: String // 외부에서 전달되는 place (areaId 역할)
+});
 
 const selectedOptions = ref({
-  age: '',
-  mobility: '',
-  price: '',
+  ageGroup: '',
+  footTraffic: '',
+  nearbyPrices: '',
   atmosphere: ''
-})
+});
 
-const isSubmitted = ref(false)
-const evaluationId = ref(null)
+const isSubmitted = ref(false);
+const evaluationId = ref(null);
 
-const ageGroups = ref([])
-const footTraffics = ref([])
-const nearbyPrices = ref([])
-const atmospheres = ref([])
+const ageGroups = ref([]);
+const footTraffics = ref([]);
+const nearbyPrices = ref([]);
+const atmospheres = ref([]);
 
+// 옵션을 선택하는 함수
+const selectOption = (category, option) => {
+  selectedOptions.value[category] = option;
+};
+
+// 평가 데이터를 받아오는 함수
 const fetchTypeList = async () => {
+  if (!props.place) return; // place가 없으면 종료
+
   try {
-    console.log('타입 데이터를 불러옵니다...');
-    const response = await axios.get('https://j11d108.p.ssafy.io/api/area-evaluation/type');
-    const data = response.data;
-    console.log('타입 데이터:', data); // API 응답 데이터 출력
-    ageGroups.value = data.age_groups;
-    footTraffics.value = data.foot_traffics;
-    nearbyPrices.value = data.nearby_prices;
-    atmospheres.value = data.atmospheres;
+    getAllAreaEvaluationType(props.place, null, (response) => {
+      const data = response.data;
+      ageGroups.value = data.age_groups;
+      footTraffics.value = data.foot_traffics;
+      nearbyPrices.value = data.nearby_prices;
+      atmospheres.value = data.atmospheres;
+    }, (error) => {
+      console.error('타입 데이터 불러오기 실패:', error);
+    });
   } catch (error) {
     console.error('타입 데이터 불러오기 실패:', error);
-    console.error('API 응답:', error.response); // 추가 에러 정보 출력
   }
 };
 
+// 내 평가 데이터를 불러오는 함수
+const fetchMyEvaluation = async () => {
+  if (!props.place) return; // place가 없으면 종료
 
-const selectOption = (category, option) => {
-  selectedOptions.value[category] = option
-}
+  try {
+    getMyAreaEvaluation(props.place, evaluationId.value, (response) => {
+      const data = response.data;
+      evaluationId.value = data.evaluation_id;
+      selectedOptions.value.ageGroup = data.age_group;
+      selectedOptions.value.footTraffic = data.foot_traffic;
+      selectedOptions.value.nearbyPrices = data.nearby_prices;
+      selectedOptions.value.atmosphere = data.atmosphere;
+      isSubmitted.value = true;
+    }, (error) => {
+      console.error('내 평가 데이터 불러오기 실패:', error);
+    });
+  } catch (error) {
+    console.error('내 평가 데이터 불러오기 실패:', error);
+  }
+};
 
+// 평가 생성 함수
 const createEvaluation = async () => {
   try {
-    const response = await axios.post('https://j11d108.p.ssafy.io/api/area-evaluation', selectedOptions.value)
-    console.log('평가 제출 성공:', response.data)
-    evaluationId.value = response.data.id
-    isSubmitted.value = true
-  } catch (error) {
-    console.error('평가 제출 실패:', error)
-  }
-}
+    const evaluationData = {
+      age_group: selectedOptions.value.ageGroup || '',
+      foot_traffic: selectedOptions.value.footTraffic || '',
+      atmosphere: selectedOptions.value.atmosphere || '',
+      nearby_prices: selectedOptions.value.nearbyPrices || ''
+    };
 
+    if (!evaluationData.age_group || !evaluationData.foot_traffic || !evaluationData.atmosphere || !evaluationData.nearby_prices) {
+      console.error('모든 필드를 입력해야 합니다.');
+      return;
+    }
+
+    postAreaEvaluation(props.place, evaluationData, (response) => {
+      evaluationId.value = response.data.evaluation_Id;
+      isSubmitted.value = true;
+
+      // 평가 제출 후 평가 데이터를 다시 불러옴
+      fetchMyEvaluation();
+
+      // 성공 알림
+      window.alert('평가가 성공적으로 제출되었습니다!');
+    }, (error) => {
+      console.error('평가 제출 실패:', error);
+    });
+  } catch (error) {
+    console.error('평가 제출 실패:', error);
+  }
+};
+
+// 평가 수정 함수
 const updateEvaluation = async () => {
-  if (!evaluationId.value) return
-  try {
-    const response = await axios.put(`https://j11d108.p.ssafy.io/api/area-evaluation/${evaluationId.value}`, selectedOptions.value)
-    console.log('평가 수정 성공:', response.data)
-  } catch (error) {
-    console.error('평가 수정 실패:', error)
-  }
-}
+  if (!evaluationId.value) return;
 
-const deleteEvaluation = async () => {
-  if (!evaluationId.value) return
   try {
-    await axios.delete(`https://j11d108.p.ssafy.io/api/area-evaluation/${evaluationId.value}`)
-    console.log('평가 삭제 성공')
-    isSubmitted.value = false
-    selectedOptions.value = { age: '', mobility: '', price: '', atmosphere: '' }
+    const evaluationData = {
+      age_group: selectedOptions.value.ageGroup || '',
+      foot_traffic: selectedOptions.value.footTraffic || '',
+      atmosphere: selectedOptions.value.atmosphere || '',
+      nearby_prices: selectedOptions.value.nearbyPrices || ''
+    };
+
+    if (!evaluationData.age_group || !evaluationData.foot_traffic || !evaluationData.atmosphere || !evaluationData.nearby_prices) {
+      console.error('모든 필드를 입력해야 합니다.');
+      window.alert('모든 필드를 입력해야 합니다.');
+      return;
+    }
+
+    putAreaEvaluation(props.place, evaluationId.value, evaluationData, (response) => {
+      console.log('평가 수정 성공:', response);
+
+      // 성공 알림
+      window.alert('평가가 성공적으로 수정되었습니다!');
+    }, (error) => {
+      console.error('평가 수정 실패:', error);
+      window.alert('평가 수정에 실패했습니다.');
+    });
   } catch (error) {
-    console.error('평가 삭제 실패:', error)
+    console.error('평가 수정 실패:', error);
+    window.alert('평가 수정에 실패했습니다.');
   }
-}
+};
+
+// 평가 삭제 함수
+const deleteEvaluation = async () => {
+  if (!evaluationId.value) return;
+
+  try {
+    deleteAreaEvaluation(props.place, evaluationId.value, (response) => {
+      isSubmitted.value = false;
+      selectedOptions.value = { ageGroup: '', footTraffic: '', nearbyPrices: '', atmosphere: '' };
+
+      // 성공 알림
+      window.alert('평가가 성공적으로 삭제되었습니다!');
+    }, (error) => {
+      console.error('평가 삭제 실패:', error);
+      window.alert('평가 삭제에 실패했습니다.');
+    });
+  } catch (error) {
+    console.error('평가 삭제 실패:', error);
+  }
+};
+
+// place가 변경될 때 데이터를 다시 불러옴
+watch(() => props.place, (newPlace) => {
+  console.log('새로운 place:', newPlace);
+  if (newPlace) {
+    fetchTypeList();
+    fetchMyEvaluation();
+  }
+});
 
 onMounted(() => {
-  fetchTypeList()
-})
+  console.log('초기 place:', props.place);
+  fetchTypeList();
+  fetchMyEvaluation();
+});
 </script>
 
 <style scoped>

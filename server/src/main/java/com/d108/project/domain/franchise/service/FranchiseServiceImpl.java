@@ -44,7 +44,7 @@ public class FranchiseServiceImpl implements FranchiseService {
 
     @Override
     public List<FranchiseDto> getFranchisesByType(String type) {
-        List<Franchise> franchises = franchiseRepository.findAllByType(type);
+        List<Franchise> franchises = franchiseRepository.findAllByTypeOrderByName(type);
         List<FranchiseDto> franchiseDtos = new ArrayList<>();
         for (Franchise franchise : franchises) {
             FranchiseDto dto = FranchiseDto.to(franchise);

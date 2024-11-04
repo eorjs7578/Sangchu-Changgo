@@ -4,6 +4,7 @@ import com.d108.project.domain.area.entity.Area;
 import com.d108.project.domain.area.repository.AreaRepository;
 import com.d108.project.domain.forum.board.dto.BoardRequestSearchDto;
 import com.d108.project.domain.forum.board.dto.BoardResponseDto;
+import com.d108.project.domain.forum.board.dto.PageDTO;
 import com.d108.project.domain.forum.board.entity.Board;
 import com.d108.project.domain.forum.board.repository.BoardRepository;
 import com.d108.project.domain.forum.board.repository.BoardSearchRepository;
@@ -12,15 +13,19 @@ import com.d108.project.domain.forum.post.repository.PostRepository;
 import com.d108.project.domain.franchise.entity.Franchise;
 import com.d108.project.domain.franchise.repository.FranchiseRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
@@ -31,6 +36,9 @@ public class BoardServiceImpl implements BoardService {
     private final AreaRepository areaRepository;
     private final FranchiseRepository franchiseRepository;
     private final PostRepository postRepository;
+
+    private final RedisTemplate<String, Object> BoardRedisTemplate;
+
 
     // TODO: 게시판 검색이 아니라 상권이나 프랜차이즈로 검색을 해주고 게시판 클릭시 없으면 만들어주는 것으로 구현하는게 좋을듯  
     @Override
@@ -43,25 +51,77 @@ public class BoardServiceImpl implements BoardService {
 
     }
 
+    //프랜차이즈 조회
     @Override
     public Page<BoardResponseDto> getAllFranchiseBoards(int page, int size) {
         // 페이지 요청 객체 생성
         Pageable pageable = PageRequest.of(page, size);
+        String key = "franchise_page_"+page+"_"+size;
 
-        // 프랜차이즈 게시판 조회 (프랜차이즈 ID가 null이 아닌 게시판)
-        Page<Board> franchiseBoards = boardRepository.findByFranchiseIdIsNotNull(pageable);
+        // Redis에서 조회
+        PageDTO<BoardResponseDto> franchiseBoardsDTO = (PageDTO<BoardResponseDto>) BoardRedisTemplate.opsForValue().get(key);
+        Page<BoardResponseDto> franchiseBoards = null;
+
+        // Redis에 값이 없으면 DB에서 조회
+        if (franchiseBoardsDTO == null) {
+            log.info("db조회");
+            System.out.println("db");
+            Page<Board> boards = boardRepository.findByFranchiseIdIsNotNull(pageable);
+            franchiseBoards = getBoardResponseDtos(boards);
+
+            if (franchiseBoards != null) {
+                // Page를 PageDTO로 변환하여 Redis에 저장
+                PageDTO<BoardResponseDto> pageDTO = new PageDTO<>(franchiseBoards);
+                BoardRedisTemplate.opsForValue().set(key, pageDTO);
+            }
+        } else {
+            log.info("redis!");
+            // Redis에서 가져온 PageDTO를 Page로 변환
+            franchiseBoards = new PageImpl<>(
+                    franchiseBoardsDTO.getContent(),
+                    PageRequest.of(franchiseBoardsDTO.getPageNumber(), franchiseBoardsDTO.getPageSize()),
+                    franchiseBoardsDTO.getTotalElements()
+            );
+        }
+
         System.out.println(franchiseBoards);
         // 각 Board에 대해 최신 글과 총 게시물 개수를 가져와 DTO로 변환
-        return getBoardResponseDtos(franchiseBoards);
+        return franchiseBoards;
     }
 
     @Override
     public Page<BoardResponseDto> getAllAreaBoards(int page, int size) {
+        // 페이지 요청 객체 생성
         Pageable pageable = PageRequest.of(page, size);
+        String key = "area_page_"+page+"_"+size;
 
-        Page<Board> areaBoards = boardRepository.findByAreaIdIsNotNull(pageable); // 지역 게시판 조회
-        // 각 Board에 대해 최신 글과 총 게시물 개수를 가져와 DTO로 변환
-        return getBoardResponseDtos(areaBoards);
+        // Redis에서 조회
+        PageDTO<BoardResponseDto> areaBoardsDTO = (PageDTO<BoardResponseDto>) BoardRedisTemplate.opsForValue().get(key);
+        Page<BoardResponseDto> areaBoards = null;
+
+        // Redis에 값이 없으면 DB에서 조회
+        if (areaBoardsDTO == null) {
+            log.info("db조회");
+            System.out.println("db");
+            Page<Board> boards = boardRepository.findByAreaIdIsNotNull(pageable);
+            areaBoards = getBoardResponseDtos(boards);
+
+            if (areaBoards != null) {
+                // Page를 PageDTO로 변환하여 Redis에 저장
+                PageDTO<BoardResponseDto> pageDTO = new PageDTO<>(areaBoards);
+                BoardRedisTemplate.opsForValue().set(key, pageDTO);
+            }
+        } else {
+            log.info("area redis!");
+            // Redis에서 가져온 PageDTO를 Page로 변환
+            areaBoards = new PageImpl<>(
+                    areaBoardsDTO.getContent(),
+                    PageRequest.of(areaBoardsDTO.getPageNumber(), areaBoardsDTO.getPageSize()),
+                    areaBoardsDTO.getTotalElements()
+            );
+        }
+
+        return areaBoards;
     }
 
     @Override
@@ -95,6 +155,9 @@ public class BoardServiceImpl implements BoardService {
 
         // 검색 조건에 맞는 게시판 조회 로직
         String keyword = boardRequestSearchDto.keyword();
+
+//        Page<Board> searchResults = boardRepository.searchFranchiseBoardsByKeyword(keyword, pageable);
+        // 기존
         Page<Board> searchResults = boardSearchRepository.searchFranchiseBoardsByKeyword(keyword, pageable);
 
         return getBoardResponseDtos(searchResults);

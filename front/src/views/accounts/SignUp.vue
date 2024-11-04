@@ -5,9 +5,24 @@
         <h2>Sign Up</h2>
         <p>회원가입 후 다양한 기능을 이용하세요.</p>
         <form @submit.prevent="handleSignUp">
-          <!-- 이름 필드 -->
-          <label for="username">아이디</label>
-          <input type="text" id="username" placeholder="아이디" v-model="username" />
+           <!-- 아이디 필드 -->
+           <label for="username">아이디</label>
+          <div class="d-flex justify-content-between mb-1">
+            <input type="text"
+                   id="username" placeholder="아이디" v-model="username" :disabled="isUsernameChecked"
+            />
+            <button
+              type="button"
+              class="mb-3"
+              @click="handleUsername(username)"
+              :disabled="isUsernameChecked"
+              :class="{ 'btn btn-secondary': isUsernameChecked, 'btn btn-primary': !isUsernameChecked }"
+
+            >
+              아이디 중복 확인
+            </button>
+          </div>
+          <span v-if="isUsernameError" class="error-text">{{usernameMessage}}</span>
 
           <!-- 닉네임 필드 -->
           <label for="nickname">닉네임</label>
@@ -20,6 +35,7 @@
                 :disabled="isNicknameChecked"
             />
             <button
+                class="mb-3"
                 type="button"
                 @click="handleNickname(nickname)"
                 :disabled="isNicknameChecked"
@@ -31,22 +47,45 @@
             <span v-if="isNicknameError" class="error-text">{{nicknameMessage}}</span>
           <!-- 이메일, 인증 -->
           <label for="email">이메일</label>
-          <div class="email-verification">
-            <input type="email" id="email" placeholder="example@example.com" v-model="email" />
-            <button type="button" @click="handleGetAuthCode">인증번호 전송</button>
+          <div class="d-flex justify-content-between mb-1">
+            <input
+                type="email"
+                id="email"
+                placeholder="example@example.com"
+                v-model="email"
+                :disabled="isEmailChecked"
+            />
+            <button
+                class="mb-3"
+                type="button"
+                @click="handleGetAuthCode"
+                :disabled="isEmailChecked || isEmailSend"
+                :class="{ 'btn btn-secondary': isEmailChecked, 'btn btn-primary': !isEmailChecked }"
+            >{{ isEmailChecked ? "인증 완료" : "인증번호 전송" }}</button>
           </div>
 
           <!-- 인증번호 확인 -->
-          <div class="verification-code">
-            <div class="input-wrapper">
-              <input type="text" placeholder="인증번호" v-model="authCode" />
-              <span class="timer">{{ formatTime(validationTime) }}</span>
-            </div>
-            <div class="verification-wrapper">
-              <button type="button" @click="handleCheckAuthCode">인증번호 확인</button>
+          <!-- 인증번호 입력 -->
+          <div v-if="isEmailSend">
+            <label for="authCode">인증번호</label>
+            <div class="d-flex justify-content-between mb-1">
+              <input
+                  type="text"
+                  id="authCode"
+                  placeholder="인증번호"
+                  v-model="authCode"
+                  :disabled="isEmailChecked"
+              />
+              <span v-if="!isEmailChecked" class="timer mb-3">{{ formatTime(validationTime) }}</span>
+              <button
+                  class="mb-3 ms-2"
+                  type="button"
+                  @click="handleCheckAuthCode"
+                  :disabled="isEmailChecked"
+                  :class="{ 'btn btn-secondary': isEmailChecked, 'btn btn-primary': !isEmailChecked }"
+              >인증번호 확인</button>
             </div>
           </div>
-
           <!-- 비밀번호 -->
           <label for="password">비밀번호</label>
           <input type="password" id="password" placeholder="비밀번호" v-model="password" />
@@ -75,13 +114,16 @@
     isNicknameValidated,
     isPasswordValidated,
     isNicknameDuplicated,
+    isUsernameDuplicated,
     checkAuthCode,
     getAuthCode,
-    signUp, login
+    signUp, login,
+    updateEmail
   } from "@/util/AuthenticationUtil.js";
 
 
   const router = useRouter();
+  const usernameMessage = ref("");
   const nicknameMessage = ref("");
   const username = ref("");
   const password = ref("");
@@ -94,6 +136,8 @@
   const isEmailChecked = ref(false);
   const isNicknameError = ref(false);
   const isNicknameChecked = ref(false);
+  const isUsernameError = ref(false);
+  const isUsernameChecked = ref(false);
 
 
   function handleSignUp() {
@@ -140,6 +184,30 @@
         })
     }
 
+// 아이디 유효성 및 중복 확인
+function handleUsername(username) {
+  if (!isUsernameValidated(username)) {
+    usernameMessage.value = "유효하지 않은 아이디입니다.";
+    isUsernameError.value = true;
+    return;
+  }
+
+  isUsernameDuplicated(username).then(isDuplicated => {
+    if (isDuplicated) {
+      usernameMessage.value = "사용할 수 있는 아이디입니다.";
+      isUsernameError.value = false;
+      isUsernameChecked.value = true;
+    } else {
+      usernameMessage.value = "이미 존재하는 아이디입니다.";
+      isUsernameError.value = true;
+    }
+  }).catch(error => {
+    console.error(error);
+    usernameMessage.value = "아이디 확인 중 오류가 발생했습니다.";
+    isUsernameError.value = true;
+  });
+}
+
   // 닉네임 유효성 및 중복 확인
   function handleNickname(nickname) {
     if (!isNicknameValidated(nickname)) {
@@ -167,10 +235,16 @@
   // 이메일 인증번호 발송
   function handleGetAuthCode() {
     if (isEmailValidated(email.value)) {
-      alert("인증번호가 이메일로 발송되었습니다. \n네트워크 환경에 따라 발송에 시간이 걸릴 수 있습니다.")
+      if (!window.confirm("사용하실 수 있는 이메일 입니다. \n사용하시겠습니까?")) {
+        return
+      }
+      alert("이메일이 발송되었습니다.")
       isEmailSend.value = true;
       validationTime.value = 300;
+
       getAuthCode(email.value)
+          .then(() => {
+          })
     } else {
       alert("유효하지 않은 이메일 입니다. \n이메일을 다시 확인해주세요.")
     }
@@ -178,21 +252,15 @@
 
   // 이메일 인증번호 확인
   function handleCheckAuthCode() {
-
-    if (!isEmailSend.value) {
-      alert("인증 코드를 먼저 받아주세요.")
-      return;
-    }
-
     checkAuthCode(email.value, authCode.value)
         .then(isVerified => {
           if (isVerified) {
             alert("인증되었습니다.")
             isEmailChecked.value = true;
           }
-          else {
-            alert("인증 번호를 다시 한 번 확인해주세요.")
-          }
+        })
+        .catch(() => {
+          alert("인증 번호를 다시 한 번 확인해주세요.")
         })
   }
 
@@ -200,6 +268,10 @@
   // 이메일 시간 제한 타이머
   let timer = null;
   watch([isEmailSend, validationTime], ([newIsEmailSend, newValidationTime]) => {
+    if (isEmailChecked.value) {
+      newValidationTime = 0;
+      timer = null;
+    }
     if (timer) {
       clearInterval(timer);
     }
@@ -216,119 +288,160 @@
 </script>
 
 <style scoped>
-    /* 전체 레이아웃을 잡는 컨테이너 */
-    .main-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    width: 100%;
-    background-color: #f3f4f6;
-  }
+/* 전체 레이아웃을 잡는 컨테이너 */
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f3f4f6;
+}
 
-    .signup-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px;
-    padding: 1rem;
-    box-sizing: border-box;
-  }
+.signup-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 1rem;
+  box-sizing: border-box;
+}
 
-    .signup-container {
-    width: 100%;
-    max-width: 600px;
-    padding: 2rem;
-    background-color: white;
-  }
+.signup-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px; /* Add border radius for better UI */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Add subtle shadow for focus */
+}
 
-    .signup-container h2 {
-      font-size: 2rem;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
+.signup-container h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #333;
+}
 
-    .signup-container p {
-      text-align: center;
-    margin-bottom: 1.5rem;
-  }
+.signup-container p {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #666;
+}
 
-    .signup-container form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
+.signup-container form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-    .signup-container label {
-      margin-bottom: 0.5rem;
-  }
+.signup-container label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #444;
+}
 
-    .signup-container input {
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
+.signup-container input {
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
 
-    .signup-container button {
-    padding: 0.8rem;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+.signup-container button {
+  padding: 0.8rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
 
-    .signup-container button:hover {
-      background-color: #218838;
-  }
+.signup-container button:hover {
+  background-color: #218838;
+}
 
-    .email-verification,
-    .verification-code {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
+/* Align 아이디/닉네임 input and button in the same row */
+.signup-container .d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-    .email-verification input,
-    .verification-code input {
-    flex: 1;
-    margin-right: 0.5rem;
-    height: 40px; /* 입력 칸과 버튼의 높이를 동일하게 설정 */
-  }
+.signup-container .d-flex input {
+  flex-grow: 1;
+  margin-right: 10px;
+  min-width: 0; /* To allow shrinking */
+}
 
-    .email-verification button,
-    .verification-code button {
-    padding: 0 10px;
-    height: 40px; /* 버튼 높이를 입력 칸 높이와 동일하게 설정 */
-    white-space: nowrap;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+.signup-container .d-flex button {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
-    .verification-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-left: 0.5rem;
-  }
+.signup-container .email-verification,
+.verification-code {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
 
-    .timer {
-      font-size: 0.8rem;
-    color: #888;
-    margin-top: 0.2rem; /* 타이머를 버튼과 붙이기 */
-  }
+.signup-container .email-verification input,
+.verification-code input {
+  flex: 1;
+  margin-right: 0.5rem;
+  height: 40px;
+}
 
-    .error-text {
-    color: red;
-    font-size: 0.9rem;
-    margin-top: -0.5rem;
-    margin-bottom: 0.5rem;
-  }
+.signup-container .email-verification button,
+.verification-code button {
+  padding: 0 10px;
+  height: 40px;
+  white-space: nowrap;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
+.signup-container .verification-code .timer {
+  font-size: 0.9rem;
+  color: #888;
+  margin-right: 10px;
+}
+
+.error-text {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Disabled button styling */
+.signup-container .btn-secondary {
+  background-color: #6c757d;
+}
+
+.signup-container .btn-primary {
+  background-color: #28a745;
+}
+
+.signup-container .btn-primary:disabled {
+  background-color: #c4c4c4;
+}
+
+.signup-container p a {
+  color: #007bff;
+}
+
+.signup-container p a:hover {
+  text-decoration: underline;
+}
 </style>

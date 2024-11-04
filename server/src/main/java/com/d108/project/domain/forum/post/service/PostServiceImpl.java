@@ -3,6 +3,7 @@ package com.d108.project.domain.forum.post.service;
 import com.d108.project.cache.redis.RedisUtil;
 import com.d108.project.domain.forum.board.dto.BoardResponseDto;
 import com.d108.project.domain.forum.board.entity.Board;
+import com.d108.project.domain.forum.post.dto.PostPageResponseDto;
 import com.d108.project.domain.forum.post.entity.Post;
 import com.d108.project.domain.forum.post.repository.PostRepository;
 import com.d108.project.domain.forum.board.repository.BoardRepository;
@@ -12,6 +13,7 @@ import com.d108.project.domain.forum.post.dto.PostResponseDto;
 import com.d108.project.domain.forum.post.dto.PostUpdateDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostServiceImpl implements PostService {
 
     private final RedisUtil redisUtil;
@@ -70,7 +73,7 @@ public class PostServiceImpl implements PostService {
 
         // 조회수 올리고
         Long view = incrementViewCountById(postId);
-
+        log.info(String.valueOf(view));
         // 조회
         PostResponseDto postResponseDto = PostResponseDto.from(post);
         postResponseDto.setView(view);
@@ -141,20 +144,30 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> getPostsByBoardId(Long boardId, int page, int size) {
+    public PostPageResponseDto getPostsByBoardId(Long boardId, int page, int size) {
         Board board = boardRepository.getReferenceById(boardId);
         Pageable pageable = PageRequest.of(page, size);
         Page<Post> posts = postRepository.findByBoard(pageable, board);
 
-        return posts.stream()
-                .map(post -> {
-                    PostResponseDto postResponseDto = PostResponseDto.from(post);
-                    postResponseDto.setView(getViewCountById(post.getId()));
-                    return postResponseDto;
-                })
-                .collect(Collectors.toList());
-    }
+        List<PostResponseDto> postDtos = posts.stream()
+            .map(post -> {
+                PostResponseDto postResponseDto = PostResponseDto.from(post);
+                postResponseDto.setView(getViewCountById(post.getId()));
+                return postResponseDto;
+            })
+            .collect(Collectors.toList());
 
+        // builder 패턴을 사용하여 PostPageResponseDto 생성
+        return PostPageResponseDto.builder()
+            .posts(postDtos)
+             .totalElements(posts.getTotalElements()) // 전체 데이터 수
+            .totalPages(posts.getTotalPages()) // 전체 페이지 수
+            .currentPage(posts.getNumber()) // 현재 페이지
+            .pageSize(posts.getSize()) // 페이지 당 데이터 수
+            .isFirstPage(posts.isFirst()) // 첫 번째 페이지 여부
+            .isLastPage(posts.isLast()) // 마지막 페이지 여부
+            .build();
+}
 
     // 조회수 관련 메서드
 
@@ -191,7 +204,7 @@ public class PostServiceImpl implements PostService {
         String redisKey = REDIS_PREFIX + postId;
         String viewCountStr = redisUtil.getData(redisKey);
         // 레디스에 저장된 viewCount가 없는 경우 DB에서 가져옴
-        if (viewCountStr != null) {
+        if (viewCountStr == null) {
             Post post = postRepository.findById(postId)
                     .orElseThrow(() -> new IllegalArgumentException("존재 하지 않는 글입니다."));
             // DB에서 가져온 데이터를 문자열로 바꾼 후, 다시 레디스에 저장함
@@ -201,4 +214,5 @@ public class PostServiceImpl implements PostService {
         // DB에도 없는 경우.. 가 있는지는 모르겠는데 그 경우 0으로
         return (viewCountStr == null) ? 0 : Long.parseLong(viewCountStr);
     }
+
 }

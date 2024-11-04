@@ -13,12 +13,15 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "chart.js": "^4.4.4",
-    "pinia": "^2.1.7",
+    "lucide-vue-next": "^0.446.0",
+    "pinia": "^2.2.2",
+    "pinia-plugin-persistedstate": "^4.0.2",
     "vue": "^3.4.29",
     "vue-chartjs": "^5.3.1",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
     "@vitejs/plugin-vue": "^5.0.5",
     "vite": "^5.3.1"
   }

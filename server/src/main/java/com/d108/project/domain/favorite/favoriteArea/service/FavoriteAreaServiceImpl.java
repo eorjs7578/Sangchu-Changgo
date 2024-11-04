@@ -1,7 +1,9 @@
 package com.d108.project.domain.favorite.favoriteArea.service;
 
+import com.d108.project.domain.area.dto.AreaDto;
 import com.d108.project.domain.area.dto.AreaListDto;
 import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaRequestDto;
+import com.d108.project.domain.favorite.favoriteArea.dto.FavoriteAreaResponse;
 import com.d108.project.domain.favorite.favoriteArea.entity.FavoriteArea;
 import com.d108.project.domain.favorite.favoriteArea.repository.FavoriteAreaRepository;
 import com.d108.project.domain.area.entity.Area;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,21 +28,43 @@ public class FavoriteAreaServiceImpl implements FavoriteAreaService {
 
     @Override
     public AreaListDto getFavoriteAreasByMember(Long memberId) {
-        List<Area> areas = new ArrayList<>();
+        System.out.println(memberId);
+        List<FavoriteArea> favoriteAreaList = favoriteAreaRepository.findAllByMemberId(memberId);
 
-        favoriteAreaRepository.findAllByMemberId(memberId)
-                .forEach(favoriteArea -> areas.add(favoriteArea.getArea()));
+        if (favoriteAreaList.isEmpty()) {
+            return new AreaListDto(null);
+        }
+
+        List<FavoriteArea> areas = new ArrayList<>(favoriteAreaList);
 
         return AreaListDto.createAreaListDto(areas);
     }
 
     @Override
-    public void createFavoriteArea(Long memberId, FavoriteAreaRequestDto favoriteAreaRequestDto) {
+    public FavoriteAreaResponse getFavoriteAreaIdByMember(Long memberId, Long areaId) {
+        Optional<FavoriteArea> favoriteArea = favoriteAreaRepository.findAllByMemberIdAndAreaId(memberId, areaId);
+
+        return favoriteArea.map(area -> new FavoriteAreaResponse(true, area.getId()))
+                .orElseGet(() -> new FavoriteAreaResponse(false, 0L));
+    }
+
+
+
+    @Override
+    public Long createFavoriteArea(Long memberId, FavoriteAreaRequestDto favoriteAreaRequestDto) {
         Member member = memberRepository.getReferenceById(memberId);
-        Area area = areaRepository.findById(favoriteAreaRequestDto.areaId()).orElseThrow();
+        Area area = areaRepository.findById(favoriteAreaRequestDto.areaId())
+                .orElseThrow(() -> new IllegalArgumentException("area ID 값이 올바르지 않습니다."));
+
+        Optional<FavoriteArea> favoriteArea = favoriteAreaRepository.findAllByMemberIdAndAreaId(memberId, area.getId());
+        if (favoriteArea.isPresent()) throw new IllegalArgumentException("이미 해당 관심상권이 있습니다.");
 
         FavoriteArea favorite = FavoriteArea.toFavoriteArea(member, area);
-        favoriteAreaRepository.save(favorite);
+        FavoriteArea save = favoriteAreaRepository.save(favorite);
+        System.out.println(save);
+        favoriteArea = favoriteAreaRepository.findAllByMemberIdAndAreaId(memberId, area.getId());
+        System.out.println(favoriteArea.get().getId());
+        return favoriteArea.get().getId();
     }
 
     @Override

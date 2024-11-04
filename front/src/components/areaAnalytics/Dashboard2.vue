@@ -1,91 +1,193 @@
 <template>
-  <div class="container-fluid">
-    <div class="row bg-success text-white p-3 align-items-center">
-      <div class="col-10">
-        <h2 class="font-weight-bold">{{ place }}</h2>
+  <div>
+    <div class="container-fluid h-100">
+      <div class="row bg-success text-white p-3 align-items-center">
+        <div class="col-8">
+          <h2 class="font-weight-bold">{{ area }}</h2>
+        </div>
+        <div class="col-2 text-right">
+          <button class="btn" @click="toggleFavorite">
+            <img
+              :src="favorite ? starFilled : starEmpty"
+              alt="Favorite"
+              class="favorite-icon"
+            />
+          </button>
+        </div>
+        <div class="col-2 text-right">
+          <button class="btn" @click="closeModal">
+            x
+          </button>
+        </div>
       </div>
-      <div class="col-2 text-right">
-        <button class="btn" @click="toggleFavorite">
-          {{ favorite ? "♥" : "♡" }}
-        </button>
+
+      <nav class="nav nav-pills nav-fill my-3">
+        <a
+            class="nav-item nav-link"
+            :class="{ active: activeSection === 'populationAnalysis' }"
+            @click.prevent="scrollToSection('populationAnalysis')"
+        >
+          인구
+        </a>
+        <a
+            class="nav-item nav-link"
+            :class="{ active: activeSection === 'storeAnalysis' }"
+            @click.prevent="scrollToSection('storeAnalysis')"
+        >
+          점포수
+        </a>
+        <a
+            class="nav-item nav-link"
+            :class="{ active: activeSection === 'salesAnalysis' }"
+            @click.prevent="scrollToSection('salesAnalysis')"
+        >
+          매출분석
+        </a>
+        <a
+            class="nav-item nav-link"
+            :class="{ active: activeSection === 'surveyResult' }"
+            @click.prevent="scrollToSection('surveyResult')"
+        >
+          평가 결과
+        </a>
+        <a
+            class="nav-item nav-link"
+            :class="{ active: activeSection === 'surveyForm' }"
+            @click.prevent="scrollToSection('surveyForm')"
+        >
+          평가하기
+        </a>
+      </nav>
+
+      <div
+          ref="scrollContainer"
+          class="overflow-auto custom-scroll h-75"
+      >
+
+        <!-- 인구 정보 -->
+        <PopulationAnalysis :place="place" />
+
+        <!-- 점포 분석 -->
+        <StoreAnalysis :place="place" @update:location="handleLocationUpdate" />
+
+        <!-- 매출 분석 -->
+        <SalesAnalysis :place="place" :service="service" />
+
+        <!-- 평가 결과 -->
+        <SurveyResult
+            :place="place"
+        />
+
+        <!--평가 폼-->
+        <SurveyForm
+            :place="place"
+        />
+
       </div>
     </div>
 
-    <nav class="nav nav-pills nav-fill my-3">
-      <a
-          class="nav-item nav-link"
-          :class="{ active: activeSection === 'population' }"
-          @click.prevent="scrollToSection('population')"
-      >
-        인구
-      </a>
-      <a
-          class="nav-item nav-link"
-          :class="{ active: activeSection === 'storeAnalytics' }"
-          @click.prevent="scrollToSection('storeAnalytics')"
-      >
-        점포수
-      </a>
-      <a
-          class="nav-item nav-link"
-          :class="{ active: activeSection === 'analysis' }"
-          @click.prevent="scrollToSection('analysis')"
-      >
-        매출분석
-      </a>
-      <a
-          class="nav-item nav-link"
-          :class="{ active: activeSection === 'rent' }"
-          @click.prevent="scrollToSection('rent')"
-      >
-        임대료
-      </a>
-      <a
-          class="nav-item nav-link"
-          :class="{ active: activeSection === 'review' }"
-          @click.prevent="scrollToSection('review')"
-      >
-        리뷰
-      </a>
-    </nav>
-
-    <div
-        ref="scrollContainer"
-        class="overflow-auto custom-scroll"
-        style="max-height: 400px;"
-    >
-
-      <!--인구 정보-->
-      <PopulationAnalysis
-          :place
-      />
-
-      <!--점포 정보-->
-      <StoreAnalytics />
-
-      <!---->
-
-    </div>
+    <!-- Login Modal -->
+    <LoginModal v-if="showLoginPopup" />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import PopulationAnalysis from "@/components/areaAnalytics/PopulationAnalysis.vue";
-import StoreAnalytics from "@/components/areaAnalytics/StoreAnalytics.vue";
+import SalesAnalysis from "@/components/areaAnalytics/SalesAnalysis.vue";
+import StoreAnalysis from "@/components/areaAnalytics/StoreAnalysis.vue";
+import LoginModal from "@/components/login/LoginModal.vue"; // Import the LoginModal
 import { useRouter } from "vue-router";
+import {api} from "@/lib/api.js";
+import SurveyForm from "./SurveyForm.vue";
+import SurveyResult from "./SurveyResult.vue";
+import starEmpty from '@/assets/img/star.png';
+import starFilled from '@/assets/img/filled_star.png';
+import { useAccountStore } from "@/stores/useAccountStore";
 
-defineProps({
+const props = defineProps({
   place: String,
 });
 
+const emit = defineEmits(["closeModal"])
+const area = ref("");
 const favorite = ref(false);
+const showLoginPopup = ref(false); // Flag for showing login modal
 const activeSection = ref('');
 const scrollContainer = ref(null);
-const router = useRouter();
+const service = ref();
+const areaId = props.place; // Use the place as the favoriteAreaId
 
-const toggleFavorite = () => {
-  favorite.value = !favorite.value;
+const accountStore = useAccountStore(); // Use the account store
+
+const router = useRouter();
+const favoriteAreaId = ref('');
+
+const checkFavoriteStatus = async () => {
+  console.log(accountStore.isAuthenticated);
+
+  if (!accountStore.isAuthenticated) {
+    favorite.value = false;
+    return;
+  }
+
+  const response = await api.get(`/api/favorite/areas/${areaId}`);
+  const { isCheck, favoriteAreaId } = response.data;
+  console.log(response.data); // 여기서도 console.log 사용
+  favoriteAreaId.value = favoriteAreaId;
+  favorite.value = isCheck;
+};
+
+
+// try {
+//     const response = await api.get(`/api/favorite/areas/${areaId}`);
+//     const { isCheck, favoriteAreaId: responseAreaId } = response.data;
+//     favorite.value = isCheck;
+//   } 
+//   catch (error) {
+//     if (error.response && error.response.status === 401) {
+//       showLoginPopup.value = true; // Show login modal if unauthorized
+//     } else {
+//       console.error("Error checking favorite status:", error);
+//     }
+//   }
+
+function closeModal() {
+  emit("closeModal")
+}
+
+const toggleFavorite = async () => {
+  if (!accountStore.isAuthenticated) {
+    showLoginPopup.value = true;
+    return;
+  }
+  console.log(favorite.value)
+
+  try {
+    if (favorite.value) {
+      // If currently favorited, send DELETE request to remove favorite
+      await api.delete(`/api/favorite/areas/${favoriteAreaId.value}`);
+    } else {
+      console.log("Sending areaId:", areaId);
+      // If not favorited, send POST request to add favorite
+      const response = await api.post('/api/favorite/areas', { area_id: areaId });
+      console.log(response)
+      favoriteAreaId.value = response.data; // 응답에서 favorite_id 받아오기
+    }
+    favorite.value = !favorite.value; // Toggle the favorite state in the UI
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      showLoginPopup.value = true; // Show login modal if unauthorized
+    } else {
+      console.error("Error toggling favorite status:", error);
+      console.log(favoriteAreaId, areaId);
+    }
+  }
+};
+
+const handleLocationUpdate = (location) => {
+  console.log('Selected location received from child:', location);
+  service.value = location;
 };
 
 const scrollToSection = (section) => {
@@ -98,8 +200,8 @@ const scrollToSection = (section) => {
 
 const updateActiveSection = () => {
   const container = scrollContainer.value;
-  const sections = ['population', 'storeAnalytics', 'analysis', 'rent', 'review'];
-
+  
+  const sections = ['populationAnalysis', 'storeAnalysis', 'salesAnalysis', 'rent', 'surveyForm', 'surveyResult'];
   sections.forEach(section => {
     const element = document.getElementById(section);
     if (element) {
@@ -116,22 +218,43 @@ const updateActiveSection = () => {
 onMounted(() => {
   const container = scrollContainer.value;
   container.addEventListener('scroll', updateActiveSection);
-});
 
+  api.get("/api/area-info", {
+    params: {
+      areaId: props.place,
+    }
+  })
+    .then(response => {
+      area.value = response.data.area_name;
+    })
+    .catch(err => {
+      console.error("Error fetching area info:", err);
+    });
+
+  // Check if the area is a favorite when component mounts
+  checkFavoriteStatus();
+});
 </script>
 
 <style>
 .custom-scroll {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE와 Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .custom-scroll::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
 .nav-link.active {
-  background-color: #007bff; /* 활성화 색상 */
-  color: white; /* 텍스트 색상 */
+  background-color: #007bff;
+  color: white;
 }
+
+.favorite-icon {
+    max-width: 30px; /* 원하는 너비 설정 */
+    max-height: 30px; /* 원하는 높이 설정 */
+    width: auto;
+    height: auto;
+  }
 </style>

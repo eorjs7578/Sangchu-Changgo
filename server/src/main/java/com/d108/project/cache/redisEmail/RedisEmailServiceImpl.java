@@ -2,6 +2,7 @@ package com.d108.project.cache.redisEmail;
 
 import com.d108.project.cache.redis.RedisUtil;
 import com.d108.project.cache.redisEmail.dto.EmailAuthCheckDto;
+import com.d108.project.domain.member.repository.MemberRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class RedisEmailServiceImpl implements RedisEmailService {
     private String hostEmail;
     private final RedisUtil redisUtil;
     private final JavaMailSender mailSender;
+    private final MemberRepository memberRepository;
     private static final SecureRandom random = new SecureRandom();
 
     /**
@@ -38,18 +40,17 @@ public class RedisEmailServiceImpl implements RedisEmailService {
     // 인증코드 검증
     @Override
     public Boolean checkAuthCode(EmailAuthCheckDto emailAuthCheckDto) {
-        // email의 키값으로 저장된 코드와 입력한 인증코드와 같은지 다른지 검증
-        if (emailAuthCheckDto.getAuthCode().equals(redisUtil.getData("auth: "+emailAuthCheckDto.getEmail()))) {
-            // 코드가 일치하면 레디스에서 즉시 삭제
-            redisUtil.deleteData("auth: "+emailAuthCheckDto.getEmail());
+        String storedAuthCode = redisUtil.getData("auth: " + emailAuthCheckDto.getEmail());
+        if (emailAuthCheckDto.getAuthCode().equals(storedAuthCode)) {
+            redisUtil.deleteData("auth: " + emailAuthCheckDto.getEmail());
             return true;
         }
         return false;
     }
-
     // 인증 메일 발송
     @Override
     public void sendEmail(String email) throws MessagingException {
+
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "utf-8");
         String authCode = createAuthCode(email);
